@@ -401,6 +401,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
     streamsNotifier.value.forEach((stream) {
       stream.isVisibleNotifier.addListener(onStreamVisibleStateUpdate);
     });
+    onStreamVisibleStateUpdate();
     previousStreams =
         List<ZegoOutsideRoomAudioVideoViewStream>.from(streamsNotifier.value);
   }
