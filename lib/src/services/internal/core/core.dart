@@ -81,6 +81,7 @@ class ZegoUIKitCore
     bool? enablePlatformView,
     bool playingStreamInPIPUnderIOS = false,
     ZegoScenario scenario = ZegoScenario.Default,
+    bool withoutCreateEngine = false,
   }) async {
     if (Platform.isIOS) {
       this.playingStreamInPIPUnderIOS = playingStreamInPIPUnderIOS;
@@ -131,43 +132,49 @@ class ZegoUIKitCore
     }));
 
     ZegoLoggerService.logInfo(
-      'create engine with profile',
+      'create engine with profile,'
+      'withoutCreateEngine:$withoutCreateEngine, ',
       tag: 'uikit-service-core',
       subTag: 'init',
     );
-    try {
-      await ZegoExpressEngine.createEngineWithProfile(
-        ZegoEngineProfile(
-          appID,
-          scenario,
-          appSign: appSign,
-          enablePlatformView: enablePlatformView,
-        ),
-      ).then((value) {
+    if (withoutCreateEngine) {
+      /// make it has been created (android call offline invitation will have a scene created in advance)
+      expressEngineCreatedNotifier.value = true;
+    } else {
+      try {
+        await ZegoExpressEngine.createEngineWithProfile(
+          ZegoEngineProfile(
+            appID,
+            scenario,
+            appSign: appSign,
+            enablePlatformView: enablePlatformView,
+          ),
+        ).then((value) {
+          ZegoLoggerService.logInfo(
+            'engine created',
+            tag: 'uikit-service-core',
+            subTag: 'init',
+          );
+        });
+
+        expressEngineCreatedNotifier.value = true;
+      } catch (e) {
         ZegoLoggerService.logInfo(
-          'engine created',
+          'engine error:$e, '
+          'app sign:$appSign, ',
           tag: 'uikit-service-core',
           subTag: 'init',
         );
-      });
 
-      expressEngineCreatedNotifier.value = true;
-    } catch (e) {
-      ZegoLoggerService.logInfo(
-        'engine error:$e, '
-        'app sign:$appSign, ',
-        tag: 'uikit-service-core',
-        subTag: 'init',
-      );
-
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
-        ZegoUIKitError(
-          code: -1,
-          message: e.toString(),
-          method: 'createEngineWithProfile',
-        ),
-      );
-      expressEngineCreatedNotifier.value = false;
+        ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+          ZegoUIKitError(
+            code: -1,
+            message: e.toString(),
+            method: 'createEngineWithProfile',
+          ),
+        );
+        expressEngineCreatedNotifier.value = false;
+      }
     }
 
     ZegoExpressEngine.setEngineConfig(ZegoEngineConfig(advancedConfig: {
@@ -296,16 +303,22 @@ class ZegoUIKitCore
     coreData.logout();
   }
 
+  bool hasLoginSameRoom(String roomID) {
+    return coreData.room.id == roomID;
+  }
+
   Future<ZegoRoomLoginResult> joinRoom(
     String roomID, {
     String token = '',
     bool markAsLargeRoom = false,
+    bool keepWakeScreen = true,
+    bool isSimulated = false,
   }) async {
     if (ZegoAudioVideoViewOutsideRoomID.isRandomRoomID(coreData.room.id)) {
       await leaveRoom();
     }
 
-    if (coreData.room.id == roomID) {
+    if (hasLoginSameRoom(roomID)) {
       ZegoLoggerService.logInfo(
         'already in room($roomID)',
         tag: 'uikit-room',
@@ -329,18 +342,25 @@ class ZegoUIKitCore
 
     event.init();
 
-    final originWakelockEnabledF = WakelockPlus.enabled;
+    Future<bool> originWakelockEnabledF = Future.value(false);
+    if (keepWakeScreen) {
+      originWakelockEnabledF = WakelockPlus.enabled;
+    }
 
     ZegoLoggerService.logInfo(
-      'try join room id:"$roomID" by ${coreData.localUser}',
+      'try join room id:"$roomID" by ${coreData.localUser}, '
+      'isSimulated:$isSimulated, ',
       tag: 'uikit-room',
       subTag: 'join room',
     );
-    final joinRoomResult = await ZegoExpressEngine.instance.loginRoom(
-      roomID,
-      coreData.localUser.toZegoUser(),
-      config: ZegoRoomConfig(0, true, token),
-    );
+
+    final joinRoomResult = isSimulated
+        ? ZegoRoomLoginResult(0, {})
+        : await ZegoExpressEngine.instance.loginRoom(
+            roomID,
+            coreData.localUser.toZegoUser(),
+            config: ZegoRoomConfig(0, true, token),
+          );
     ZegoLoggerService.logInfo(
       'result:${joinRoomResult.errorCode},'
       'extendedData:${joinRoomResult.extendedData}',
@@ -352,12 +372,20 @@ class ZegoUIKitCore
       await coreData.startPublishOrNot();
       await syncDeviceStatusByStreamExtraInfo();
 
-      final originWakelockEnabled = await originWakelockEnabledF;
-      if (originWakelockEnabled) {
-        isNeedDisableWakelock = false;
-      } else {
-        isNeedDisableWakelock = true;
-        WakelockPlus.enable();
+      if (isSimulated) {
+        /// at this time, express will not throw the stream event again,
+        /// and it is necessary to actively obtain
+        await coreData.syncRoomStream();
+      }
+
+      if (keepWakeScreen) {
+        final originWakelockEnabled = await originWakelockEnabledF;
+        if (originWakelockEnabled) {
+          isNeedDisableWakelock = false;
+        } else {
+          isNeedDisableWakelock = true;
+          WakelockPlus.enable();
+        }
       }
 
       await ZegoExpressEngine.instance.startSoundLevelMonitor();

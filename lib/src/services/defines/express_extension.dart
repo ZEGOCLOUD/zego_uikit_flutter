@@ -86,6 +86,16 @@ extension ZegoPublishStreamQualityExtension on ZegoPublishStreamQuality {
   }
 }
 
+extension ZegoStreamExtension on ZegoStream {
+  String toStringX() {
+    return 'ZegoStreamExtension{'
+        'user:(${user.userID},${user.userName}), '
+        'streamID:$streamID, '
+        'extraInfo:$extraInfo, '
+        '}';
+  }
+}
+
 extension ZegoMixerTaskExtension on ZegoMixerTask {
   String toStringX() {
     return 'ZegoMixerTask{'

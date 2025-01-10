@@ -103,6 +103,9 @@ class ZegoUIKit
     bool? enablePlatformView,
     bool playingStreamInPIPUnderIOS = false,
     ZegoScenario scenario = ZegoScenario.Default,
+
+    /// accept in call invitation on android, will create in advance
+    bool withoutCreateEngine = false,
   }) async {
     return ZegoUIKitCore.shared.init(
       appID: appID,
@@ -111,6 +114,7 @@ class ZegoUIKit
       scenario: scenario,
       playingStreamInPIPUnderIOS: playingStreamInPIPUnderIOS,
       enablePlatformView: enablePlatformView,
+      withoutCreateEngine: withoutCreateEngine,
     );
   }
 

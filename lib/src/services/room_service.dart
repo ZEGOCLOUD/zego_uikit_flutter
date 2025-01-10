@@ -14,13 +14,24 @@ mixin ZegoRoomService {
     String roomID, {
     String token = '',
     bool markAsLargeRoom = false,
-  }) async {
-    final joinBeginTime = DateTime.now().millisecondsSinceEpoch;
+    bool keepWakeScreen = true,
 
+    /// Simulate entering the room, it will not really initiate the entry
+    /// call on express (accept offline call invitation on android, will join
+    /// in advance)
+    bool isSimulated = false,
+  }) async {
+    if (ZegoUIKitCore.shared.hasLoginSameRoom(roomID)) {
+      return ZegoRoomLoginResult(0, {});
+    }
+
+    final joinBeginTime = DateTime.now().millisecondsSinceEpoch;
     final joinRoomResult = await ZegoUIKitCore.shared.joinRoom(
       roomID,
       token: token,
       markAsLargeRoom: markAsLargeRoom,
+      keepWakeScreen: keepWakeScreen,
+      isSimulated: isSimulated,
     );
 
     if (ZegoErrorCode.CommonSuccess != joinRoomResult.errorCode) {

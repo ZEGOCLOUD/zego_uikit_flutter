@@ -177,17 +177,17 @@ class ZegoUIKitUser {
         'name:$name, '
         'in-room attributes:${inRoomAttributes.value}, '
         'camera:${camera.value}, '
-        'microphone:${microphone.value}, '
-        'microphone mute mode:${microphoneMuteMode.value} '
         '}';
   }
 
-  String toSimpleString() {
+  String toMoreString() {
     return '{'
         'id:$id, '
         'name:$name, '
         'camera:${camera.value}, '
         'microphone:${microphone.value} '
+        'microphone:${microphone.value}, '
+        'microphone mute mode:${microphoneMuteMode.value} '
         '}';
   }
 }

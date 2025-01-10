@@ -521,6 +521,45 @@ mixin ZegoUIKitCoreDataStream {
     }
   }
 
+  Future<void> syncRoomStream() async {
+    final currentRoomID = ZegoUIKitCore.shared.coreData.room.id;
+    if (currentRoomID.isEmpty) {
+      ZegoLoggerService.logInfo(
+        'not in room',
+        tag: 'uikit-stream',
+        subTag: 'syncRoomStream',
+      );
+
+      return;
+    }
+
+    await ZegoExpressEngine.instance
+        .getRoomStreamList(
+      ZegoUIKitCore.shared.coreData.room.id,
+      ZegoRoomStreamListType.Play,
+    )
+        .then((streamList) {
+      ZegoLoggerService.logInfo(
+        'publishStreamList list, ${streamList.publishStreamList.map((e) => e.toStringX())},  '
+        'playStreamList list, ${streamList.playStreamList.map((e) => e.toStringX())}',
+        tag: 'uikit-stream',
+        subTag: 'syncRoomStream',
+      );
+
+      ZegoLoggerService.logInfo(
+        'put play stream list to onRoomStreamUpdate',
+        tag: 'uikit-stream',
+        subTag: 'syncRoomStream',
+      );
+      ZegoUIKitCore.shared.eventHandler.onRoomStreamUpdate(
+        currentRoomID,
+        ZegoUpdateType.Add,
+        streamList.playStreamList,
+        {},
+      );
+    });
+  }
+
   Future<Widget?> createCanvasViewByExpressWithCompleter(
     Function(int viewID) onViewCreated, {
     Key? key,

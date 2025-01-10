@@ -84,7 +84,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   ) async {
     ZegoLoggerService.logInfo(
       'onRoomStreamUpdate, roomID:$roomID, update type:$updateType'
-      ", stream list:${streamList.map((e) => "stream id:${e.streamID}, extra info${e.extraInfo}, user id:${e.user.userID}")},"
+      ", stream list:${streamList.map((e) => e.toStringX())},"
       ' extended data:$extendedData',
       tag: 'uikit-service-core',
       subTag: 'event',
@@ -134,6 +134,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
             stream.user.userID,
           );
         }
+
+        parseStreamExtraInfo(stream);
       }
 
       onRoomStreamExtraInfoUpdate(roomID, streamList);
@@ -887,39 +889,61 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       subTag: 'event',
     );
     for (final stream in streamList) {
-      if (stream.extraInfo.isEmpty) {
-        ZegoLoggerService.logInfo(
-          'onRoomStreamExtraInfoUpdate extra info is empty',
-          tag: 'uikit-service-core',
-          subTag: 'event',
-        );
-        continue;
-      }
+      parseStreamExtraInfo(stream);
+    }
+  }
 
-      final extraInfos = jsonDecode(stream.extraInfo) as Map<String, dynamic>;
-      if (extraInfos.containsKey(streamExtraInfoCameraKey)) {
-        onRemoteCameraStateUpdate(
-          stream.streamID,
-          extraInfos[streamExtraInfoCameraKey]!
-              ? ZegoRemoteDeviceState.Open
-              : ZegoRemoteDeviceState.Mute,
-        );
-      }
-      if (extraInfos.containsKey(streamExtraInfoMicrophoneKey)) {
-        onRemoteMicStateUpdate(
-          stream.streamID,
-          extraInfos[streamExtraInfoMicrophoneKey]!
-              ? ZegoRemoteDeviceState.Open
-              : ZegoRemoteDeviceState.Mute,
-        );
-      }
-      if (extraInfos.containsKey(ZegoUIKitSEIDefines.keyMediaType)) {
-        coreData.media.onRemoteMediaTypeUpdate(
-          stream.streamID,
-          extraInfos[ZegoUIKitSEIDefines.keyMediaType] as int? ??
-              ZegoUIKitMediaType.pureAudio.index,
-        );
-      }
+  void parseStreamExtraInfo(ZegoStream stream) {
+    if (stream.extraInfo.isEmpty) {
+      ZegoLoggerService.logInfo(
+        'onRoomStreamExtraInfoUpdate extra info is empty',
+        tag: 'uikit-service-core',
+        subTag: 'event',
+      );
+
+      return;
+    }
+
+    ZegoLoggerService.logError(
+      'try parse stream extra info(${stream.extraInfo})',
+      tag: 'uikit-service-core',
+      subTag: 'event',
+    );
+    var extraInfos = {};
+    try {
+      jsonDecode(stream.extraInfo) as Map<String, dynamic>? ?? {};
+    } catch (e) {
+      ZegoLoggerService.logError(
+        'parse stream extra info(${stream.extraInfo}) error: $e',
+        tag: 'uikit-service-core',
+        subTag: 'event',
+      );
+    }
+
+    if (extraInfos.containsKey(streamExtraInfoCameraKey)) {
+      onRemoteCameraStateUpdate(
+        stream.streamID,
+        extraInfos[streamExtraInfoCameraKey]!
+            ? ZegoRemoteDeviceState.Open
+            : ZegoRemoteDeviceState.Mute,
+      );
+    }
+
+    if (extraInfos.containsKey(streamExtraInfoMicrophoneKey)) {
+      onRemoteMicStateUpdate(
+        stream.streamID,
+        extraInfos[streamExtraInfoMicrophoneKey]!
+            ? ZegoRemoteDeviceState.Open
+            : ZegoRemoteDeviceState.Mute,
+      );
+    }
+
+    if (extraInfos.containsKey(ZegoUIKitSEIDefines.keyMediaType)) {
+      coreData.media.onRemoteMediaTypeUpdate(
+        stream.streamID,
+        extraInfos[ZegoUIKitSEIDefines.keyMediaType] as int? ??
+            ZegoUIKitMediaType.pureAudio.index,
+      );
     }
   }
 
