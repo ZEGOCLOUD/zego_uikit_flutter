@@ -69,9 +69,9 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
   }
 
   Future<bool> uninit() async {
-    previousStreams.forEach((stream) {
+    for (var stream in previousStreams) {
       stream.isVisibleNotifier.removeListener(onStreamVisibleStateUpdate);
-    });
+    }
     previousStreams.clear();
     streamsNotifier.removeListener(onStreamsUpdated);
 
@@ -393,14 +393,14 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
   }
 
   void onStreamsUpdated() {
-    previousStreams.forEach((stream) {
+    for (var stream in previousStreams) {
       stream.isVisibleNotifier.removeListener(onStreamVisibleStateUpdate);
-    });
+    }
     previousStreams.clear();
 
-    streamsNotifier.value.forEach((stream) {
+    for (var stream in streamsNotifier.value) {
       stream.isVisibleNotifier.addListener(onStreamVisibleStateUpdate);
-    });
+    }
     onStreamVisibleStateUpdate();
     previousStreams =
         List<ZegoOutsideRoomAudioVideoViewStream>.from(streamsNotifier.value);

@@ -104,7 +104,7 @@ class ZegoUIKit
     bool playingStreamInPIPUnderIOS = false,
     ZegoScenario scenario = ZegoScenario.Default,
 
-    /// accept in call invitation on android, will create in advance
+    /// accept offline call invitation on android, will create in advance
     bool withoutCreateEngine = false,
   }) async {
     return ZegoUIKitCore.shared.init(

@@ -36,7 +36,6 @@ class _ZegoUIKitFlipTransitionState extends State<ZegoUIKitFlipTransition>
           _controller.reset();
         }
       });
-    ;
 
     _animation = Tween<double>(begin: 0.0, end: 3.14159).animate(_controller);
 

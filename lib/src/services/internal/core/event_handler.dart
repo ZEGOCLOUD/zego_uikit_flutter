@@ -134,8 +134,6 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
             stream.user.userID,
           );
         }
-
-        parseStreamExtraInfo(stream);
       }
 
       onRoomStreamExtraInfoUpdate(roomID, streamList);
@@ -911,7 +909,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     );
     var extraInfos = {};
     try {
-      jsonDecode(stream.extraInfo) as Map<String, dynamic>? ?? {};
+      extraInfos = jsonDecode(stream.extraInfo) as Map<String, dynamic>? ?? {};
     } catch (e) {
       ZegoLoggerService.logError(
         'parse stream extra info(${stream.extraInfo}) error: $e',

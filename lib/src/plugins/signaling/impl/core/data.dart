@@ -320,7 +320,7 @@ class ZegoSignalingPluginCoreData
           tag: 'uikit-plugin-signaling',
           subTag: 'core data',
         );
-        return ZegoSignalingPluginJoinRoomResult();
+        return const ZegoSignalingPluginJoinRoomResult();
       }
 
       ZegoLoggerService.logInfo(
