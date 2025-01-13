@@ -100,7 +100,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   Widget build(BuildContext context) {
     if (ZegoUIKit().getUser(widget.user?.id ?? '').isEmpty()) {
       ZegoLoggerService.logInfo(
-        '${widget.user?.id} is null',
+        'use id:(${widget.user?.id}) is null',
         tag: 'uikit-component',
         subTag: 'audio video view',
       );

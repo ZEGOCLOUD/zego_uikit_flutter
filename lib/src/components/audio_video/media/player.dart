@@ -183,42 +183,45 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
       return Container();
     }
 
-    return ValueListenableBuilder<bool>(
-      valueListenable: surfaceVisibilityNotifier,
-      builder: (context, surfaceVisibility, _) {
-        return GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            if (showVolumeSliderNotifier.value) {
-              showVolumeSliderNotifier.value = false;
-            } else {
-              surfaceVisibilityNotifier.value = !surfaceVisibility;
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      child: ValueListenableBuilder<bool>(
+        valueListenable: surfaceVisibilityNotifier,
+        builder: (context, surfaceVisibility, _) {
+          return GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              if (showVolumeSliderNotifier.value) {
+                showVolumeSliderNotifier.value = false;
+              } else {
+                surfaceVisibilityNotifier.value = !surfaceVisibility;
 
-              final playState = ZegoUIKit().getMediaPlayStateNotifier().value;
-              if (ZegoUIKitMediaPlayState.noPlay == playState ||
-                  ZegoUIKitMediaPlayState.playEnded == playState) {
-                /// reject hide if not source playing
-                surfaceVisibilityNotifier.value = true;
-              }
+                final playState = ZegoUIKit().getMediaPlayStateNotifier().value;
+                if (ZegoUIKitMediaPlayState.noPlay == playState ||
+                    ZegoUIKitMediaPlayState.playEnded == playState) {
+                  /// reject hide if not source playing
+                  surfaceVisibilityNotifier.value = true;
+                }
 
-              if (surfaceVisibilityNotifier.value) {
-                if (ZegoUIKitMediaPlayState.playing == playState) {
-                  startHideSurfaceTimer();
+                if (surfaceVisibilityNotifier.value) {
+                  if (ZegoUIKitMediaPlayState.playing == playState) {
+                    startHideSurfaceTimer();
+                  }
                 }
               }
-            }
-          },
-          child: Container(
-            color: Colors.transparent,
-            child: surfaceVisibility
-                ? controls(
-                    maxViewWidth,
-                    maxViewHeight,
-                  )
-                : Container(),
-          ),
-        );
-      },
+            },
+            child: Container(
+              color: Colors.transparent,
+              child: surfaceVisibility
+                  ? controls(
+                      maxViewWidth,
+                      maxViewHeight,
+                    )
+                  : Container(),
+            ),
+          );
+        },
+      ),
     );
   }
 
