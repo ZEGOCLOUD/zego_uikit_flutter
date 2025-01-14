@@ -541,7 +541,6 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
   }) async {
     ZegoLoggerService.logInfo(
       'appID:$appID, '
-      'signOrToken:$signOrToken, '
       'params:$params, ',
       tag: 'uikit-channel',
       subTag: 'reporterCreate',
