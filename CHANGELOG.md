@@ -1,3 +1,7 @@
+## 2.28.4
+
+- Support init without creating express engine; support join room without initiating entry.
+
 ## 2.28.3
 
 - Fix bugs
