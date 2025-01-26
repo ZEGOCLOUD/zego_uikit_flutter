@@ -1,3 +1,8 @@
+## 2.28.5
+
+- Bugs
+  - Fix the occasional fail of enableCustomVideoProcessing
+
 ## 2.28.4
 
 - Support init without creating express engine; support join room without initiating entry.
