@@ -234,7 +234,8 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                   ZegoLoggerService.logInfo(
                     '${widget.user?.id}\'s constraints changed,'
                     'width:${constraints.maxWidth}, '
-                    'height:${constraints.maxHeight}, ',
+                    'height:${constraints.maxHeight}, '
+                    'isCameraOn:$isCameraOn, ',
                     tag: 'uikit-component',
                     subTag: 'audio video view',
                   );

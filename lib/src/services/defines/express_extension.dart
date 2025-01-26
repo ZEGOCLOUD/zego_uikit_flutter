@@ -3,6 +3,18 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/services/defines/audio_video.dart';
+import 'package:zego_uikit/src/services/defines/express.dart';
+
+extension ZegoUIKitExpressEngineStateExtension on ZegoUIKitExpressEngineState {
+  static ZegoUIKitExpressEngineState fromSDK(ZegoEngineState engineState) {
+    switch (engineState) {
+      case ZegoEngineState.Start:
+        return ZegoUIKitExpressEngineState.start;
+      case ZegoEngineState.Stop:
+        return ZegoUIKitExpressEngineState.stop;
+    }
+  }
+}
 
 extension ZegoMixerOutputVideoConfignExtension on ZegoMixerOutputVideoConfig {
   String toStringX() {

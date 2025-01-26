@@ -76,6 +76,20 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   ZegoUIKitCoreDataErrorImpl get error => ZegoUIKitCore.shared.error;
 
   @override
+  void onEngineStateUpdate(ZegoEngineState state) {
+    ZegoLoggerService.logInfo(
+      'onEngineStateUpdate, '
+      'state:$state, ',
+      tag: 'uikit-service-core',
+      subTag: 'event',
+    );
+
+    coreData.engineState = ZegoUIKitExpressEngineStateExtension.fromSDK(state);
+
+    coreData.engineStateStreamCtrl.add(coreData.engineState);
+  }
+
+  @override
   Future<void> onRoomStreamUpdate(
     String roomID,
     ZegoUpdateType updateType,

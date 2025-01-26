@@ -19,6 +19,13 @@ class ZegoUIKitCoreData
       customCommandReceivedStreamCtrl;
   final networkStateNotifier =
       ValueNotifier<ZegoUIKitNetworkState>(ZegoUIKitNetworkState.online);
+
+  ZegoUIKitExpressEngineState engineState = ZegoUIKitExpressEngineState.stop;
+  final engineStateStreamCtrl =
+      StreamController<ZegoUIKitExpressEngineState>.broadcast();
+  bool waitingEngineStopEnableCustomVideoProcessing = false;
+  StreamSubscription? engineStateUpdatedSubscription;
+
   StreamController<ZegoUIKitNetworkState>? networkStateStreamCtrl;
 
   ZegoEffectsBeautyParam beautyParam = ZegoEffectsBeautyParam.defaultParam();

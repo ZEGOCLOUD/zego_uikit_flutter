@@ -167,6 +167,8 @@ class ZegoUIKitExpressEventImpl {
   }
 
   void uninit() {
+    onEngineStateUpdate(ZegoEngineState.Stop);
+
     ZegoExpressEngine.onDebugError = null;
     ZegoExpressEngine.onApiCalledResult = null;
     ZegoExpressEngine.onEngineStateUpdate = null;

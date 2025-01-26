@@ -40,6 +40,8 @@ mixin ZegoUIKitCoreDataStream {
   bool isPublishingStream = false;
   bool isPreviewing = false;
   bool isEnableCustomVideoRender = false;
+  bool isUsingFrontCameraRequesting = false;
+
   Map<String, List<PlayerStateUpdateCallback>> playerStateUpdateCallbackList =
       {};
 
@@ -212,6 +214,7 @@ mixin ZegoUIKitCoreDataStream {
 
     isPublishingStream = false;
     isPlayingStream = false;
+    isUsingFrontCameraRequesting = false;
   }
 
   Future<void> startPreview() async {

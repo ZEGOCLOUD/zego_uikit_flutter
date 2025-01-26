@@ -140,6 +140,10 @@ class ZegoUIKit
         const Stream.empty();
   }
 
+  Stream<ZegoUIKitExpressEngineState> getEngineStateStream() {
+    return ZegoUIKitCore.shared.coreData.engineStateStreamCtrl.stream;
+  }
+
   ZegoUIKitReporter reporter() {
     return ZegoUIKitCore.shared.reporter;
   }

@@ -55,7 +55,6 @@ class ZegoUIKitCore
   bool isInit = false;
   bool isNeedDisableWakelock = false;
   bool playingStreamInPIPUnderIOS = false;
-  bool isUsingFrontCameraRequesting = false;
   final expressEngineCreatedNotifier = ValueNotifier<bool>(false);
   List<StreamSubscription<dynamic>?> subscriptions = [];
   String? version;
@@ -83,22 +82,26 @@ class ZegoUIKitCore
     ZegoScenario scenario = ZegoScenario.Default,
     bool withoutCreateEngine = false,
   }) async {
-    if (Platform.isIOS) {
-      this.playingStreamInPIPUnderIOS = playingStreamInPIPUnderIOS;
-
-      ZegoLoggerService.logInfo(
-        'update playingStreamInPIPUnderIOS:$playingStreamInPIPUnderIOS, ',
-        tag: 'uikit-service-core',
-        subTag: 'init',
-      );
-    }
-
     if (isInit) {
       ZegoLoggerService.logWarn(
         'had init',
         tag: 'uikit-service-core',
         subTag: 'init',
       );
+
+      if (Platform.isIOS) {
+        this.playingStreamInPIPUnderIOS = playingStreamInPIPUnderIOS;
+        coreData.isEnablePlatformView = enablePlatformView ?? false;
+
+        ZegoLoggerService.logInfo(
+          'had init now, just update next params: '
+          'playingStreamInPIPUnderIOS:$playingStreamInPIPUnderIOS, '
+          'enablePlatformView:$enablePlatformView, ',
+          tag: 'uikit-service-core',
+          subTag: 'init',
+        );
+      }
+
       return;
     }
 
@@ -120,6 +123,7 @@ class ZegoUIKitCore
       params: {},
     );
 
+    this.playingStreamInPIPUnderIOS = playingStreamInPIPUnderIOS;
     coreData.init();
     coreData.isEnablePlatformView = enablePlatformView ?? false;
 
@@ -772,7 +776,7 @@ class ZegoUIKitCore
       return true;
     }
 
-    if (isUsingFrontCameraRequesting) {
+    if (coreData.isUsingFrontCameraRequesting) {
       ZegoLoggerService.logInfo(
         'still requesting, ignore',
         tag: 'uikit-camera',
@@ -790,7 +794,7 @@ class ZegoUIKitCore
 
     /// Access request frequency limit
     /// Frequent switching will cause a black screen
-    isUsingFrontCameraRequesting = true;
+    coreData.isUsingFrontCameraRequesting = true;
 
     coreData.localUser.mainChannel.isCapturedVideoFirstFrame.value = false;
     coreData.localUser.mainChannel.isCapturedVideoFirstFrame
@@ -819,7 +823,7 @@ class ZegoUIKitCore
     coreData.localUser.mainChannel.isCapturedVideoFirstFrame
         .removeListener(onCapturedVideoFirstFrameAfterSwitchCamera);
 
-    isUsingFrontCameraRequesting = false;
+    coreData.isUsingFrontCameraRequesting = false;
 
     ZegoLoggerService.logInfo(
       'onCapturedVideoFirstFrameAfterSwitchCamera',
@@ -1453,16 +1457,49 @@ class ZegoUIKitCore
     if (Platform.isAndroid) {
       type = ZegoVideoBufferType.GLTexture2D;
     }
+
     ZegoLoggerService.logInfo(
-      '${enable ? "enable" : "disable"} custom video processing, buffer type:$type',
+      '${enable ? "enable" : "disable"} custom video processing, '
+      'buffer type:$type, '
+      'express engineState:${coreData.engineState}, ',
       tag: 'uikit-stream',
       subTag: 'custom video processing',
     );
 
-    ZegoExpressEngine.instance.enableCustomVideoProcessing(
-      enable,
-      ZegoCustomVideoProcessConfig(type),
+    if (ZegoUIKitExpressEngineState.stop == coreData.engineState) {
+      /// this api does not allow setting after the express internal engine starts;
+      /// if set after the internal engine starts, it will cause the external video preprocessing to not be truly turned off/turned on
+      /// so turned off/turned on only effect when engine state is stop
+      ZegoExpressEngine.instance.enableCustomVideoProcessing(
+        enable,
+        ZegoCustomVideoProcessConfig(type),
+      );
+    } else {
+      coreData.waitingEngineStopEnableCustomVideoProcessing = enable;
+
+      coreData.engineStateUpdatedSubscription?.cancel();
+      coreData.engineStateUpdatedSubscription = coreData
+          .engineStateStreamCtrl.stream
+          .listen(onWaitingEngineStopEnableCustomVideoProcessing);
+    }
+  }
+
+  void onWaitingEngineStopEnableCustomVideoProcessing(
+    ZegoUIKitExpressEngineState engineState,
+  ) {
+    final targetEnabled = coreData.waitingEngineStopEnableCustomVideoProcessing;
+
+    ZegoLoggerService.logInfo(
+      'onWaitingEngineStopEnableCustomVideoProcessing, '
+      'target enabled:$targetEnabled, '
+      'engineState:$engineState, ',
+      tag: 'uikit-stream',
+      subTag: 'custom video processing',
     );
+
+    coreData.waitingEngineStopEnableCustomVideoProcessing = false;
+    coreData.engineStateUpdatedSubscription?.cancel();
+    enableCustomVideoProcessing(targetEnabled);
   }
 }
 

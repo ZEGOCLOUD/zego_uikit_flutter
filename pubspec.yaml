@@ -13,7 +13,7 @@ dependencies:
 
   zego_plugin_adapter: ^2.13.5
 
-  zego_express_engine: ^3.18.0
+  zego_express_engine: ^3.18.1
   zego_zpns: ^2.6.0+3
   zego_callkit: ^1.0.0+4
 

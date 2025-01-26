@@ -2,6 +2,7 @@ export 'audio_video.dart';
 export 'command.dart';
 export 'effect.dart';
 export 'error.dart';
+export 'express.dart';
 export 'express.event.dart';
 export 'media.dart';
 export 'media.event.dart';
