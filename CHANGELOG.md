@@ -1,3 +1,8 @@
+## 2.28.6
+- 
+- Features
+  - Support for additional listening offline message handler
+
 ## 2.28.5
 
 - Bugs
