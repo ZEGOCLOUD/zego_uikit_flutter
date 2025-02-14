@@ -1,3 +1,7 @@
+## 2.28.7
+
+- add system version of device
+
 ## 2.28.6
 - 
 - Features
