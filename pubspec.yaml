@@ -17,6 +17,7 @@ dependencies:
   zego_zpns: ^2.6.0+3
   zego_callkit: ^1.0.0+4
 
+  device_info_plus: ^11.3.0
   encrypt: ^5.0.3
   permission_handler: ^11.3.1
   flutter_logs: ^2.2.1

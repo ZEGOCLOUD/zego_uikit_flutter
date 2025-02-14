@@ -12,6 +12,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/channel/platform_interface.dart';

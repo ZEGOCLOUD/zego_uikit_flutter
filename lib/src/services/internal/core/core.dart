@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 
 // Flutter imports:
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,8 @@ part 'media.dart';
 
 part 'error.dart';
 
+part 'device.dart';
+
 part 'message.dart';
 
 /// @nodoc
@@ -41,7 +44,8 @@ class ZegoUIKitCore
     with
         ZegoUIKitCoreMessage,
         ZegoUIKitCoreEventHandler,
-        ZegoUIKitCoreDataError {
+        ZegoUIKitCoreDataError,
+        ZegoUIKitCoreDataDevice {
   ZegoUIKitCore._internal() {
     eventHandler.initConnectivity();
   }
@@ -129,6 +133,7 @@ class ZegoUIKitCore
 
     event.init();
     error.init();
+    await device.init();
     initEventHandle();
 
     ZegoExpressEngine.setEngineConfig(ZegoEngineConfig(advancedConfig: {
@@ -238,6 +243,7 @@ class ZegoUIKitCore
     coreData.uninit();
     event.uninit();
     error.uninit();
+    device.uninit();
     uninitEventHandle();
 
     clear();

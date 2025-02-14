@@ -3,5 +3,11 @@ class ZegoMobileSystemVersion {
   int minor = 0;
   int patch = 0;
 
+  ZegoMobileSystemVersion({
+    required this.major,
+    required this.minor,
+    required this.patch,
+  });
+
   ZegoMobileSystemVersion.empty();
 }
