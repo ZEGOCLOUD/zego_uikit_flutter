@@ -3,6 +3,12 @@ import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 
 /// @nodoc
 mixin ZegoPluginBackgroundMessageService {
+  Future<void> removeBackgroundMessageHandler({String key = ''}) async {
+    return ZegoPluginAdapter().signalingPlugin!.removeBackgroundMessageHandler(
+          key: key,
+        );
+  }
+
   /// register background message handler
   /// only for Android
   ///
