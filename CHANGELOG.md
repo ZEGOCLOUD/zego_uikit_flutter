@@ -1,9 +1,15 @@
+## 2.28.8
+
+- Bugs
+  - Fix the problem that some models of android get system version return empty
+
 ## 2.28.7
 
-- add system version of device
+- Features
+  - add system version of device
 
 ## 2.28.6
-- 
+  
 - Features
   - Support for additional listening offline message handler
 
