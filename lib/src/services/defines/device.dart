@@ -9,5 +9,7 @@ class ZegoMobileSystemVersion {
     required this.patch,
   });
 
+  bool get isEmpty => major == 0;
+
   ZegoMobileSystemVersion.empty();
 }

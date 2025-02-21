@@ -20,23 +20,37 @@ mixin ZegoDeviceService {
   }
 
   ZegoMobileSystemVersion getMobileSystemVersionX() {
-    if (Platform.isAndroid) {
-      return parse(
-        ZegoUIKitCore.shared.device.androidDeviceInfo?.version.incremental ??
-            '',
-      );
+    final parsedByFlutter = getMobileSystemVersion();
+
+    if(parsedByFlutter.isEmpty) {
+      if (Platform.isAndroid) {
+        final parsedVersion = parse(
+          ZegoUIKitCore.shared.device.androidDeviceInfo?.version.incremental ??
+              '',
+        );
+        if (parsedVersion.isEmpty) {
+          return ZegoMobileSystemVersion(
+            major: int.tryParse(
+                ZegoUIKitCore.shared.device.androidDeviceInfo?.version.release ?? '') ?? 0,
+            minor: 0,
+            patch: 0,
+          );
+        }
+
+        return parsedVersion;
+      }
+
+      if (Platform.isIOS) {
+        return ZegoMobileSystemVersion(
+          major: 0,
+          minor: 0,
+          patch: 0,
+        );
+        // return ZegoUIKitCore.shared.device.iosDeviceInfo;
+      }
     }
 
-    if (Platform.isIOS) {
-      return ZegoMobileSystemVersion(
-        major: 0,
-        minor: 0,
-        patch: 0,
-      );
-      // return ZegoUIKitCore.shared.device.iosDeviceInfo;
-    }
-
-    return ZegoMobileSystemVersion.empty();
+    return parsedByFlutter;
   }
 
   ZegoMobileSystemVersion getMobileSystemVersion() {
