@@ -1,3 +1,8 @@
+
+## 2.28.9
+
+- Update dependency
+
 ## 2.28.8
 
 - Bugs
