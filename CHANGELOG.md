@@ -1,3 +1,7 @@
+## 2.28.10
+
+- Bugs
+  - Flutter version 3.29.0 Adaptation
 
 ## 2.28.9
 
