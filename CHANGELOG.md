@@ -1,3 +1,9 @@
+## 2.28.11
+
+- Bugs
+  - clear current user room attributes after logout room
+
+
 ## 2.28.10
 
 - Bugs
