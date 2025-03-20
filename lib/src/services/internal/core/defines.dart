@@ -156,8 +156,6 @@ class ZegoUIKitCoreUser {
     microphone.value = false;
   }
 
-  bool get isEmpty => id.isEmpty;
-
   String id = '';
   String name = '';
 
@@ -179,6 +177,52 @@ class ZegoUIKitCoreUser {
   ZegoUIKitCoreStreamInfo thirdChannel = ZegoUIKitCoreStreamInfo.empty();
 
   bool isAnotherRoomUser = false;
+
+  ValueNotifier<ZegoStreamQualityLevel> network =
+      ValueNotifier<ZegoStreamQualityLevel>(ZegoStreamQualityLevel.Excellent);
+
+  // only for local
+  ValueNotifier<bool> isFrontFacing = ValueNotifier<bool>(true);
+  ValueNotifier<bool> isFrontTriggerByTurnOnCamera = ValueNotifier<bool>(false);
+  ValueNotifier<bool> isVideoMirror = ValueNotifier<bool>(false);
+  ValueNotifier<ZegoUIKitAudioRoute> audioRoute =
+      ValueNotifier<ZegoUIKitAudioRoute>(ZegoUIKitAudioRoute.receiver);
+  ZegoUIKitAudioRoute lastAudioRoute = ZegoUIKitAudioRoute.receiver;
+
+  void clear() {
+    id = '';
+    name = '';
+
+    network.value = ZegoStreamQualityLevel.Excellent;
+
+    isFrontFacing.value = true;
+    isFrontTriggerByTurnOnCamera.value = false;
+    isVideoMirror.value = false;
+    audioRoute.value = ZegoUIKitAudioRoute.receiver;
+    lastAudioRoute = ZegoUIKitAudioRoute.receiver;
+
+    clearRoomAttribute();
+  }
+
+  void clearRoomAttribute() {
+    camera.value = false;
+    cameraMuteMode.value = false;
+    cameraException.value = null;
+
+    microphone.value = false;
+    microphoneMuteMode.value = false;
+    microphoneException.value = null;
+
+    inRoomAttributes.value = {};
+
+    mainChannel = ZegoUIKitCoreStreamInfo.empty();
+    auxChannel = ZegoUIKitCoreStreamInfo.empty();
+    thirdChannel = ZegoUIKitCoreStreamInfo.empty();
+
+    isAnotherRoomUser = false;
+  }
+
+  bool get isEmpty => id.isEmpty;
 
   Future<void> destroyTextureRenderer(
       {required ZegoStreamType streamType}) async {
@@ -203,17 +247,6 @@ class ZegoUIKitCoreUser {
         break;
     }
   }
-
-  ValueNotifier<ZegoStreamQualityLevel> network =
-      ValueNotifier<ZegoStreamQualityLevel>(ZegoStreamQualityLevel.Excellent);
-
-  // only for local
-  ValueNotifier<bool> isFrontFacing = ValueNotifier<bool>(true);
-  ValueNotifier<bool> isFrontTriggerByTurnOnCamera = ValueNotifier<bool>(false);
-  ValueNotifier<bool> isVideoMirror = ValueNotifier<bool>(false);
-  ValueNotifier<ZegoUIKitAudioRoute> audioRoute =
-      ValueNotifier<ZegoUIKitAudioRoute>(ZegoUIKitAudioRoute.receiver);
-  ZegoUIKitAudioRoute lastAudioRoute = ZegoUIKitAudioRoute.receiver;
 
   ZegoUIKitUser toZegoUikitUser() => ZegoUIKitUser(id: id, name: name);
 

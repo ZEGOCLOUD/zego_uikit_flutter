@@ -15,8 +15,8 @@ mixin ZegoDeviceService {
         const Stream.empty();
   }
 
-  void enableCustomVideoProcessing(bool enable) {
-    ZegoUIKitCore.shared.enableCustomVideoProcessing(enable);
+  Future<void> enableCustomVideoProcessing(bool enable) async {
+    return ZegoUIKitCore.shared.enableCustomVideoProcessing(enable);
   }
 
   ZegoMobileSystemVersion getMobileSystemVersionX() {

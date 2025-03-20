@@ -445,6 +445,7 @@ class ZegoUIKitCore
     }
 
     clear();
+    coreData.localUser.clearRoomAttribute();
     coreData.canvasViewCreateQueue.clear();
 
     await ZegoExpressEngine.instance.stopSoundLevelMonitor();
@@ -1458,7 +1459,7 @@ class ZegoUIKitCore
     }
   }
 
-  void enableCustomVideoProcessing(bool enable) {
+  Future<void> enableCustomVideoProcessing(bool enable) async {
     var type = ZegoVideoBufferType.CVPixelBuffer;
     if (Platform.isAndroid) {
       type = ZegoVideoBufferType.GLTexture2D;
@@ -1476,7 +1477,7 @@ class ZegoUIKitCore
       /// this api does not allow setting after the express internal engine starts;
       /// if set after the internal engine starts, it will cause the external video preprocessing to not be truly turned off/turned on
       /// so turned off/turned on only effect when engine state is stop
-      ZegoExpressEngine.instance.enableCustomVideoProcessing(
+      await ZegoExpressEngine.instance.enableCustomVideoProcessing(
         enable,
         ZegoCustomVideoProcessConfig(type),
       );

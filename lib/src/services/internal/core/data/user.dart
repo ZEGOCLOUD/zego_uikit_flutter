@@ -143,9 +143,7 @@ mixin ZegoUIKitCoreDataUser {
       subTag: 'logout',
     );
 
-    localUser
-      ..id = ''
-      ..name = '';
+    localUser.clear();
 
     _userLeaveStreamCtrl?.add([localUser]);
     _userListStreamCtrl?.add(remoteUsersList);
