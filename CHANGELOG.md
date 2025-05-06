@@ -1,3 +1,7 @@
+## 2.28.13
+
+- Fix the issue where audio video view cannot display foreground and background components
+
 ## 2.28.12
 
 - Update zpns
