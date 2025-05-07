@@ -1,6 +1,12 @@
+## 2.28.14
+
+- Bugs
+  - Fix the issue of strange base color in audio & video window when audio call
+
 ## 2.28.13
 
-- Fix the issue where audio video view cannot display foreground and background components
+- Bugs
+  - Fix the issue where audio video view cannot display foreground and background components
 
 ## 2.28.12
 
