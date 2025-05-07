@@ -115,7 +115,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       );
     }
 
-    final view = circleBorder(
+    return circleBorder(
       child: ValueListenableBuilder<bool>(
         valueListenable:
             ZegoUIKit().getCameraStateNotifier(widget.user?.id ?? ''),
@@ -126,7 +126,10 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
             subTag: 'audio video view',
           );
 
-          return isCameraOn
+          final isLocalUser = null != widget.user &&
+              ZegoUIKit().getLocalUser().id == widget.user?.id;
+
+          final content = isCameraOn
               ? Stack(
                   children: [
                     background(),
@@ -145,14 +148,14 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                     foreground(),
                   ],
                 );
+
+          return SizedBox.expand(
+            child: (isLocalUser && isCameraOn)
+                ? localCameraFlipAnimation(content)
+                : content,
+          );
         },
       ),
-    );
-
-    final isLocalUser =
-        null != widget.user && ZegoUIKit().getLocalUser().id == widget.user?.id;
-    return SizedBox.expand(
-      child: isLocalUser ? localCameraFlipAnimation(view) : view,
     );
   }
 
