@@ -761,8 +761,11 @@ class ZegoUIKitCore
     );
   }
 
-  Future<bool> useFrontFacingCamera(bool isFrontFacing) async {
-    if (!coreData.localUser.camera.value) {
+  Future<bool> useFrontFacingCamera(
+    bool isFrontFacing, {
+    bool ignoreCameraStatus = false,
+  }) async {
+    if (!ignoreCameraStatus && !coreData.localUser.camera.value) {
       ZegoLoggerService.logInfo(
         'camera not open now',
         tag: 'uikit-camera',
