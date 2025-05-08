@@ -13,7 +13,7 @@ dependencies:
 
   zego_plugin_adapter: ^2.13.9
 
-  zego_express_engine: ^3.19.1
+  zego_express_engine: ^3.20.0
   zego_zpns: ^2.6.0+3
   zego_callkit: ^1.0.0+4
 
@@ -24,7 +24,7 @@ dependencies:
   native_device_orientation: ^2.0.3
   wakelock_plus: ^1.2.10
   cached_network_image: ^3.3.0
-  file_picker: ^8.0.6
+  file_picker: ^10.1.2
   path: ^1.8.3
   plugin_platform_interface: ^2.1.8
   visibility_detector: ^0.4.0+2
