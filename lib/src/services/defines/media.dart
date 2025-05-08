@@ -1,8 +1,12 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
+import 'package:file_picker/file_picker.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
+
+typedef ZegoUIKitPlatformFile = PlatformFile;
 
 List<String> zegoMediaVideoExtensions = const [
   "avi",

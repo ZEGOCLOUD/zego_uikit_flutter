@@ -118,21 +118,21 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
     return coreData.media.muteNotifier;
   }
 
-  Future<List<PlatformFile>> pickPureAudioMediaFile() async {
+  Future<List<ZegoUIKitPlatformFile>> pickPureAudioMediaFile() async {
     return coreData.media.pickMediaFiles(
       allowMultiple: false,
       allowedExtensions: coreData.media.pureAudioExtensions,
     );
   }
 
-  Future<List<PlatformFile>> pickVideoMediaFile() async {
+  Future<List<ZegoUIKitPlatformFile>> pickVideoMediaFile() async {
     return coreData.media.pickMediaFiles(
       allowMultiple: false,
       allowedExtensions: coreData.media.videoExtensions,
     );
   }
 
-  Future<List<PlatformFile>> pickMediaFile({
+  Future<List<ZegoUIKitPlatformFile>> pickMediaFile({
     List<String>? allowedExtensions,
   }) async {
     return coreData.media.pickMediaFiles(

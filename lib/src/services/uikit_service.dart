@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';

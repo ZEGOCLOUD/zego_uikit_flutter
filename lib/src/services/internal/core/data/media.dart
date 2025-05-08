@@ -556,7 +556,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
     }
   }
 
-  Future<List<PlatformFile>> pickMediaFiles({
+  Future<List<ZegoUIKitPlatformFile>> pickMediaFiles({
     bool allowMultiple = true,
     List<String>? allowedExtensions,
   }) async {
@@ -635,7 +635,16 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
         tag: 'uikit-media',
         subTag: 'pickMediaFiles',
       );
-      return pickFilesResult;
+      return pickFilesResult
+          .map((file) => ZegoUIKitPlatformFile(
+                name: file.name,
+                path: file.path,
+                bytes: file.bytes,
+                readStream: file.readStream,
+                size: file.size,
+                identifier: file.identifier,
+              ))
+          .toList();
     } on PlatformException catch (e) {
       ZegoLoggerService.logInfo(
         'unsupported operation $e',

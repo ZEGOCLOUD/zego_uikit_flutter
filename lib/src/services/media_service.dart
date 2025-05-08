@@ -133,18 +133,18 @@ mixin ZegoMediaService {
     return ZegoUIKitCore.shared.getMediaPlayStateNotifier();
   }
 
-  Future<List<PlatformFile>> pickPureAudioMediaFile() async {
+  Future<List<ZegoUIKitPlatformFile>> pickPureAudioMediaFile() async {
     return ZegoUIKitCore.shared.pickPureAudioMediaFile();
   }
 
-  Future<List<PlatformFile>> pickVideoMediaFile() async {
+  Future<List<ZegoUIKitPlatformFile>> pickVideoMediaFile() async {
     return ZegoUIKitCore.shared.pickVideoMediaFile();
   }
 
   /// If you want to specify the allowed formats, you can set them using [allowedExtensions].
   /// Currently, for video, we support "avi", "flv", "mkv", "mov", "mp4", "mpeg", "webm", "wmv".
   /// For audio, we support "aac", "midi", "mp3", "ogg", "wav".
-  Future<List<PlatformFile>> pickMediaFile({
+  Future<List<ZegoUIKitPlatformFile>> pickMediaFile({
     List<String>? allowedExtensions,
   }) async {
     return ZegoUIKitCore.shared.pickMediaFile(

@@ -3,6 +3,7 @@ import 'dart:async';
 
 // Project imports:
 import 'package:zego_uikit/src/plugins/signaling/impl/service/user_attributes_p.dart';
+import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 /// @nodoc
