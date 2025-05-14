@@ -350,8 +350,12 @@ API_AVAILABLE(ios(15.0))
 }
 
 #pragma mark - ZegoCustomVideoRenderHandler
+
 - (void)onRemoteVideoFrameCVPixelBuffer:(CVPixelBufferRef)buffer param:(ZegoVideoFrameParam *)param streamID:(NSString *)streamID
 {
+//    NSLog(@"pixel buffer video frame callback. format:%d, width:%f, height:%f", (int)param.format, param.size.width, param.size.height);
+
+    
     CMSampleBufferRef sampleBuffer = [self createSampleBuffer:buffer];
     if (sampleBuffer) {
         UIView* flutterVideoView = [self.flutterVideoViewDictionary objectForKey:streamID];
@@ -374,7 +378,7 @@ API_AVAILABLE(ios(15.0))
         if(nil != destLayer) {
             [destLayer enqueueSampleBuffer:sampleBuffer];
             if (destLayer.status == AVQueuedSampleBufferRenderingStatusFailed) {
-                NSLog(@"[PIPManager] onRemoteVideoFrameCVPixelBuffer dest layer render failed, error:%ld", destLayer.error.code);
+//                NSLog(@"[PIPManager] onRemoteVideoFrameCVPixelBuffer dest layer render failed, error:%ld", destLayer.error.code);
                 
                 if (-11847 == destLayer.error.code) {
                     if (destLayer == self.pipLayer) {

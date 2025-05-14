@@ -24,7 +24,7 @@
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    //    NSLog(@"handleMethodCall, method: %@", call.method);
+    //    NSLog(@"[UIKit Plugin] handleMethodCall, method: %@", call.method);
     
     if ([@"isLockScreen" isEqualToString:call.method]) {
         result(@([UIScreen mainScreen].brightness == 0.0));
@@ -42,7 +42,7 @@
         NSNumber *enabledValue = arguments[@"enabled"];
         BOOL isEnabled = [enabledValue boolValue];
         
-        NSLog(@"enableHardwareDecoder, isEnabled: %@", isEnabled ? @"YES" : @"NO");
+        NSLog(@"[UIKit Plugin] enableHardwareDecoder, isEnabled: %@", isEnabled ? @"YES" : @"NO");
         [[PipManager sharedInstance] enableHardwareDecoder:isEnabled];
         
         result(nil);
@@ -52,7 +52,7 @@
         NSNumber *enabledValue = arguments[@"enabled"];
         BOOL isEnabled = [enabledValue boolValue];
         
-        NSLog(@"enableCustomVideoRender, isEnabled: %@", isEnabled ? @"YES" : @"NO");
+        NSLog(@"[UIKit Plugin] enableCustomVideoRender, isEnabled: %@", isEnabled ? @"YES" : @"NO");
         [[PipManager sharedInstance] enableCustomVideoRender:isEnabled];
         
         result(nil);
@@ -67,7 +67,7 @@
         CGFloat cgFloatAspectWidth = [aspectWidth floatValue];
         CGFloat cgFloatAspectHeight = [aspectHeight floatValue];
         
-        NSLog(@"enableAutoPIP, isEnabled: %@", isEnabled ? @"YES" : @"NO");
+        NSLog(@"[UIKit Plugin] enableAutoPIP, isEnabled: %@", isEnabled ? @"YES" : @"NO");
         
         [[PipManager sharedInstance] updatePIPAspectSize:cgFloatAspectWidth :cgFloatAspectHeight];
 
@@ -83,7 +83,7 @@
         CGFloat cgFloatAspectWidth = [aspectWidth floatValue];
         CGFloat cgFloatAspectHeight = [aspectHeight floatValue];
         
-        NSLog(@"enablePIP, streamID: %@", streamID);
+        NSLog(@"[UIKit Plugin] enablePIP, streamID: %@", streamID);
         
         [[PipManager sharedInstance] updatePIPAspectSize:cgFloatAspectWidth :cgFloatAspectHeight];
         
@@ -94,13 +94,13 @@
         NSDictionary *arguments = call.arguments;
         NSString *streamID = arguments[@"stream_id"];
         
-        NSLog(@"updatePIPSource, streamID: %@", streamID);
+        NSLog(@"[UIKit Plugin] updatePIPSource, streamID: %@", streamID);
         
         [[PipManager sharedInstance] updatePIPSource:streamID];
         
         result(nil);
     } else if ([@"stopPIP" isEqualToString:call.method]) {
-        NSLog(@"stopPIP");
+        NSLog(@"[UIKit Plugin] stopPIP");
         
         BOOL callResult = [[PipManager sharedInstance] stopPIP];
         
@@ -111,7 +111,7 @@
         NSNumber *viewID = arguments[@"view_id"];
         NSString *streamID = arguments[@"stream_id"];
         
-        NSLog(@"startPlayingStreamInPIP, viewID: %@, streamID: %@", viewID, streamID);
+        NSLog(@"[UIKit Plugin] startPlayingStreamInPIP, viewID: %@, streamID: %@", viewID, streamID);
         [self startPlayingStreamInPIP:viewID streamID:streamID];
         
         result(nil);
@@ -119,7 +119,7 @@
         NSDictionary *arguments = call.arguments;
         NSString *streamID = arguments[@"stream_id"];
         
-        NSLog(@"stopPlayingStreamInPIP, streamID: %@", streamID);
+        NSLog(@"[UIKit Plugin] stopPlayingStreamInPIP, streamID: %@", streamID);
         [self stopPlayingStreamInPIP:streamID];
         
         result(nil);
@@ -166,7 +166,7 @@
 }
 
 - (void)minimizeApp {
-    NSLog(@"minimizeApp");
+    NSLog(@"[UIKit Plugin] minimizeApp");
     
     UIApplication *app = [UIApplication sharedApplication];
     [app performSelector:@selector(suspend)];
@@ -174,14 +174,14 @@
 
 - (void)startPlayingStreamInPIP:(NSNumber *)viewID streamID:(NSString *)streamID  {
     //    if(! [[ZegoExpressEngineMethodHandler sharedInstance] enablePlatformView]) {
-    //        NSLog(@"not enablePlatformView in express");
+    //        NSLog(@"[UIKit Plugin] not enablePlatformView in express");
     //
     //        return;
     //    }
     
     ZegoPlatformView *platformView = [[ZegoPlatformViewFactory sharedInstance]getPlatformView:viewID];
     if(platformView == nil) {
-        NSLog(@"platformView is nil");
+        NSLog(@"[UIKit Plugin] platformView is nil");
         
         return;
     }
