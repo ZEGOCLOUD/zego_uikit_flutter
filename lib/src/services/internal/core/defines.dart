@@ -129,6 +129,9 @@ class ZegoUIKitCoreStreamInfo {
 
   ZegoUIKitCoreStreamInfo.empty() {
     soundLevelStream ??= StreamController<double>.broadcast();
+
+    viewIDNotifier.addListener(_onViewIDUpdate);
+    viewNotifier.addListener(_onViewUpdate);
   }
 
   void closeSoundLevel() {
@@ -146,6 +149,26 @@ class ZegoUIKitCoreStreamInfo {
     isRenderedVideoFirstFrameNotifier.value = false;
     isSendAudioFirstFrameNotifier.value = false;
     isSendVideoFirstFrameNotifier.value = false;
+  }
+
+  void _onViewUpdate() {
+    ZegoLoggerService.logInfo(
+      'view update, '
+      'view:${viewNotifier.value}, '
+      'stream id:$streamID, ',
+      tag: 'uikit-service-core',
+      subTag: 'core room',
+    );
+  }
+
+  void _onViewIDUpdate() {
+    ZegoLoggerService.logInfo(
+      'view id update, '
+      'view id:${viewIDNotifier.value}, '
+      'stream id:$streamID, ',
+      tag: 'uikit-service-core',
+      subTag: 'core room',
+    );
   }
 }
 

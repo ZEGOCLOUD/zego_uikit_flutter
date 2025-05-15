@@ -139,18 +139,14 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
               ? Stack(
                   children: [
                     background(),
-                    videoView(
-                      isCameraOn: isCameraOn,
-                    ),
+                    videoView(isCameraOn: true),
                     foreground(),
                     testViewID(),
                   ],
                 )
               : Stack(
                   children: [
-                    videoView(
-                      isCameraOn: isCameraOn,
-                    ),
+                    videoView(isCameraOn: false),
                     background(),
                     foreground(),
                     testViewID(),
@@ -276,9 +272,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                   return SizedBox(
                     width: constraints.maxWidth,
                     height: constraints.maxHeight,
-                    child: isCameraOn
-                        ? audioVideoView
-                        : Container(color: Colors.transparent),
+                    child: audioVideoView,
                   );
                 },
               );
