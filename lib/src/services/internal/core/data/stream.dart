@@ -232,15 +232,20 @@ mixin ZegoUIKitCoreDataStream {
 
   Future<void> onViewCreatedByStartPreview(ZegoStreamType streamType) async {
     ZegoLoggerService.logInfo(
-      'start preview, on view created',
+      'start preview, on view created,'
+      'view id:${ZegoUIKitCore.shared.coreData.localUser.mainChannel.viewIDNotifier.value}, ',
       tag: 'uikit-stream',
       subTag: 'onViewCreatedByStartPreview',
     );
 
-    assert(ZegoUIKitCore.shared.coreData.localUser.mainChannel.viewID != -1);
+    assert(ZegoUIKitCore
+            .shared.coreData.localUser.mainChannel.viewIDNotifier.value !=
+        -1);
 
     final previewCanvas = ZegoCanvas(
-      ZegoUIKitCore.shared.coreData.localUser.mainChannel.viewID,
+      ZegoUIKitCore
+              .shared.coreData.localUser.mainChannel.viewIDNotifier.value ??
+          -1,
       viewMode: pushVideoConfig.useVideoViewAspectFill
           ? ZegoViewMode.AspectFill
           : ZegoViewMode.AspectFit,
@@ -313,8 +318,8 @@ mixin ZegoUIKitCoreDataStream {
     if (Platform.isIOS) {
       /// queue maybe stack without render(get view id) by start preview
       final localStreamChannel = getLocalStreamChannel(streamType);
-      if (localStreamChannel.viewID == -1 &&
-          localStreamChannel.view.value != null) {
+      if (localStreamChannel.viewIDNotifier.value == -1 &&
+          localStreamChannel.viewNotifier.value != null) {
         ZegoLoggerService.logInfo(
           'force update view to get view id on StartPreview',
           tag: 'uikit-stream',
@@ -335,12 +340,21 @@ mixin ZegoUIKitCoreDataStream {
   Future<void> onViewCreatedByStartPublishingStream(
     ZegoStreamType streamType,
   ) async {
+    final localTargetStreamViewID =
+        getLocalStreamChannel(streamType).viewIDNotifier.value ?? -1;
+    ZegoLoggerService.logInfo(
+      'onViewCreatedByStartPublishingStream, '
+      'view id:$localTargetStreamViewID, ',
+      tag: 'uikit-stream',
+      subTag: 'start publish stream',
+    );
+
     /// advance config
     switch (streamType) {
       case ZegoStreamType.main:
-        assert(getLocalStreamChannel(streamType).viewID != -1);
+        assert(localTargetStreamViewID != -1);
         final canvas = ZegoCanvas(
-          getLocalStreamChannel(streamType).viewID,
+          localTargetStreamViewID,
           viewMode: pushVideoConfig.useVideoViewAspectFill
               ? ZegoViewMode.AspectFill
               : ZegoViewMode.AspectFit,
@@ -373,9 +387,7 @@ mixin ZegoUIKitCoreDataStream {
         );
 
         final canvas = ZegoCanvas(
-          ZegoUIKitCore.shared.coreData
-              .getLocalStreamChannel(streamType)
-              .viewID,
+          localTargetStreamViewID,
           viewMode: ZegoViewMode.AspectFit,
         );
         ZegoUIKitCore.shared.coreData.media.currentPlayer!
@@ -601,8 +613,8 @@ mixin ZegoUIKitCoreDataStream {
   }) async {
     if (isCanvasViewCreateByQueue) {
       final localStreamChannel = getLocalStreamChannel(streamType);
-      if (localStreamChannel.viewID != -1 &&
-          localStreamChannel.view.value != null) {
+      if (localStreamChannel.viewIDNotifier.value != -1 &&
+          localStreamChannel.viewNotifier.value != null) {
         await createLocalUserVideoView(
           streamType: streamType,
           onViewCreated: onViewCreated,
@@ -636,18 +648,18 @@ mixin ZegoUIKitCoreDataStream {
     final localStreamChannel = getLocalStreamChannel(streamType);
     ZegoLoggerService.logInfo(
       'current streamChannel, '
-      'view id:${localStreamChannel.viewID},'
-      'view:${localStreamChannel.view}',
+      'view id:${localStreamChannel.viewIDNotifier.value},'
+      'view:${localStreamChannel.viewNotifier}',
       tag: 'uikit-stream',
       subTag: 'create local user video view',
     );
 
-    if (localStreamChannel.viewID != -1 &&
-        localStreamChannel.view.value != null) {
+    if (localStreamChannel.viewIDNotifier.value != -1 &&
+        localStreamChannel.viewNotifier.value != null) {
       ZegoLoggerService.logInfo(
         'user view had created, directly call callback, '
-        'view id:${localStreamChannel.viewID},'
-        'view:${localStreamChannel.view}',
+        'view id:${localStreamChannel.viewIDNotifier.value},'
+        'view:${localStreamChannel.viewNotifier}',
         tag: 'uikit-stream',
         subTag: 'create local user video view',
       );
@@ -666,11 +678,11 @@ mixin ZegoUIKitCoreDataStream {
             subTag: 'create local user video view',
           );
 
-          localStreamChannel.viewID = viewID;
+          localStreamChannel.viewIDNotifier.value = viewID;
 
           onViewCreated(streamType);
         },
-        key: localStreamChannel.globalKey.value,
+        key: localStreamChannel.globalKeyNotifier.value,
       ).then((widget) {
         ZegoLoggerService.logInfo(
           'widget done, widget:$widget ${widget.hashCode}',
@@ -678,7 +690,7 @@ mixin ZegoUIKitCoreDataStream {
           subTag: 'create local user video view',
         );
 
-        localStreamChannel.view.value = widget;
+        localStreamChannel.viewNotifier.value = widget;
 
         notifyStreamListControl(streamType);
       });
@@ -797,8 +809,8 @@ mixin ZegoUIKitCoreDataStream {
 
       final targetUserStreamChannel =
           getUserStreamChannel(targetUser, streamType);
-      if (targetUserStreamChannel.viewID != -1 &&
-          targetUserStreamChannel.view.value != null) {
+      if (targetUserStreamChannel.viewIDNotifier.value != -1 &&
+          targetUserStreamChannel.viewNotifier.value != null) {
         await startPlayingStream(streamID, streamUserID);
       } else {
         ZegoLoggerService.logInfo(
@@ -845,14 +857,16 @@ mixin ZegoUIKitCoreDataStream {
         getUserStreamChannel(targetUser, streamType);
     ZegoLoggerService.logInfo(
       'current stream channel, '
-      'view id:${targetUserStreamChannel.viewID},'
-      'view:${targetUserStreamChannel.view}',
+      'view id:${targetUserStreamChannel.viewIDNotifier.value},'
+      'view:${targetUserStreamChannel.viewNotifier}',
       tag: 'uikit-stream',
       subTag: 'start play stream',
     );
-    if (targetUserStreamChannel.viewID != -1 &&
-        targetUserStreamChannel.view.value != null) {
-      final viewID = getUserStreamChannel(targetUser, streamType).viewID;
+    if (targetUserStreamChannel.viewIDNotifier.value != -1 &&
+        targetUserStreamChannel.viewNotifier.value != null) {
+      final viewID =
+          getUserStreamChannel(targetUser, streamType).viewIDNotifier.value ??
+              -1;
 
       ZegoLoggerService.logInfo(
         'canvas view had created before, directly call callback, '
@@ -885,7 +899,8 @@ mixin ZegoUIKitCoreDataStream {
             subTag: 'start play stream',
           );
 
-          getUserStreamChannel(targetUser, streamType).viewID = viewID;
+          getUserStreamChannel(targetUser, streamType).viewIDNotifier.value =
+              viewID;
 
           playStreamOnViewCreated(
             streamID: streamID,
@@ -894,7 +909,7 @@ mixin ZegoUIKitCoreDataStream {
             streamType: streamType,
           );
         },
-        key: targetUserStreamChannel.globalKey.value,
+        key: targetUserStreamChannel.globalKeyNotifier.value,
       ).then((widget) {
         ZegoLoggerService.logInfo(
           'widget done, '
@@ -905,7 +920,8 @@ mixin ZegoUIKitCoreDataStream {
           subTag: 'start play stream',
         );
 
-        getUserStreamChannel(targetUser, streamType).view.value = widget;
+        getUserStreamChannel(targetUser, streamType).viewNotifier.value =
+            widget;
 
         notifyStreamListControl(streamType);
       });
@@ -1222,7 +1238,7 @@ mixin ZegoUIKitCoreDataStream {
       );
 
       ZegoUIKitCore.shared.coreData.remoteUsersList[targetUserIndex].mainChannel
-          .viewID = viewID;
+          .viewIDNotifier.value = viewID;
       final canvas = ZegoCanvas(viewID, viewMode: ZegoViewMode.AspectFill);
 
       final playConfig = ZegoPlayerConfig(
@@ -1263,7 +1279,7 @@ mixin ZegoUIKitCoreDataStream {
 
       assert(widget != null);
       ZegoUIKitCore.shared.coreData.remoteUsersList[targetUserIndex].mainChannel
-          .view.value = widget;
+          .viewNotifier.value = widget;
 
       notifyStreamListControl(ZegoStreamType.main);
       if (!isUserExist) {
@@ -1306,7 +1322,7 @@ mixin ZegoUIKitCoreDataStream {
       ..cameraMuteMode.value = false
       ..microphone.value = false
       ..microphoneMuteMode.value = false
-      ..mainChannel.soundLevel?.add(0);
+      ..mainChannel.soundLevelStream?.add(0);
 
     streamDic.remove(streamID);
     ZegoUIKitCore.shared.coreData.remoteUsersList

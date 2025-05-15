@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:core';
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -58,8 +59,13 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   Timer? viewIDGuardTimer;
   final isLocalUserFlippedNotifier = ValueNotifier<bool>(false);
 
-  int get userViewID => ZegoUIKit().getAudioVideoViewID(widget.user!.id);
-  bool get userViewIDIsEmpty => -1 == userViewID;
+  int get userViewID =>
+      ZegoUIKit().getAudioVideoViewIDNotifier(widget.user?.id ?? '').value ??
+      -1;
+
+  bool get userViewIDIsEmpty =>
+      -1 ==
+      ZegoUIKit().getAudioVideoViewIDNotifier(widget.user?.id ?? '').value;
 
   ZegoUIKitCoreUser get localUserData =>
       ZegoUIKitCore.shared.coreData.localUser;
@@ -164,7 +170,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     return ValueListenableBuilder<bool>(
       valueListenable: localUserData.isFrontFacing,
       builder: (context, isReadyFrontFacing, _) {
-        localUserData.mainChannel.isCapturedVideoFirstFrame
+        localUserData.mainChannel.isCapturedVideoFirstFrameNotifier
             .addListener(onCapturedVideoFirstFrameAfterSwitchCamera);
 
         return ZegoUIKitFlipTransition(
@@ -174,7 +180,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
               localUserData.isFrontTriggerByTurnOnCamera,
           child: ValueListenableBuilder<bool>(
             valueListenable:
-                localUserData.mainChannel.isRenderedVideoFirstFrame,
+                localUserData.mainChannel.isRenderedVideoFirstFrameNotifier,
             builder: (context, isRenderedVideoFirstFrame, _) {
               return isRenderedVideoFirstFrame
                   ? child
@@ -206,7 +212,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
   void onCapturedVideoFirstFrameAfterSwitchCamera() {
     ZegoUIKitCore
-        .shared.coreData.localUser.mainChannel.isCapturedVideoFirstFrame
+        .shared.coreData.localUser.mainChannel.isCapturedVideoFirstFrameNotifier
         .removeListener(onCapturedVideoFirstFrameAfterSwitchCamera);
 
     isLocalUserFlippedNotifier.value = !isLocalUserFlippedNotifier.value;

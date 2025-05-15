@@ -138,11 +138,13 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore.shared.coreData.localUser.mainChannel.view;
+          return ZegoUIKitCore
+              .shared.coreData.localUser.mainChannel.viewNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore.shared.coreData.localUser.auxChannel.view;
+          return ZegoUIKitCore
+              .shared.coreData.localUser.auxChannel.viewNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
@@ -150,18 +152,18 @@ mixin ZegoAudioVideoService {
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
         case ZegoStreamType.main:
-          return targetUser.mainChannel.view;
+          return targetUser.mainChannel.viewNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return targetUser.auxChannel.view;
+          return targetUser.auxChannel.viewNotifier;
         // return targetUser.thirdChannel.view;
       }
     }
   }
 
   /// get audio video view id notifier
-  int getAudioVideoViewID(
+  ValueNotifier<int?> getAudioVideoViewIDNotifier(
     String? userID, {
     ZegoStreamType streamType = ZegoStreamType.main,
   }) {
@@ -169,11 +171,13 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore.shared.coreData.localUser.mainChannel.viewID;
+          return ZegoUIKitCore
+              .shared.coreData.localUser.mainChannel.viewIDNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore.shared.coreData.localUser.auxChannel.viewID;
+          return ZegoUIKitCore
+              .shared.coreData.localUser.auxChannel.viewIDNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
@@ -181,11 +185,11 @@ mixin ZegoAudioVideoService {
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
         case ZegoStreamType.main:
-          return targetUser.mainChannel.viewID;
+          return targetUser.mainChannel.viewIDNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return targetUser.auxChannel.viewID;
+          return targetUser.auxChannel.viewIDNotifier;
         // return targetUser.thirdChannel.view;
       }
     }
@@ -199,11 +203,13 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore.shared.coreData.localUser.mainChannel.quality;
+          return ZegoUIKitCore
+              .shared.coreData.localUser.mainChannel.qualityNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore.shared.coreData.localUser.auxChannel.quality;
+          return ZegoUIKitCore
+              .shared.coreData.localUser.auxChannel.qualityNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
@@ -211,11 +217,11 @@ mixin ZegoAudioVideoService {
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
         case ZegoStreamType.main:
-          return targetUser.mainChannel.quality;
+          return targetUser.mainChannel.qualityNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return targetUser.auxChannel.quality;
+          return targetUser.auxChannel.qualityNotifier;
       }
     }
   }
@@ -228,13 +234,13 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore
-              .shared.coreData.localUser.mainChannel.isCapturedAudioFirstFrame;
+          return ZegoUIKitCore.shared.coreData.localUser.mainChannel
+              .isCapturedAudioFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore
-              .shared.coreData.localUser.auxChannel.isCapturedAudioFirstFrame;
+          return ZegoUIKitCore.shared.coreData.localUser.auxChannel
+              .isCapturedAudioFirstFrameNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
@@ -242,11 +248,11 @@ mixin ZegoAudioVideoService {
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
         case ZegoStreamType.main:
-          return targetUser.mainChannel.isCapturedAudioFirstFrame;
+          return targetUser.mainChannel.isCapturedAudioFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return targetUser.auxChannel.isCapturedAudioFirstFrame;
+          return targetUser.auxChannel.isCapturedAudioFirstFrameNotifier;
       }
     }
   }
@@ -259,13 +265,13 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore
-              .shared.coreData.localUser.mainChannel.isCapturedVideoFirstFrame;
+          return ZegoUIKitCore.shared.coreData.localUser.mainChannel
+              .isCapturedVideoFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore
-              .shared.coreData.localUser.auxChannel.isCapturedVideoFirstFrame;
+          return ZegoUIKitCore.shared.coreData.localUser.auxChannel
+              .isCapturedVideoFirstFrameNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
@@ -273,11 +279,11 @@ mixin ZegoAudioVideoService {
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
         case ZegoStreamType.main:
-          return targetUser.mainChannel.isCapturedVideoFirstFrame;
+          return targetUser.mainChannel.isCapturedVideoFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return targetUser.auxChannel.isCapturedVideoFirstFrame;
+          return targetUser.auxChannel.isCapturedVideoFirstFrameNotifier;
       }
     }
   }
@@ -290,13 +296,13 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore
-              .shared.coreData.localUser.mainChannel.isSendAudioFirstFrame;
+          return ZegoUIKitCore.shared.coreData.localUser.mainChannel
+              .isSendAudioFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore
-              .shared.coreData.localUser.auxChannel.isSendAudioFirstFrame;
+          return ZegoUIKitCore.shared.coreData.localUser.auxChannel
+              .isSendAudioFirstFrameNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
@@ -304,11 +310,11 @@ mixin ZegoAudioVideoService {
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
         case ZegoStreamType.main:
-          return targetUser.mainChannel.isSendAudioFirstFrame;
+          return targetUser.mainChannel.isSendAudioFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return targetUser.auxChannel.isSendAudioFirstFrame;
+          return targetUser.auxChannel.isSendAudioFirstFrameNotifier;
       }
     }
   }
@@ -321,13 +327,13 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore
-              .shared.coreData.localUser.mainChannel.isSendVideoFirstFrame;
+          return ZegoUIKitCore.shared.coreData.localUser.mainChannel
+              .isSendVideoFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore
-              .shared.coreData.localUser.auxChannel.isSendVideoFirstFrame;
+          return ZegoUIKitCore.shared.coreData.localUser.auxChannel
+              .isSendVideoFirstFrameNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
@@ -335,11 +341,11 @@ mixin ZegoAudioVideoService {
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
         case ZegoStreamType.main:
-          return targetUser.mainChannel.isSendVideoFirstFrame;
+          return targetUser.mainChannel.isSendVideoFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return targetUser.auxChannel.isSendVideoFirstFrame;
+          return targetUser.auxChannel.isSendVideoFirstFrameNotifier;
       }
     }
   }
@@ -376,7 +382,7 @@ mixin ZegoAudioVideoService {
     return ZegoUIKitCore.shared.coreData
             .getUser(userID)
             .mainChannel
-            .soundLevel
+            .soundLevelStream
             ?.stream ??
         const Stream.empty();
   }
@@ -435,7 +441,10 @@ mixin ZegoAudioVideoService {
 
   /// get video size notifier
   ValueNotifier<Size> getVideoSizeNotifier(String userID) {
-    return ZegoUIKitCore.shared.coreData.getUser(userID).mainChannel.viewSize;
+    return ZegoUIKitCore.shared.coreData
+        .getUser(userID)
+        .mainChannel
+        .viewSizeNotifier;
   }
 
   /// update texture render orientation

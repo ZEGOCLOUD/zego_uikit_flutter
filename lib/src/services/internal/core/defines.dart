@@ -105,40 +105,47 @@ class ZegoUIKitCoreStreamInfo {
   String streamID = '';
   int streamTimestamp = 0;
 
-  int viewID = -1;
-  ValueNotifier<Widget?> view = ValueNotifier<Widget?>(null);
-  ValueNotifier<Size> viewSize = ValueNotifier<Size>(const Size(360, 640));
-  StreamController<double>? soundLevel;
+  ValueNotifier<int?> viewIDNotifier = ValueNotifier<int?>(-1);
+  ValueNotifier<Widget?> viewNotifier = ValueNotifier<Widget?>(null);
+  ValueNotifier<Size> viewSizeNotifier =
+      ValueNotifier<Size>(const Size(360, 640));
+  StreamController<double>? soundLevelStream;
 
-  ValueNotifier<ZegoUIKitPublishStreamQuality> quality =
+  ValueNotifier<ZegoUIKitPublishStreamQuality> qualityNotifier =
       ValueNotifier<ZegoUIKitPublishStreamQuality>(
           ZegoPublishStreamQualityExtension.empty().toUIKit());
-  ValueNotifier<bool> isCapturedAudioFirstFrame = ValueNotifier<bool>(false);
-  ValueNotifier<bool> isCapturedVideoFirstFrame = ValueNotifier<bool>(false);
-  ValueNotifier<bool> isRenderedVideoFirstFrame = ValueNotifier<bool>(false);
-  ValueNotifier<bool> isSendAudioFirstFrame = ValueNotifier<bool>(false);
-  ValueNotifier<bool> isSendVideoFirstFrame = ValueNotifier<bool>(false);
-  ValueNotifier<GlobalKey> globalKey = ValueNotifier<GlobalKey>(GlobalKey());
+  ValueNotifier<bool> isCapturedAudioFirstFrameNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<bool> isCapturedVideoFirstFrameNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<bool> isRenderedVideoFirstFrameNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<bool> isSendAudioFirstFrameNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<bool> isSendVideoFirstFrameNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<GlobalKey> globalKeyNotifier =
+      ValueNotifier<GlobalKey>(GlobalKey());
 
   ZegoUIKitCoreStreamInfo.empty() {
-    soundLevel ??= StreamController<double>.broadcast();
+    soundLevelStream ??= StreamController<double>.broadcast();
   }
 
   void closeSoundLevel() {
-    soundLevel?.close();
+    soundLevelStream?.close();
   }
 
   void clearViewInfo() {
-    viewID = -1;
-    view.value = null;
-    viewSize.value = const Size(360, 640);
+    viewIDNotifier.value = -1;
+    viewNotifier.value = null;
+    viewSizeNotifier.value = const Size(360, 640);
 
-    quality.value = ZegoPublishStreamQualityExtension.empty().toUIKit();
-    isCapturedAudioFirstFrame.value = false;
-    isCapturedVideoFirstFrame.value = false;
-    isRenderedVideoFirstFrame.value = false;
-    isSendAudioFirstFrame.value = false;
-    isSendVideoFirstFrame.value = false;
+    qualityNotifier.value = ZegoPublishStreamQualityExtension.empty().toUIKit();
+    isCapturedAudioFirstFrameNotifier.value = false;
+    isCapturedVideoFirstFrameNotifier.value = false;
+    isRenderedVideoFirstFrameNotifier.value = false;
+    isSendAudioFirstFrameNotifier.value = false;
+    isSendVideoFirstFrameNotifier.value = false;
   }
 }
 
@@ -228,9 +235,9 @@ class ZegoUIKitCoreUser {
       {required ZegoStreamType streamType}) async {
     switch (streamType) {
       case ZegoStreamType.main:
-        if (mainChannel.viewID != -1) {
+        if (mainChannel.viewIDNotifier.value != -1) {
           await ZegoExpressEngine.instance.destroyCanvasView(
-            mainChannel.viewID,
+            mainChannel.viewIDNotifier.value ?? -1,
           );
         }
 
@@ -239,8 +246,9 @@ class ZegoUIKitCoreUser {
       case ZegoStreamType.media:
       case ZegoStreamType.screenSharing:
       case ZegoStreamType.mix:
-        if (auxChannel.viewID != -1) {
-          await ZegoExpressEngine.instance.destroyCanvasView(auxChannel.viewID);
+        if (auxChannel.viewIDNotifier.value != -1) {
+          await ZegoExpressEngine.instance
+              .destroyCanvasView(auxChannel.viewIDNotifier.value ?? -1);
         }
 
         auxChannel.clearViewInfo();

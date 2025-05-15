@@ -91,7 +91,7 @@ mixin ZegoMixerService {
     return ZegoUIKitCore.shared.coreData
             .getUserInMixerStream(userID)
             .mainChannel
-            .soundLevel
+            .soundLevelStream
             ?.stream ??
         const Stream.empty();
   }

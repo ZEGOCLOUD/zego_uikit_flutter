@@ -90,11 +90,11 @@ class ZegoUIKitUser {
       return ZegoUIKitCore.shared.coreData
               .getUserInMixerStream(id)
               .mainChannel
-              .soundLevel
+              .soundLevelStream
               ?.stream ??
           const Stream.empty();
     }
-    return user.mainChannel.soundLevel?.stream ?? const Stream.empty();
+    return user.mainChannel.soundLevelStream?.stream ?? const Stream.empty();
   }
 
   StreamController<double>? get soundLevelStreamController {
@@ -103,9 +103,9 @@ class ZegoUIKitUser {
       return ZegoUIKitCore.shared.coreData
           .getUserInMixerStream(id)
           .mainChannel
-          .soundLevel;
+          .soundLevelStream;
     }
-    return user.mainChannel.soundLevel;
+    return user.mainChannel.soundLevelStream;
   }
 
   Stream<double> get auxSoundLevel {
@@ -114,11 +114,11 @@ class ZegoUIKitUser {
       return ZegoUIKitCore.shared.coreData
               .getUserInMixerStream(id)
               .auxChannel
-              .soundLevel
+              .soundLevelStream
               ?.stream ??
           const Stream.empty();
     }
-    return user.auxChannel.soundLevel?.stream ?? const Stream.empty();
+    return user.auxChannel.soundLevelStream?.stream ?? const Stream.empty();
   }
 
   ValueNotifier<ZegoUIKitUserAttributes> get inRoomAttributes {

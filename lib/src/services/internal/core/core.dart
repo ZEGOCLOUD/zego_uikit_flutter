@@ -805,10 +805,12 @@ class ZegoUIKitCore
     /// Frequent switching will cause a black screen
     coreData.isUsingFrontCameraRequesting = true;
 
-    coreData.localUser.mainChannel.isCapturedVideoFirstFrame.value = false;
-    coreData.localUser.mainChannel.isCapturedVideoFirstFrame
+    coreData.localUser.mainChannel.isCapturedVideoFirstFrameNotifier.value =
+        false;
+    coreData.localUser.mainChannel.isCapturedVideoFirstFrameNotifier
         .addListener(onCapturedVideoFirstFrameAfterSwitchCamera);
-    coreData.localUser.mainChannel.isRenderedVideoFirstFrame.value = false;
+    coreData.localUser.mainChannel.isRenderedVideoFirstFrameNotifier.value =
+        false;
 
     coreData.localUser.isFrontFacing.value = isFrontFacing;
     await ZegoExpressEngine.instance.useFrontCamera(isFrontFacing);
@@ -829,7 +831,7 @@ class ZegoUIKitCore
   }
 
   void onCapturedVideoFirstFrameAfterSwitchCamera() {
-    coreData.localUser.mainChannel.isCapturedVideoFirstFrame
+    coreData.localUser.mainChannel.isCapturedVideoFirstFrameNotifier
         .removeListener(onCapturedVideoFirstFrameAfterSwitchCamera);
 
     coreData.isUsingFrontCameraRequesting = false;
@@ -1134,7 +1136,7 @@ class ZegoUIKitCore
         coreData.localUser.microphoneMuteMode.value = true;
 
         /// local sound level should be mute too
-        coreData.localUser.mainChannel.soundLevel?.add(0.0);
+        coreData.localUser.mainChannel.soundLevelStream?.add(0.0);
       } else {
         await ZegoExpressEngine.instance.muteMicrophone(true);
         await ZegoExpressEngine.instance.mutePublishStreamAudio(false);
@@ -1199,7 +1201,7 @@ class ZegoUIKitCore
       config.toSDK,
       channel: streamType.channel,
     );
-    coreData.localUser.mainChannel.viewSize.value = Size(
+    coreData.localUser.mainChannel.viewSizeNotifier.value = Size(
       config.width.toDouble(),
       config.height.toDouble(),
     );
@@ -1260,7 +1262,7 @@ class ZegoUIKitCore
         zegoVideoConfig,
         channel: ZegoPublishChannel.Main,
       );
-      coreData.localUser.mainChannel.viewSize.value = Size(
+      coreData.localUser.mainChannel.viewSizeNotifier.value = Size(
         zegoVideoConfig.captureWidth.toDouble(),
         zegoVideoConfig.captureHeight.toDouble(),
       );

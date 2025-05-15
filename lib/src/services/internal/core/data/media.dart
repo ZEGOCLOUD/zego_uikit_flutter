@@ -440,7 +440,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
   ) {
     _soundLevel = soundLevel;
 
-    ZegoUIKitCore.shared.coreData.localUser.auxChannel.soundLevel
+    ZegoUIKitCore.shared.coreData.localUser.auxChannel.soundLevelStream
         ?.add(soundLevel);
   }
 
@@ -550,7 +550,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
         if (-1 != targetUserIndex) {
           final targetUser =
               ZegoUIKitCore.shared.coreData.remoteUsersList[targetUserIndex];
-          targetUser.auxChannel.soundLevel?.add(soundLevel);
+          targetUser.auxChannel.soundLevelStream?.add(soundLevel);
         }
       }
     }

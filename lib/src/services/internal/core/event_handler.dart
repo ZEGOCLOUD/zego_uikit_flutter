@@ -285,7 +285,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           ZegoUIKitCore.shared.coreData.localUser,
           coreData.getStreamTypeByID(streamID),
         )
-        .quality
+        .qualityNotifier
         .value = quality.toUIKit();
   }
 
@@ -296,7 +296,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           ZegoUIKitCore.shared.coreData.localUser,
           ZegoStreamType.main,
         )
-        .isCapturedAudioFirstFrame
+        .isCapturedAudioFirstFrameNotifier
         .value = true;
   }
 
@@ -310,7 +310,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
             channel,
           ),
         )
-        .isCapturedVideoFirstFrame
+        .isCapturedVideoFirstFrameNotifier
         .value = true;
 
     try {
@@ -324,7 +324,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
                 channel,
               ),
             )
-            .isRenderedVideoFirstFrame
+            .isRenderedVideoFirstFrameNotifier
             .value = true;
       });
     } catch (e) {
@@ -346,7 +346,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
             channel,
           ),
         )
-        .isRenderedVideoFirstFrame
+        .isRenderedVideoFirstFrameNotifier
         .value = true;
   }
 
@@ -360,7 +360,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
             channel,
           ),
         )
-        .isSendAudioFirstFrame
+        .isSendAudioFirstFrameNotifier
         .value = true;
   }
 
@@ -374,7 +374,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
             channel,
           ),
         )
-        .isSendVideoFirstFrame
+        .isSendVideoFirstFrameNotifier
         .value = true;
   }
 
@@ -632,7 +632,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     }
 
     if (!targetUser.microphone.value) {
-      targetUser.mainChannel.soundLevel?.add(0);
+      targetUser.mainChannel.soundLevelStream?.add(0);
     }
 
     if (oldMicrophoneValue != targetUser.microphone.value ||
@@ -675,7 +675,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       coreData
           .getUserStreamChannel(coreData.remoteUsersList[targetUserIndex],
               coreData.getStreamTypeByID(streamID))
-          .soundLevel
+          .soundLevelStream
           ?.add(soundLevel);
     });
   }
@@ -686,7 +686,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       return;
     }
 
-    coreData.localUser.mainChannel.soundLevel?.add(soundLevel);
+    coreData.localUser.mainChannel.soundLevelStream?.add(soundLevel);
   }
 
   @override
@@ -712,7 +712,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         targetMixerStream.usersNotifier.value
             .elementAt(index)
             .mainChannel
-            .soundLevel
+            .soundLevelStream
             ?.add(soundLevel);
       });
     });
@@ -762,8 +762,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     final size = Size(width.toDouble(), height.toDouble());
     final targetUserStreamChannel = coreData.getUserStreamChannel(
         targetUser, coreData.getStreamTypeByID(streamID));
-    if (targetUserStreamChannel.viewSize.value != size) {
-      targetUserStreamChannel.viewSize.value = size;
+    if (targetUserStreamChannel.viewSizeNotifier.value != size) {
+      targetUserStreamChannel.viewSizeNotifier.value = size;
     }
   }
 
