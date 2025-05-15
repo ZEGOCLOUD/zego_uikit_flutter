@@ -143,6 +143,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                       isCameraOn: isCameraOn,
                     ),
                     foreground(),
+                    testViewID(),
                   ],
                 )
               : Stack(
@@ -152,6 +153,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                     ),
                     background(),
                     foreground(),
+                    testViewID(),
                   ],
                 );
 
@@ -163,6 +165,28 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         },
       ),
     );
+  }
+
+  Widget testViewID() {
+    return Container();
+
+    if (kDebugMode) {
+      return ValueListenableBuilder<int?>(
+        valueListenable:
+            ZegoUIKit().getAudioVideoViewIDNotifier(widget.user!.id),
+        builder: (context, viewID, _) {
+          return Align(
+            alignment: Alignment.topRight,
+            child: Text(
+              "view id:$viewID",
+              style: TextStyle(fontSize: 30.zR, color: Colors.red),
+            ),
+          );
+        },
+      );
+    }
+
+    return Container();
   }
 
   Widget localCameraFlipAnimation(Widget child) {

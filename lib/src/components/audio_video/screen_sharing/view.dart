@@ -2,6 +2,7 @@
 import 'dart:core';
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -100,13 +101,11 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
           child: Stack(
             children: [
               background(),
-              if (widget.user?.id == ZegoUIKit().getLocalUser().id)
-                Container()
-              else
-                videoView(),
+              videoView(),
               foreground(),
               fullScreenButton(),
               countdown(),
+              testViewID(),
             ],
           ),
         ),
@@ -120,6 +119,30 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
         },
       ),
     );
+  }
+
+  Widget testViewID() {
+    return Container();
+
+    if (kDebugMode) {
+      return ValueListenableBuilder<int?>(
+        valueListenable: ZegoUIKit().getAudioVideoViewIDNotifier(
+          widget.user!.id,
+          streamType: ZegoStreamType.screenSharing,
+        ),
+        builder: (context, viewID, _) {
+          return Align(
+            alignment: Alignment.topRight,
+            child: Text(
+              "view id:$viewID",
+              style: TextStyle(fontSize: 30.zR, color: Colors.red),
+            ),
+          );
+        },
+      );
+    }
+
+    return Container();
   }
 
   Widget videoView() {
@@ -200,6 +223,9 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         padding: const EdgeInsets.all(5),
+        decoration: const BoxDecoration(
+          color: Color(0xFF333438),
+        ),
         child: Stack(
           children: [
             Positioned(
