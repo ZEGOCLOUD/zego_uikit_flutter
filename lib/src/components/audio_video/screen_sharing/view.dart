@@ -379,9 +379,12 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
     switch (widget.showFullscreenModeToggleButtonRules) {
       case ZegoShowFullscreenModeToggleButtonRules.alwaysShow:
         return Positioned(
-          top: 100.zR,
-          right: 50.zR,
-          child: getFullScreenIconButton(),
+          top: 0,
+          bottom: 0,
+          right: 20.zR,
+          child: Center(
+            child: getFullScreenIconButton(),
+          ),
         );
       case ZegoShowFullscreenModeToggleButtonRules.alwaysHide:
         return Container();
@@ -391,9 +394,11 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
           builder: (context, isShow, _) {
             if (isShow) {
               return Positioned(
-                top: 120.zR,
-                right: 10.zR,
-                child: getFullScreenIconButton(),
+                top: 0,
+                bottom: 0,
+                child: Center(
+                  child: getFullScreenIconButton(),
+                ),
               );
             } else {
               return Container();
@@ -405,8 +410,10 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
 
   IconButton getFullScreenIconButton() {
     return IconButton(
+      iconSize: 50.zR,
       icon: getFullScreenIcon(),
       onPressed: () {
+        /// notify ZegoAudioVideoContainer to update layout
         if (widget.user?.id ==
             widget.controller?.fullscreenUserNotifier.value?.id) {
           widget.controller?.fullscreenUserNotifier.value = null;

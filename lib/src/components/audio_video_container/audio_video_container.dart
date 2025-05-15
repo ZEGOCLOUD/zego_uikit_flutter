@@ -87,17 +87,12 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
 
   var defaultScreenSharingViewController = ZegoScreenSharingViewController();
 
-  ValueNotifier<ZegoUIKitUser?> get fullScreenUserNotifier =>
-      widget.screenSharingViewController?.fullscreenUserNotifier ??
-      defaultScreenSharingViewController.fullscreenUserNotifier;
+  ZegoScreenSharingViewController get screenSharingController =>
+      widget.screenSharingViewController ?? defaultScreenSharingViewController;
 
   @override
   void initState() {
     super.initState();
-
-    if (ZegoUIKit().getScreenSharingList().isNotEmpty) {
-      fullScreenUserNotifier.value = ZegoUIKit().getScreenSharingList().first;
-    }
 
     if (widget.sources.contains(ZegoAudioVideoContainerSource.user)) {
       onUserListUpdated(ZegoUIKit().getAllUsers());
@@ -139,7 +134,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ZegoUIKitUser?>(
-        valueListenable: fullScreenUserNotifier,
+        valueListenable: screenSharingController.fullscreenUserNotifier,
         builder: (BuildContext context, fullscreenUser, _) {
           if (fullscreenUser != null &&
               (widget.layout is ZegoLayoutGalleryConfig) &&
@@ -209,9 +204,12 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
   }
 
   void onStreamListUpdated(List<ZegoUIKitUser> streamUsers) {
-    fullScreenUserNotifier.value = ZegoUIKit().getScreenSharingList().isEmpty
-        ? null
-        : ZegoUIKit().getScreenSharingList().first;
+    if (screenSharingController.private.defaultFullScreen) {
+      screenSharingController.fullscreenUserNotifier.value =
+          ZegoUIKit().getScreenSharingList().isEmpty
+              ? null
+              : ZegoUIKit().getScreenSharingList().first;
+    }
 
     setState(() {
       updateUserList();
