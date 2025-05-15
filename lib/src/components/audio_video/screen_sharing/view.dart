@@ -300,7 +300,8 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'You are sharing screen',
+                    widget.controller?.private.sharingTipText ??
+                        'You are sharing screen',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 32.zR,
@@ -320,7 +321,8 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
                         borderRadius: BorderRadius.circular(6.zR),
                       ),
                       child: Text(
-                        'Stop sharing',
+                        widget.controller?.private.stopSharingButtonText ??
+                            'Stop sharing',
                         style: TextStyle(
                           color: Colors.red,
                           fontSize: 26.zR,
