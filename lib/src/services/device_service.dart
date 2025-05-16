@@ -22,7 +22,7 @@ mixin ZegoDeviceService {
   ZegoMobileSystemVersion getMobileSystemVersionX() {
     final parsedByFlutter = getMobileSystemVersion();
 
-    if(parsedByFlutter.isEmpty) {
+    if (parsedByFlutter.isEmpty) {
       if (Platform.isAndroid) {
         final parsedVersion = parse(
           ZegoUIKitCore.shared.device.androidDeviceInfo?.version.incremental ??
@@ -30,8 +30,10 @@ mixin ZegoDeviceService {
         );
         if (parsedVersion.isEmpty) {
           return ZegoMobileSystemVersion(
-            major: int.tryParse(
-                ZegoUIKitCore.shared.device.androidDeviceInfo?.version.release ?? '') ?? 0,
+            major: int.tryParse(ZegoUIKitCore
+                        .shared.device.androidDeviceInfo?.version.release ??
+                    '') ??
+                0,
             minor: 0,
             patch: 0,
           );
