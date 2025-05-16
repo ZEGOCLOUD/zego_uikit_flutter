@@ -105,12 +105,6 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   @override
   Widget build(BuildContext context) {
     if (ZegoUIKit().getUser(widget.user?.id ?? '').isEmpty()) {
-      ZegoLoggerService.logInfo(
-        'use id:(${widget.user?.id}) is null',
-        tag: 'uikit-component',
-        subTag: 'audio video view',
-      );
-
       return SizedBox.expand(
         child: Stack(
           children: [
@@ -126,12 +120,6 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         valueListenable:
             ZegoUIKit().getCameraStateNotifier(widget.user?.id ?? ''),
         builder: (context, isCameraOn, _) {
-          ZegoLoggerService.logInfo(
-            '${widget.user?.id}\'s camera changed $isCameraOn,',
-            tag: 'uikit-component',
-            subTag: 'audio video view',
-          );
-
           final isLocalUser = null != widget.user &&
               ZegoUIKit().getLocalUser().id == widget.user?.id;
 
@@ -236,12 +224,6 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         .removeListener(onCapturedVideoFirstFrameAfterSwitchCamera);
 
     isLocalUserFlippedNotifier.value = !isLocalUserFlippedNotifier.value;
-
-    ZegoLoggerService.logInfo(
-      'onCapturedVideoFirstFrameAfterSwitchCamera',
-      tag: 'uikit-component',
-      subTag: 'audio video view',
-    );
   }
 
   Widget videoView({
@@ -260,15 +242,6 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
             ? Container()
             : LayoutBuilder(
                 builder: (context, constraints) {
-                  ZegoLoggerService.logInfo(
-                    '${widget.user?.id}\'s constraints changed,'
-                    'width:${constraints.maxWidth}, '
-                    'height:${constraints.maxHeight}, '
-                    'isCameraOn:$isCameraOn, ',
-                    tag: 'uikit-component',
-                    subTag: 'audio video view',
-                  );
-
                   return SizedBox(
                     width: constraints.maxWidth,
                     height: constraints.maxHeight,
@@ -289,21 +262,9 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       valueListenable: ZegoUIKit().getAudioVideoViewNotifier(widget.user!.id),
       builder: (context, userView, _) {
         if (userView == null) {
-          ZegoLoggerService.logError(
-            '${widget.user?.id}\'s view is null',
-            tag: 'uikit-component',
-            subTag: 'audio video view',
-          );
-
           /// hide video view when use not found
           return Container(color: Colors.transparent);
         }
-
-        ZegoLoggerService.logInfo(
-          'render ${widget.user?.id}\'s view ${userView.hashCode}',
-          tag: 'uikit-component',
-          subTag: 'audio video view',
-        );
 
         return deviceOrientationListenerBuilder(
           child: childBuilder(userView),
@@ -459,31 +420,14 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   }
 
   void runViewIDTimeGuard() {
-    ZegoLoggerService.logInfo(
-      'guard run, ${widget.user?.id}\'s view id is:$userViewID',
-      tag: 'uikit-component',
-      subTag: 'audio video view',
-    );
-
     viewIDGuardTimer?.cancel();
     viewIDGuardTimer = null;
 
     viewIDGuardTimer ??=
         Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      ZegoLoggerService.logInfo(
-        'guard check, ${widget.user?.id}\'s view id is:$userViewID',
-        tag: 'uikit-component',
-        subTag: 'audio video view',
-      );
-
       if (!userViewIDIsEmpty) {
         viewIDGuardTimer?.cancel();
       } else {
-        ZegoLoggerService.logInfo(
-          'guard check, ${widget.user?.id}\'s view-id($userViewID) is not valid now, force update',
-          tag: 'uikit-component',
-          subTag: 'audio video view',
-        );
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {});
         });
