@@ -958,6 +958,9 @@ class ZegoUIKitCore
       coreData.localUser.lastAudioRoute = coreData.localUser.audioRoute.value;
       coreData.localUser.audioRoute.value = ZegoUIKitAudioRoute.speaker;
     } else {
+      if (coreData.localUser.lastAudioRoute == ZegoUIKitAudioRoute.speaker) {
+        coreData.localUser.lastAudioRoute = ZegoUIKitAudioRoute.receiver;
+      }
       coreData.localUser.audioRoute.value = coreData.localUser.lastAudioRoute;
     }
 
