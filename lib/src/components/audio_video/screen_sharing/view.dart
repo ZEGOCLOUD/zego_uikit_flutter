@@ -223,8 +223,10 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         padding: const EdgeInsets.all(5),
-        decoration: const BoxDecoration(
-          color: Color(0xFF333438),
+        decoration: BoxDecoration(
+          color: widget.user?.id == ZegoUIKit().getLocalUser().id
+              ? const Color(0xFF333438)
+              : Colors.transparent,
         ),
         child: Stack(
           children: [
