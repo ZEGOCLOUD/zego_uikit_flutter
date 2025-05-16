@@ -1,3 +1,9 @@
+## 2.28.15
+
+- Bugs
+  - Fix screen sharing failure iOS PIP mode
+  - Fix the issue where there is no sound in pure audio
+
 ## 2.28.14
 
 - Bugs
