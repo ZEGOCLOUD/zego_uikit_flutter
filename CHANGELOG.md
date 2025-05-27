@@ -1,3 +1,10 @@
+## 2.28.16
+
+- Bugs
+  - Fix occasional video black render screen issue in live streaming
+  - Fix the crash on screen sharing when exist someone in screen sharing
+  - Fix black background issue in audio room
+
 ## 2.28.15
 
 - Bugs
