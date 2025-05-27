@@ -117,9 +117,10 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           subTag: 'event',
         );
 
-        if (-1 ==
-            coreData.remoteUsersList
-                .indexWhere((user) => stream.user.userID == user.id)) {
+        late ZegoUIKitCoreUser targetUser;
+        var targetUserIndex = coreData.remoteUsersList
+            .indexWhere((user) => stream.user.userID == user.id);
+        if (-1 == targetUserIndex) {
           /// user is not exist before stream added
           ZegoLoggerService.logInfo(
             "stream's user ${stream.user.userID}  ${stream.user.userName} is not exist, create",
@@ -127,14 +128,16 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
             subTag: 'event',
           );
 
-          final targetUser = ZegoUIKitCoreUser.fromZego(stream.user);
-          final streamType = coreData.getStreamTypeByID(stream.streamID);
-          coreData.getUserStreamChannel(targetUser, streamType)
-            ..streamID = stream.streamID
-            ..streamTimestamp =
-                coreData.networkDateTime_.millisecondsSinceEpoch;
+          targetUser = ZegoUIKitCoreUser.fromZego(stream.user);
           coreData.remoteUsersList.add(targetUser);
+        } else {
+          targetUser = coreData.remoteUsersList[targetUserIndex];
         }
+
+        final streamType = coreData.getStreamTypeByID(stream.streamID);
+        coreData.getUserStreamChannel(targetUser, streamType)
+          ..streamID = stream.streamID
+          ..streamTimestamp = coreData.networkDateTime_.millisecondsSinceEpoch;
 
         if (coreData.isAllPlayStreamAudioVideoMuted) {
           ZegoLoggerService.logInfo(
@@ -211,8 +214,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         coreData.room.isLargeRoom = true;
       }
 
-      coreData.userJoinStreamCtrl
-          ?.add(userList.map(ZegoUIKitCoreUser.fromZego).toList());
+      coreData.userJoinStreamCtrl?.add(
+        userList.map(ZegoUIKitCoreUser.fromZego).toList(),
+      );
     } else {
       for (final user in userList) {
         coreData.removeUser(user.userID);
@@ -901,12 +905,18 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       subTag: 'event',
     );
     for (final stream in streamList) {
-      parseStreamExtraInfo(stream);
+      parseStreamExtraInfo(
+        streamID: stream.streamID,
+        extraInfo: stream.extraInfo,
+      );
     }
   }
 
-  void parseStreamExtraInfo(ZegoStream stream) {
-    if (stream.extraInfo.isEmpty) {
+  void parseStreamExtraInfo({
+    required String streamID,
+    required String extraInfo,
+  }) {
+    if (extraInfo.isEmpty) {
       ZegoLoggerService.logInfo(
         'onRoomStreamExtraInfoUpdate extra info is empty',
         tag: 'uikit-service-core',
@@ -916,17 +926,20 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       return;
     }
 
+    coreData.streamExtraInfo[streamID] = extraInfo;
+
     ZegoLoggerService.logError(
-      'try parse stream extra info(${stream.extraInfo})',
+      'try parse stream extra info($extraInfo)',
       tag: 'uikit-service-core',
       subTag: 'event',
     );
+
     var extraInfos = {};
     try {
-      extraInfos = jsonDecode(stream.extraInfo) as Map<String, dynamic>? ?? {};
+      extraInfos = jsonDecode(extraInfo) as Map<String, dynamic>? ?? {};
     } catch (e) {
       ZegoLoggerService.logError(
-        'parse stream extra info(${stream.extraInfo}) error: $e',
+        'parse stream extra info($extraInfo) error: $e',
         tag: 'uikit-service-core',
         subTag: 'event',
       );
@@ -934,7 +947,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     if (extraInfos.containsKey(streamExtraInfoCameraKey)) {
       onRemoteCameraStateUpdate(
-        stream.streamID,
+        streamID,
         extraInfos[streamExtraInfoCameraKey]!
             ? ZegoRemoteDeviceState.Open
             : ZegoRemoteDeviceState.Mute,
@@ -943,7 +956,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     if (extraInfos.containsKey(streamExtraInfoMicrophoneKey)) {
       onRemoteMicStateUpdate(
-        stream.streamID,
+        streamID,
         extraInfos[streamExtraInfoMicrophoneKey]!
             ? ZegoRemoteDeviceState.Open
             : ZegoRemoteDeviceState.Mute,
@@ -952,7 +965,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     if (extraInfos.containsKey(ZegoUIKitSEIDefines.keyMediaType)) {
       coreData.media.onRemoteMediaTypeUpdate(
-        stream.streamID,
+        streamID,
         extraInfos[ZegoUIKitSEIDefines.keyMediaType] as int? ??
             ZegoUIKitMediaType.pureAudio.index,
       );

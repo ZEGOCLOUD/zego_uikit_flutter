@@ -98,6 +98,8 @@ class ZegoUIKitCoreData
 
     remoteUsersList.clear();
     streamDic.clear();
+    streamExtraInfo.clear();
+
     room.clear();
   }
 

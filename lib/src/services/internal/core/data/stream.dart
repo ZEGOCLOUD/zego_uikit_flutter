@@ -59,6 +59,8 @@ mixin ZegoUIKitCoreDataStream {
   final Map<String, ZegoUIKitCoreDataStreamData> streamDic =
       {}; // stream_id:user_id
 
+  final Map<String, String> streamExtraInfo = {}; // stream_id:extra info
+
   ZegoAudioVideoResourceMode playResourceMode =
       ZegoAudioVideoResourceMode.defaultMode;
 
@@ -286,6 +288,65 @@ mixin ZegoUIKitCoreDataStream {
       );
       return;
     }
+    final localTargetStreamViewID =
+        getLocalStreamChannel(streamType).viewIDNotifier.value ?? -1;
+    ZegoLoggerService.logInfo(
+      'updateConfigBeforeStartPublishingStream, '
+      'view id:$localTargetStreamViewID, ',
+      tag: 'uikit-stream',
+      subTag: 'start publish stream',
+    );
+
+    /// advance config
+    switch (streamType) {
+      case ZegoStreamType.main:
+        await ZegoExpressEngine.instance
+            .enableCamera(ZegoUIKitCore.shared.coreData.localUser.camera.value);
+        await ZegoExpressEngine.instance.muteMicrophone(
+          !ZegoUIKitCore.shared.coreData.localUser.microphone.value,
+        );
+        break;
+      case ZegoStreamType.media:
+        await ZegoExpressEngine.instance.setVideoSource(
+          ZegoVideoSourceType.Player,
+          instanceID:
+              ZegoUIKitCore.shared.coreData.media.currentPlayer!.getIndex(),
+          channel: streamType.channel,
+        );
+        await ZegoExpressEngine.instance.setAudioSource(
+          ZegoAudioSourceType.MediaPlayer,
+          channel: streamType.channel,
+        );
+
+        await ZegoExpressEngine.instance.setVideoConfig(
+          ZegoUIKitCore.shared.coreData.media.getPreferVideoConfig(),
+          channel: streamType.channel,
+        );
+        break;
+      case ZegoStreamType.screenSharing:
+        await ZegoExpressEngine.instance.setVideoSource(
+          ZegoVideoSourceType.ScreenCapture,
+          instanceID:
+              ZegoUIKitCore.shared.coreData.screenCaptureSource!.getIndex(),
+          channel: streamType.channel,
+        );
+        await ZegoExpressEngine.instance.setAudioSource(
+          ZegoAudioSourceType.ScreenCapture,
+          channel: streamType.channel,
+        );
+
+        await ZegoExpressEngine.instance.setVideoConfig(
+          ZegoVideoConfig.preset(ZegoVideoConfigPreset.Preset540P),
+          channel: streamType.channel,
+        );
+        break;
+      case ZegoStreamType.mix:
+        await ZegoExpressEngine.instance.setVideoConfig(
+          ZegoVideoConfig.preset(ZegoVideoConfigPreset.Preset540P),
+          channel: streamType.channel,
+        );
+        break;
+    }
 
     /// generate stream id
     getLocalStreamChannel(streamType)
@@ -367,33 +428,11 @@ mixin ZegoUIKitCoreDataStream {
               ? ZegoViewMode.AspectFill
               : ZegoViewMode.AspectFit,
         );
-
-        await ZegoExpressEngine.instance
-            .enableCamera(ZegoUIKitCore.shared.coreData.localUser.camera.value);
-        await ZegoExpressEngine.instance.muteMicrophone(
-          !ZegoUIKitCore.shared.coreData.localUser.microphone.value,
-        );
         await ZegoExpressEngine.instance.startPreview(canvas: canvas).then((_) {
           isPreviewing = true;
         });
         break;
       case ZegoStreamType.media:
-        await ZegoExpressEngine.instance.setVideoSource(
-          ZegoVideoSourceType.Player,
-          instanceID:
-              ZegoUIKitCore.shared.coreData.media.currentPlayer!.getIndex(),
-          channel: streamType.channel,
-        );
-        await ZegoExpressEngine.instance.setAudioSource(
-          ZegoAudioSourceType.MediaPlayer,
-          channel: streamType.channel,
-        );
-
-        await ZegoExpressEngine.instance.setVideoConfig(
-          ZegoUIKitCore.shared.coreData.media.getPreferVideoConfig(),
-          channel: streamType.channel,
-        );
-
         final canvas = ZegoCanvas(
           localTargetStreamViewID,
           viewMode: ZegoViewMode.AspectFit,
@@ -402,28 +441,8 @@ mixin ZegoUIKitCoreDataStream {
             .setPlayerCanvas(canvas);
         break;
       case ZegoStreamType.screenSharing:
-        await ZegoExpressEngine.instance.setVideoSource(
-          ZegoVideoSourceType.ScreenCapture,
-          instanceID:
-              ZegoUIKitCore.shared.coreData.screenCaptureSource!.getIndex(),
-          channel: streamType.channel,
-        );
-        await ZegoExpressEngine.instance.setAudioSource(
-          ZegoAudioSourceType.ScreenCapture,
-          channel: streamType.channel,
-        );
-
-        await ZegoExpressEngine.instance.setVideoConfig(
-          ZegoVideoConfig.preset(ZegoVideoConfigPreset.Preset540P),
-          channel: streamType.channel,
-        );
-
         break;
       case ZegoStreamType.mix:
-        await ZegoExpressEngine.instance.setVideoConfig(
-          ZegoVideoConfig.preset(ZegoVideoConfigPreset.Preset540P),
-          channel: streamType.channel,
-        );
         break;
     }
   }
@@ -602,7 +621,7 @@ mixin ZegoUIKitCoreDataStream {
     }
 
     ZegoLoggerService.logInfo(
-      'with express with key:$canvasViewKey',
+      'with express with key:$canvasViewKey(${canvasViewKey.toString()})',
       tag: 'uikit-stream',
       subTag: 'create canvas view',
     );
@@ -716,7 +735,9 @@ mixin ZegoUIKitCoreDataStream {
 
           onViewCreated(streamType);
         },
-        key: localStreamChannel.globalKeyNotifier.value,
+        key: streamType == ZegoStreamType.main
+            ? localStreamChannel.globalMainStreamChannelKeyNotifier.value
+            : localStreamChannel.globalAuxStreamChannelKeyNotifier.value,
       ).then((widget) {
         ZegoLoggerService.logInfo(
           'widget done, widget:$widget ${widget.hashCode}',
@@ -812,6 +833,25 @@ mixin ZegoUIKitCoreDataStream {
       } else {
         if (ZegoUIKitCore.shared.coreData.localUser.id != streamInfo.userID &&
             streamInfo.playerState == ZegoPlayerState.NoPlay) {
+          final previousStreamExtraInfo =
+              ZegoUIKitCore.shared.coreData.streamExtraInfo[streamID] ?? '';
+          final targetUserIndex = ZegoUIKitCore.shared.coreData.remoteUsersList
+              .indexWhere((user) => streamInfo.userID == user.id);
+          ZegoLoggerService.logInfo(
+            'test, attempt to restore previous stream additional information, '
+            'previousStreamExtraInfo:$previousStreamExtraInfo, '
+            'targetUserIndex:$targetUserIndex',
+            tag: 'uikit-stream',
+            subTag: 'mute all play stream audio video',
+          );
+          if (previousStreamExtraInfo.isNotEmpty) {
+            /// 先加载之前的流附加信息
+            ZegoUIKitCore.shared.eventHandler.parseStreamExtraInfo(
+              streamID: streamID,
+              extraInfo: previousStreamExtraInfo,
+            );
+          }
+
           await startPlayingStreamQueue(streamID, streamInfo.userID);
         }
       }
@@ -836,6 +876,18 @@ mixin ZegoUIKitCoreDataStream {
   ) async {
     final targetUserIndex = ZegoUIKitCore.shared.coreData.remoteUsersList
         .indexWhere((user) => streamUserID == user.id);
+    if (-1 == targetUserIndex) {
+      ZegoLoggerService.logInfo(
+        'targetUserIndex is invalid, '
+        'stream id: $streamID, '
+        'user id:$streamUserID, ',
+        tag: 'uikit-stream',
+        subTag: 'start play stream',
+      );
+
+      return;
+    }
+
     final targetUser =
         ZegoUIKitCore.shared.coreData.remoteUsersList[targetUserIndex];
     final streamType = getStreamTypeByID(streamID);
@@ -934,7 +986,7 @@ mixin ZegoUIKitCoreDataStream {
         canvasViewCreateQueue.completeCurrentTask();
       }
 
-      await playStreamOnViewCreated(
+      await updatePlayStreamViewOnViewCreated(
         streamID: streamID,
         viewID: viewID,
         streamType: streamType,
@@ -960,13 +1012,15 @@ mixin ZegoUIKitCoreDataStream {
           getUserStreamChannel(targetUser, streamType).viewIDNotifier.value =
               viewID;
 
-          await playStreamOnViewCreated(
+          await updatePlayStreamViewOnViewCreated(
             streamID: streamID,
             viewID: viewID,
             streamType: streamType,
           );
         },
-        key: targetUserStreamChannel.globalKeyNotifier.value,
+        key: streamType == ZegoStreamType.main
+            ? targetUserStreamChannel.globalMainStreamChannelKeyNotifier.value
+            : targetUserStreamChannel.globalAuxStreamChannelKeyNotifier.value,
       ).then((widget) {
         ZegoLoggerService.logInfo(
           'widget done, '
@@ -1138,7 +1192,7 @@ mixin ZegoUIKitCoreDataStream {
     }
   }
 
-  Future<void> playStreamOnViewCreated({
+  Future<void> updatePlayStreamViewOnViewCreated({
     required String streamID,
     required int viewID,
     ZegoStreamType? streamType,
@@ -1289,6 +1343,12 @@ mixin ZegoUIKitCoreDataStream {
           orElse: ZegoUIKitCoreUser.empty);
     }).where((user) {
       if (user.id.isEmpty) {
+        ZegoLoggerService.logInfo(
+          'test, user id empty',
+          tag: 'uikit-stream',
+          subTag: 'getAudioVideoList',
+        );
+
         return false;
       }
 
@@ -1383,7 +1443,7 @@ mixin ZegoUIKitCoreDataStream {
           .viewIDNotifier.value = viewID;
 
       final canvas = ZegoCanvas(viewID, viewMode: ZegoViewMode.AspectFill);
-      await playStreamOnViewCreated(
+      await updatePlayStreamViewOnViewCreated(
         streamID: streamID,
         viewID: viewID,
         canvas: canvas,
@@ -1514,7 +1574,7 @@ mixin ZegoUIKitCoreDataStream {
         mixerStreamDic[mixerID]!.viewID = viewID;
 
         final canvas = ZegoCanvas(viewID, viewMode: ZegoViewMode.AspectFill);
-        await playStreamOnViewCreated(
+        await updatePlayStreamViewOnViewCreated(
           streamID: mixerID,
           viewID: viewID,
           canvas: canvas,

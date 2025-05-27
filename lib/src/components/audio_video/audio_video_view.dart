@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:io' show Platform;
+import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
@@ -81,6 +82,8 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     return ZegoUIKitCore.shared.coreData.isEnablePlatformView;
   }
 
+  bool get logEnabled => false;
+
   @override
   void initState() {
     super.initState();
@@ -113,7 +116,23 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
   @override
   Widget build(BuildContext context) {
+    if (logEnabled) {
+      ZegoLoggerService.logInfo(
+        '${widget.user?.id}\' build,',
+        tag: 'uikit-component',
+        subTag: 'audio video view',
+      );
+    }
+
     if (ZegoUIKit().getUser(widget.user?.id ?? '').isEmpty()) {
+      if (logEnabled) {
+        ZegoLoggerService.logInfo(
+          'use id:(${widget.user?.id}) is null',
+          tag: 'uikit-component',
+          subTag: 'audio video view',
+        );
+      }
+
       return SizedBox.expand(
         child: Stack(
           children: [
@@ -129,6 +148,14 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         valueListenable:
             ZegoUIKit().getCameraStateNotifier(widget.user?.id ?? ''),
         builder: (context, isCameraOn, _) {
+          if (logEnabled) {
+            ZegoLoggerService.logInfo(
+              '${widget.user?.id}\'s camera changed $isCameraOn,',
+              tag: 'uikit-component',
+              subTag: 'audio video view',
+            );
+          }
+
           final isLocalUser = null != widget.user &&
               ZegoUIKit().getLocalUser().id == widget.user?.id;
 
@@ -233,6 +260,14 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         .removeListener(onCapturedVideoFirstFrameAfterSwitchCamera);
 
     isLocalUserFlippedNotifier.value = !isLocalUserFlippedNotifier.value;
+
+    if (logEnabled) {
+      ZegoLoggerService.logInfo(
+        'onCapturedVideoFirstFrameAfterSwitchCamera',
+        tag: 'uikit-component',
+        subTag: 'audio video view',
+      );
+    }
   }
 
   Widget videoView({
@@ -251,18 +286,23 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
             ? Container()
             : LayoutBuilder(
                 builder: (context, constraints) {
+                  if (logEnabled) {
+                    ZegoLoggerService.logInfo(
+                      '${widget.user?.id}\'s constraints changed,'
+                      'width:${constraints.maxWidth}, '
+                      'height:${constraints.maxHeight}, '
+                      'isCameraOn:$isCameraOn, ',
+                      tag: 'uikit-component',
+                      subTag: 'audio video view',
+                    );
+                  }
+
                   return SizedBox(
                     width: constraints.maxWidth,
                     height: constraints.maxHeight,
                     child: isCameraOn
                         ? audioVideoView
                         : Container(color: Colors.transparent),
-
-                    // isRenderOnCameraOff
-                    //     ? audioVideoView
-                    //     : isCameraOn
-                    //         ? audioVideoView
-                    //         : Container(color: Colors.transparent),
                   );
                 },
               );
@@ -279,8 +319,24 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       valueListenable: ZegoUIKit().getAudioVideoViewNotifier(widget.user!.id),
       builder: (context, userView, _) {
         if (userView == null) {
+          if (logEnabled) {
+            ZegoLoggerService.logError(
+              '${widget.user?.id}\'s view is null',
+              tag: 'uikit-component',
+              subTag: 'audio video view',
+            );
+          }
+
           /// hide video view when use not found
           return Container(color: Colors.transparent);
+        }
+
+        if (logEnabled) {
+          ZegoLoggerService.logInfo(
+            'render ${widget.user?.id}\'s view ${userView.hashCode}',
+            tag: 'uikit-component',
+            subTag: 'audio video view',
+          );
         }
 
         return deviceOrientationListenerBuilder(
@@ -437,14 +493,38 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   }
 
   void runViewIDTimeGuard() {
+    if (logEnabled) {
+      ZegoLoggerService.logInfo(
+        'guard run, ${widget.user?.id}\'s view id is:$userViewID',
+        tag: 'uikit-component',
+        subTag: 'audio video view',
+      );
+    }
+
     viewIDGuardTimer?.cancel();
     viewIDGuardTimer = null;
 
     viewIDGuardTimer ??=
         Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      if (logEnabled) {
+        ZegoLoggerService.logInfo(
+          'guard check, ${widget.user?.id}\'s view id is:$userViewID',
+          tag: 'uikit-component',
+          subTag: 'audio video view',
+        );
+      }
+
       if (!userViewIDIsEmpty) {
         viewIDGuardTimer?.cancel();
       } else {
+        if (logEnabled) {
+          ZegoLoggerService.logInfo(
+            'guard check, ${widget.user?.id}\'s view-id($userViewID) is not valid now, force update',
+            tag: 'uikit-component',
+            subTag: 'audio video view',
+          );
+        }
+
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {});
         });

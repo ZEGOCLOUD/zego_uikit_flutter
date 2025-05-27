@@ -125,7 +125,9 @@ class ZegoUIKitCoreStreamInfo {
       ValueNotifier<bool>(false);
   ValueNotifier<bool> isSendVideoFirstFrameNotifier =
       ValueNotifier<bool>(false);
-  ValueNotifier<GlobalKey> globalKeyNotifier =
+  ValueNotifier<GlobalKey> globalMainStreamChannelKeyNotifier =
+      ValueNotifier<GlobalKey>(GlobalKey());
+  ValueNotifier<GlobalKey> globalAuxStreamChannelKeyNotifier =
       ValueNotifier<GlobalKey>(GlobalKey());
 
   ZegoUIKitCoreStreamInfo.empty() {
