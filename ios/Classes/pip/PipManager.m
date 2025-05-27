@@ -240,24 +240,23 @@ API_AVAILABLE(ios(15.0))
     }
 }
 
-- (void)startPlayingStream:(NSString *)streamID videoView:(UIView *)videoView {
-    NSLog(@"[PIPManager] startPlayingStream, stream id:%@, video view:%@", streamID, videoView);
+- (void)startPlayingStream:(NSString *)streamID {
+    NSLog(@"[PIPManager] startPlayingStream, stream id:%@", streamID);
+    
+    [[ZegoExpressEngine sharedEngine] startPlayingStream:streamID];
+}
+
+- (void)updatePlayingStreamView:(NSString *)streamID videoView:(UIView *)videoView {
+    NSLog(@"[PIPManager] updatePlayingStreamView, stream id:%@, video view:%@", streamID, videoView);
     
     // add a layer for custom rendering to the video view, if not found, add one
     [self addFlutterLayerWithView:streamID :videoView];
-    
-    [[ZegoExpressEngine sharedEngine] startPlayingStream:streamID];
     
     if(self.pipController != nil && self.pipController.isPictureInPictureActive) {
         [self updatePIPStreamID: streamID];
     } else {
         [self enablePIP:streamID];
     }
-    
-    // Fix an unsolvable bug, occasionally layer rendering black screen
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(500 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
-//        [self performSelectorOnMainThread:@selector(rebuildFlutterLayer:) withObject:self.pipStreamID waitUntilDone:YES];
-//    });
 }
 
 - (void)stopPlayingStream:(NSString *)streamID {

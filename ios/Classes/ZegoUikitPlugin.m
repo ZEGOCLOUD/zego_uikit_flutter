@@ -108,11 +108,20 @@
     } else if ([@"startPlayingStreamInPIP" isEqualToString:call.method]) {
         NSDictionary *arguments = call.arguments;
         
+        NSString *streamID = arguments[@"stream_id"];
+        
+        NSLog(@"[UIKit Plugin] startPlayingStreamInPIP, streamID: %@", streamID);
+        [self startPlayingStreamInPIP:streamID];
+        
+        result(nil);
+    } else if ([@"updatePlayingStreamViewInPIP" isEqualToString:call.method]) {
+        NSDictionary *arguments = call.arguments;
+        
         NSNumber *viewID = arguments[@"view_id"];
         NSString *streamID = arguments[@"stream_id"];
         
-        NSLog(@"[UIKit Plugin] startPlayingStreamInPIP, viewID: %@, streamID: %@", viewID, streamID);
-        [self startPlayingStreamInPIP:viewID streamID:streamID];
+        NSLog(@"[UIKit Plugin] updatePlayingStreamViewInPIP, viewID: %@, streamID: %@", viewID, streamID);
+        [self updatePlayingStreamViewInPIP:viewID streamID:streamID];
         
         result(nil);
     } else if ([@"stopPlayingStreamInPIP" isEqualToString:call.method]) {
@@ -172,13 +181,13 @@
     [app performSelector:@selector(suspend)];
 }
 
-- (void)startPlayingStreamInPIP:(NSNumber *)viewID streamID:(NSString *)streamID  {
-    //    if(! [[ZegoExpressEngineMethodHandler sharedInstance] enablePlatformView]) {
-    //        NSLog(@"[UIKit Plugin] not enablePlatformView in express");
-    //
-    //        return;
-    //    }
-    
+- (void)startPlayingStreamInPIP:(NSString *)streamID  {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[PipManager sharedInstance] startPlayingStream:streamID];
+    });
+}
+
+- (void)updatePlayingStreamViewInPIP:(NSNumber *)viewID streamID:(NSString *)streamID  {
     ZegoPlatformView *platformView = [[ZegoPlatformViewFactory sharedInstance]getPlatformView:viewID];
     if(platformView == nil) {
         NSLog(@"[UIKit Plugin] platformView is nil");
@@ -187,7 +196,7 @@
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[PipManager sharedInstance] startPlayingStream:streamID videoView:platformView.view];
+        [[PipManager sharedInstance] updatePlayingStreamView:streamID videoView:platformView.view];
     });
 }
 

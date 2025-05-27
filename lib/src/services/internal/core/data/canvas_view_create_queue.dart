@@ -15,6 +15,8 @@ class ZegoStreamCanvasViewCreateQueue {
 
   bool get isTaskRunning => _isTaskRunning;
 
+  String? get currentTaskId => _taskList.isNotEmpty ? _taskList[0].id : null;
+
   void clear() {
     _isTaskRunning = false;
     _taskList = [];
@@ -33,12 +35,16 @@ class ZegoStreamCanvasViewCreateQueue {
     }
   }
 
-  Future<void> addTask(Future Function() task) async {
+  Future<void> addTask({
+    required String id,
+    required Future Function() task,
+  }) async {
     TaskItem taskItem = TaskItem(
+      DateTime.now().millisecondsSinceEpoch.toString(),
       task,
       () {
         ZegoLoggerService.logInfo(
-          'task run finished, '
+          'task run finished, task queue size:${_taskList.length}, '
           'run next task',
           tag: 'uikit-stream',
           subTag: 'queue',
@@ -116,10 +122,12 @@ class ZegoStreamCanvasViewCreateQueue {
 }
 
 class TaskItem {
+  final String id;
   final Future Function() runner;
   final VoidCallback next;
 
   const TaskItem(
+    this.id,
     this.runner,
     this.next,
   );

@@ -91,11 +91,8 @@ mixin ZegoChannelService {
     await ZegoUIKitPluginPlatform.instance.requestDismissKeyguard();
   }
 
-  Future<void> startPlayingStreamInPIP(int viewID, String streamID) async {
-    await ZegoUIKitPluginPlatform.instance.startPlayingStreamInPIP(
-      viewID,
-      streamID,
-    );
+  Future<void> startPlayingStreamInPIP(String streamID) async {
+    await ZegoUIKitPluginPlatform.instance.startPlayingStreamInPIP(streamID);
   }
 
   Future<void> stopPlayingStreamInPIP(String streamID) async {

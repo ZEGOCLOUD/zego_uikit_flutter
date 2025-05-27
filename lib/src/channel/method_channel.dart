@@ -469,7 +469,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
   /// only support iOS
   @override
-  Future<void> startPlayingStreamInPIP(int viewID, String streamID) async {
+  Future<void> startPlayingStreamInPIP(String streamID) async {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
@@ -481,7 +481,6 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     }
 
     ZegoLoggerService.logInfo(
-      'viewID:$viewID, '
       'streamID:$streamID, ',
       tag: 'uikit-channel',
       subTag: 'startPlayingStreamInPIP',
@@ -489,7 +488,6 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     try {
       await methodChannel.invokeMethod('startPlayingStreamInPIP', {
-        'view_id': viewID,
         'stream_id': streamID,
       });
     } on PlatformException catch (e) {
@@ -497,6 +495,40 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
         'Failed to request: $e.',
         tag: 'uikit-channel',
         subTag: 'startPlayingStreamInPIP',
+      );
+    }
+  }
+
+  /// only support iOS
+  @override
+  Future<void> updatePlayingStreamViewInPIP(int viewID, String streamID) async {
+    if (Platform.isAndroid) {
+      ZegoLoggerService.logInfo(
+        'not support in Android',
+        tag: 'uikit-channel',
+        subTag: 'updatePlayingStreamViewInPIP',
+      );
+
+      return;
+    }
+
+    ZegoLoggerService.logInfo(
+      'viewID:$viewID, '
+      'streamID:$streamID, ',
+      tag: 'uikit-channel',
+      subTag: 'updatePlayingStreamViewInPIP',
+    );
+
+    try {
+      await methodChannel.invokeMethod('updatePlayingStreamViewInPIP', {
+        'view_id': viewID,
+        'stream_id': streamID,
+      });
+    } on PlatformException catch (e) {
+      ZegoLoggerService.logError(
+        'Failed to request: $e.',
+        tag: 'uikit-channel',
+        subTag: 'updatePlayingStreamViewInPIP',
       );
     }
   }

@@ -107,6 +107,7 @@ class ZegoUIKitCoreStreamInfo {
 
   ValueNotifier<int?> viewIDNotifier = ValueNotifier<int?>(-1);
   ValueNotifier<Widget?> viewNotifier = ValueNotifier<Widget?>(null);
+  ValueNotifier<bool> viewCreatingNotifier = ValueNotifier<bool>(false);
   ValueNotifier<Size> viewSizeNotifier =
       ValueNotifier<Size>(const Size(360, 640));
   StreamController<double>? soundLevelStream;

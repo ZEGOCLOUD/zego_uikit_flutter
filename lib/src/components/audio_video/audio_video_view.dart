@@ -1,6 +1,7 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:core';
+import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
@@ -72,6 +73,14 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
+  bool get isRenderOnCameraOff {
+    if (Platform.isAndroid) {
+      return false;
+    }
+
+    return ZegoUIKitCore.shared.coreData.isEnablePlatformView;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -134,7 +143,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                 )
               : Stack(
                   children: [
-                    videoView(isCameraOn: false),
+                    videoView(isCameraOn: false), //
                     background(),
                     foreground(),
                     testViewID(),
@@ -245,7 +254,15 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                   return SizedBox(
                     width: constraints.maxWidth,
                     height: constraints.maxHeight,
-                    child: audioVideoView,
+                    child: isCameraOn
+                        ? audioVideoView
+                        : Container(color: Colors.transparent),
+
+                    // isRenderOnCameraOff
+                    //     ? audioVideoView
+                    //     : isCameraOn
+                    //         ? audioVideoView
+                    //         : Container(color: Colors.transparent),
                   );
                 },
               );
