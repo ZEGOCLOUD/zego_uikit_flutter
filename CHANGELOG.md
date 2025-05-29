@@ -1,4 +1,10 @@
+## 2.28.18
+
+- Bugs
+- Fix black issue on local side when sharing media 
+
 ## 2.28.17
+- Bugs
   - Fix occasional video black render screen issue in live streaming
 
 ## 2.28.16

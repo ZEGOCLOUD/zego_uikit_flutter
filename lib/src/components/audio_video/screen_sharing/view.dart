@@ -124,25 +124,25 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
   Widget testViewID() {
     return Container();
 
-    if (kDebugMode) {
-      return ValueListenableBuilder<int?>(
-        valueListenable: ZegoUIKit().getAudioVideoViewIDNotifier(
-          widget.user!.id,
-          streamType: ZegoStreamType.screenSharing,
-        ),
-        builder: (context, viewID, _) {
-          return Align(
-            alignment: Alignment.topRight,
-            child: Text(
-              "view id:$viewID",
-              style: TextStyle(fontSize: 30.zR, color: Colors.red),
-            ),
-          );
-        },
-      );
-    }
-
-    return Container();
+    // if (kDebugMode) {
+    //   return ValueListenableBuilder<int?>(
+    //     valueListenable: ZegoUIKit().getAudioVideoViewIDNotifier(
+    //       widget.user!.id,
+    //       streamType: ZegoStreamType.screenSharing,
+    //     ),
+    //     builder: (context, viewID, _) {
+    //       return Align(
+    //         alignment: Alignment.topRight,
+    //         child: Text(
+    //           "view id:$viewID",
+    //           style: TextStyle(fontSize: 30.zR, color: Colors.red),
+    //         ),
+    //       );
+    //     },
+    //   );
+    // }
+    //
+    // return Container();
   }
 
   Widget videoView() {

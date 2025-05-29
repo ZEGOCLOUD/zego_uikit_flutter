@@ -25,7 +25,7 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
       );
       await coreData
           .startPublishingStream(streamType: ZegoStreamType.media)
-          .then((value) {
+          .then((value) async {
         /// sync media type via stream extra info
         final streamExtraInfo = <String, dynamic>{
           ZegoUIKitSEIDefines.keyMediaType:
@@ -36,6 +36,14 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
         ZegoExpressEngine.instance.setStreamExtraInfo(
           extraInfo,
           channel: ZegoStreamType.media.channel,
+        );
+
+        /// render
+        await coreData.createLocalUserVideoViewQueue(
+          streamType: ZegoStreamType.media,
+          onViewCreated: (ZegoStreamType streamType) {
+            coreData.onViewCreatedByStartPublishingStream(ZegoStreamType.media);
+          },
         );
       });
     }

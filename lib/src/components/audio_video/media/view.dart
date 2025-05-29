@@ -43,6 +43,8 @@ class ZegoUIKitMediaView extends StatefulWidget {
 }
 
 class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
+  bool get logEnabled => false;
+
   @override
   Widget build(BuildContext context) {
     return circleBorder(
@@ -58,6 +60,12 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
 
   Widget mediaView() {
     if (widget.user == null) {
+      ZegoLoggerService.logInfo(
+        'use id:(${widget.user?.id}) is null',
+        tag: 'uikit-component',
+        subTag: 'media view',
+      );
+
       return Container(color: Colors.transparent);
     }
 
@@ -73,6 +81,12 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
                   ),
                   builder: (context, userView, _) {
                     if (userView == null) {
+                      ZegoLoggerService.logError(
+                        '${widget.user?.id}\'s view is null',
+                        tag: 'uikit-component',
+                        subTag: 'media view',
+                      );
+
                       /// hide video view when use not found
                       return Container(color: Colors.transparent);
                     }

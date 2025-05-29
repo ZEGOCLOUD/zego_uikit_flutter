@@ -388,22 +388,6 @@ mixin ZegoUIKitCoreDataStream {
     });
 
     notifyStreamListControl(streamType);
-
-    // if (Platform.isIOS) {
-    //   /// queue maybe stack without render(get view id) by start preview
-    //   final localStreamChannel = getLocalStreamChannel(streamType);
-    //   if (localStreamChannel.viewIDNotifier.value == -1 &&
-    //       localStreamChannel.viewNotifier.value != null) {
-    //     ZegoLoggerService.logInfo(
-    //       'force update view to get view id on StartPreview',
-    //       tag: 'uikit-stream',
-    //       subTag: 'start publish stream',
-    //     );
-    //
-    //     /// force update, get view id
-    //     notifyStreamListControl(streamType);
-    //   }
-    // }
   }
 
   Future<void> onViewCreatedByStartPublishingStream(
@@ -550,10 +534,12 @@ mixin ZegoUIKitCoreDataStream {
         ZegoUIKitCore.shared.coreData.localUser.cameraMuteMode.value ||
         ZegoUIKitCore.shared.coreData.localUser.microphone.value ||
         ZegoUIKitCore.shared.coreData.localUser.microphoneMuteMode.value) {
+      /// start publish first
       await startPublishingStream(
         streamType: ZegoStreamType.main,
       );
 
+      /// create canvas if need
       if (ZegoUIKitCore.shared.coreData.localUser.camera.value ||
           ZegoUIKitCore.shared.coreData.localUser.cameraMuteMode.value) {
         await createLocalUserVideoViewQueue(
@@ -707,6 +693,7 @@ mixin ZegoUIKitCoreDataStream {
     final localStreamChannel = getLocalStreamChannel(streamType);
     ZegoLoggerService.logInfo(
       'current streamChannel, '
+      'streamType:$streamType, '
       'view id:${localStreamChannel.viewIDNotifier.value},'
       'view:${localStreamChannel.viewNotifier}, '
       'view hashCode:${localStreamChannel.viewNotifier.hashCode}',
@@ -735,7 +722,9 @@ mixin ZegoUIKitCoreDataStream {
       await createCanvasViewByExpressWithCompleter(
         (viewID) async {
           ZegoLoggerService.logInfo(
-            'view id done, viewID:$viewID',
+            'view id done, '
+            'streamType:$streamType, '
+            'viewID:$viewID',
             tag: 'uikit-stream',
             subTag: 'create local user video view',
           );
@@ -751,7 +740,9 @@ mixin ZegoUIKitCoreDataStream {
             : localStreamChannel.globalAuxStreamChannelKeyNotifier.value,
       ).then((widget) {
         ZegoLoggerService.logInfo(
-          'widget done, widget:$widget ${widget.hashCode}',
+          'widget done, '
+          'streamType:$streamType, '
+          'widget:$widget ${widget.hashCode}',
           tag: 'uikit-stream',
           subTag: 'create local user video view',
         );

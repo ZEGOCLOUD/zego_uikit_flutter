@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:io' show Platform;
-import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
@@ -184,23 +183,23 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   Widget testViewID() {
     return Container();
 
-    if (kDebugMode) {
-      return ValueListenableBuilder<int?>(
-        valueListenable:
-            ZegoUIKit().getAudioVideoViewIDNotifier(widget.user!.id),
-        builder: (context, viewID, _) {
-          return Align(
-            alignment: Alignment.topRight,
-            child: Text(
-              "view id:$viewID",
-              style: TextStyle(fontSize: 30.zR, color: Colors.red),
-            ),
-          );
-        },
-      );
-    }
-
-    return Container();
+    // if (kDebugMode) {
+    //   return ValueListenableBuilder<int?>(
+    //     valueListenable:
+    //         ZegoUIKit().getAudioVideoViewIDNotifier(widget.user!.id),
+    //     builder: (context, viewID, _) {
+    //       return Align(
+    //         alignment: Alignment.topRight,
+    //         child: Text(
+    //           "view id:$viewID",
+    //           style: TextStyle(fontSize: 30.zR, color: Colors.red),
+    //         ),
+    //       );
+    //     },
+    //   );
+    // }
+    //
+    // return Container();
   }
 
   Widget localCameraFlipAnimation(Widget child) {
