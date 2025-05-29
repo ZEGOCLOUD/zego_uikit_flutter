@@ -116,22 +116,12 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
   @override
   Widget build(BuildContext context) {
-    if (logEnabled) {
+    if (ZegoUIKit().getUser(widget.user?.id ?? '').isEmpty()) {
       ZegoLoggerService.logInfo(
-        '${widget.user?.id}\' build,',
+        'use id:(${widget.user?.id}) is null',
         tag: 'uikit-component',
         subTag: 'audio video view',
       );
-    }
-
-    if (ZegoUIKit().getUser(widget.user?.id ?? '').isEmpty()) {
-      if (logEnabled) {
-        ZegoLoggerService.logInfo(
-          'use id:(${widget.user?.id}) is null',
-          tag: 'uikit-component',
-          subTag: 'audio video view',
-        );
-      }
 
       return SizedBox.expand(
         child: Stack(
@@ -143,18 +133,22 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       );
     }
 
+    ZegoLoggerService.logInfo(
+      '${widget.user?.id}\' build,',
+      tag: 'uikit-component',
+      subTag: 'audio video view',
+    );
+
     return circleBorder(
       child: ValueListenableBuilder<bool>(
         valueListenable:
             ZegoUIKit().getCameraStateNotifier(widget.user?.id ?? ''),
         builder: (context, isCameraOn, _) {
-          if (logEnabled) {
-            ZegoLoggerService.logInfo(
-              '${widget.user?.id}\'s camera changed $isCameraOn,',
-              tag: 'uikit-component',
-              subTag: 'audio video view',
-            );
-          }
+          ZegoLoggerService.logInfo(
+            '${widget.user?.id}\'s camera changed $isCameraOn,',
+            tag: 'uikit-component',
+            subTag: 'audio video view',
+          );
 
           final isLocalUser = null != widget.user &&
               ZegoUIKit().getLocalUser().id == widget.user?.id;
@@ -319,13 +313,11 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       valueListenable: ZegoUIKit().getAudioVideoViewNotifier(widget.user!.id),
       builder: (context, userView, _) {
         if (userView == null) {
-          if (logEnabled) {
-            ZegoLoggerService.logError(
-              '${widget.user?.id}\'s view is null',
-              tag: 'uikit-component',
-              subTag: 'audio video view',
-            );
-          }
+          ZegoLoggerService.logError(
+            '${widget.user?.id}\'s view is null',
+            tag: 'uikit-component',
+            subTag: 'audio video view',
+          );
 
           /// hide video view when use not found
           return Container(color: Colors.transparent);

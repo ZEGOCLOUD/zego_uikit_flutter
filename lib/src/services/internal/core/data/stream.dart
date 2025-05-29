@@ -468,7 +468,7 @@ mixin ZegoUIKitCoreDataStream {
       return;
     }
 
-    if (canvasViewCreateQueue.currentTaskId == targetStreamID) {
+    if (canvasViewCreateQueue.currentTaskKey == targetStreamID) {
       ZegoLoggerService.logInfo(
         'stopped canvas view queue',
         tag: 'uikit-stream',
@@ -628,6 +628,13 @@ mixin ZegoUIKitCoreDataStream {
 
     return await ZegoExpressEngine.instance.createCanvasView(
       (int viewID) async {
+        ZegoLoggerService.logInfo(
+          'createCanvasView onViewCreated, '
+          'viewID:$viewID, ',
+          tag: 'uikit-stream',
+          subTag: 'create canvas view',
+        );
+
         if (isCanvasViewCreateByQueue) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             onViewCreated.call(viewID);
@@ -672,7 +679,11 @@ mixin ZegoUIKitCoreDataStream {
         );
 
         canvasViewCreateQueue.addTask(
-          id: localStreamChannel.streamID,
+          uniqueKey: generateStreamID(
+            ZegoUIKitCore.shared.coreData.localUser.id,
+            ZegoUIKitCore.shared.coreData.room.id,
+            streamType,
+          ),
           task: () async {
             await createLocalUserVideoView(
               streamType: streamType,
@@ -919,7 +930,7 @@ mixin ZegoUIKitCoreDataStream {
         );
 
         canvasViewCreateQueue.addTask(
-          id: targetUserStreamChannel.streamID,
+          uniqueKey: streamID,
           task: () async {
             await startPlayingStream(streamID, streamUserID);
           },
@@ -1290,7 +1301,7 @@ mixin ZegoUIKitCoreDataStream {
           ZegoUIKitCore.shared.coreData.remoteUsersList[targetUserIndex];
       final streamType = getStreamTypeByID(streamID);
 
-      if (canvasViewCreateQueue.currentTaskId ==
+      if (canvasViewCreateQueue.currentTaskKey ==
           getUserStreamChannel(targetUser, streamType).streamID) {
         ZegoLoggerService.logInfo(
           'stopped canvas view queue',
@@ -1571,6 +1582,13 @@ mixin ZegoUIKitCoreDataStream {
       );
 
       ZegoExpressEngine.instance.createCanvasView((viewID) async {
+        ZegoLoggerService.logInfo(
+          'createCanvasView onViewCreated, '
+          'viewID:$viewID, ',
+          tag: 'uikit-stream',
+          subTag: 'start play mix audio video',
+        );
+
         mixerStreamDic[mixerID]!.viewID = viewID;
 
         final canvas = ZegoCanvas(viewID, viewMode: ZegoViewMode.AspectFill);

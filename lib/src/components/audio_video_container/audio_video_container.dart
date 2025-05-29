@@ -90,6 +90,8 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
   ZegoScreenSharingViewController get screenSharingController =>
       widget.screenSharingViewController ?? defaultScreenSharingViewController;
 
+  bool get logEnabled => false;
+
   @override
   void initState() {
     super.initState();
@@ -174,6 +176,13 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
 
   /// picture in picture
   Widget pictureInPictureLayout(List<ZegoUIKitUser> userList) {
+    ZegoLoggerService.logInfo(
+      'use pictureInPictureLayout, '
+      'userList:${userList.map((e) => "${e.toString()}, ")}, ',
+      tag: 'uikit-component',
+      subTag: 'audio video container',
+    );
+
     return ZegoLayoutPictureInPicture(
       layoutConfig: widget.layout as ZegoLayoutPictureInPictureConfig,
       backgroundBuilder: widget.backgroundBuilder,
@@ -185,6 +194,13 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
 
   /// gallery
   Widget galleryLayout(List<ZegoUIKitUser> userList) {
+    ZegoLoggerService.logInfo(
+      'use galleryLayout, '
+      'userList:${userList.map((e) => "${e.toString()}, ")}, ',
+      tag: 'uikit-component',
+      subTag: 'audio video container',
+    );
+
     return ZegoLayoutGallery(
       layoutConfig: widget.layout as ZegoLayoutGalleryConfig,
       backgroundBuilder: widget.backgroundBuilder,
@@ -228,15 +244,40 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
     final streamUsers =
         ZegoUIKit().getAudioVideoList() + ZegoUIKit().getScreenSharingList();
 
+    if (logEnabled) {
+      ZegoLoggerService.logInfo(
+        'updateUserList 1, '
+        'streamUsers:${streamUsers.map((e) => "${e.toString()}, ")}, ',
+        tag: 'uikit-component',
+        subTag: 'audio video container',
+      );
+    }
+
     /// remove if not in stream
     userList.removeWhere((user) =>
         -1 == streamUsers.indexWhere((streamUser) => user.id == streamUser.id));
+    if (logEnabled) {
+      ZegoLoggerService.logInfo(
+        'updateUserList 2, '
+        'userList:${streamUsers.map((e) => "${e.toString()}, ")}, ',
+        tag: 'uikit-component',
+        subTag: 'audio video container',
+      );
+    }
 
     /// add if in stream
     for (final streamUser in streamUsers) {
       if (-1 == userList.indexWhere((user) => user.id == streamUser.id)) {
         userList.add(streamUser);
       }
+    }
+    if (logEnabled) {
+      ZegoLoggerService.logInfo(
+        'updateUserList 3, '
+        'userList:${streamUsers.map((e) => "${e.toString()}, ")}, ',
+        tag: 'uikit-component',
+        subTag: 'audio video container',
+      );
     }
 
     if (widget.sources.contains(ZegoAudioVideoContainerSource.user)) {
@@ -255,6 +296,14 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
         userList.add(user);
       });
     }
+    if (logEnabled) {
+      ZegoLoggerService.logInfo(
+        'updateUserList 4, '
+        'userList:${streamUsers.map((e) => "${e.toString()}, ")}, ',
+        tag: 'uikit-component',
+        subTag: 'audio video container',
+      );
+    }
 
     if (widget.sources.contains(ZegoAudioVideoContainerSource.virtualUser)) {
       /// add in list even though use is not in stream
@@ -272,14 +321,38 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
         userList.add(virtualUser);
       }
     }
+    if (logEnabled) {
+      ZegoLoggerService.logInfo(
+        'updateUserList 5, '
+        'userList:${streamUsers.map((e) => "${e.toString()}, ")}, ',
+        tag: 'uikit-component',
+        subTag: 'audio video container',
+      );
+    }
 
     userList =
         widget.sortAudioVideo?.call(List<ZegoUIKitUser>.from(userList)) ??
             userList;
+    if (logEnabled) {
+      ZegoLoggerService.logInfo(
+        'updateUserList 6, '
+        'userList:${streamUsers.map((e) => "${e.toString()}, ")}, ',
+        tag: 'uikit-component',
+        subTag: 'audio video container',
+      );
+    }
 
     userList =
         widget.filterAudioVideo?.call(List<ZegoUIKitUser>.from(userList)) ??
             userList;
+    if (logEnabled) {
+      ZegoLoggerService.logInfo(
+        'updateUserList 7, '
+        'userList:${streamUsers.map((e) => "${e.toString()}, ")}, ',
+        tag: 'uikit-component',
+        subTag: 'audio video container',
+      );
+    }
 
     widget.onUserListUpdated?.call(List<ZegoUIKitUser>.from(userList));
   }

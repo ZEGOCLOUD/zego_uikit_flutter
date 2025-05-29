@@ -15,7 +15,7 @@ class ZegoStreamCanvasViewCreateQueue {
 
   bool get isTaskRunning => _isTaskRunning;
 
-  String? get currentTaskId => _taskList.isNotEmpty ? _taskList[0].id : null;
+  String? get currentTaskKey => _taskList.isNotEmpty ? _taskList[0].key : null;
 
   void clear() {
     _isTaskRunning = false;
@@ -27,6 +27,12 @@ class ZegoStreamCanvasViewCreateQueue {
   }
 
   void completeCurrentTask() {
+    ZegoLoggerService.logInfo(
+      'complete current task($currentTaskKey)',
+      tag: 'uikit-stream',
+      subTag: 'queue',
+    );
+
     final tempCompleter = _completer;
     _completer = null;
 
@@ -36,15 +42,15 @@ class ZegoStreamCanvasViewCreateQueue {
   }
 
   Future<void> addTask({
-    required String id,
+    required String uniqueKey,
     required Future Function() task,
   }) async {
     TaskItem taskItem = TaskItem(
-      DateTime.now().millisecondsSinceEpoch.toString(),
+      uniqueKey,
       task,
       () {
         ZegoLoggerService.logInfo(
-          'task run finished, task queue size:${_taskList.length}, '
+          'task($uniqueKey) run finished, task queue size:${_taskList.length}, '
           'run next task',
           tag: 'uikit-stream',
           subTag: 'queue',
@@ -60,7 +66,7 @@ class ZegoStreamCanvasViewCreateQueue {
 
     _taskList.add(taskItem);
     ZegoLoggerService.logInfo(
-      'task is added, task queue size:${_taskList.length}',
+      'task($uniqueKey) is added, task queue size:${_taskList.length}',
       tag: 'uikit-stream',
       subTag: 'queue',
     );
@@ -70,7 +76,7 @@ class ZegoStreamCanvasViewCreateQueue {
   Future<void> _doTask() async {
     if (_isTaskRunning) {
       ZegoLoggerService.logInfo(
-        'task is running',
+        'task($currentTaskKey) is running',
         tag: 'uikit-stream',
         subTag: 'queue',
       );
@@ -99,7 +105,7 @@ class ZegoStreamCanvasViewCreateQueue {
     _isTaskRunning = true;
 
     ZegoLoggerService.logInfo(
-      'run task',
+      'run task(${task.key})',
       tag: 'uikit-stream',
       subTag: 'queue',
     );
@@ -111,7 +117,7 @@ class ZegoStreamCanvasViewCreateQueue {
       task.next();
     } catch (e) {
       ZegoLoggerService.logInfo(
-        'task exception, $e',
+        'task(${task.key}) exception, $e',
         tag: 'uikit-stream',
         subTag: 'queue',
       );
@@ -122,12 +128,12 @@ class ZegoStreamCanvasViewCreateQueue {
 }
 
 class TaskItem {
-  final String id;
+  final String key;
   final Future Function() runner;
   final VoidCallback next;
 
   const TaskItem(
-    this.id,
+    this.key,
     this.runner,
     this.next,
   );

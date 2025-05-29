@@ -177,6 +177,7 @@ class ZegoUIKitUser {
         'name:$name, '
         'in-room attributes:${inRoomAttributes.value}, '
         'camera:${camera.value}, '
+        'microphone:${microphone.value}, '
         '}';
   }
 
@@ -184,8 +185,9 @@ class ZegoUIKitUser {
     return '{'
         'id:$id, '
         'name:$name, '
+        'in-room attributes:${inRoomAttributes.value}, '
         'camera:${camera.value}, '
-        'microphone:${microphone.value} '
+        'camera mute mode:${cameraMuteMode.value}, '
         'microphone:${microphone.value}, '
         'microphone mute mode:${microphoneMuteMode.value} '
         '}';
