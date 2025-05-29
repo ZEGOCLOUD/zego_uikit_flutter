@@ -1,3 +1,6 @@
+## 2.28.17
+  - Fix occasional video black render screen issue in live streaming
+
 ## 2.28.16
 
 - Bugs
