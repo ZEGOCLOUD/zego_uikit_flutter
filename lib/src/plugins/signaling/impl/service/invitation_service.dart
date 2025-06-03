@@ -251,7 +251,8 @@ mixin ZegoPluginInvitationService {
 
     return ZegoSignalingPluginCore.shared.coreData.reject(invitationID, data);
   }
-
+  
+  @pragma('vm:entry-point')
   Future<ZegoSignalingPluginResponseInvitationResult>
       refuseInvitationByInvitationID({
     required String invitationID,
@@ -333,6 +334,7 @@ mixin ZegoPluginInvitationService {
   }
 
   /// stream callback, notify invitee if invitation timeout
+  @pragma('vm:entry-point')
   Stream<Map<String, dynamic>> getInvitationTimeoutStream() {
     return ZegoSignalingPluginCore
             .shared.coreData.streamCtrlInvitationTimeout?.stream ??
@@ -361,6 +363,7 @@ mixin ZegoPluginInvitationService {
   }
 
   /// stream callback, notify when call invitation cancelled by inviter
+  @pragma('vm:entry-point')
   Stream<Map<String, dynamic>> getInvitationCanceledStream() {
     return ZegoSignalingPluginCore
             .shared.coreData.streamCtrlInvitationCanceled?.stream ??

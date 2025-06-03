@@ -48,6 +48,7 @@ mixin ZegoLoggerService {
     FlutterLogs.clearLogs();
   }
 
+  @pragma('vm:entry-point')
   static Future<void> logInfo(
     String logMessage, {
     String tag = '',
