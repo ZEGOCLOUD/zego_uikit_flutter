@@ -15,12 +15,7 @@ mixin ZegoLoggerService {
 
     try {
       await FlutterLogs.initLogs(
-              logLevelsEnabled: [
-                LogLevel.INFO,
-                LogLevel.WARNING,
-                LogLevel.ERROR,
-                LogLevel.SEVERE
-              ],
+              logLevelsEnabled: [LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR, LogLevel.SEVERE],
               timeStampFormat: TimeStampFormat.TIME_FORMAT_24_FULL,
               directoryStructure: DirectoryStructure.SINGLE_FILE_FOR_DAY,
               logTypesEnabled: ['device', 'network', 'errors'],
@@ -48,6 +43,7 @@ mixin ZegoLoggerService {
     FlutterLogs.clearLogs();
   }
 
+  @pragma('vm:entry-point')
   static Future<void> logInfo(
     String logMessage, {
     String tag = '',

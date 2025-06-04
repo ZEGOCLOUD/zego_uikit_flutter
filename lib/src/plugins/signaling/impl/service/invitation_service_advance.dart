@@ -676,6 +676,7 @@ mixin ZegoPluginInvitationServiceAdvance {
   }
 
   /// stream callback, notify invitee if invitation timeout
+  @pragma('vm:entry-point')
   Stream<Map<String, dynamic>> getAdvanceInvitationTimeoutStream() {
     return ZegoSignalingPluginCore
             .shared.coreData.streamCtrlAdvanceInvitationTimeout?.stream ??
@@ -683,6 +684,7 @@ mixin ZegoPluginInvitationServiceAdvance {
   }
 
   /// stream callback, notify when call invitation cancelled by inviter
+  @pragma('vm:entry-point')
   Stream<Map<String, dynamic>> getAdvanceInvitationCanceledStream() {
     return ZegoSignalingPluginCore
             .shared.coreData.streamCtrlAdvanceInvitationCanceled?.stream ??

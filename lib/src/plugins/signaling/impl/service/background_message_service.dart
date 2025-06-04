@@ -30,6 +30,7 @@ mixin ZegoPluginBackgroundMessageService {
   /// key: 'handler1',
   /// );
   /// ```
+  @pragma('vm:entry-point')
   Future<ZegoSignalingPluginSetMessageHandlerResult>
       setBackgroundMessageHandler(
     ZegoSignalingPluginZPNsBackgroundMessageHandler handler, {
@@ -40,7 +41,8 @@ mixin ZegoPluginBackgroundMessageService {
           key: key,
         );
   }
-
+  
+  @pragma('vm:entry-point')
   Future<ZegoSignalingPluginSetMessageHandlerResult> setThroughMessageHandler(
     ZegoSignalingPluginZPNsThroughMessageHandler? handler,
   ) async {

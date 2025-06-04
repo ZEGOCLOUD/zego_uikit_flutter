@@ -28,6 +28,7 @@ mixin ZegoPluginService {
   }
 
   /// signal plugin
+  @pragma('vm:entry-point')
   ZegoUIKitSignalingPluginImpl getSignalingPlugin() {
     /// make sure core data's stream had created
     ZegoSignalingPluginCore.shared.coreData.initData();

@@ -17,6 +17,7 @@ mixin ZegoChannelService {
     return ZegoUIKitPluginPlatform.instance.checkAppRunning();
   }
 
+  @pragma('vm:entry-point')
   Future<void> activeAppToForeground() async {
     await ZegoUIKitPluginPlatform.instance.activeAppToForeground();
   }
@@ -87,6 +88,7 @@ mixin ZegoChannelService {
     await ZegoUIKitPluginPlatform.instance.enableCustomVideoRender(isEnabled);
   }
 
+  @pragma('vm:entry-point')
   Future<void> requestDismissKeyguard() async {
     await ZegoUIKitPluginPlatform.instance.requestDismissKeyguard();
   }
