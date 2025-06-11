@@ -1,7 +1,12 @@
 ## 2.28.18
 
+- Features
+  - add openAppSettings
+
+## 2.28.18
+
 - Bugs
-- Fix black issue on local side when sharing media 
+  - Fix black issue on local side when sharing media 
 
 ## 2.28.17
 - Bugs
