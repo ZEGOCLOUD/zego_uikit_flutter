@@ -83,6 +83,10 @@ public class ZegoUikitPlugin implements FlutterPlugin, MethodCallHandler, Activi
                 handleReporterEvent(call);
                 result.success(null);
                 break;
+            case Defines.FLUTTER_API_FUNC_OPEN_APP_SETTINGS:
+                openAppSettings();
+                result.success(null);
+                break;
             default:
                 result.notImplemented();
                 break;
@@ -211,6 +215,19 @@ public class ZegoUikitPlugin implements FlutterPlugin, MethodCallHandler, Activi
             WindowManager.LayoutParams params = activity.getWindow().getAttributes();
             params.flags |= WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
             activity.getWindow().setAttributes(params);
+        }
+    }
+
+    private void openAppSettings() {
+        Log.d(TAG, "openAppSettings");
+        try {
+            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            android.net.Uri uri = android.net.Uri.fromParts("package", context.getPackageName(), null);
+            intent.setData(uri);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Log.e(TAG, "Error in openAppSettings", e);
         }
     }
 }

@@ -679,4 +679,32 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       );
     }
   }
+
+  @override
+  Future<void> openAppSettings() async {
+    if (Platform.isIOS) {
+      ZegoLoggerService.logInfo(
+        'not support in iOS',
+        tag: 'uikit-channel',
+        subTag: 'openAppSettings',
+      );
+      return;
+    }
+
+    ZegoLoggerService.logInfo(
+      'openAppSettings',
+      tag: 'uikit-channel',
+      subTag: 'openAppSettings',
+    );
+
+    try {
+      await methodChannel.invokeMethod('openAppSettings');
+    } on PlatformException catch (e) {
+      ZegoLoggerService.logError(
+        'Failed to open app settings: $e.',
+        tag: 'uikit-channel',
+        subTag: 'openAppSettings',
+      );
+    }
+  }
 }

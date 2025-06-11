@@ -116,4 +116,10 @@ mixin ZegoChannelService {
 
     return true;
   }
+
+  /// 打开应用设置页面
+  /// 仅支持 Android 平台
+  Future<void> openAppSettings() async {
+    await ZegoUIKitPluginPlatform.instance.openAppSettings();
+  }
 }

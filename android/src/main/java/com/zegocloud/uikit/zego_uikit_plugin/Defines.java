@@ -12,6 +12,7 @@ public interface Defines {
     String FLUTTER_API_FUNC_REPORTER_UPDATE_TOKEN = "reporterUpdateToken";
     String FLUTTER_API_FUNC_REPORTER_UPDATE_COMMON_PARAMS = "reporterUpdateCommonParams";
     String FLUTTER_API_FUNC_REPORTER_EVENT = "reporterEvent";
+    String FLUTTER_API_FUNC_OPEN_APP_SETTINGS = "openAppSettings";
 
     String FLUTTER_PARAM_NON_ROOT = "nonRoot";
 }
