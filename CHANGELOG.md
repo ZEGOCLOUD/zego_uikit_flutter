@@ -1,4 +1,9 @@
-## 2.28.18
+## 2.28.20
+
+- Features
+  - support onWillPress on invitation's button
+
+## 2.28.19
 
 - Features
   - add openAppSettings
