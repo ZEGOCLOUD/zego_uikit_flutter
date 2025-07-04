@@ -20,7 +20,10 @@ dependencies:
   device_info_plus: ^11.3.0
   encrypt: ^5.0.3
   permission_handler: ^11.3.1
-  flutter_logs: ^2.2.1
+  flutter_logs:
+    git:
+      url: https://github.com/yoer/flutter_logs.git
+      ref: master
   native_device_orientation: ^2.0.3
   wakelock_plus: ^1.2.10
   cached_network_image: ^3.3.0
