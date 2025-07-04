@@ -38,6 +38,7 @@ class ZegoRefuseInvitationButton extends StatefulWidget {
     this.buttonSize,
     this.iconTextSpacing,
     this.verticalLayout = true,
+    this.onWillPress,
     this.onPressed,
     this.networkLoadingConfig,
     this.clickableTextColor = Colors.black,
@@ -64,6 +65,8 @@ class ZegoRefuseInvitationButton extends StatefulWidget {
   final Color? unclickableTextColor;
   final Color? clickableBackgroundColor;
   final Color? unclickableBackgroundColor;
+
+  final void Function()? onWillPress;
 
   ///  You can do what you want after pressed.
   final void Function(ZegoRefuseInvitationButtonResult result)? onPressed;
@@ -98,6 +101,8 @@ class _ZegoRefuseInvitationButtonState
   }
 
   Future<void> onPressed() async {
+    widget.onWillPress?.call();
+
     final result = widget.isAdvancedMode
         ? await ZegoUIKit().getSignalingPlugin().refuseAdvanceInvitation(
               inviterID: widget.inviterID,

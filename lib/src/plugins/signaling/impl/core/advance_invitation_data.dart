@@ -1051,7 +1051,8 @@ mixin ZegoSignalingPluginCoreAdvanceInvitationData {
     ZegoSignalingPluginIncomingInvitationTimeoutEvent event,
   ) {
     ZegoLoggerService.logInfo(
-      'onIncomingInvitationTimeout',
+      'onIncomingInvitationTimeout, '
+      'event:$event, ',
       tag: 'uikit-plugin-signaling',
       subTag: 'advance invitation data',
     );

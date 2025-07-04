@@ -423,7 +423,7 @@ class ZegoUIKitCore
   }) async {
     ZegoLoggerService.logInfo(
       'current room is ${coreData.room.id}, '
-      'target room id:$targetRoomID'
+      'target room id:$targetRoomID, '
       'network state:${ZegoUIKit().getNetworkState()}, ',
       tag: 'uikit-room',
       subTag: 'leave room',
