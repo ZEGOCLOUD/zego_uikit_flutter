@@ -1,3 +1,8 @@
+## 2.28.21
+
+- Bugs
+  - return error if invitation id is empty on invitation API
+
 ## 2.28.20
 
 - Features
