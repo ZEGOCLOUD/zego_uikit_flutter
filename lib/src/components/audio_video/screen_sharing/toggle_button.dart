@@ -72,10 +72,10 @@ class _ZegoScreenSharingToggleButtonState
   }
 
   Future<void> onPressed() async {
-    if(ZegoUIKit().getScreenSharingList().isNotEmpty) {
+    if (ZegoUIKit().getScreenSharingList().isNotEmpty) {
       ZegoLoggerService.logInfo(
         "some user is sharing in room, "
-            "${ZegoUIKit().getScreenSharingList().map((e)=>"${e.toString()},")}",
+        "${ZegoUIKit().getScreenSharingList().map((e) => "${e.toString()},")}",
         tag: 'uikit-component',
         subTag: 'ZegoScreenSharingToggleButton',
       );
