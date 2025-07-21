@@ -1,3 +1,8 @@
+## 2.28.22
+
+- Bugs
+  - Fixed the issue where the useVideoViewAspectFill configuration item does not take effect in iOS play streaming
+
 ## 2.28.21
 
 - Bugs
