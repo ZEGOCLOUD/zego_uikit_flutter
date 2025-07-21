@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) enableCustomVideoRender: (BOOL)isEnabled;
 
 - (void) startPlayingStream:(NSString *)streamID;
-- (void) updatePlayingStreamView:(NSString *)streamID videoView:(UIView *)videoView;
+- (void) updatePlayingStreamView:(NSString *)streamID videoView:(UIView *)videoView  viewMode:(NSNumber *)viewMode;
 - (void) stopPlayingStream:(NSString *)streamID;
 
 @end

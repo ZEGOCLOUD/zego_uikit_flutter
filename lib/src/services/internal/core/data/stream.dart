@@ -73,6 +73,7 @@ mixin ZegoUIKitCoreDataStream {
       turnOnYourMicrophoneRequestStreamCtrl;
   StreamController<ZegoUIKitReceiveSEIEvent>? receiveSEIStreamCtrl;
 
+  bool useVideoViewAspectFill = false;
   ZegoUIKitVideoInternalConfig pushVideoConfig = ZegoUIKitVideoInternalConfig();
 
   void initStream() {
@@ -248,7 +249,7 @@ mixin ZegoUIKitCoreDataStream {
       ZegoUIKitCore
               .shared.coreData.localUser.mainChannel.viewIDNotifier.value ??
           -1,
-      viewMode: pushVideoConfig.useVideoViewAspectFill
+      viewMode: useVideoViewAspectFill
           ? ZegoViewMode.AspectFill
           : ZegoViewMode.AspectFit,
     );
@@ -408,7 +409,7 @@ mixin ZegoUIKitCoreDataStream {
         assert(localTargetStreamViewID != -1);
         final canvas = ZegoCanvas(
           localTargetStreamViewID,
-          viewMode: pushVideoConfig.useVideoViewAspectFill
+          viewMode: useVideoViewAspectFill
               ? ZegoViewMode.AspectFill
               : ZegoViewMode.AspectFit,
         );
@@ -1100,63 +1101,6 @@ mixin ZegoUIKitCoreDataStream {
     }
   }
 
-  Future<void> updatePlayingStreamView({
-    required String streamID,
-    required int viewID,
-    ZegoCanvas? canvas,
-  }) async {
-    bool startPlayingStreamInIOSPIP = false;
-    if (Platform.isIOS) {
-      startPlayingStreamInIOSPIP =
-          ZegoUIKitCore.shared.playingStreamInPIPUnderIOS;
-    }
-
-    ZegoLoggerService.logInfo(
-      'streamID:$streamID, '
-      'viewID:$viewID, '
-      'canvas:$canvas, '
-      'isPlayingStreamInIOSPIP:$startPlayingStreamInIOSPIP, ',
-      tag: 'uikit-stream',
-      subTag: 'update play stream view/canvas by express',
-    );
-
-    if (startPlayingStreamInIOSPIP) {
-      ZegoUIKitPluginPlatform.instance
-          .updatePlayingStreamViewInPIP(viewID, streamID)
-          .then((_) {
-        ZegoLoggerService.logInfo(
-          'finish update stream view/canvas in ios with pip, '
-          'stream id:$streamID, '
-          'view id:$viewID, ',
-          tag: 'uikit-stream',
-          subTag: 'start play stream',
-        );
-      });
-    } else {
-      if (null != canvas) {
-        await ZegoExpressEngine.instance
-            .updatePlayingCanvas(streamID, canvas)
-            .then((value) {
-          ZegoLoggerService.logInfo(
-            'finish update stream view/canvas, '
-            'stream id: $streamID, '
-            'canvas:$canvas, ',
-            tag: 'uikit-stream',
-            subTag: 'start play stream',
-          );
-        });
-      } else {
-        ZegoLoggerService.logInfo(
-          'canvas is null, '
-          'stream id: $streamID, '
-          'canvas:$canvas, ',
-          tag: 'uikit-stream',
-          subTag: 'start play stream',
-        );
-      }
-    }
-  }
-
   Future<void> stopPlayingStreamByExpress(String streamID) async {
     bool stopPlayingStreamInIOSPIP = false;
     if (Platform.isIOS) {
@@ -1200,28 +1144,63 @@ mixin ZegoUIKitCoreDataStream {
     ZegoStreamType? streamType,
     ZegoCanvas? canvas,
   }) async {
+    final viewMode = ZegoStreamType.main == streamType
+        ? (useVideoViewAspectFill
+            ? ZegoViewMode.AspectFill
+            : ZegoViewMode.AspectFit)
+
+        /// screen share/media default AspectFit
+        : ZegoViewMode.AspectFit;
     final canvas = ZegoCanvas(
       viewID,
-      viewMode: ZegoStreamType.main == streamType
-          ? (pushVideoConfig.useVideoViewAspectFill
-              ? ZegoViewMode.AspectFill
-              : ZegoViewMode.AspectFit)
-
-          /// screen share/media default AspectFit
-          : ZegoViewMode.AspectFit,
+      viewMode: viewMode,
     );
 
+    bool startPlayingStreamInIOSPIP = false;
+    if (Platform.isIOS) {
+      startPlayingStreamInIOSPIP =
+          ZegoUIKitCore.shared.playingStreamInPIPUnderIOS;
+
+      ZegoLoggerService.logInfo(
+        'isPlayingStreamInIOSPIP:$startPlayingStreamInIOSPIP, ',
+        tag: 'uikit-stream',
+        subTag: 'start play stream',
+      );
+    }
+
     ZegoLoggerService.logInfo(
-      'ready start, stream id: $streamID',
+      'ready start, '
+      'stream id: $streamID, '
+      'view mode:$viewMode(${viewMode.index}), ',
       tag: 'uikit-stream',
       subTag: 'start play stream',
     );
 
-    await updatePlayingStreamView(
-      streamID: streamID,
-      viewID: viewID,
-      canvas: canvas,
-    );
+    if (startPlayingStreamInIOSPIP) {
+      ZegoUIKitPluginPlatform.instance
+          .updatePlayingStreamViewInPIP(viewID, streamID, viewMode.index)
+          .then((_) {
+        ZegoLoggerService.logInfo(
+          'finish update stream view/canvas in ios with pip, '
+          'stream id:$streamID, '
+          'view id:$viewID, ',
+          tag: 'uikit-stream',
+          subTag: 'start play stream',
+        );
+      });
+    } else {
+      await ZegoExpressEngine.instance
+          .updatePlayingCanvas(streamID, canvas)
+          .then((value) {
+        ZegoLoggerService.logInfo(
+          'finish update stream view/canvas, '
+          'stream id: $streamID, '
+          'canvas:$canvas, ',
+          tag: 'uikit-stream',
+          subTag: 'start play stream',
+        );
+      });
+    }
   }
 
   Future<void> playStreamOnViewWillCreated({

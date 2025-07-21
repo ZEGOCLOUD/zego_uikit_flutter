@@ -119,9 +119,10 @@
         
         NSNumber *viewID = arguments[@"view_id"];
         NSString *streamID = arguments[@"stream_id"];
+        NSNumber *viewMode = arguments[@"view_mode"];
         
-        NSLog(@"[UIKit Plugin] updatePlayingStreamViewInPIP, viewID: %@, streamID: %@", viewID, streamID);
-        [self updatePlayingStreamViewInPIP:viewID streamID:streamID];
+        NSLog(@"[UIKit Plugin] updatePlayingStreamViewInPIP, viewID: %@, streamID: %@", viewID, streamID, viewMode);
+        [self updatePlayingStreamViewInPIP:viewID streamID:streamID viewMode:viewMode];
         
         result(nil);
     } else if ([@"stopPlayingStreamInPIP" isEqualToString:call.method]) {
@@ -187,7 +188,7 @@
     });
 }
 
-- (void)updatePlayingStreamViewInPIP:(NSNumber *)viewID streamID:(NSString *)streamID  {
+- (void)updatePlayingStreamViewInPIP:(NSNumber *)viewID streamID:(NSString *)streamID viewMode:(NSNumber *)viewMode  {
     ZegoPlatformView *platformView = [[ZegoPlatformViewFactory sharedInstance]getPlatformView:viewID];
     if(platformView == nil) {
         NSLog(@"[UIKit Plugin] platformView is nil");
@@ -196,7 +197,7 @@
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[PipManager sharedInstance] updatePlayingStreamView:streamID videoView:platformView.view];
+        [[PipManager sharedInstance] updatePlayingStreamView:streamID videoView:platformView.view viewMode:viewMode];
     });
 }
 
