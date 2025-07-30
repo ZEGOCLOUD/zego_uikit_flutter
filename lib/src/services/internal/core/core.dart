@@ -68,7 +68,7 @@ class ZegoUIKitCore
       final mobileInfo = 'platform:${Platform.operatingSystem}, '
           'version:${Platform.operatingSystemVersion}';
 
-      const zegoUIKitVersion = 'zego_uikit: 2.28.20; ';
+      const zegoUIKitVersion = 'zego_uikit: 2.28.23; ';
       version ??=
           '${zegoUIKitVersion}zego_express:$expressVersion,mobile:$mobileInfo';
     }
@@ -1319,8 +1319,7 @@ class ZegoUIKitCore
   }
 
   void updateVideoViewMode(bool useVideoViewAspectFill) {
-    if (coreData.pushVideoConfig.useVideoViewAspectFill ==
-        useVideoViewAspectFill) {
+    if (coreData.useVideoViewAspectFill == useVideoViewAspectFill) {
       ZegoLoggerService.logInfo(
         'mode is equal',
         tag: 'uikit-stream',
@@ -1333,7 +1332,7 @@ class ZegoUIKitCore
         tag: 'uikit-stream',
         subTag: 'update video view mode',
       );
-      coreData.pushVideoConfig.useVideoViewAspectFill = useVideoViewAspectFill;
+      coreData.useVideoViewAspectFill = useVideoViewAspectFill;
       // TODO: need re preview, and re playStream
     }
   }

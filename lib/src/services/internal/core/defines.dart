@@ -381,12 +381,10 @@ class ZegoUIKitVideoInternalConfig {
   ZegoUIKitVideoInternalConfig({
     this.resolution = ZegoPresetResolution.Preset360P,
     this.orientation = DeviceOrientation.portraitUp,
-    this.useVideoViewAspectFill = false,
   });
 
   ZegoPresetResolution resolution;
   DeviceOrientation orientation;
-  bool useVideoViewAspectFill;
 
   bool needUpdateOrientation(ZegoUIKitVideoInternalConfig newConfig) {
     return orientation != newConfig.orientation;
@@ -417,13 +415,10 @@ class ZegoUIKitVideoInternalConfig {
   ZegoUIKitVideoInternalConfig copyWith({
     ZegoPresetResolution? resolution,
     DeviceOrientation? orientation,
-    bool? useVideoViewAspectFill,
   }) =>
       ZegoUIKitVideoInternalConfig(
         resolution: resolution ?? this.resolution,
         orientation: orientation ?? this.orientation,
-        useVideoViewAspectFill:
-            useVideoViewAspectFill ?? this.useVideoViewAspectFill,
       );
 }
 

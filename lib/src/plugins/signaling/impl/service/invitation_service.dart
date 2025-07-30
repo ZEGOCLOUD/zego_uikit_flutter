@@ -171,8 +171,28 @@ mixin ZegoPluginInvitationService {
       );
       return ZegoSignalingPluginCancelInvitationResult(
         invitationID: invitationID,
-        error: PlatformException(code: '', message: ''),
+        error: PlatformException(
+          code: ZegoSignalingErrorCode.invitationCancelError.toString(),
+          message: 'invitees is empty',
+        ),
         errorInvitees: <String>[],
+      );
+    }
+
+    if (invitationID?.isEmpty ?? true) {
+      ZegoLoggerService.logError(
+        'cancel invitation, '
+        'invitationID is empty',
+        tag: 'uikit-plugin-signaling',
+        subTag: 'invitation service',
+      );
+      return ZegoSignalingPluginCancelInvitationResult(
+        invitationID: invitationID ?? '',
+        error: PlatformException(
+          code: ZegoSignalingErrorCode.invitationCancelError.toString(),
+          message: 'invitationID is empty',
+        ),
+        errorInvitees: invitees,
       );
     }
 
@@ -209,17 +229,31 @@ mixin ZegoPluginInvitationService {
     required String data,
     String? targetInvitationID,
   }) async {
+    ZegoLoggerService.logInfo(
+      'inviterID:$inviterID, '
+      'data:$data, '
+      'targetInvitationID:$targetInvitationID, ',
+      tag: 'uikit-plugin-signaling',
+      subTag: 'invitation service, refuse invitation',
+    );
+
     late String invitationID;
     Map<String, dynamic> extendedDataMap = {};
     try {
       extendedDataMap = jsonDecode(data) as Map<String, dynamic>? ?? {};
     } catch (e) {
       ZegoLoggerService.logError(
-        'refuse invitation, data is not a json:$data',
+        'data is not a json:$data',
         tag: 'uikit-plugin-signaling',
-        subTag: 'invitation service',
+        subTag: 'invitation service, refuse invitation',
       );
     } finally {
+      ZegoLoggerService.logInfo(
+        'extendedDataMap:$extendedDataMap',
+        tag: 'uikit-plugin-signaling',
+        subTag: 'invitation service, refuse invitation',
+      );
+
       invitationID = (targetInvitationID?.isNotEmpty ?? false)
           ? targetInvitationID!
           : (extendedDataMap['invitation_id'] as String? ?? '');
@@ -233,20 +267,23 @@ mixin ZegoPluginInvitationService {
       ZegoLoggerService.logError(
         'invitationID is empty, inviter id:$inviterID',
         tag: 'uikit-plugin-signaling',
-        subTag: 'invitation service',
+        subTag: 'invitation service, refuse invitation',
       );
       return ZegoSignalingPluginResponseInvitationResult(
         invitationID: invitationID,
+        error: PlatformException(
+          code: ZegoSignalingErrorCode.invitationRefuseError.toString(),
+          message: 'invitationID is empty',
+        ),
       );
     }
 
     ZegoLoggerService.logInfo(
-      'refuse invitation, '
       'network state:${ZegoUIKit().getNetworkState()}, '
       'invitationID:$invitationID, '
       'inviter id:$inviterID, data:$data',
       tag: 'uikit-plugin-signaling',
-      subTag: 'invitation service',
+      subTag: 'invitation service, refuse invitation',
     );
 
     return ZegoSignalingPluginCore.shared.coreData.reject(invitationID, data);
@@ -302,6 +339,10 @@ mixin ZegoPluginInvitationService {
       );
       return ZegoSignalingPluginResponseInvitationResult(
         invitationID: invitationID,
+        error: PlatformException(
+          code: ZegoSignalingErrorCode.invitationAcceptError.toString(),
+          message: 'invitationID is empty',
+        ),
       );
     }
 

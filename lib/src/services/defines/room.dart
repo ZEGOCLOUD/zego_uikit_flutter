@@ -15,6 +15,13 @@ class ZegoUIKitRoom {
   String id = '';
 
   ZegoUIKitRoom({required this.id});
+
+  @override
+  String toString() {
+    return 'ZegoUIKitRoom:{'
+        'id:$id, '
+        '}';
+  }
 }
 
 class ZegoUIKitRoomState {

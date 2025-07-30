@@ -95,7 +95,11 @@ abstract class ZegoUIKitPluginPlatform extends PlatformInterface {
         'startPlayingStreamInPIP has not been implemented.');
   }
 
-  Future<void> updatePlayingStreamViewInPIP(int viewID, String streamID) {
+  Future<void> updatePlayingStreamViewInPIP(
+    int viewID,
+    String streamID,
+    int viewMode,
+  ) {
     throw UnimplementedError(
         'updatePlayingStreamViewInPIP has not been implemented.');
   }

@@ -501,7 +501,11 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
   /// only support iOS
   @override
-  Future<void> updatePlayingStreamViewInPIP(int viewID, String streamID) async {
+  Future<void> updatePlayingStreamViewInPIP(
+    int viewID,
+    String streamID,
+    int viewMode,
+  ) async {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
@@ -514,7 +518,8 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'viewID:$viewID, '
-      'streamID:$streamID, ',
+      'streamID:$streamID, '
+      'viewMode:$viewMode, ',
       tag: 'uikit-channel',
       subTag: 'updatePlayingStreamViewInPIP',
     );
@@ -523,6 +528,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       await methodChannel.invokeMethod('updatePlayingStreamViewInPIP', {
         'view_id': viewID,
         'stream_id': streamID,
+        'view_mode': viewMode,
       });
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(

@@ -1,3 +1,18 @@
+## 2.28.23
+
+- Bugs
+  - Fixed the issue where the menu was obscured when the navigation bar was enabled on some Android devices 
+
+## 2.28.22
+
+- Bugs
+  - Fixed the issue where the useVideoViewAspectFill configuration item does not take effect in iOS play streaming
+
+## 2.28.21
+
+- Bugs
+  - return error if invitation id is empty on invitation API
+
 ## 2.28.20
 
 - Features

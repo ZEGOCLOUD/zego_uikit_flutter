@@ -96,13 +96,15 @@ class _ZegoMoreButtonState extends State<ZegoMoreButton> {
         return AnimatedPadding(
           padding: MediaQuery.of(context).viewInsets,
           duration: const Duration(milliseconds: 50),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            height: rowCount * widget.menuRowHeight,
-            child: menu(
-              context,
-              // List.from is for copy list，otherwise will lose items in next build
-              splitButtonFromListsToRows(List.from(menuButtonList)),
+          child: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              height: rowCount * widget.menuRowHeight,
+              child: menu(
+                context,
+                // List.from is for copy list，otherwise will lose items in next build
+                splitButtonFromListsToRows(List.from(menuButtonList)),
+              ),
             ),
           ),
         );

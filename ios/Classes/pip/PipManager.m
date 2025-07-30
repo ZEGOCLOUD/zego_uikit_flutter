@@ -18,6 +18,7 @@ API_AVAILABLE(ios(15.0))
 @property (nonatomic, assign) BOOL isAutoStarted;
 @property (nonatomic, assign) CGFloat aspectWidth;
 @property (nonatomic, assign) CGFloat aspectHeight;
+@property (nonatomic, assign) ZegoViewMode currentViewMode;
 
 @property (nonatomic, strong) AVPictureInPictureController *pipController;
 @property (nonatomic, strong) AVPictureInPictureVideoCallViewController *pipCallVC;
@@ -45,6 +46,7 @@ API_AVAILABLE(ios(15.0))
         self.isAutoStarted = YES;
         self.aspectWidth = 9;
         self.aspectHeight = 16;
+        self.currentViewMode = ZegoViewModeAspectFit;
         
         self.flutterVideoViewDictionary = [NSMutableDictionary dictionary];
     }
@@ -246,11 +248,12 @@ API_AVAILABLE(ios(15.0))
     [[ZegoExpressEngine sharedEngine] startPlayingStream:streamID];
 }
 
-- (void)updatePlayingStreamView:(NSString *)streamID videoView:(UIView *)videoView {
-    NSLog(@"[PIPManager] updatePlayingStreamView, stream id:%@, video view:%@", streamID, videoView);
+- (void)updatePlayingStreamView:(NSString *)streamID videoView:(UIView *)videoView viewMode:(NSNumber *)viewMode{
+    NSLog(@"[PIPManager] updatePlayingStreamView, stream id:%@, video view:%@, view mode:%@", streamID, videoView, viewMode);
     
     // add a layer for custom rendering to the video view, if not found, add one
     [self addFlutterLayerWithView:streamID :videoView];
+    [self setViewMode:(ZegoViewMode)[viewMode integerValue]];
     
     if(self.pipController != nil && self.pipController.isPictureInPictureActive) {
         [self updatePIPStreamID: streamID];
@@ -274,7 +277,7 @@ API_AVAILABLE(ios(15.0))
     NSLog(@"[PIPManager] createAVSampleBufferDisplayLayer");
     
     AVSampleBufferDisplayLayer *layer = [[AVSampleBufferDisplayLayer alloc] init];
-    layer.videoGravity = AVLayerVideoGravityResizeAspect;
+    layer.videoGravity = [self videoGravityForViewMode:self.currentViewMode];
     layer.opaque = YES;
     
     return layer;
@@ -487,7 +490,9 @@ API_AVAILABLE(ios(15.0))
         displayLayer = [self createAVSampleBufferDisplayLayer];
         displayLayer.name = kFlutterLayerName;
         [videoView.layer addSublayer:displayLayer];
+        
         displayLayer.frame = videoView.bounds;
+        displayLayer.videoGravity = [self videoGravityForViewMode:self.currentViewMode];
         
         NSLog(@"[PIPManager] addFlutterLayerWithView, layer not found, add layer:%@ in videoView:%@", displayLayer, videoView);
     }
@@ -529,6 +534,38 @@ API_AVAILABLE(ios(15.0))
         
         self.pipLayer = [self createAVSampleBufferDisplayLayer];
         [self.pipVideoView addDisplayLayer:self.pipLayer];
+    }
+}
+
+- (void)setViewMode:(ZegoViewMode)viewMode {
+    NSLog(@"[PIPManager] setViewMode: %d", (int)viewMode);
+    
+    self.currentViewMode = viewMode;
+    
+    // 更新现有layer的videoGravity
+    if (self.pipLayer) {
+        self.pipLayer.videoGravity = [self videoGravityForViewMode:viewMode];
+    }
+    
+    // 更新所有flutter layer的videoGravity
+    for (UIView *videoView in self.flutterVideoViewDictionary.allValues) {
+        AVSampleBufferDisplayLayer *layer = [self getLayerOfView:videoView];
+        if (layer) {
+            layer.videoGravity = [self videoGravityForViewMode:viewMode];
+        }
+    }
+}
+
+- (NSString *)videoGravityForViewMode:(ZegoViewMode)viewMode {
+    switch (viewMode) {
+        case ZegoViewModeAspectFit:
+            return AVLayerVideoGravityResizeAspect;
+        case ZegoViewModeAspectFill:
+            return AVLayerVideoGravityResizeAspectFill;
+        case ZegoViewModeScaleToFill:
+            return AVLayerVideoGravityResize;
+        default:
+            return AVLayerVideoGravityResizeAspect;
     }
 }
 

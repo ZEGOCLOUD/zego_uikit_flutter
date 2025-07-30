@@ -928,7 +928,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     coreData.streamExtraInfo[streamID] = extraInfo;
 
-    ZegoLoggerService.logError(
+    ZegoLoggerService.logInfo(
       'try parse stream extra info($extraInfo)',
       tag: 'uikit-service-core',
       subTag: 'event',
