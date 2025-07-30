@@ -120,7 +120,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
                     width: 1.0,
                   ),
                   borderRadius: BorderRadius.circular(4.0),
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withValues(alpha: 0.5),
                 ),
                 child: Stack(
                   children: [
@@ -275,7 +275,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
                     ),
                     overlayShape: SliderComponentShape.noOverlay,
                     activeTrackColor: Colors.white,
-                    inactiveTrackColor: Colors.white.withOpacity(0.5),
+                    inactiveTrackColor: Colors.white.withValues(alpha: 0.5),
                     disabledThumbColor: Colors.white,
                     disabledActiveTrackColor: Colors.white,
                     disabledInactiveTrackColor: Colors.white,
@@ -405,9 +405,9 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
                               enabledThumbRadius: 6.0,
                             ),
                             overlayShape: SliderComponentShape.noOverlay,
-                            overlayColor: Colors.yellow.withOpacity(0.4),
+                            overlayColor: Colors.yellow.withValues(alpha: 0.4),
                             activeTrackColor: Colors.blue,
-                            inactiveTrackColor: Colors.blue.withOpacity(0.5),
+                            inactiveTrackColor: Colors.blue.withValues(alpha: 0.5),
                           ),
                           child: Slider(
                             min: 0,

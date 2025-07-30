@@ -73,7 +73,7 @@ class _ZegoDraggableBottomSheetState extends State<ZegoDraggableBottomSheet> {
               child: GestureDetector(
             onTap: () => setState(() => currentHeight = widget.minExtent),
             child: Container(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
               ),

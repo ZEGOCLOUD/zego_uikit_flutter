@@ -82,7 +82,7 @@ class _ZegoInRoomMessageInputState extends State<ZegoInRoomMessageInput> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.zR, vertical: 15.zR),
-      color: widget.backgroundColor ?? const Color(0xff222222).withOpacity(0.8),
+      color: widget.backgroundColor ?? const Color(0xff222222).withValues(alpha: 0.8),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: 90.zR,

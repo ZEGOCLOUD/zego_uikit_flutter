@@ -72,14 +72,14 @@ class _ZegoNetworkLoadingState extends State<ZegoNetworkLoading> {
                   CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
                       (widget.config?.progressColor ?? Colors.black)
-                          .withOpacity(0.2),
+                          .withValues(alpha: 0.2),
                     ),
                   ),
                   widget.config?.icon ??
                       Icon(
                         Icons.wifi_off,
                         color: (widget.config?.iconColor ?? Colors.black)
-                            .withOpacity(0.5),
+                            .withValues(alpha: 0.5),
                       ),
                 ],
               ),

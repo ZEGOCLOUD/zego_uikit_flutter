@@ -177,7 +177,7 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
         clipBehavior: Clip.antiAlias,
         elevation: 6.0,
         shadowColor:
-            (widget.borderColor ?? const Color(0xffA4A4A4)).withOpacity(0.3),
+            (widget.borderColor ?? const Color(0xffA4A4A4)).withValues(alpha: 0.3),
         child: child,
       ),
     );

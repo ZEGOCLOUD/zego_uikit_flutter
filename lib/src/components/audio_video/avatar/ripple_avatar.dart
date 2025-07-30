@@ -86,7 +86,7 @@ class _ZegoRippleAvatarState extends State<ZegoRippleAvatar> {
 
   Widget animation() {
     return RippleAnimation(
-      color: widget.color ?? const Color(0xffDBDDE3).withOpacity(0.1),
+      color: widget.color ?? const Color(0xffDBDDE3).withValues(alpha: 0.1),
       minRadius: widget.minRadius,
       radiusIncrement: widget.radiusIncrement,
       countReceiver: countNotifier,

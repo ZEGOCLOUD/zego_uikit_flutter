@@ -230,8 +230,8 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                Colors.grey.withOpacity(0.05),
-                                Colors.black.withOpacity(0.1),
+                                Colors.grey.withValues(alpha: 0.05),
+                                Colors.black.withValues(alpha: 0.1),
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -430,7 +430,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         clipBehavior: Clip.antiAlias,
         elevation: 6.0,
         shadowColor:
-            (widget.borderColor ?? const Color(0xffA4A4A4)).withOpacity(0.3),
+            (widget.borderColor ?? const Color(0xffA4A4A4)).withValues(alpha: 0.3),
         child: child,
       ),
     );

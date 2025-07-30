@@ -82,7 +82,7 @@ class ZegoInRoomMessageViewItem extends StatefulWidget {
 
   /// The background of chat message list items
   /// If you set the [backgroundColor], the [opacity] setting will be overridden.
-  /// You can use `backgroundColor.withOpacity(0.5)` to set the opacity of the background color.
+  /// You can use `backgroundColor.withValues(alpha: 0.5)` to set the opacity of the background color.
   final Color? backgroundColor;
 
   /// The max lines of chat message list items, default value is not limit.
@@ -118,7 +118,7 @@ class _ZegoInRoomLiveMessageViewItemState
 
   Widget item() {
     final defaultBackgroundColor =
-        const Color(0xff2a2a2a).withOpacity(widget.opacity ?? 0.5);
+        const Color(0xff2a2a2a).withValues(alpha: widget.opacity ?? 0.5);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

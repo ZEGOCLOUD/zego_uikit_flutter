@@ -87,7 +87,7 @@ class RipplePainter extends CustomPainter {
     double radius;
     if (wave != 0) {
       final opacity = (1 - ((wave - 1) / length)).clamp(0.0, 1.0);
-      paintColor = color.withOpacity(opacity);
+      paintColor = color.withValues(alpha: opacity);
 
       radius = minRadius * (1 + radiusIncrement * wave);
       final paint = Paint()

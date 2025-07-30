@@ -104,7 +104,7 @@ Future<bool> showTopModalSheet<T>(
           barrierDismissible: barrierDismissible,
           transitionDuration: const Duration(milliseconds: 250),
           barrierLabel: MaterialLocalizations.of(context).dialogLabel,
-          barrierColor: Colors.black.withOpacity(0.5),
+          barrierColor: Colors.black.withValues(alpha: 0.5),
           pageBuilder: (context, _, __) => ZegoScreenUtilInit(
             designSize: const Size(750, 1334),
             minTextAdapt: true,

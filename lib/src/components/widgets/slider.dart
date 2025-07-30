@@ -78,10 +78,10 @@ class _ZegoSliderState extends State<ZegoSlider> {
                 fontWeight: FontWeight.w400,
               ),
           valueIndicatorColor:
-              widget.textBackgroundColor ?? Colors.white.withOpacity(0.5),
+              widget.textBackgroundColor ?? Colors.white.withValues(alpha: 0.5),
           activeTrackColor: widget.activeTrackColor ?? Colors.white,
           inactiveTrackColor: widget.inactiveTrackColor ??
-              const Color(0xff000000).withOpacity(0.3),
+              const Color(0xff000000).withValues(alpha: 0.3),
           trackHeight: widget.trackHeight ?? 6.0.zR,
           thumbColor: widget.thumbColor ?? Colors.white,
           thumbShape: RoundSliderThumbShape(

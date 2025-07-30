@@ -267,7 +267,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2),
+        color: Colors.black.withValues(alpha: 0.2),
         borderRadius: const BorderRadius.all(Radius.circular(4)),
       ),
       child: Row(
@@ -369,7 +369,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
         borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius!)),
         clipBehavior: Clip.antiAlias,
         elevation: 6.0,
-        shadowColor: widget.borderColor.withOpacity(0.3),
+        shadowColor: widget.borderColor.withValues(alpha: 0.3),
         child: child,
       ),
     );
