@@ -176,8 +176,8 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
         borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius!)),
         clipBehavior: Clip.antiAlias,
         elevation: 6.0,
-        shadowColor:
-            (widget.borderColor ?? const Color(0xffA4A4A4)).withValues(alpha: 0.3),
+        shadowColor: (widget.borderColor ?? const Color(0xffA4A4A4))
+            .withValues(alpha: 0.3),
         child: child,
       ),
     );

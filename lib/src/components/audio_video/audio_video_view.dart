@@ -4,7 +4,6 @@ import 'dart:core';
 import 'dart:io' show Platform;
 
 // Flutter imports:
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -429,8 +428,8 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius!)),
         clipBehavior: Clip.antiAlias,
         elevation: 6.0,
-        shadowColor:
-            (widget.borderColor ?? const Color(0xffA4A4A4)).withValues(alpha: 0.3),
+        shadowColor: (widget.borderColor ?? const Color(0xffA4A4A4))
+            .withValues(alpha: 0.3),
         child: child,
       ),
     );

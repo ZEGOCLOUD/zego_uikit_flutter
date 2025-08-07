@@ -143,8 +143,6 @@ mixin ZegoSignalingPluginCoreAdvanceInvitationData {
 
   String? get _loginUser =>
       ZegoSignalingPluginCore.shared.coreData.currentUserID;
-  String? get _loginUserName =>
-      ZegoSignalingPluginCore.shared.coreData.currentUserName;
 
   void addAdvanceInvitationData(AdvanceInvitationData invitationData) {
     ZegoLoggerService.logInfo(

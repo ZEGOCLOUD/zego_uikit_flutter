@@ -154,12 +154,12 @@ class _ZegoOutsideRoomAudioVideoViewListState
             width: constraints.maxWidth,
             height: constraints.maxHeight,
             decoration: BoxDecoration(
-              color: widget.style.backgroundColor.withValues(alpha: 
-                widget.style.backgroundColorOpacity,
+              color: widget.style.backgroundColor.withValues(
+                alpha: widget.style.backgroundColorOpacity,
               ),
               border: Border.all(
-                color: widget.style.borderColor.withValues(alpha: 
-                  widget.style.borderColorOpacity,
+                color: widget.style.borderColor.withValues(
+                  alpha: widget.style.borderColorOpacity,
                 ),
               ),
               borderRadius: BorderRadius.all(
@@ -212,8 +212,8 @@ class _ZegoOutsideRoomAudioVideoViewListState
       height: height,
       decoration: BoxDecoration(
         border: Border.all(
-          color: widget.style.item.borderColor.withValues(alpha: 
-            widget.style.item.borderColorOpacity,
+          color: widget.style.item.borderColor.withValues(
+            alpha: widget.style.item.borderColorOpacity,
           ),
         ),
         borderRadius: BorderRadius.all(

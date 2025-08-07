@@ -23,7 +23,8 @@ class ZegoInRoomNotificationViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final messageBackgroundColor = const Color(0xff2a2a2a).withValues(alpha: 0.5);
+    final messageBackgroundColor =
+        const Color(0xff2a2a2a).withValues(alpha: 0.5);
     const messageNameColor = Color(0xffFFB763);
 
     return Column(

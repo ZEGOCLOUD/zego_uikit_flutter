@@ -407,7 +407,8 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
                             overlayShape: SliderComponentShape.noOverlay,
                             overlayColor: Colors.yellow.withValues(alpha: 0.4),
                             activeTrackColor: Colors.blue,
-                            inactiveTrackColor: Colors.blue.withValues(alpha: 0.5),
+                            inactiveTrackColor:
+                                Colors.blue.withValues(alpha: 0.5),
                           ),
                           child: Slider(
                             min: 0,

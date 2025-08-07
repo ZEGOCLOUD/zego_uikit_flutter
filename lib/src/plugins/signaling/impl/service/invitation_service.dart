@@ -179,7 +179,7 @@ mixin ZegoPluginInvitationService {
       );
     }
 
-    if (invitationID?.isEmpty ?? true) {
+    if (invitationID.isEmpty) {
       ZegoLoggerService.logError(
         'cancel invitation, '
         'invitationID is empty',
@@ -187,7 +187,7 @@ mixin ZegoPluginInvitationService {
         subTag: 'invitation service',
       );
       return ZegoSignalingPluginCancelInvitationResult(
-        invitationID: invitationID ?? '',
+        invitationID: invitationID,
         error: PlatformException(
           code: ZegoSignalingErrorCode.invitationCancelError.toString(),
           message: 'invitationID is empty',
