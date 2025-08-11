@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
-import 'package:zego_callkit/zego_callkit.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 
 // Project imports:
@@ -59,7 +58,10 @@ class ZegoUIKitSignalingPluginImpl
     return ZegoSignalingPluginCore.shared.uninit(forceDestroy: forceDestroy);
   }
 
-  Future<void> reportCallEnded(CXCallEndedReason endedReason, UUID uuid) async {
+  Future<void> reportCallEnded(
+    ZegoSignalingPluginCXCallEndedReason endedReason,
+    String uuid,
+  ) async {
     return ZegoSignalingPluginCore.shared.reportCallEnded(endedReason, uuid);
   }
 

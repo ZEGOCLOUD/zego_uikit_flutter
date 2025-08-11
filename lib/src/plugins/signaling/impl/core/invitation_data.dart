@@ -153,7 +153,10 @@ mixin ZegoSignalingPluginCoreInvitationData {
 
   InvitationData? removeInvitationData(String invitationID) {
     ZegoLoggerService.logInfo(
-      'remove invitation data, invitationID: $invitationID',
+      'remove invitation data, '
+      'invitationID: $invitationID, '
+      'containsKey:${invitationMap.containsKey(invitationID)}'
+      'map:$invitationMap, ',
       tag: 'uikit-plugin-signaling',
       subTag: 'invitation data',
     );
