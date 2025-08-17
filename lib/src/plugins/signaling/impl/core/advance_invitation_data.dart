@@ -655,7 +655,7 @@ mixin ZegoSignalingPluginCoreAdvanceInvitationData {
     String extendedData,
   ) async {
     ZegoLoggerService.logInfo(
-      'reject, '
+      'refuse, '
       'invitationID:$invitationID, '
       'extendedData:$extendedData, ',
       tag: 'uikit-plugin-signaling',
@@ -671,13 +671,13 @@ mixin ZegoSignalingPluginCoreAdvanceInvitationData {
         .then((result) {
       if (result.error == null) {
         ZegoLoggerService.logInfo(
-          'reject invitation done, result: $result',
+          'refuse invitation done, result: $result',
           tag: 'uikit-plugin-signaling',
           subTag: 'advance invitation data',
         );
       } else {
         ZegoLoggerService.logError(
-          'reject invitation failed, result: $result',
+          'refuse invitation failed, result: $result',
           tag: 'uikit-plugin-signaling',
           subTag: 'advance invitation data',
         );

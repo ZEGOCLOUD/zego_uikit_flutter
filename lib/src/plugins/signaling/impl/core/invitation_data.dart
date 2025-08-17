@@ -413,13 +413,13 @@ mixin ZegoSignalingPluginCoreInvitationData {
         .then((result) {
       if (result.error == null) {
         ZegoLoggerService.logInfo(
-          'reject invitation done, invitationID:$invitationID',
+          'refuse invitation done, invitationID:$invitationID',
           tag: 'uikit-plugin-signaling',
           subTag: 'invitation data',
         );
       } else {
         ZegoLoggerService.logError(
-          'reject invitation failed, error: ${result.error}',
+          'refuse invitation failed, error: ${result.error}',
           tag: 'uikit-plugin-signaling',
           subTag: 'invitation data',
         );

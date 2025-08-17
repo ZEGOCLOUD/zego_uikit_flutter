@@ -99,6 +99,8 @@ mixin ZegoAudioVideoService {
   /// local use front facing camera
   Future<bool> useFrontFacingCamera(
     bool isFrontFacing, {
+    /// Whether to ignore the camera's open state;
+    /// if not ignored, the operation will not be executed when the camera is not open
     bool ignoreCameraStatus = false,
   }) async {
     return ZegoUIKitCore.shared.useFrontFacingCamera(
