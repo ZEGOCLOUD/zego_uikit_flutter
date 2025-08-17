@@ -54,34 +54,42 @@ class _ZegoSwitchCameraButtonState extends State<ZegoSwitchCameraButton> {
     final sizeBoxSize = widget.iconSize ?? Size(56.zR, 56.zR);
 
     return ValueListenableBuilder<bool>(
-      valueListenable: ZegoUIKit()
-          .getUseFrontFacingCameraStateNotifier(ZegoUIKit().getLocalUser().id),
-      builder: (context, isFrontFacing, _) {
-        return GestureDetector(
-          onTap: () async {
-            final targetState = !isFrontFacing;
-            await ZegoUIKit().useFrontFacingCamera(targetState);
+        valueListenable:
+            ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id),
+        builder: (context, isCameraOn, _) {
+          return ValueListenableBuilder<bool>(
+            valueListenable: ZegoUIKit().getUseFrontFacingCameraStateNotifier(
+                ZegoUIKit().getLocalUser().id),
+            builder: (context, isFrontFacing, _) {
+              return GestureDetector(
+                onTap: isCameraOn
+                    ? () async {
+                        final targetState = !isFrontFacing;
+                        await ZegoUIKit().useFrontFacingCamera(targetState);
 
-            if (widget.onPressed != null) {
-              widget.onPressed!(targetState);
-            }
-          },
-          child: Container(
-            width: containerSize.width,
-            height: containerSize.height,
-            decoration: BoxDecoration(
-              color: widget.icon?.backgroundColor ??
-                  controlBarButtonCheckedBackgroundColor,
-              shape: BoxShape.circle,
-            ),
-            child: SizedBox.fromSize(
-              size: sizeBoxSize,
-              child: widget.icon?.icon ??
-                  UIKitImage.asset(StyleIconUrls.iconS1ControlBarFlipCamera),
-            ),
-          ),
-        );
-      },
-    );
+                        if (widget.onPressed != null) {
+                          widget.onPressed!(targetState);
+                        }
+                      }
+                    : null,
+                child: Container(
+                  width: containerSize.width,
+                  height: containerSize.height,
+                  decoration: BoxDecoration(
+                    color: widget.icon?.backgroundColor ??
+                        controlBarButtonCheckedBackgroundColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: SizedBox.fromSize(
+                    size: sizeBoxSize,
+                    child: widget.icon?.icon ??
+                        UIKitImage.asset(
+                            StyleIconUrls.iconS1ControlBarFlipCamera),
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 }
