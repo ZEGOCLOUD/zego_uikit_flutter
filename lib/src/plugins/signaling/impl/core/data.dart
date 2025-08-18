@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 // Package imports:
-import 'package:zego_callkit/zego_callkit.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 
 // Project imports:
@@ -139,7 +138,8 @@ class ZegoSignalingPluginCoreData
     uninitAdvanceInvitationData();
   }
 
-  Future<void> reportCallEnded(CXCallEndedReason endedReason, UUID uuid) async {
+  Future<void> reportCallEnded(
+      ZegoSignalingPluginCXCallEndedReason endedReason, String uuid) async {
     ZegoLoggerService.logInfo(
       'reportCallEnded, endedReason:$endedReason, uuid:$uuid',
       tag: 'uikit-plugin-signaling',

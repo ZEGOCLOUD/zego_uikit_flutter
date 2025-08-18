@@ -174,7 +174,10 @@ mixin ZegoSignalingPluginCoreAdvanceInvitationData {
     final data = advanceInvitationMap.remove(invitationID);
 
     ZegoLoggerService.logInfo(
-      'remove invitation data, invitationID: $invitationID, map:$advanceInvitationMap',
+      'remove invitation data, '
+      'invitationID: $invitationID, '
+      'containsKey: ${advanceInvitationMap.containsKey(invitationID)}, '
+      'map:$advanceInvitationMap, ',
       tag: 'uikit-plugin-signaling',
       subTag: 'advance invitation data',
     );

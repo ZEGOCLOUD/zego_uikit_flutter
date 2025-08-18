@@ -86,7 +86,7 @@ mixin ZegoPluginCallKitService {
         .getCallkitPerformSetHeldCallActionEventStream();
   }
 
-  Stream<ZegoSignalingPluginCallKitSetMutedCallActionEvent>
+  Stream<ZegoSignalingPluginCallKitActionEvent>
       getCallkitPerformSetMutedCallActionEventStream() {
     return ZegoPluginAdapter()
         .signalingPlugin!

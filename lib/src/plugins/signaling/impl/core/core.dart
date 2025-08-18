@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:zego_callkit/zego_callkit.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 
 // Project imports:
@@ -42,7 +41,10 @@ class ZegoSignalingPluginCore with ZegoSignalingPluginCoreEvent {
     return coreData.destroy(forceDestroy: forceDestroy);
   }
 
-  Future<void> reportCallEnded(CXCallEndedReason endedReason, UUID uuid) async {
+  Future<void> reportCallEnded(
+    ZegoSignalingPluginCXCallEndedReason endedReason,
+    String uuid,
+  ) async {
     return coreData.reportCallEnded(endedReason, uuid);
   }
 
