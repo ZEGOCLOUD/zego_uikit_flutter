@@ -17,7 +17,7 @@ dependencies:
 
   device_info_plus: ^11.5.0
   encrypt: ^5.0.3
-  flutter_logs: ^2.2.1
+  flutter_logs_yoer: ^2.2.1
   permission_handler: ^12.0.1
   native_device_orientation: ^2.0.3
   wakelock_plus: ^1.2.10

@@ -4,7 +4,7 @@ part of 'uikit_service.dart';
 mixin ZegoLoggerService {
   static bool isZegoLoggerInit = false;
 
-  Future<void> initLog({String folderName = 'uikit'}) async {
+  Future<void> initLog() async {
     if (isZegoLoggerInit) {
       return;
     }
@@ -14,7 +14,7 @@ mixin ZegoLoggerService {
     }
 
     try {
-      await FlutterLogs.initLogs(
+      await FlutterLogsYoer.initLogs(
               logLevelsEnabled: [
                 LogLevel.INFO,
                 LogLevel.WARNING,
@@ -25,13 +25,14 @@ mixin ZegoLoggerService {
               directoryStructure: DirectoryStructure.SINGLE_FILE_FOR_DAY,
               logTypesEnabled: ['device', 'network', 'errors'],
               logFileExtension: LogFileExtension.LOG,
-              logsWriteDirectoryName: 'zego_prebuilt/$folderName',
-              logsExportDirectoryName: 'zego_prebuilt/$folderName/Exported',
+              logsWriteDirectoryName: 'ZegoUIKits',
+              logsExportDirectoryName: 'ZegoUIKits/Exported',
+              useCachesDirectory: true,
               debugFileOperations: true,
               isDebuggable: true)
           .then((value) {
-        FlutterLogs.setDebugLevel(0);
-        FlutterLogs.logInfo(
+        FlutterLogsYoer.setDebugLevel(0);
+        FlutterLogsYoer.logInfo(
           'uikit',
           'log init done',
           '==========================================',
@@ -45,7 +46,7 @@ mixin ZegoLoggerService {
   }
 
   Future<void> clearLogs() async {
-    FlutterLogs.clearLogs();
+    FlutterLogsYoer.clearLogs();
   }
 
   static Future<void> logInfo(
@@ -58,7 +59,7 @@ mixin ZegoLoggerService {
       return;
     }
 
-    return FlutterLogs.logInfo(tag, subTag, logMessage);
+    return FlutterLogsYoer.logInfo(tag, subTag, logMessage);
   }
 
   static Future<void> logWarn(
@@ -71,7 +72,7 @@ mixin ZegoLoggerService {
       return;
     }
 
-    return FlutterLogs.logWarn(tag, subTag, logMessage);
+    return FlutterLogsYoer.logWarn(tag, subTag, logMessage);
   }
 
   static Future<void> logError(
@@ -84,7 +85,7 @@ mixin ZegoLoggerService {
       return;
     }
 
-    return FlutterLogs.logError(tag, subTag, logMessage);
+    return FlutterLogsYoer.logError(tag, subTag, logMessage);
   }
 
   static Future<void> logErrorTrace(
@@ -98,6 +99,6 @@ mixin ZegoLoggerService {
       return;
     }
 
-    return FlutterLogs.logErrorTrace(tag, subTag, logMessage, e);
+    return FlutterLogsYoer.logErrorTrace(tag, subTag, logMessage, e);
   }
 }
