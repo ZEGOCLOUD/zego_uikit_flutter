@@ -16,6 +16,11 @@ Future<bool> requestPermission(Permission permission) async {
     );
   }
 
+  ZegoLoggerService.logInfo(
+    '$permission status: $status',
+    tag: 'uikit',
+    subTag: 'permission',
+  );
   if (status != PermissionStatus.granted) {
     ZegoLoggerService.logError(
       '$permission permission not granted, $status',

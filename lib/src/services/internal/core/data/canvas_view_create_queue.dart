@@ -51,6 +51,7 @@ class ZegoStreamCanvasViewCreateQueue {
       () {
         ZegoLoggerService.logInfo(
           'task($uniqueKey) run finished, task queue size:${_taskList.length}, '
+          'keys:${_taskList.map((e) => '${e.key},')}, '
           'run next task',
           tag: 'uikit-stream',
           subTag: 'queue',
@@ -66,7 +67,8 @@ class ZegoStreamCanvasViewCreateQueue {
 
     _taskList.add(taskItem);
     ZegoLoggerService.logInfo(
-      'task($uniqueKey) is added, task queue size:${_taskList.length}',
+      'task($uniqueKey) is added, task queue size:${_taskList.length}, '
+      'keys:${_taskList.map((e) => '${e.key},')}',
       tag: 'uikit-stream',
       subTag: 'queue',
     );
@@ -95,7 +97,8 @@ class ZegoStreamCanvasViewCreateQueue {
     }
 
     ZegoLoggerService.logInfo(
-      'try get task, task queue size:${_taskList.length}',
+      'try get task, task queue size:${_taskList.length}, '
+      'keys:${_taskList.map((e) => '${e.key},')}',
       tag: 'uikit-stream',
       subTag: 'queue',
     );
