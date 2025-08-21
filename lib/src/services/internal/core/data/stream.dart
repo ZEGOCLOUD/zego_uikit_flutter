@@ -268,6 +268,27 @@ mixin ZegoUIKitCoreDataStream {
       subTag: 'stop preview',
     );
 
+    /// It is necessary to cancel the queue waiting in startpreview and the corresponding state that may exist,
+    /// otherwise it may not render next time
+    final queueKey = generateStreamID(
+      ZegoUIKitCore.shared.coreData.localUser.id,
+      ZegoUIKitCore.shared.coreData.room.id,
+      ZegoStreamType.main,
+    );
+    if (canvasViewCreateQueue.currentTaskKey == queueKey) {
+      ZegoLoggerService.logInfo(
+        'stopped canvas view queue',
+        tag: 'uikit-stream',
+        subTag: 'publish stream',
+      );
+
+      canvasViewCreateQueue.completeCurrentTask();
+
+      getLocalStreamChannel(
+        ZegoStreamType.main,
+      ).viewCreatingNotifier.value = false;
+    }
+
     await ZegoUIKitCore.shared.coreData.localUser
         .destroyTextureRenderer(streamType: ZegoStreamType.main);
 
