@@ -306,4 +306,10 @@ class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier
 
   @override
   int get value => _updateTimestamp;
+
+  @override
+  void dispose() {
+    _removeListenUserProperty();
+    super.dispose();
+  }
 }

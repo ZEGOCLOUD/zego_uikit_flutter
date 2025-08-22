@@ -155,9 +155,11 @@ class ZegoScreenUtil {
     bool minTextAdapt = false,
     ZegoFontSizeResolver? fontSizeResolver,
   }) {
+    // Capture the MediaQuery data before the async operation
+    final mediaQueryData = MediaQuery.maybeOf(context);
     return ZegoScreenUtil.ensureScreenSize().then((_) {
       return configure(
-        data: MediaQuery.maybeOf(context),
+        data: mediaQueryData,
         designSize: designSize,
         minTextAdapt: minTextAdapt,
         splitScreenMode: splitScreenMode,
@@ -172,7 +174,7 @@ class ZegoScreenUtil {
 
   /// 每个逻辑像素的字体像素数，字体的缩放比例
   /// The number of font pixels for each logical pixel.
-  double get textScaleFactor => _data.textScaleFactor;
+  double get textScaleFactor => _data.textScaler.scale(1.0);
 
   /// 设备的像素密度
   /// The size of the media in logical pixels (e.g, the size of the screen).

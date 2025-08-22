@@ -439,7 +439,8 @@ extension ZegoAudioVideoResourceModeExtension on ZegoAudioVideoResourceMode {
       case ZegoAudioVideoResourceMode.onlyRTC:
         return ZegoStreamResourceMode.OnlyRTC;
       case ZegoAudioVideoResourceMode.cdnPlus:
-        return ZegoStreamResourceMode.CDNPlus;
+        // CDNPlus is deprecated, use Default as fallback
+        return ZegoStreamResourceMode.Default;
     }
   }
 }

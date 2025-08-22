@@ -57,7 +57,7 @@ class _ZegoUIKitMediaWaveformState extends State<ZegoUIKitMediaWaveform> {
     );
   }
 
-  void onSoundLevelUpdated(soundLevel) {
+  void onSoundLevelUpdated(double soundLevel) {
     setState(() {
       _soundLevels.add(soundLevel);
       if (_soundLevels.length > soundLevelCount) {

@@ -1,8 +1,9 @@
-// Dart imports:
-import 'dart:ui' as ui;
+
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 
 class ZegoInputBoardWrapper extends StatefulWidget {
   const ZegoInputBoardWrapper({
@@ -17,7 +18,20 @@ class ZegoInputBoardWrapper extends StatefulWidget {
 }
 
 class _ZegoInputBoardWrapperState extends State<ZegoInputBoardWrapper> {
-  final padding = MediaQueryData.fromWindow(ui.window).padding;
+  late final EdgeInsets padding;
+  
+  @override
+  void initState() {
+    super.initState();
+    // Use View.of(context) instead of deprecated window
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final view = View.of(context);
+        padding = MediaQueryData.fromView(view).padding;
+        setState(() {});
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
