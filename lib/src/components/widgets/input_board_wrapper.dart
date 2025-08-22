@@ -1,9 +1,6 @@
-
-
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 
 class ZegoInputBoardWrapper extends StatefulWidget {
   const ZegoInputBoardWrapper({
@@ -19,7 +16,7 @@ class ZegoInputBoardWrapper extends StatefulWidget {
 
 class _ZegoInputBoardWrapperState extends State<ZegoInputBoardWrapper> {
   late final EdgeInsets padding;
-  
+
   @override
   void initState() {
     super.initState();
