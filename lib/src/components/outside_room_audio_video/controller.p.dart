@@ -409,14 +409,14 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
   Future<void> onStreamVisibleStateUpdate() async {
     if (ZegoOutsideRoomAudioVideoViewListPlayMode.autoPlay ==
         _config.playMode) {
-      streamsNotifier.value.forEach((stream) async {
+      for (final stream in streamsNotifier.value) {
         await playOne(
           user: stream.user,
           roomID: stream.roomID,
           toPlay: stream.isVisibleNotifier.value,
           withLog: false,
         );
-      });
+      }
     }
   }
 }
