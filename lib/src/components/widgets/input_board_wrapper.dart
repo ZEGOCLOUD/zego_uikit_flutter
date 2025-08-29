@@ -20,12 +20,15 @@ class _ZegoInputBoardWrapperState extends State<ZegoInputBoardWrapper> {
   @override
   void initState() {
     super.initState();
+
+    padding = EdgeInsets.zero;
     // Use View.of(context) instead of deprecated window
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        final view = View.of(context);
-        padding = MediaQueryData.fromView(view).padding;
-        setState(() {});
+        setState(() {
+          final view = View.of(context);
+          padding = MediaQueryData.fromView(view).padding;
+        });
       }
     });
   }

@@ -1,6 +1,6 @@
 name: zego_uikit
 description: ZegoUIKit is a low-code offering with pre-built and UI-ready components, such as AudioVideoView, CameraButtons, etc. Save time and assemble features fast with ZegoUIKit.
-version: 2.28.24
+version: 2.28.25
 homepage: https://www.zegocloud.com/
 
 environment:
@@ -13,7 +13,7 @@ dependencies:
 
   zego_plugin_adapter: ^2.13.10
 
-  zego_express_engine: ^3.20.0
+  zego_express_engine: ^3.22.0
 
   device_info_plus: ^11.5.0
   encrypt: ^5.0.3

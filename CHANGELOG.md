@@ -1,3 +1,8 @@
+## 2.28.25
+
+- Bugs
+  - fix compile error
+
 ## 2.28.24
 
 - Features

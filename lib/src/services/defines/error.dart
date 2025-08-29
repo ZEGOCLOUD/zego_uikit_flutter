@@ -115,6 +115,12 @@ class ZegoUIKitErrorCode {
   /// System error exception. For example, low memory, etc.
   static const int screenCaptureExceptionSystemError = 300010010;
 
+  /// Exception interrupted. For example, the user clicks the stop button in the control center during the capture process.
+  static const int screenCaptureExceptionInterrupted = 300010011;
+
+  /// Audio device exception. You need to restart the capture.
+  static const int screenCaptureExceptionAudioDeviceException = 300010012;
+
   static int fromZegoScreenCaptureExceptionType(
     ZegoScreenCaptureExceptionType exceptionType,
   ) {
@@ -139,6 +145,10 @@ class ZegoUIKitErrorCode {
         return screenCaptureExceptionSourceNotSpecified;
       case ZegoScreenCaptureExceptionType.SystemError:
         return screenCaptureExceptionSystemError;
+      case ZegoScreenCaptureExceptionType.ExceptionInterrupted:
+        return screenCaptureExceptionInterrupted;
+      case ZegoScreenCaptureExceptionType.AudioDeviceException:
+        return screenCaptureExceptionAudioDeviceException;
     }
   }
 
