@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  zego_plugin_adapter: ^2.13.10
+  zego_plugin_adapter: ^2.13.11
 
   zego_express_engine: ^3.22.0
 
