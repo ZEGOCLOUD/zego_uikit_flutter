@@ -1,3 +1,9 @@
+## 2.28.26
+
+- Bugs
+  - fix a crash error
+
+
 ## 2.28.25
 
 - Bugs

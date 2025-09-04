@@ -15,13 +15,12 @@ class ZegoInputBoardWrapper extends StatefulWidget {
 }
 
 class _ZegoInputBoardWrapperState extends State<ZegoInputBoardWrapper> {
-  late final EdgeInsets padding;
+  EdgeInsets padding = EdgeInsets.zero;
 
   @override
   void initState() {
     super.initState();
 
-    padding = EdgeInsets.zero;
     // Use View.of(context) instead of deprecated window
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
