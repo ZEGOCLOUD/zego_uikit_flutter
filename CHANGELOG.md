@@ -1,8 +1,12 @@
+## 2.28.27
+
+- Bugs
+  - Fixed the issue where iOS would get stuck during play streaming when has remote user which camera is turned off
+
 ## 2.28.26
 
 - Bugs
   - fix a crash error
-
 
 ## 2.28.25
 
