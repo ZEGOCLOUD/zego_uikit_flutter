@@ -32,4 +32,25 @@ mixin ZegoPluginNotificationService {
       androidSound: androidSound,
     );
   }
+
+  /// get notification arrived stream
+  Stream<ZegoSignalingPluginNotificationArrivedEvent>
+      getNotificationArrivedStream() {
+    return ZegoSignalingPluginCore.shared.coreData
+        .getNotificationArrivedStream();
+  }
+
+  /// get notification clicked stream
+  Stream<ZegoSignalingPluginNotificationClickedEvent>
+      getNotificationClickedStream() {
+    return ZegoSignalingPluginCore.shared.coreData
+        .getNotificationClickedStream();
+  }
+
+  /// get notification registered stream
+  Stream<ZegoSignalingPluginNotificationRegisteredEvent>
+      getNotificationRegisteredStream() {
+    return ZegoSignalingPluginCore.shared.coreData
+        .getNotificationRegisteredStream();
+  }
 }

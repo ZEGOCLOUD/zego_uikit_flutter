@@ -119,6 +119,7 @@ class ZegoSignalingPluginCoreData
 
     initInvitationData();
     initAdvanceInvitationData();
+    initNotificationData();
   }
 
   void uninitData() {
@@ -136,6 +137,7 @@ class ZegoSignalingPluginCoreData
 
     uninitInvitationData();
     uninitAdvanceInvitationData();
+    uninitNotificationData();
   }
 
   Future<void> reportCallEnded(
@@ -472,6 +474,8 @@ class ZegoSignalingPluginCoreData
       tag: 'uikit-plugin-signaling',
       subTag: 'core data',
     );
+
+    streamCtrlNotificationArrived?.add(event);
   }
 
   void onNotificationClicked(
@@ -481,6 +485,8 @@ class ZegoSignalingPluginCoreData
       tag: 'uikit-plugin-signaling',
       subTag: 'core data',
     );
+
+    streamCtrlNotificationClicked?.add(event);
   }
 
   void onNotificationRegistered(
@@ -490,6 +496,8 @@ class ZegoSignalingPluginCoreData
       tag: 'uikit-plugin-signaling',
       subTag: 'core data',
     );
+
+    streamCtrlNotificationRegistered?.add(event);
   }
 
   /// on room state changed

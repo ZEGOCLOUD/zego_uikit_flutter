@@ -43,10 +43,7 @@ class ZegoUIKitSignalingPluginImpl
   }
 
   /// init
-  Future<void> init(
-    int appID, {
-    String appSign = '',
-  }) async {
+  Future<void> init(int appID, {String appSign = ''}) async {
     initUserInRoomAttributes();
     return ZegoSignalingPluginCore.shared.init(appID: appID, appSign: appSign);
   }
@@ -75,11 +72,7 @@ class ZegoUIKitSignalingPluginImpl
     required String name,
     String token = '',
   }) async {
-    return ZegoSignalingPluginCore.shared.login(
-      id,
-      name,
-      token: token,
-    );
+    return ZegoSignalingPluginCore.shared.login(id, name, token: token);
   }
 
   /// logout
