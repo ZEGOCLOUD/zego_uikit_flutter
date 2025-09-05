@@ -562,6 +562,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       coreData.notifyStreamListControl(coreData.getStreamTypeByID(streamID));
     }
 
+    coreData.syncCanvasViewCreateQueue(streamType: streamType);
+
     targetUser.cameraException.value =
         ZegoUIKitDeviceExceptionTypeExtension.fromDeviceState(state);
   }

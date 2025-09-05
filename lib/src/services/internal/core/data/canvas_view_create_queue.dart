@@ -28,15 +28,31 @@ class ZegoStreamCanvasViewCreateQueue {
 
   void completeCurrentTask() {
     ZegoLoggerService.logInfo(
-      'complete current task($currentTaskKey)',
+      'try complete current task($currentTaskKey)',
       tag: 'uikit-stream',
       subTag: 'queue',
     );
+
+    if (_completer == null) {
+      ZegoLoggerService.logInfo(
+        'completer is null',
+        tag: 'uikit-stream',
+        subTag: 'queue',
+      );
+
+      return;
+    }
 
     final tempCompleter = _completer;
     _completer = null;
 
     if (!(tempCompleter?.isCompleted ?? true)) {
+      ZegoLoggerService.logInfo(
+        'current task($currentTaskKey) is completed',
+        tag: 'uikit-stream',
+        subTag: 'queue',
+      );
+
       tempCompleter?.complete();
     }
   }
@@ -78,7 +94,7 @@ class ZegoStreamCanvasViewCreateQueue {
   Future<void> _doTask() async {
     if (_isTaskRunning) {
       ZegoLoggerService.logInfo(
-        'task($currentTaskKey) is running',
+        'task($currentTaskKey) is running, ignore current do request',
         tag: 'uikit-stream',
         subTag: 'queue',
       );

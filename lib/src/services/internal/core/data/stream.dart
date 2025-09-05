@@ -1263,6 +1263,27 @@ mixin ZegoUIKitCoreDataStream {
     }
   }
 
+  void syncCanvasViewCreateQueue({
+    ZegoStreamType streamType = ZegoStreamType.main,
+  }) {
+    getAudioVideoList(streamType: streamType).forEach((user) {
+      if (canvasViewCreateQueue.currentTaskKey ==
+          getUserStreamChannel(user, streamType).streamID) {
+        if (user.camera.value) {
+          return;
+        }
+
+        ZegoLoggerService.logInfo(
+          'user($user) camera is close, try stopped canvas view queue',
+          tag: 'uikit-stream',
+          subTag: 'syncCanvasViewCreateQueue',
+        );
+
+        canvasViewCreateQueue.completeCurrentTask();
+      }
+    });
+  }
+
   /// will change data variables
   Future<void> stopPlayingStream(
     String streamID, {
