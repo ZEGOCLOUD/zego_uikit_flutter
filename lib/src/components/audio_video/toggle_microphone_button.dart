@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
+import 'package:zego_uikit/src/components/audio_video/button_rate_limit_mixin.dart';
 import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
 import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
@@ -47,8 +48,8 @@ class ZegoToggleMicrophoneButton extends StatefulWidget {
       _ZegoToggleMicrophoneButtonState();
 }
 
-class _ZegoToggleMicrophoneButtonState
-    extends State<ZegoToggleMicrophoneButton> {
+class _ZegoToggleMicrophoneButtonState extends State<ZegoToggleMicrophoneButton>
+    with ButtonRateLimitMixin {
   @override
   void initState() {
     super.initState();
@@ -100,21 +101,29 @@ class _ZegoToggleMicrophoneButtonState
   }
 
   void onPressed() {
-    /// get current microphone state
-    final valueNotifier =
-        ZegoUIKit().getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id);
+    if (!executeWithRateLimit(() {
+      /// get current microphone state
+      final valueNotifier =
+          ZegoUIKit().getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id);
 
-    final targetState = !valueNotifier.value;
+      final targetState = !valueNotifier.value;
 
-    if (targetState) {
-      requestPermission(Permission.microphone);
-    }
+      if (targetState) {
+        requestPermission(Permission.microphone);
+      }
 
-    /// reverse current state
-    ZegoUIKit().turnMicrophoneOn(targetState, muteMode: widget.muteMode);
+      /// reverse current state
+      ZegoUIKit().turnMicrophoneOn(targetState, muteMode: widget.muteMode);
 
-    if (widget.onPressed != null) {
-      widget.onPressed!(targetState);
+      if (widget.onPressed != null) {
+        widget.onPressed!(targetState);
+      }
+    })) {
+      ZegoLoggerService.logInfo(
+        "here",
+        tag: 'uikit-microphone',
+        subTag: 'switch microphone',
+      );
     }
   }
 }

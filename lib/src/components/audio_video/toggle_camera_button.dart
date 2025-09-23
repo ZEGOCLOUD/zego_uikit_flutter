@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
+import 'package:zego_uikit/src/components/audio_video/button_rate_limit_mixin.dart';
 import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
 import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
@@ -42,7 +43,8 @@ class ZegoToggleCameraButton extends StatefulWidget {
   State<ZegoToggleCameraButton> createState() => _ZegoToggleCameraButtonState();
 }
 
-class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton> {
+class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton>
+    with ButtonRateLimitMixin {
   @override
   void initState() {
     super.initState();
@@ -93,24 +95,32 @@ class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton> {
   }
 
   void onPressed() {
-    /// get current camera state
-    final valueNotifier =
-        ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id);
+    if (!executeWithRateLimit(() {
+      /// get current camera state
+      final valueNotifier =
+          ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id);
 
-    final targetState = !valueNotifier.value;
+      final targetState = !valueNotifier.value;
 
-    if (targetState) {
-      requestPermission(Permission.camera).then((value) {
+      if (targetState) {
+        requestPermission(Permission.camera).then((value) {
+          /// reverse current state
+          ZegoUIKit().turnCameraOn(true);
+        });
+      } else {
         /// reverse current state
-        ZegoUIKit().turnCameraOn(true);
-      });
-    } else {
-      /// reverse current state
-      ZegoUIKit().turnCameraOn(false);
-    }
+        ZegoUIKit().turnCameraOn(false);
+      }
 
-    if (widget.onPressed != null) {
-      widget.onPressed!(targetState);
+      if (widget.onPressed != null) {
+        widget.onPressed!(targetState);
+      }
+    })) {
+      ZegoLoggerService.logInfo(
+        "Click rate is limited, ignoring the current click",
+        tag: 'uikit-camera',
+        subTag: 'toggle camera',
+      );
     }
   }
 }

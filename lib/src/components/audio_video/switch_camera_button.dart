@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 // Project imports:
+import 'package:zego_uikit/src/components/audio_video/button_rate_limit_mixin.dart';
 import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
 import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
@@ -37,7 +38,8 @@ class ZegoSwitchCameraButton extends StatefulWidget {
   State<ZegoSwitchCameraButton> createState() => _ZegoSwitchCameraButtonState();
 }
 
-class _ZegoSwitchCameraButtonState extends State<ZegoSwitchCameraButton> {
+class _ZegoSwitchCameraButtonState extends State<ZegoSwitchCameraButton>
+    with ButtonRateLimitMixin {
   @override
   void initState() {
     super.initState();
@@ -64,11 +66,19 @@ class _ZegoSwitchCameraButtonState extends State<ZegoSwitchCameraButton> {
               return GestureDetector(
                 onTap: isCameraOn
                     ? () async {
-                        final targetState = !isFrontFacing;
-                        await ZegoUIKit().useFrontFacingCamera(targetState);
+                        if (!executeWithRateLimit(() async {
+                          final targetState = !isFrontFacing;
+                          await ZegoUIKit().useFrontFacingCamera(targetState);
 
-                        if (widget.onPressed != null) {
-                          widget.onPressed!(targetState);
+                          if (widget.onPressed != null) {
+                            widget.onPressed!(targetState);
+                          }
+                        })) {
+                          ZegoLoggerService.logInfo(
+                            "Click rate is limited, ignoring the current click",
+                            tag: 'uikit-camera',
+                            subTag: 'switch camera',
+                          );
                         }
                       }
                     : null,

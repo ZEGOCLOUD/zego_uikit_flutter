@@ -64,6 +64,7 @@ mixin ZegoChannelService {
   Future<void> enableCustomVideoRender(bool isEnabled) async {
     ZegoLoggerService.logInfo(
       'isEnabled:$isEnabled, '
+      'express engineState:${ZegoUIKitCore.shared.coreData.engineState}, '
       'roomState:${ZegoUIKitCore.shared.coreData.room.state.value}, '
       'isPreviewing:${ZegoUIKitCore.shared.coreData.isPreviewing}, '
       'isPublishingStream:${ZegoUIKitCore.shared.coreData.isPublishingStream}, '

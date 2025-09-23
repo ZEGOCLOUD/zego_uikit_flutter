@@ -153,6 +153,14 @@ class ZegoUIKitUser {
     return user.mainChannel.streamTimestamp;
   }
 
+  ValueNotifier<ZegoUIKitAudioRoute?> get audioRoute {
+    final user = ZegoUIKitCore.shared.coreData.getUser(id);
+    if (user.isEmpty) {
+      return ZegoUIKitCore.shared.coreData.getUserInMixerStream(id).audioRoute;
+    }
+    return user.audioRoute;
+  }
+
   ZegoUIKitUser.empty();
 
   bool isEmpty() {

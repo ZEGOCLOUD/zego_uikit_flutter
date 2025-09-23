@@ -138,6 +138,7 @@ class _ZegoLayoutGalleryState extends State<ZegoLayoutGallery> {
       layoutItems: [],
     );
 
+    /// TODO: play in rotation
     final layoutUsers = List<ZegoUIKitUser>.from(widget.userList);
 
     var lastUsers = <ZegoUIKitUser>[];

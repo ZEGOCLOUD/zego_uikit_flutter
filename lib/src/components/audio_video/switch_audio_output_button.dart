@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Project imports:
+import 'package:zego_uikit/src/components/audio_video/button_rate_limit_mixin.dart';
 import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
 import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
@@ -42,7 +43,7 @@ class ZegoSwitchAudioOutputButton extends StatefulWidget {
 }
 
 class _ZegoSwitchAudioOutputButtonState
-    extends State<ZegoSwitchAudioOutputButton> {
+    extends State<ZegoSwitchAudioOutputButton> with ButtonRateLimitMixin {
   @override
   void initState() {
     super.initState();
@@ -111,21 +112,29 @@ class _ZegoSwitchAudioOutputButtonState
   }
 
   void onPressed() {
-    final audioRoute = ZegoUIKit()
-        .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
-        .value;
-    if (ZegoUIKitAudioRoute.headphone == audioRoute ||
-        ZegoUIKitAudioRoute.bluetooth == audioRoute) {
-      ///  not support close
-      return;
-    }
+    if (!executeWithRateLimit(() {
+      final audioRoute = ZegoUIKit()
+          .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
+          .value;
+      if (ZegoUIKitAudioRoute.headphone == audioRoute ||
+          ZegoUIKitAudioRoute.bluetooth == audioRoute) {
+        ///  not support close
+        return;
+      }
 
-    final targetState = audioRoute != ZegoUIKitAudioRoute.speaker;
+      final targetState = audioRoute != ZegoUIKitAudioRoute.speaker;
 
-    ZegoUIKit().setAudioOutputToSpeaker(targetState);
+      ZegoUIKit().setAudioOutputToSpeaker(targetState);
 
-    if (widget.onPressed != null) {
-      widget.onPressed!(targetState);
+      if (widget.onPressed != null) {
+        widget.onPressed!(targetState);
+      }
+    })) {
+      ZegoLoggerService.logInfo(
+        "Click rate is limited, ignoring the current click",
+        tag: 'uikit-audio-output',
+        subTag: 'switch audio output',
+      );
     }
   }
 }
