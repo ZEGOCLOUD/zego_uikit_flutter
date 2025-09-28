@@ -625,7 +625,8 @@ mixin ZegoUIKitCoreDataStream {
     Key? canvasViewKey;
     if (Platform.isIOS && isEnablePlatformView) {
       /// iOS & platform view, express view id not callback sometimes, or call random
-      canvasViewKey = key;
+      /// This will trigger the issue of duplicate keys, and there is no problem after removing it for testing
+      // canvasViewKey = key;
     }
 
     ZegoLoggerService.logInfo(
