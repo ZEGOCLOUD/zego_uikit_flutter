@@ -1,3 +1,9 @@
+## 2.28.28
+
+- Update environment
+- Bugs
+  - Fixed the issue of duplicate key
+
 ## 2.28.27
 
 - Bugs
@@ -17,14 +23,14 @@
 
 - Features
   - When the camera is turned off, switching between the front and rear cameras is not allowed.
-  - Remove zpns dependency 
-  - The location for generating iOS logs has been changed to the same directory as the Zego SDK, and the folder name has been changed to ZegoUIKits 
+  - Remove zpns dependency
+  - The location for generating iOS logs has been changed to the same directory as the Zego SDK, and the folder name has been changed to ZegoUIKits
 - Update dependency
 
 ## 2.28.23
 
 - Bugs
-  - Fixed the issue where the menu was obscured when the navigation bar was enabled on some Android devices 
+  - Fixed the issue where the menu was obscured when the navigation bar was enabled on some Android devices
 
 ## 2.28.22
 
@@ -49,9 +55,10 @@
 ## 2.28.18
 
 - Bugs
-  - Fix black issue on local side when sharing media 
+  - Fix black issue on local side when sharing media
 
 ## 2.28.17
+
 - Bugs
   - Fix occasional video black render screen issue in live streaming
 
@@ -87,7 +94,6 @@
 - Bugs
   - clear current user room attributes after logout room
 
-
 ## 2.28.10
 
 - Bugs
@@ -108,7 +114,7 @@
   - add system version of device
 
 ## 2.28.6
-  
+
 - Features
   - Support for additional listening offline message handler
 
@@ -163,7 +169,7 @@
 ## 2.27.17
 
 - Add data analyze
-  
+
 ## 2.27.16
 
 - Add some logs
