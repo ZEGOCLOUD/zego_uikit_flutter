@@ -19,15 +19,10 @@ class ZegoUIKitBeautyPluginImpl {
       ZegoUIKitBeautyPluginImpl._internal();
 
   /// init
-  Future<void> init(
-    int appID, {
-    String appSign = '',
-    String licence = '',
-  }) async {
+  Future<void> init(int appID, String appSign) async {
     return ZegoBeautyPluginCore.shared.init(
       appID: appID,
       appSign: appSign,
-      licence: licence,
     );
   }
 
