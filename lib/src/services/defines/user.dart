@@ -28,138 +28,37 @@ class ZegoUIKitUser {
     );
   }
 
-  ValueNotifier<bool> get microphone {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData.getUserInMixerStream(id).microphone;
-    }
-    return user.microphone;
-  }
+  ValueNotifier<bool> get microphone => _tryGetUser.microphone;
 
-  ValueNotifier<bool> get microphoneMuteMode {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData
-          .getUserInMixerStream(id)
-          .microphoneMuteMode;
-    }
-    return user.microphoneMuteMode;
-  }
+  ValueNotifier<bool> get microphoneMuteMode => _tryGetUser.microphoneMuteMode;
 
-  ValueNotifier<ZegoUIKitDeviceExceptionType?> get microphoneException {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData
-          .getUserInMixerStream(id)
-          .microphoneException;
-    }
-    return user.microphoneException;
-  }
+  ValueNotifier<ZegoUIKitDeviceExceptionType?> get microphoneException =>
+      _tryGetUser.microphoneException;
 
-  ValueNotifier<bool> get camera {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData.getUserInMixerStream(id).camera;
-    }
-    return user.camera;
-  }
+  ValueNotifier<bool> get camera => _tryGetUser.camera;
 
-  ValueNotifier<bool> get cameraMuteMode {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData
-          .getUserInMixerStream(id)
-          .cameraMuteMode;
-    }
-    return user.cameraMuteMode;
-  }
+  ValueNotifier<bool> get cameraMuteMode => _tryGetUser.cameraMuteMode;
 
-  ValueNotifier<ZegoUIKitDeviceExceptionType?> get cameraException {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData
-          .getUserInMixerStream(id)
-          .cameraException;
-    }
-    return user.cameraException;
-  }
+  ValueNotifier<ZegoUIKitDeviceExceptionType?> get cameraException =>
+      _tryGetUser.cameraException;
 
-  Stream<double> get soundLevel {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData
-              .getUserInMixerStream(id)
-              .mainChannel
-              .soundLevelStream
-              ?.stream ??
-          const Stream.empty();
-    }
-    return user.mainChannel.soundLevelStream?.stream ?? const Stream.empty();
-  }
+  Stream<double> get soundLevel =>
+      _tryGetUser.mainChannel.soundLevelStream?.stream ?? const Stream.empty();
 
-  StreamController<double>? get soundLevelStreamController {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData
-          .getUserInMixerStream(id)
-          .mainChannel
-          .soundLevelStream;
-    }
-    return user.mainChannel.soundLevelStream;
-  }
+  StreamController<double>? get soundLevelStreamController =>
+      _tryGetUser.mainChannel.soundLevelStream;
 
-  Stream<double> get auxSoundLevel {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData
-              .getUserInMixerStream(id)
-              .auxChannel
-              .soundLevelStream
-              ?.stream ??
-          const Stream.empty();
-    }
-    return user.auxChannel.soundLevelStream?.stream ?? const Stream.empty();
-  }
+  Stream<double> get auxSoundLevel =>
+      _tryGetUser.auxChannel.soundLevelStream?.stream ?? const Stream.empty();
 
-  ValueNotifier<ZegoUIKitUserAttributes> get inRoomAttributes {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData
-          .getUserInMixerStream(id)
-          .inRoomAttributes;
-    }
-    return user.inRoomAttributes;
-  }
+  ValueNotifier<ZegoUIKitUserAttributes> get inRoomAttributes =>
+      _tryGetUser.inRoomAttributes;
 
-  String get streamID {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData
-          .getUserInMixerStream(id)
-          .mainChannel
-          .streamID;
-    }
-    return user.mainChannel.streamID;
-  }
+  String get streamID => _tryGetUser.mainChannel.streamID;
 
-  int get streamTimestamp {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData
-          .getUserInMixerStream(id)
-          .mainChannel
-          .streamTimestamp;
-    }
-    return user.mainChannel.streamTimestamp;
-  }
+  int get streamTimestamp => _tryGetUser.mainChannel.streamTimestamp;
 
-  ValueNotifier<ZegoUIKitAudioRoute?> get audioRoute {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    if (user.isEmpty) {
-      return ZegoUIKitCore.shared.coreData.getUserInMixerStream(id).audioRoute;
-    }
-    return user.audioRoute;
-  }
+  ValueNotifier<ZegoUIKitAudioRoute?> get audioRoute => _tryGetUser.audioRoute;
 
   ZegoUIKitUser.empty();
 
@@ -177,6 +76,18 @@ class ZegoUIKitUser {
 
   ZegoUIKitUser.fromZego(ZegoUser zegoUser)
       : this(id: zegoUser.userID, name: zegoUser.userName);
+
+  ZegoUIKitCoreUser get _tryGetUser {
+    final user = ZegoUIKitCore.shared.coreData.getUser(id);
+    final userPointer = identityHashCode(user);
+    debugPrint('_tryGetUser id:$id, pointer:$userPointer');
+    if (user.isEmpty) {
+      final mixerUser = ZegoUIKitCore.shared.coreData.getUserInMixerStream(id);
+      return mixerUser.isEmpty ? user : mixerUser;
+    }
+
+    return user;
+  }
 
   @override
   String toString() {
