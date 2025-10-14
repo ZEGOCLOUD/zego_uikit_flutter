@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/button_rate_limit_mixin.dart';
@@ -47,6 +48,11 @@ class _ZegoSwitchAudioOutputButtonState
   @override
   void initState() {
     super.initState();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      /// synchronizing the default status
+      ZegoUIKit().setAudioOutputToSpeaker(widget.defaultUseSpeaker);
+    });
   }
 
   @override
