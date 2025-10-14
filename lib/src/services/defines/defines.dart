@@ -14,3 +14,4 @@ export 'pip.dart';
 export 'device.dart';
 export 'reporter.dart';
 export 'network.dart';
+export 'log_exporter.dart';
