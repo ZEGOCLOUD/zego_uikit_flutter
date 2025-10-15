@@ -1,3 +1,8 @@
+## 2.28.29
+
+- Features
+  - Support export log by `ZegoUIKit().exportLogs()`
+
 ## 2.28.28
 
 - Update environment
