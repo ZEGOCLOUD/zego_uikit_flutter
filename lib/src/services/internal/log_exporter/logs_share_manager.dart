@@ -67,7 +67,7 @@ class ZegoLogExporterShareManager {
   /// [fileName] Zip file name (without extension), defaults to current timestamp
   /// [fileTypes] List of file types to collect, defaults to [ZegoLogExporterFileType.txt, ZegoLogExporterFileType.log, ZegoLogExporterFileType.zip]
   /// [directories] List of directory types to collect, defaults to 5 log directories
-  /// [onProgress] Optional progress callback, returns number of processed files
+  /// [onProgress] Optional progress callback, returns progress percentage (0.0 to 1.0)
   Future<bool> share({
     String? title,
     String? content,
@@ -75,7 +75,7 @@ class ZegoLogExporterShareManager {
     List<ZegoLogExporterFileType> fileTypes = const [
       ZegoLogExporterFileType.txt,
       ZegoLogExporterFileType.log,
-      ZegoLogExporterFileType.zip
+      ZegoLogExporterFileType.zip,
     ],
     List<ZegoLogExporterDirectoryType> directories = const [
       ZegoLogExporterDirectoryType.zegoUIKits,
@@ -84,7 +84,7 @@ class ZegoLogExporterShareManager {
       ZegoLogExporterDirectoryType.zefLogs,
       ZegoLogExporterDirectoryType.zegoLogs,
     ],
-    void Function(int processedFiles)? onProgress,
+    void Function(double progress)? onProgress,
   }) async {
     String? zipPath;
     try {
@@ -116,7 +116,8 @@ class ZegoLogExporterShareManager {
       );
 
       debugPrint(
-          'ZegoLogExporterShareManager: Successfully shared logs zip file');
+        'ZegoLogExporterShareManager: Successfully shared logs zip file',
+      );
       return true;
     } catch (e, stackTrace) {
       debugPrint('ZegoLogExporterShareManager: Error sharing logs: $e');
@@ -135,7 +136,7 @@ class ZegoLogExporterShareManager {
   /// [fileName] Zip file name (without extension), defaults to current timestamp
   /// [fileTypes] List of file types to collect, defaults to [ZegoLogExporterFileType.txt, ZegoLogExporterFileType.log, ZegoLogExporterFileType.zip]
   /// [directories] List of directory types to collect, defaults to 5 log directories
-  /// [onProgress] Optional progress callback
+  /// [onProgress] Optional progress callback, returns progress percentage (0.0 to 1.0)
   ///
   /// Returns the full path of the zip file, or null if failed
   Future<String?> _collectLogs({
@@ -143,7 +144,7 @@ class ZegoLogExporterShareManager {
     List<ZegoLogExporterFileType> fileTypes = const [
       ZegoLogExporterFileType.txt,
       ZegoLogExporterFileType.log,
-      ZegoLogExporterFileType.zip
+      ZegoLogExporterFileType.zip,
     ],
     List<ZegoLogExporterDirectoryType> directories = const [
       ZegoLogExporterDirectoryType.zegoUIKits,
@@ -152,24 +153,30 @@ class ZegoLogExporterShareManager {
       ZegoLogExporterDirectoryType.zefLogs,
       ZegoLogExporterDirectoryType.zegoLogs,
     ],
-    void Function(int processedFiles)? onProgress,
+    void Function(double progress)? onProgress,
   }) async {
     try {
       final tempDir = await getTemporaryDirectory();
       final archive = Archive();
       int processedFiles = 0;
+      int totalFiles = 0;
 
       /// File type filtering
-      final includeAllFileTypes =
-          fileTypes.contains(ZegoLogExporterFileType.all);
+      final includeAllFileTypes = fileTypes.contains(
+        ZegoLogExporterFileType.all,
+      );
 
       /// Directory type filtering
-      final includeAllDirectories =
-          directories.contains(ZegoLogExporterDirectoryType.all);
+      final includeAllDirectories = directories.contains(
+        ZegoLogExporterDirectoryType.all,
+      );
 
       void updateProgress() {
         processedFiles++;
-        onProgress?.call(processedFiles);
+        if (totalFiles > 0) {
+          final progress = processedFiles / totalFiles;
+          onProgress?.call(progress);
+        }
       }
 
       /// Check if file matches specified type
@@ -205,7 +212,8 @@ class ZegoLogExporterShareManager {
 
         // Only print skip message once, not in the loop
         debugPrint(
-            'ZegoLogExporterShareManager: Skipping Android directory (not in config): $firstLevelDirName');
+          'ZegoLogExporterShareManager: Skipping Android directory (not in config): $firstLevelDirName',
+        );
         return false;
       }
 
@@ -221,7 +229,8 @@ class ZegoLogExporterShareManager {
 
         // Only print skip message once, not in the loop
         debugPrint(
-            'ZegoLogExporterShareManager: Skipping iOS directory (not in config): $dirName');
+          'ZegoLogExporterShareManager: Skipping iOS directory (not in config): $dirName',
+        );
         return false;
       }
 
@@ -237,135 +246,127 @@ class ZegoLogExporterShareManager {
           );
         } catch (e) {
           debugPrint(
-              'ZegoLogExporterShareManager: Error adding file ${file.path}: $e');
+            'ZegoLogExporterShareManager: Error adding file ${file.path}: $e',
+          );
         }
       }
 
-      /// Collect Android logs
-      if (Platform.isAndroid) {
-        debugPrint('ZegoLogExporterShareManager: Collecting Android logs...');
-        final appDir = await getExternalStorageDirectory();
-        if (appDir != null) {
-          final filesDir = Directory(appDir.path);
-          if (await filesDir.exists()) {
-            // Track all discovered directories for debugging
-            final Set<String> discoveredDirs = {};
+      /// Process files with callback (for counting or collecting)
+      Future<void> processFiles({
+        required Future<void> Function(File file, String archivePath) onFile,
+      }) async {
+        /// Process Android logs
+        if (Platform.isAndroid) {
+          final appDir = await getExternalStorageDirectory();
+          if (appDir != null) {
+            final filesDir = Directory(appDir.path);
+            if (await filesDir.exists()) {
+              await for (final entity in filesDir.list(recursive: true)) {
+                if (entity is File) {
+                  final name = entity.uri.pathSegments.last;
+                  final relativePath = p.relative(
+                    entity.path,
+                    from: filesDir.path,
+                  );
+                  final isRootFile = !relativePath.contains('/');
 
-            await for (final entity in filesDir.list(recursive: true)) {
-              final name = entity.uri.pathSegments.last;
-              final relativePath = p.relative(entity.path, from: filesDir.path);
-
-              // Track first-level directories
-              if (relativePath.contains('/')) {
-                final firstLevelDir =
-                    relativePath.substring(0, relativePath.indexOf('/'));
-                discoveredDirs.add(firstLevelDir);
-              }
-
-              if (entity is File) {
-                /// Check if file should be collected
-                /// For root directory files (no '/' in path), only check file type
-                /// For subdirectory files, check both directory and file type
-                final isRootFile = !relativePath.contains('/');
-
-                if (isRootFile) {
-                  /// Root directory file: only check file type
-                  if (shouldIncludeFile(name)) {
-                    await addFileToArchive(
-                        entity, 'zego_logs_android/$relativePath');
-                  }
-                } else {
-                  /// Subdirectory file: check directory first, then file type
-                  if (shouldIncludeDirectory(relativePath)) {
+                  if (isRootFile) {
+                    /// Root directory file: only check file type
                     if (shouldIncludeFile(name)) {
-                      await addFileToArchive(
-                          entity, 'zego_logs_android/$relativePath');
+                      await onFile(entity, 'zego_logs_android/$relativePath');
                     }
                   } else {
-                    debugPrint(
-                        'ZegoLogExporterShareManager: Skipping Android directory: $relativePath');
-                  }
-                }
-              }
-            }
-
-            // Print all discovered directories
-            debugPrint(
-                'ZegoLogExporterShareManager: Discovered Android directories: ${discoveredDirs.toList()..sort()}');
-          }
-        }
-      }
-
-      /// Collect iOS logs
-      else if (Platform.isIOS) {
-        debugPrint('ZegoLogExporterShareManager: Collecting iOS logs...');
-
-        /// Collect logs from Application Support directory
-        final appSupportDir = await getApplicationSupportDirectory();
-        final logsDir = Directory('${appSupportDir.path}/Logs');
-        if (await logsDir.exists()) {
-          await for (final entity in logsDir.list(recursive: true)) {
-            if (entity is File) {
-              final name = entity.uri.pathSegments.last;
-
-              /// Check if file type matches
-              if (shouldIncludeFile(name)) {
-                final relativePath =
-                    p.relative(entity.path, from: logsDir.path);
-                await addFileToArchive(entity, 'ios_logs/$relativePath');
-              }
-            }
-          }
-        }
-
-        /// Collect logs from Caches directory
-        final cachesDir = await getTemporaryDirectory();
-        final parentDir = cachesDir.parent;
-        final cachesDirPath = Directory('${parentDir.path}/Caches');
-
-        if (await cachesDirPath.exists()) {
-          /// Iterate through all first-level items under Caches
-          await for (final entity in cachesDirPath.list()) {
-            if (entity is File) {
-              /// Root directory file in Caches: only check file type
-              final fileName = entity.uri.pathSegments.last;
-              if (shouldIncludeFile(fileName)) {
-                final relativePath =
-                    p.relative(entity.path, from: cachesDirPath.path);
-                debugPrint(
-                    'ZegoLogExporterShareManager: Processing iOS Caches root file: $fileName');
-                await addFileToArchive(entity, 'zego_logs_ios/$relativePath');
-              }
-            } else if (entity is Directory) {
-              final dirName = entity.path.split('/').last;
-
-              /// Check if this directory should be collected (directly by directory name)
-              if (shouldIncludeDirectoryName(dirName)) {
-                debugPrint(
-                    'ZegoLogExporterShareManager: Processing iOS Caches directory: $dirName');
-                await for (final file in entity.list(recursive: true)) {
-                  if (file is File) {
-                    final fileName = file.uri.pathSegments.last;
-
-                    /// Check if file type matches
-                    if (shouldIncludeFile(fileName)) {
-                      final relativePath =
-                          p.relative(file.path, from: entity.path);
-                      await addFileToArchive(
-                        file,
-                        'zego_logs_ios/$dirName/$relativePath',
-                      );
+                    /// Subdirectory file: check directory first, then file type
+                    if (shouldIncludeDirectory(relativePath)) {
+                      if (shouldIncludeFile(name)) {
+                        await onFile(entity, 'zego_logs_android/$relativePath');
+                      }
                     }
                   }
                 }
-              } else {
-                debugPrint(
-                    'ZegoLogExporterShareManager: Skipping iOS Caches directory: $dirName');
+              }
+            }
+          }
+        }
+        /// Process iOS logs
+        else if (Platform.isIOS) {
+          /// Process logs from Application Support directory
+          final appSupportDir = await getApplicationSupportDirectory();
+          final logsDir = Directory('${appSupportDir.path}/Logs');
+          if (await logsDir.exists()) {
+            await for (final entity in logsDir.list(recursive: true)) {
+              if (entity is File) {
+                final name = entity.uri.pathSegments.last;
+                if (shouldIncludeFile(name)) {
+                  final relativePath = p.relative(
+                    entity.path,
+                    from: logsDir.path,
+                  );
+                  await onFile(entity, 'zego_logs_ios/$relativePath');
+                }
+              }
+            }
+          }
+
+          /// Process logs from Caches directory
+          final cachesDir = await getTemporaryDirectory();
+          final parentDir = cachesDir.parent;
+          final cachesDirPath = Directory('${parentDir.path}/Caches');
+
+          if (await cachesDirPath.exists()) {
+            await for (final entity in cachesDirPath.list()) {
+              if (entity is File) {
+                /// Root directory file in Caches: only check file type
+                final fileName = entity.uri.pathSegments.last;
+                if (shouldIncludeFile(fileName)) {
+                  final relativePath = p.relative(
+                    entity.path,
+                    from: cachesDirPath.path,
+                  );
+                  await onFile(entity, 'zego_logs_ios/$relativePath');
+                }
+              } else if (entity is Directory) {
+                final dirName = entity.path.split('/').last;
+                if (shouldIncludeDirectoryName(dirName)) {
+                  await for (final file in entity.list(recursive: true)) {
+                    if (file is File) {
+                      final fileName = file.uri.pathSegments.last;
+                      if (shouldIncludeFile(fileName)) {
+                        final relativePath = p.relative(
+                          file.path,
+                          from: entity.path,
+                        );
+                        await onFile(
+                          file,
+                          'zego_logs_ios/$dirName/$relativePath',
+                        );
+                      }
+                    }
+                  }
+                }
               }
             }
           }
         }
       }
+
+      /// First pass: Count total files to be processed
+      debugPrint('ZegoLogExporterShareManager: Scanning files...');
+      await processFiles(
+        onFile: (file, archivePath) async {
+          totalFiles++;
+        },
+      );
+      debugPrint(
+        'ZegoLogExporterShareManager: Found $totalFiles files to process',
+      );
+
+      /// Second pass: Collect logs and add to archive
+      await processFiles(
+        onFile: (file, archivePath) async {
+          await addFileToArchive(file, archivePath);
+        },
+      );
 
       /// Check if any logs were collected
       if (archive.isEmpty) {
@@ -426,10 +427,12 @@ class ZegoLogExporterShareManager {
           try {
             await entity.delete();
             debugPrint(
-                'ZegoLogExporterShareManager: Cleaned up ${entity.path}');
+              'ZegoLogExporterShareManager: Cleaned up ${entity.path}',
+            );
           } catch (e) {
             debugPrint(
-                'ZegoLogExporterShareManager: Error cleaning ${entity.path}: $e');
+              'ZegoLogExporterShareManager: Error cleaning ${entity.path}: $e',
+            );
           }
         }
       }

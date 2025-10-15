@@ -953,7 +953,6 @@ class ZegoUIKitCore
     );
     ZegoExpressEngine.instance.setAudioRouteToSpeaker(useSpeaker);
 
-    // TODO: use sdk callback to update audioRoute
     if (useSpeaker) {
       coreData.localUser.lastAudioRoute = coreData.localUser.audioRoute.value;
       coreData.localUser.audioRoute.value = ZegoUIKitAudioRoute.speaker;
@@ -963,6 +962,11 @@ class ZegoUIKitCore
       }
       coreData.localUser.audioRoute.value = coreData.localUser.lastAudioRoute;
     }
+    ZegoLoggerService.logInfo(
+      'audioRoute:${coreData.localUser.audioRoute.value}',
+      tag: 'uikit-service-core',
+      subTag: 'set audio output to speaker',
+    );
 
     return true;
   }

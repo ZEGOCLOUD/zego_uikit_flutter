@@ -56,7 +56,7 @@ mixin ZegoLoggerService {
   /// [fileName] Zip file name (without extension), defaults to current timestamp
   /// [fileTypes] List of file types to collect, defaults to [ZegoLogExporterFileType.txt, ZegoLogExporterFileType.log, ZegoLogExporterFileType.zip]
   /// [directories] List of directory types to collect, defaults to 5 log directories
-  /// [onProgress] Optional progress callback, returns number of processed files
+  /// [onProgress] Optional progress callback, returns progress percentage (0.0 to 1.0)
   Future<bool> exportLogs({
     String? title,
     String? content,
@@ -73,7 +73,7 @@ mixin ZegoLoggerService {
       ZegoLogExporterDirectoryType.zefLogs,
       ZegoLogExporterDirectoryType.zegoLogs,
     ],
-    void Function(int processedFiles)? onProgress,
+    void Function(double progress)? onProgress,
   }) async {
     return ZegoLogExporterShareManager().share(
       title: title,
