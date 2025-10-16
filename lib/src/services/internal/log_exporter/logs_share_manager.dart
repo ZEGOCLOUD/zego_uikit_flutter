@@ -10,6 +10,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+// Project imports:
 import 'package:zego_uikit/src/services/services.dart';
 
 /// Log share manager
@@ -288,6 +289,7 @@ class ZegoLogExporterShareManager {
             }
           }
         }
+
         /// Process iOS logs
         else if (Platform.isIOS) {
           /// Process logs from Application Support directory

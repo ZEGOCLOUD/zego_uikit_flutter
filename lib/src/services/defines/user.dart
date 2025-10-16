@@ -79,8 +79,6 @@ class ZegoUIKitUser {
 
   ZegoUIKitCoreUser get _tryGetUser {
     final user = ZegoUIKitCore.shared.coreData.getUser(id);
-    final userPointer = identityHashCode(user);
-    debugPrint('_tryGetUser id:$id, pointer:$userPointer');
     if (user.isEmpty) {
       final mixerUser = ZegoUIKitCore.shared.coreData.getUserInMixerStream(id);
       return mixerUser.isEmpty ? user : mixerUser;
