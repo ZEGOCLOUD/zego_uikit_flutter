@@ -1,3 +1,5 @@
+import 'package:zego_express_engine/zego_express_engine.dart';
+
 class ZegoMobileSystemVersion {
   int major = 0;
   int minor = 0;
@@ -13,3 +15,5 @@ class ZegoMobileSystemVersion {
 
   ZegoMobileSystemVersion.empty();
 }
+
+typedef ZegoUIKitAudioDeviceMode = ZegoAudioDeviceMode;

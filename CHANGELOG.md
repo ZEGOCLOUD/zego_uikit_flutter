@@ -1,3 +1,8 @@
+## 2.28.30
+
+- Features
+  - Support 'setAudioDeviceMode'
+
 ## 2.28.29
 
 - Features

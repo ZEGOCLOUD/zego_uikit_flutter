@@ -68,7 +68,7 @@ class ZegoUIKitCore
       final mobileInfo = 'platform:${Platform.operatingSystem}, '
           'version:${Platform.operatingSystemVersion}';
 
-      const zegoUIKitVersion = 'zego_uikit: 2.28.29; ';
+      const zegoUIKitVersion = 'zego_uikit: 2.28.30; ';
       version ??=
           '${zegoUIKitVersion}zego_express:$expressVersion,mobile:$mobileInfo';
     }
@@ -1639,3 +1639,17 @@ extension ZegoUIKitCoreAudioVideo on ZegoUIKitCore {
 
 /// @nodoc
 extension ZegoUIKitCoreScreenShare on ZegoUIKitCore {}
+
+extension ZegoUIKitCoreDevice on ZegoUIKitCore {
+  Future<void> setAudioDeviceMode(ZegoUIKitAudioDeviceMode deviceMode) async {
+    ZegoLoggerService.logWarn(
+      'set audio device mode:$deviceMode',
+      tag: 'uikit-core',
+      subTag: 'device',
+    );
+
+    return ZegoExpressEngine.instance.setAudioDeviceMode(
+      ZegoAudioDeviceMode.values[deviceMode.index],
+    );
+  }
+}

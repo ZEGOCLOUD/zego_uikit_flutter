@@ -24,7 +24,7 @@ mixin ZegoDeviceService {
 
     if (parsedByFlutter.isEmpty) {
       if (Platform.isAndroid) {
-        final parsedVersion = parse(
+        final parsedVersion = _parseMobileSystemVersion(
           ZegoUIKitCore.shared.device.androidDeviceInfo?.version.incremental ??
               '',
         );
@@ -56,10 +56,11 @@ mixin ZegoDeviceService {
   }
 
   ZegoMobileSystemVersion getMobileSystemVersion() {
-    return parse(Platform.operatingSystemVersion);
+    return _parseMobileSystemVersion(Platform.operatingSystemVersion);
   }
 
-  ZegoMobileSystemVersion parse(String operatingSystemVersion) {
+  ZegoMobileSystemVersion _parseMobileSystemVersion(
+      String operatingSystemVersion) {
     var systemVersion = ZegoMobileSystemVersion.empty();
 
     if (Platform.isAndroid) {
@@ -83,5 +84,9 @@ mixin ZegoDeviceService {
     }
 
     return systemVersion;
+  }
+
+  Future<void> setAudioDeviceMode(ZegoUIKitAudioDeviceMode deviceMode) async {
+    return ZegoUIKitCore.shared.setAudioDeviceMode(deviceMode);
   }
 }
