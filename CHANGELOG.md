@@ -1,3 +1,8 @@
+## 3.28.31
+
+- Bugs
+  - Fixed the issue where the earpiece/speaker could still be switched while using headphones
+
 ## 2.28.30
 
 - Features
