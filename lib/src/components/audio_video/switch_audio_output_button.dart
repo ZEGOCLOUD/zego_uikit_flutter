@@ -9,7 +9,7 @@ import 'package:zego_uikit/src/components/internal/internal.dart';
 import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
-/// button used to switch audio output route between speaker or system device
+/// button used to switch audio output button route between speaker or system device
 class ZegoSwitchAudioOutputButton extends StatefulWidget {
   const ZegoSwitchAudioOutputButton({
     Key? key,
@@ -50,6 +50,17 @@ class _ZegoSwitchAudioOutputButtonState
     super.initState();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!canUpdateAudioRoute()) {
+        return;
+      }
+
+      ZegoLoggerService.logInfo(
+        "update audio route by default, "
+        "target is speaker:${widget.defaultUseSpeaker}",
+        tag: 'uikit-audio-output',
+        subTag: 'switch audio output button',
+      );
+
       /// synchronizing the default status
       ZegoUIKit().setAudioOutputToSpeaker(widget.defaultUseSpeaker);
     });
@@ -119,28 +130,49 @@ class _ZegoSwitchAudioOutputButtonState
 
   void onPressed() {
     if (!executeWithRateLimit(() {
-      final audioRoute = ZegoUIKit()
-          .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
-          .value;
-      if (ZegoUIKitAudioRoute.headphone == audioRoute ||
-          ZegoUIKitAudioRoute.bluetooth == audioRoute) {
-        ///  not support close
+      if (!canUpdateAudioRoute()) {
         return;
       }
 
-      final targetState = audioRoute != ZegoUIKitAudioRoute.speaker;
-
-      ZegoUIKit().setAudioOutputToSpeaker(targetState);
+      final audioRoute = ZegoUIKit()
+          .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
+          .value;
+      final targetIsSpeaker = audioRoute != ZegoUIKitAudioRoute.speaker;
+      ZegoLoggerService.logInfo(
+        "current audio route:$audioRoute, target is speaker:$targetIsSpeaker",
+        tag: 'uikit-audio-output',
+        subTag: 'switch audio output button',
+      );
+      ZegoUIKit().setAudioOutputToSpeaker(targetIsSpeaker);
 
       if (widget.onPressed != null) {
-        widget.onPressed!(targetState);
+        widget.onPressed!(targetIsSpeaker);
       }
     })) {
       ZegoLoggerService.logInfo(
         "Click rate is limited, ignoring the current click",
         tag: 'uikit-audio-output',
-        subTag: 'switch audio output',
+        subTag: 'switch audio output button',
       );
     }
+  }
+
+  bool canUpdateAudioRoute() {
+    final audioRoute = ZegoUIKit()
+        .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
+        .value;
+    if (ZegoUIKitAudioRoute.headphone == audioRoute ||
+        ZegoUIKitAudioRoute.bluetooth == audioRoute) {
+      ZegoLoggerService.logInfo(
+        "not support update audio route now when audio route is $audioRoute",
+        tag: 'uikit-audio-output',
+        subTag: 'switch audio output button',
+      );
+
+      ///  not support close
+      return false;
+    }
+
+    return true;
   }
 }

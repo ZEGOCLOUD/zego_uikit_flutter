@@ -207,10 +207,7 @@ class ZegoUIKitCore
     });
 
     final initAudioRoute = await ZegoExpressEngine.instance.getAudioRouteType();
-    coreData.localUser.audioRoute.value =
-        ZegoUIKitAudioRouteExtension.fromSDKValue(initAudioRoute);
-    coreData.localUser.lastAudioRoute =
-        ZegoUIKitAudioRouteExtension.fromSDKValue(initAudioRoute);
+    coreData.localUser.initAudioRoute(initAudioRoute);
 
     subscriptions.add(
       coreData.customCommandReceivedStreamCtrl?.stream.listen(
@@ -906,12 +903,12 @@ class ZegoUIKitCore
     );
   }
 
-  bool setAudioOutputToSpeaker(bool useSpeaker) {
+  bool setAudioRouteToSpeaker(bool useSpeaker) {
     if (!isInit) {
       ZegoLoggerService.logError(
         'core had not init',
         tag: 'uikit-service-core',
-        subTag: 'set audio output to speaker',
+        subTag: 'set audio route to speaker:$useSpeaker',
       );
 
       error.errorStreamCtrl?.add(ZegoUIKitError(
@@ -928,7 +925,7 @@ class ZegoUIKitCore
         ZegoLoggerService.logInfo(
           'already ${useSpeaker ? 'use' : 'not use'}',
           tag: 'uikit-service-core',
-          subTag: 'set audio output to speaker',
+          subTag: 'set audio route to speaker:$useSpeaker',
         );
 
         return true;
@@ -939,7 +936,7 @@ class ZegoUIKitCore
         ZegoLoggerService.logWarn(
           'Currently using headphone, cannot be set as speaker.',
           tag: 'uikit-service-core',
-          subTag: 'set audio output to speaker',
+          subTag: 'set audio route to speaker:$useSpeaker',
         );
 
         return false;
@@ -947,9 +944,10 @@ class ZegoUIKitCore
     }
 
     ZegoLoggerService.logInfo(
-      'use:$useSpeaker',
+      'target is speaker:$useSpeaker, '
+      'current audio route is:${coreData.localUser.audioRoute.value}, ',
       tag: 'uikit-service-core',
-      subTag: 'set audio output to speaker',
+      subTag: 'set audio route to speaker:$useSpeaker',
     );
     ZegoExpressEngine.instance.setAudioRouteToSpeaker(useSpeaker);
 
@@ -963,9 +961,9 @@ class ZegoUIKitCore
       coreData.localUser.audioRoute.value = coreData.localUser.lastAudioRoute;
     }
     ZegoLoggerService.logInfo(
-      'audioRoute:${coreData.localUser.audioRoute.value}',
+      'now audio route is:${coreData.localUser.audioRoute.value}',
       tag: 'uikit-service-core',
-      subTag: 'set audio output to speaker',
+      subTag: 'set audio route to speaker:$useSpeaker',
     );
 
     return true;

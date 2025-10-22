@@ -87,6 +87,19 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     coreData.engineState = ZegoUIKitExpressEngineStateExtension.fromSDK(state);
 
     coreData.engineStateStreamCtrl.add(coreData.engineState);
+
+    if (ZegoEngineState.Start == state) {
+      ZegoExpressEngine.instance.getAudioRouteType().then((value) {
+        ZegoLoggerService.logInfo(
+          'update audio route by onEngineStateUpdate, '
+          'state:$state, ',
+          tag: 'uikit-service-core',
+          subTag: 'event',
+        );
+
+        coreData.localUser.initAudioRoute(value);
+      });
+    }
   }
 
   @override
