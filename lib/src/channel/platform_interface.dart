@@ -110,6 +110,7 @@ abstract class ZegoUIKitPluginPlatform extends PlatformInterface {
   }
 
   Future<void> reporterCreate({
+    required String userID,
     required int appID,
     required String signOrToken,
     Map<String, Object> params = const {},

@@ -57,6 +57,7 @@ class ZegoUIKitReporter {
   int appID = -1;
 
   Future<void> create({
+    required String userID,
     required int appID,
     required String signOrToken,
     Map<String, Object> params = const {},
@@ -92,6 +93,7 @@ class ZegoUIKitReporter {
           );
 
           create(
+            userID: userID,
             appID: appID,
             signOrToken: signOrToken,
             params: params,
@@ -138,6 +140,7 @@ class ZegoUIKitReporter {
       });
     }
     await ZegoUIKitPluginPlatform.instance.reporterCreate(
+      userID: userID,
       appID: appID,
       signOrToken: signOrToken,
       params: params,

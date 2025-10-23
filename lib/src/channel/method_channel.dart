@@ -573,11 +573,13 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
   @override
   Future<void> reporterCreate({
+    required String userID,
     required int appID,
     required String signOrToken,
     Map<String, Object> params = const {},
   }) async {
     ZegoLoggerService.logInfo(
+      'userID:$userID, '
       'appID:$appID, '
       'params:$params, ',
       tag: 'uikit-channel',
@@ -586,6 +588,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     try {
       await methodChannel.invokeMethod('reporterCreate', {
+        'user_id': userID,
         'app_id': appID,
         'sign_token': signOrToken,
         'params': params,

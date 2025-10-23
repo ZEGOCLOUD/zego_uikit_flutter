@@ -94,10 +94,11 @@ public class ZegoUikitPlugin implements FlutterPlugin, MethodCallHandler, Activi
     }
 
     private void handleReporterCreate(MethodCall call, Result result) {
+        String userID = call.argument("user_id");
         int appID = call.argument("app_id");
         String signOrToken = call.argument("sign_token");
         Map<String, Object> commonParams = call.argument("params");
-        ReportUtil.create(appID, signOrToken, commonParams);
+        ReportUtil.create(appID, signOrToken, userID, commonParams);
         result.success(null);
     }
 

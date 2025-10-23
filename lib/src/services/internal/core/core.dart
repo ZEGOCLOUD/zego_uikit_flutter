@@ -121,6 +121,7 @@ class ZegoUIKitCore
     );
 
     reporter.create(
+      userID: coreData.localUser.id,
       appID: appID,
       signOrToken: appSign.isNotEmpty ? appSign : token,
       params: {},
