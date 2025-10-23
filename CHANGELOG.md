@@ -1,3 +1,7 @@
+## 3.28.32
+
+- Update dependency
+
 ## 3.28.31
 
 - Bugs
