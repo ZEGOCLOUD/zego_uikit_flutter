@@ -257,6 +257,16 @@ class ZegoUIKitCoreUser {
 
   bool get isEmpty => id.isEmpty;
 
+  void initAudioRoute(ZegoAudioRoute sdkAudioRoute) {
+    ZegoLoggerService.logInfo(
+      'init default audio route:$sdkAudioRoute',
+      tag: 'uikit-service-core',
+      subTag: 'local user',
+    );
+    audioRoute.value = ZegoUIKitAudioRouteExtension.fromSDKValue(sdkAudioRoute);
+    lastAudioRoute = ZegoUIKitAudioRouteExtension.fromSDKValue(sdkAudioRoute);
+  }
+
   Future<void> destroyTextureRenderer(
       {required ZegoStreamType streamType}) async {
     switch (streamType) {

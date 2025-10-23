@@ -1,3 +1,18 @@
+## 3.28.31
+
+- Bugs
+  - Fixed the issue where the earpiece/speaker could still be switched while using headphones
+
+## 2.28.30
+
+- Features
+  - Support 'setAudioDeviceMode'
+
+## 2.28.29
+
+- Features
+  - Support export log by `ZegoUIKit().exportLogs()`
+
 ## 2.28.28
 
 - Update environment

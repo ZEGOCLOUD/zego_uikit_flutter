@@ -44,7 +44,7 @@ mixin ZegoAudioVideoService {
 
   /// set audio output to speaker
   void setAudioOutputToSpeaker(bool isSpeaker) {
-    ZegoUIKitCore.shared.setAudioOutputToSpeaker(isSpeaker);
+    ZegoUIKitCore.shared.setAudioRouteToSpeaker(isSpeaker);
   }
 
   /// update video config
