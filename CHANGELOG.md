@@ -1,8 +1,8 @@
-## 3.28.32
+## 2.28.32
 
 - Update dependency
 
-## 3.28.31
+## 2.28.31
 
 - Bugs
   - Fixed the issue where the earpiece/speaker could still be switched while using headphones
