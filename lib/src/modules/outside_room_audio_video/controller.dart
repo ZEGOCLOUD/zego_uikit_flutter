@@ -2,8 +2,9 @@
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/components/outside_room_audio_video/controller.p.dart';
-import 'package:zego_uikit/src/components/outside_room_audio_video/internal.dart';
+import 'package:zego_uikit/src/modules/outside_room_audio_video/controller.p.dart';
+import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';
+import 'package:zego_uikit/src/modules/outside_room_audio_video/defines.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 class ZegoOutsideRoomAudioVideoViewListController {

@@ -1,5 +1,5 @@
 // Project imports:
-import 'package:zego_uikit/src/components/outside_room_audio_video/controller.dart';
+import 'package:zego_uikit/src/modules/outside_room_audio_video/controller.dart';
 import 'package:zego_uikit/src/services/defines/defines.dart';
 
 /// play mode

@@ -20,5 +20,3 @@ export 'message/message.dart';
 export 'screen_util/screen_util.dart';
 export 'theme.dart';
 export 'widgets/widgets.dart';
-export 'outside_room_audio_video/defines.dart';
-export 'outside_room_audio_video/export.dart';
