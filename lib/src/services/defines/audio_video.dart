@@ -51,26 +51,6 @@ class ZegoUIKitReceiveSEIEvent {
   }
 }
 
-/// Stream Resource Mode
-enum ZegoAudioVideoResourceMode {
-  /// Default mode. The SDK will automatically select the streaming resource according to the cdnConfig parameters set by the player config and the ready-made background configuration.
-  defaultMode,
-
-  /// Playing stream only from CDN.
-  onlyCDN,
-
-  /// Playing stream only from L3.
-  onlyL3,
-
-  /// Playing stream only from RTC.
-  onlyRTC,
-
-  /// CDN Plus mode. The SDK will automatically select the streaming resource according to the network condition.
-  cdnPlus,
-}
-
-typedef ZegoPresetResolution = ZegoVideoConfigPreset;
-
 ///  configuration parameters for audio and video streaming, such as Resolution, Frame rate, Bit rate..
 class ZegoUIKitVideoConfig {
   /// Frame rate, control the frame rate of the camera and the frame rate of the encoder.
@@ -201,24 +181,6 @@ extension ZegoStreamTypeExtension on ZegoStreamType {
         return ZegoPublishChannel.Aux;
     }
   }
-}
-
-/// Audio route
-enum ZegoUIKitAudioRoute {
-  speaker,
-  headphone,
-
-  /// bluetooth device
-  bluetooth,
-
-  /// telephone receiver
-  receiver,
-
-  /// external USB audio device
-  externalUSB,
-
-  /// apple AirPlay
-  airPlay,
 }
 
 /// Traffic control property (bitmask enumeration).

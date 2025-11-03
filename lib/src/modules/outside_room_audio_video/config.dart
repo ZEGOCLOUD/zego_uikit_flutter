@@ -26,11 +26,11 @@ class ZegoOutsideRoomAudioVideoViewListConfig {
   final ZegoUIKitVideoConfig? video;
 
   /// audio video resource mode
-  final ZegoAudioVideoResourceMode? audioVideoResourceMode;
+  final ZegoUIKitStreamResourceMode? audioVideoResourceMode;
 
   const ZegoOutsideRoomAudioVideoViewListConfig({
     this.playMode = ZegoOutsideRoomAudioVideoViewListPlayMode.autoPlay,
-    this.audioVideoResourceMode = ZegoAudioVideoResourceMode.onlyRTC,
+    this.audioVideoResourceMode = ZegoUIKitStreamResourceMode.OnlyRTC,
     this.video,
   });
 }

@@ -748,8 +748,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       subTag: 'event',
     );
 
-    coreData.localUser.audioRoute.value =
-        ZegoUIKitAudioRouteExtension.fromSDKValue(audioRoute);
+    coreData.localUser.audioRoute.value = audioRoute;
   }
 
   @override

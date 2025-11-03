@@ -114,7 +114,7 @@ mixin ZegoAudioVideoService {
     ZegoUIKitCore.shared.enableVideoMirroring(isVideoMirror);
   }
 
-  void setAudioVideoResourceMode(ZegoAudioVideoResourceMode mode) {
+  void setAudioVideoResourceMode(ZegoUIKitStreamResourceMode mode) {
     ZegoUIKitCore.shared.setAudioVideoResourceMode(mode);
   }
 

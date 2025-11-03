@@ -852,7 +852,7 @@ class ZegoUIKitCore
     );
   }
 
-  void setAudioVideoResourceMode(ZegoAudioVideoResourceMode mode) {
+  void setAudioVideoResourceMode(ZegoUIKitStreamResourceMode mode) {
     coreData.playResourceMode = mode;
 
     ZegoLoggerService.logInfo(
@@ -923,7 +923,7 @@ class ZegoUIKitCore
     }
 
     if (useSpeaker) {
-      if (ZegoUIKitAudioRoute.speaker == coreData.localUser.audioRoute.value) {
+      if (ZegoUIKitAudioRoute.Speaker == coreData.localUser.audioRoute.value) {
         ZegoLoggerService.logInfo(
           'already ${useSpeaker ? 'use' : 'not use'}',
           tag: 'uikit-service-core',
@@ -933,7 +933,7 @@ class ZegoUIKitCore
         return true;
       }
 
-      if (ZegoUIKitAudioRoute.headphone ==
+      if (ZegoUIKitAudioRoute.Headphone ==
           coreData.localUser.audioRoute.value) {
         ZegoLoggerService.logWarn(
           'Currently using headphone, cannot be set as speaker.',
@@ -955,10 +955,10 @@ class ZegoUIKitCore
 
     if (useSpeaker) {
       coreData.localUser.lastAudioRoute = coreData.localUser.audioRoute.value;
-      coreData.localUser.audioRoute.value = ZegoUIKitAudioRoute.speaker;
+      coreData.localUser.audioRoute.value = ZegoUIKitAudioRoute.Speaker;
     } else {
-      if (coreData.localUser.lastAudioRoute == ZegoUIKitAudioRoute.speaker) {
-        coreData.localUser.lastAudioRoute = ZegoUIKitAudioRoute.receiver;
+      if (coreData.localUser.lastAudioRoute == ZegoUIKitAudioRoute.Speaker) {
+        coreData.localUser.lastAudioRoute = ZegoUIKitAudioRoute.Receiver;
       }
       coreData.localUser.audioRoute.value = coreData.localUser.lastAudioRoute;
     }

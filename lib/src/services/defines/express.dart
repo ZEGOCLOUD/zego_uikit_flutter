@@ -15,3 +15,11 @@ typedef ZegoUIKitMixRenderMode = ZegoMixRenderMode;
 typedef ZegoUIKitMixerOutput = ZegoMixerOutput;
 typedef ZegoUIKitMixerInput = ZegoMixerInput;
 typedef ZegoUIKitMixerInputContentType = ZegoMixerInputContentType;
+typedef ZegoUIKitCDNConfig = ZegoCDNConfig;
+typedef ZegoUIKitVideoCodecID = ZegoVideoCodecID;
+
+typedef ZegoUIKitStreamResourceMode = ZegoStreamResourceMode;
+// typedef ZegoAudioVideoResourceMode = ZegoUIKitStreamResourceMode;
+
+typedef ZegoPresetResolution = ZegoVideoConfigPreset;
+typedef ZegoUIKitAudioRoute = ZegoAudioRoute;

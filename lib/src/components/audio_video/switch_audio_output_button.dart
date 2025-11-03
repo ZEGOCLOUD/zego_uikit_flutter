@@ -84,19 +84,19 @@ class _ZegoSwitchAudioOutputButtonState
     var backgroundColor = controlBarButtonBackgroundColor;
 
     /// get the new icon and background color
-    if (ZegoUIKitAudioRoute.bluetooth == audioRoute) {
+    if (ZegoUIKitAudioRoute.Bluetooth == audioRoute) {
       /// always open
       icon = widget.bluetoothIcon?.icon ??
           UIKitImage.asset(StyleIconUrls.iconS1ControlBarSpeakerBluetooth);
       backgroundColor = widget.bluetoothIcon?.backgroundColor ??
           controlBarButtonBackgroundColor;
-    } else if (ZegoUIKitAudioRoute.headphone == audioRoute) {
+    } else if (ZegoUIKitAudioRoute.Headphone == audioRoute) {
       /// always display speaker closed
       icon = widget.headphoneIcon?.icon ??
           UIKitImage.asset(StyleIconUrls.iconS1ControlBarSpeakerOff);
       backgroundColor = widget.headphoneIcon?.backgroundColor ??
           controlBarButtonBackgroundColor;
-    } else if (ZegoUIKitAudioRoute.speaker == audioRoute) {
+    } else if (ZegoUIKitAudioRoute.Speaker == audioRoute) {
       icon = widget.speakerIcon?.icon ??
           UIKitImage.asset(StyleIconUrls.iconS1ControlBarSpeakerNormal);
       backgroundColor = widget.speakerIcon?.backgroundColor ??
@@ -137,7 +137,7 @@ class _ZegoSwitchAudioOutputButtonState
       final audioRoute = ZegoUIKit()
           .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
           .value;
-      final targetIsSpeaker = audioRoute != ZegoUIKitAudioRoute.speaker;
+      final targetIsSpeaker = audioRoute != ZegoUIKitAudioRoute.Speaker;
       ZegoLoggerService.logInfo(
         "current audio route:$audioRoute, target is speaker:$targetIsSpeaker",
         tag: 'uikit-audio-output',
@@ -161,8 +161,8 @@ class _ZegoSwitchAudioOutputButtonState
     final audioRoute = ZegoUIKit()
         .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
         .value;
-    if (ZegoUIKitAudioRoute.headphone == audioRoute ||
-        ZegoUIKitAudioRoute.bluetooth == audioRoute) {
+    if (ZegoUIKitAudioRoute.Headphone == audioRoute ||
+        ZegoUIKitAudioRoute.Bluetooth == audioRoute) {
       ZegoLoggerService.logInfo(
         "not support update audio route now when audio route is $audioRoute",
         tag: 'uikit-audio-output',

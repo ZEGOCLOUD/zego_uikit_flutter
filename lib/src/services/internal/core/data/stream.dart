@@ -61,8 +61,8 @@ mixin ZegoUIKitCoreDataStream {
 
   final Map<String, String> streamExtraInfo = {}; // stream_id:extra info
 
-  ZegoAudioVideoResourceMode playResourceMode =
-      ZegoAudioVideoResourceMode.defaultMode;
+  ZegoUIKitStreamResourceMode playResourceMode =
+      ZegoUIKitStreamResourceMode.Default;
 
   bool isAllPlayStreamAudioVideoMuted = false;
   bool isAllPlayStreamAudioMuted = false;
@@ -1254,7 +1254,8 @@ mixin ZegoUIKitCoreDataStream {
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     final playConfig = ZegoPlayerConfig(
-      ZegoUIKitCore.shared.coreData.playResourceMode.toSdkValue,
+      ZegoUIKitCore.shared.coreData.playResourceMode,
+      // TODO 增加CDN；增加多房间ID;videoCodecID
     );
 
     ZegoLoggerService.logInfo(

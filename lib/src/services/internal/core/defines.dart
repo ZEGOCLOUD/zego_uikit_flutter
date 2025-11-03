@@ -219,8 +219,8 @@ class ZegoUIKitCoreUser {
   ValueNotifier<bool> isFrontTriggerByTurnOnCamera = ValueNotifier<bool>(false);
   ValueNotifier<bool> isVideoMirror = ValueNotifier<bool>(false);
   ValueNotifier<ZegoUIKitAudioRoute> audioRoute =
-      ValueNotifier<ZegoUIKitAudioRoute>(ZegoUIKitAudioRoute.receiver);
-  ZegoUIKitAudioRoute lastAudioRoute = ZegoUIKitAudioRoute.receiver;
+      ValueNotifier<ZegoUIKitAudioRoute>(ZegoUIKitAudioRoute.Receiver);
+  ZegoUIKitAudioRoute lastAudioRoute = ZegoUIKitAudioRoute.Receiver;
 
   void clear() {
     id = '';
@@ -231,8 +231,8 @@ class ZegoUIKitCoreUser {
     isFrontFacing.value = true;
     isFrontTriggerByTurnOnCamera.value = false;
     isVideoMirror.value = false;
-    audioRoute.value = ZegoUIKitAudioRoute.receiver;
-    lastAudioRoute = ZegoUIKitAudioRoute.receiver;
+    audioRoute.value = ZegoUIKitAudioRoute.Receiver;
+    lastAudioRoute = ZegoUIKitAudioRoute.Receiver;
 
     clearRoomAttribute();
   }
@@ -257,14 +257,14 @@ class ZegoUIKitCoreUser {
 
   bool get isEmpty => id.isEmpty;
 
-  void initAudioRoute(ZegoAudioRoute sdkAudioRoute) {
+  void initAudioRoute(ZegoAudioRoute value) {
     ZegoLoggerService.logInfo(
-      'init default audio route:$sdkAudioRoute',
+      'init default audio route:$value',
       tag: 'uikit-service-core',
       subTag: 'local user',
     );
-    audioRoute.value = ZegoUIKitAudioRouteExtension.fromSDKValue(sdkAudioRoute);
-    lastAudioRoute = ZegoUIKitAudioRouteExtension.fromSDKValue(sdkAudioRoute);
+    audioRoute.value = value;
+    lastAudioRoute = value;
   }
 
   Future<void> destroyTextureRenderer(
@@ -435,60 +435,6 @@ class ZegoUIKitVideoInternalConfig {
 /// @nodoc
 class ZegoUIKitAdvancedConfigKey {
   static const String videoViewMode = 'videoViewMode';
-}
-
-extension ZegoAudioVideoResourceModeExtension on ZegoAudioVideoResourceMode {
-  ZegoStreamResourceMode get toSdkValue {
-    switch (this) {
-      case ZegoAudioVideoResourceMode.defaultMode:
-        return ZegoStreamResourceMode.Default;
-      case ZegoAudioVideoResourceMode.onlyCDN:
-        return ZegoStreamResourceMode.OnlyCDN;
-      case ZegoAudioVideoResourceMode.onlyL3:
-        return ZegoStreamResourceMode.OnlyL3;
-      case ZegoAudioVideoResourceMode.onlyRTC:
-        return ZegoStreamResourceMode.OnlyRTC;
-      case ZegoAudioVideoResourceMode.cdnPlus:
-        // CDNPlus is deprecated, use Default as fallback
-        return ZegoStreamResourceMode.Default;
-    }
-  }
-}
-
-extension ZegoUIKitAudioRouteExtension on ZegoUIKitAudioRoute {
-  static ZegoUIKitAudioRoute fromSDKValue(ZegoAudioRoute value) {
-    switch (value) {
-      case ZegoAudioRoute.Speaker:
-        return ZegoUIKitAudioRoute.speaker;
-      case ZegoAudioRoute.Headphone:
-        return ZegoUIKitAudioRoute.headphone;
-      case ZegoAudioRoute.Bluetooth:
-        return ZegoUIKitAudioRoute.bluetooth;
-      case ZegoAudioRoute.Receiver:
-        return ZegoUIKitAudioRoute.receiver;
-      case ZegoAudioRoute.ExternalUSB:
-        return ZegoUIKitAudioRoute.externalUSB;
-      case ZegoAudioRoute.AirPlay:
-        return ZegoUIKitAudioRoute.airPlay;
-    }
-  }
-
-  ZegoAudioRoute get toSDKValue {
-    switch (this) {
-      case ZegoUIKitAudioRoute.speaker:
-        return ZegoAudioRoute.Speaker;
-      case ZegoUIKitAudioRoute.headphone:
-        return ZegoAudioRoute.Headphone;
-      case ZegoUIKitAudioRoute.bluetooth:
-        return ZegoAudioRoute.Bluetooth;
-      case ZegoUIKitAudioRoute.receiver:
-        return ZegoAudioRoute.Receiver;
-      case ZegoUIKitAudioRoute.externalUSB:
-        return ZegoAudioRoute.ExternalUSB;
-      case ZegoUIKitAudioRoute.airPlay:
-        return ZegoAudioRoute.AirPlay;
-    }
-  }
 }
 
 extension ZegoUIKitNetworkStateExtension on ZegoUIKitNetworkState {
