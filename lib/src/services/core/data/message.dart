@@ -4,9 +4,17 @@ import 'dart:async';
 // Project imports:
 import 'package:zego_uikit/src/services/services.dart';
 
+import 'package:zego_uikit/src/services/core/data/room_map.dart';
+
 mixin ZegoUIKitCoreDataMessage {
-  var broadcastMessage = ZegoUIKitCoreDataMessageInfo();
-  var barrageMessage = ZegoUIKitCoreDataMessageInfo();
+  var multiRoomBroadcastMessages =
+      ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomMessageInfo>((String roomID) {
+    return ZegoUIKitCoreDataRoomMessageInfo(roomID);
+  });
+  var multiRoomBarrageMessages =
+      ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomMessageInfo>((String roomID) {
+    return ZegoUIKitCoreDataRoomMessageInfo(roomID);
+  });
 
   void initMessage() {
     ZegoLoggerService.logInfo(
@@ -15,23 +23,81 @@ mixin ZegoUIKitCoreDataMessage {
       subTag: 'init',
     );
 
-    broadcastMessage.init();
-    barrageMessage.init();
+    multiRoomBroadcastMessages.forEach((_, roomMessages) {
+      roomMessages.init();
+    });
+    multiRoomBarrageMessages.forEach((_, roomMessages) {
+      roomMessages.init();
+    });
   }
 
-  void uninitMessage() {
+  void clearMessage({
+    String? targetRoomID,
+  }) {
+    clearBroadcastMessage(targetRoomID: targetRoomID);
+    clearBarrageMessage(targetRoomID: targetRoomID);
+  }
+
+  void clearBroadcastMessage({
+    String? targetRoomID,
+  }) {
     ZegoLoggerService.logInfo(
-      'uninit message',
+      'clear broadcast message, '
+      'room id:$targetRoomID',
       tag: 'uikit-message',
       subTag: 'uninit',
     );
 
-    broadcastMessage.uninit();
-    barrageMessage.uninit();
+    multiRoomBroadcastMessages.forEach((roomID, roomMessages) {
+      if (targetRoomID == null || targetRoomID == roomID) {
+        roomMessages.clear();
+      }
+    });
+    multiRoomBroadcastMessages.removeRoom(targetRoomID ?? '');
+  }
+
+  void clearBarrageMessage({
+    String? targetRoomID,
+  }) {
+    ZegoLoggerService.logInfo(
+      'clear barrage message, '
+      'room id:$targetRoomID',
+      tag: 'uikit-message',
+      subTag: 'uninit',
+    );
+
+    multiRoomBarrageMessages.forEach((roomID, roomMessages) {
+      if (targetRoomID == null || targetRoomID == roomID) {
+        roomMessages.clear();
+      }
+    });
+    multiRoomBarrageMessages.removeRoom(targetRoomID ?? '');
+  }
+
+  void uninitMessage() {
+    ZegoLoggerService.logInfo(
+      'uninit message, '
+      'room ids:${multiRoomBroadcastMessages.allRoomIDs}',
+      tag: 'uikit-message',
+      subTag: 'uninit',
+    );
+
+    multiRoomBroadcastMessages.forEach((_, roomMessages) {
+      roomMessages.uninit();
+    });
+    multiRoomBroadcastMessages.clearRooms();
+
+    multiRoomBarrageMessages.forEach((_, roomMessages) {
+      roomMessages.uninit();
+    });
+    multiRoomBarrageMessages.clearRooms();
   }
 }
 
-class ZegoUIKitCoreDataMessageInfo {
+class ZegoUIKitCoreDataRoomMessageInfo {
+  String roomID;
+  ZegoUIKitCoreDataRoomMessageInfo(this.roomID);
+
   int localMessageId = 0;
   List<ZegoInRoomMessage> messageList = []; // uid:user
   StreamController<List<ZegoInRoomMessage>>? streamControllerMessageList;
@@ -39,6 +105,12 @@ class ZegoUIKitCoreDataMessageInfo {
   StreamController<ZegoInRoomMessage>? streamControllerLocalMessage;
 
   void init() {
+    ZegoLoggerService.logInfo(
+      'room id:$roomID',
+      tag: 'uikit-room-message-info',
+      subTag: 'init',
+    );
+
     streamControllerMessageList ??=
         StreamController<List<ZegoInRoomMessage>>.broadcast();
     streamControllerRemoteMessage ??=
@@ -48,6 +120,12 @@ class ZegoUIKitCoreDataMessageInfo {
   }
 
   void uninit() {
+    ZegoLoggerService.logInfo(
+      'room id:$roomID',
+      tag: 'uikit-room-message-info',
+      subTag: 'uninit',
+    );
+
     streamControllerMessageList?.close();
     streamControllerMessageList = null;
 
@@ -59,6 +137,12 @@ class ZegoUIKitCoreDataMessageInfo {
   }
 
   void clear() {
+    ZegoLoggerService.logInfo(
+      'room id:$roomID',
+      tag: 'uikit-room-message-info',
+      subTag: 'clear',
+    );
+
     messageList.clear();
     streamControllerMessageList?.add(List<ZegoInRoomMessage>.from(messageList));
   }

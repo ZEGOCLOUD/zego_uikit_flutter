@@ -520,7 +520,10 @@ class ZegoUIKitCore
     }
   }
 
-  void clearLocalMessage(ZegoInRoomMessageType type) {
+  void clearLocalMessage(
+    ZegoInRoomMessageType type, {
+    String? targetRoomID,
+  }) {
     ZegoLoggerService.logInfo(
       '',
       tag: 'uikit-room',
@@ -528,11 +531,18 @@ class ZegoUIKitCore
     );
 
     (type == ZegoInRoomMessageType.broadcastMessage)
-        ? ZegoUIKitCore.shared.coreData.broadcastMessage.clear()
-        : ZegoUIKitCore.shared.coreData.barrageMessage.clear();
+        ? ZegoUIKitCore.shared.coreData.clearBroadcastMessage(
+            targetRoomID: targetRoomID,
+          )
+        : ZegoUIKitCore.shared.coreData.clearBarrageMessage(
+            targetRoomID: targetRoomID,
+          );
   }
 
-  Future<int> clearRemoteMessage(ZegoInRoomMessageType type) async {
+  Future<int> clearRemoteMessage(
+    ZegoInRoomMessageType type, {
+    String? targetRoomID,
+  }) async {
     ZegoLoggerService.logInfo(
       '',
       tag: 'uikit-room',
@@ -724,20 +734,25 @@ class ZegoUIKitCore
 
   Future<int> sendInRoomCommand(
     String command,
-    List<String> toUserIDs,
-  ) async {
+    List<String> toUserIDs, {
+    String? targetRoomID,
+  }) async {
     ZegoLoggerService.logInfo(
-      'send in-room command, command:$command, toUserIDs:$toUserIDs',
+      'send in-room command, '
+      'room id:$targetRoomID, '
+      'command:$command, '
+      'user ids:$toUserIDs',
       tag: 'uikit-room-command',
       subTag: 'custom command',
     );
 
     return ZegoExpressEngine.instance
         .sendCustomCommand(
-      coreData.room.id,
+      targetRoomID ?? coreData.room.id,
       command,
       toUserIDs.isEmpty
-          // empty mean send to all users
+
+          /// empty mean send to all users
           ? coreData.remoteUsersList
               .map((ZegoUIKitCoreUser user) => ZegoUser(user.id, user.name))
               .toList()

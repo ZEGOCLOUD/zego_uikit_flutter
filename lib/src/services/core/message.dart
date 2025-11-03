@@ -12,37 +12,52 @@ mixin ZegoUIKitCoreMessage {
 class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
   ZegoUIKitCoreData get coreData => ZegoUIKitCore.shared.coreData;
 
-  void clear() {
-    coreData.broadcastMessage.clear();
-    coreData.barrageMessage.clear();
+  void clear({
+    required String targetRoomID,
+  }) {
+    coreData.clearMessage(targetRoomID: targetRoomID);
   }
 
-  Future<int> sendBarrageMessage(String message) async {
+  Future<int> sendBarrageMessage(
+    String message, {
+    required String targetRoomID,
+  }) async {
     return _sendMessage(
       message,
-      coreData.barrageMessage,
+      coreData.multiRoomBarrageMessages.getRoom(targetRoomID),
       ZegoInRoomMessageType.barrageMessage,
+      targetRoomID: targetRoomID,
     );
   }
 
   /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
-  Future<int> sendBroadcastMessage(String message) async {
+  Future<int> sendBroadcastMessage(
+    String message, {
+    required String targetRoomID,
+  }) async {
     return _sendMessage(
       message,
-      coreData.broadcastMessage,
+      coreData.multiRoomBroadcastMessages.getRoom(targetRoomID),
       ZegoInRoomMessageType.broadcastMessage,
+      targetRoomID: targetRoomID,
     );
   }
 
   Future<int> _sendMessage(
     String message,
-    ZegoUIKitCoreDataMessageInfo messageInfo,
-    ZegoInRoomMessageType type,
-  ) async {
-    messageInfo.localMessageId = messageInfo.localMessageId - 1;
+    ZegoUIKitCoreDataRoomMessageInfo roomMessageInfo,
+    ZegoInRoomMessageType type, {
+    required String targetRoomID,
+  }) async {
+    debugPrint('send message, '
+        'room id:$targetRoomID, '
+        'message:$message, '
+        'type:$type');
+
+    roomMessageInfo.localMessageId = roomMessageInfo.localMessageId - 1;
 
     final messageItem = ZegoInRoomMessage(
-      messageID: messageInfo.localMessageId.toString(),
+      messageID: roomMessageInfo.localMessageId.toString(),
       user: coreData.localUser.toZegoUikitUser(),
       message: message,
       timestamp: coreData.networkDateTime_.millisecondsSinceEpoch,
@@ -51,18 +66,18 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
 
     if (ZegoInRoomMessageType.barrageMessage != type) {
       /// not cache barrage message
-      messageInfo.messageList.add(messageItem);
+      roomMessageInfo.messageList.add(messageItem);
     }
-    messageInfo.streamControllerMessageList?.add(
-      List<ZegoInRoomMessage>.from(messageInfo.messageList),
+    roomMessageInfo.streamControllerMessageList?.add(
+      List<ZegoInRoomMessage>.from(roomMessageInfo.messageList),
     );
 
     Future.delayed(const Duration(milliseconds: 300), () {
       if (ZegoInRoomMessageState.idle == messageItem.state.value) {
         /// if the status is still Idle after 300 ms,  it mean the message is not sent yet.
         messageItem.state.value = ZegoInRoomMessageState.sending;
-        messageInfo.streamControllerMessageList?.add(
-          List<ZegoInRoomMessage>.from(messageInfo.messageList),
+        roomMessageInfo.streamControllerMessageList?.add(
+          List<ZegoInRoomMessage>.from(roomMessageInfo.messageList),
         );
       }
     });
@@ -78,10 +93,10 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
             if (ZegoErrorCode.CommonSuccess == result.errorCode) {
               messageItem.messageID = result.messageID.toString();
             }
-            messageInfo.streamControllerLocalMessage?.add(messageItem);
+            roomMessageInfo.streamControllerLocalMessage?.add(messageItem);
 
-            messageInfo.streamControllerMessageList?.add(
-              List<ZegoInRoomMessage>.from(messageInfo.messageList),
+            roomMessageInfo.streamControllerMessageList?.add(
+              List<ZegoInRoomMessage>.from(roomMessageInfo.messageList),
             );
 
             return result.errorCode;
@@ -96,10 +111,10 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
             if (ZegoErrorCode.CommonSuccess == result.errorCode) {
               messageItem.messageID = result.messageID;
             }
-            messageInfo.streamControllerLocalMessage?.add(messageItem);
+            roomMessageInfo.streamControllerLocalMessage?.add(messageItem);
 
-            messageInfo.streamControllerMessageList?.add(
-              List<ZegoInRoomMessage>.from(messageInfo.messageList),
+            roomMessageInfo.streamControllerMessageList?.add(
+              List<ZegoInRoomMessage>.from(roomMessageInfo.messageList),
             );
 
             return result.errorCode;
@@ -109,21 +124,34 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
   /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
   Future<int> resendMessage(
     ZegoInRoomMessage message,
-    ZegoInRoomMessageType type,
-  ) async {
+    ZegoInRoomMessageType type, {
+    required String targetRoomID,
+  }) async {
     switch (type) {
       case ZegoInRoomMessageType.broadcastMessage:
-        coreData.broadcastMessage.messageList.removeWhere(
-          (element) => element.messageID == message.messageID,
-        );
+        coreData.multiRoomBroadcastMessages
+            .getRoom(targetRoomID)
+            .messageList
+            .removeWhere(
+              (element) => element.messageID == message.messageID,
+            );
 
-        return sendBroadcastMessage(message.message);
+        return sendBroadcastMessage(
+          message.message,
+          targetRoomID: targetRoomID,
+        );
       case ZegoInRoomMessageType.barrageMessage:
-        coreData.barrageMessage.messageList.removeWhere(
-          (element) => element.messageID == message.messageID,
-        );
+        coreData.multiRoomBarrageMessages
+            .getRoom(targetRoomID)
+            .messageList
+            .removeWhere(
+              (element) => element.messageID == message.messageID,
+            );
 
-        return sendBarrageMessage(message.message);
+        return sendBarrageMessage(
+          message.message,
+          targetRoomID: targetRoomID,
+        );
     }
   }
 
@@ -138,7 +166,12 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
       _messageList.add(message);
     }
 
-    _onIMRecvMessage(true, _messageList, coreData.broadcastMessage);
+    _onIMRecvMessage(
+      true,
+      roomID,
+      _messageList,
+      coreData.multiRoomBroadcastMessages.getRoom(roomID),
+    );
   }
 
   @override
@@ -152,14 +185,25 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
       _messageList.add(message);
     }
 
-    _onIMRecvMessage(false, _messageList, coreData.barrageMessage);
+    _onIMRecvMessage(
+      false,
+      roomID,
+      _messageList,
+      coreData.multiRoomBarrageMessages.getRoom(roomID),
+    );
   }
 
   void _onIMRecvMessage(
     bool localCache,
+    String roomID,
     List<ZegoInRoomMessage> messageList,
-    ZegoUIKitCoreDataMessageInfo messageInfo,
+    ZegoUIKitCoreDataRoomMessageInfo messageInfo,
   ) {
+    debugPrint('on im recv message, '
+        'room id:$roomID, '
+        'use local cache:$localCache, '
+        'message list:${messageList.map((e) => e.toString())}, ');
+
     for (final message in messageList) {
       messageInfo.streamControllerRemoteMessage?.add(message);
 
