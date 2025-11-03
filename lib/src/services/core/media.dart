@@ -3,12 +3,15 @@ part of 'core.dart';
 /// @nodoc
 extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
   Future<ZegoUIKitMediaPlayResult> playMedia({
+    required String targetRoomID,
     required String filePathOrURL,
     bool enableRepeat = false,
     bool autoStart = true,
   }) async {
     if (null != coreData.media.currentPlayer) {
-      await stopMedia();
+      await stopMedia(
+        targetRoomID: targetRoomID,
+      );
     }
 
     final playResult = await coreData.media.play(
@@ -24,7 +27,10 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
         subTag: 'playMedia',
       );
       await coreData
-          .startPublishingStream(streamType: ZegoStreamType.media)
+          .startPublishingStream(
+        targetRoomID: targetRoomID,
+        streamType: ZegoStreamType.media,
+      )
           .then((value) async {
         /// sync media type via stream extra info
         final streamExtraInfo = <String, dynamic>{
@@ -40,6 +46,7 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
 
         /// render
         await coreData.createLocalUserVideoViewQueue(
+          targetRoomID: targetRoomID,
           streamType: ZegoStreamType.media,
           onViewCreated: (ZegoStreamType streamType) {
             coreData.onViewCreatedByStartPublishingStream(ZegoStreamType.media);
@@ -55,16 +62,26 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
     await coreData.media.start();
   }
 
-  Future<void> stopMedia() async {
+  Future<void> stopMedia({
+    required String targetRoomID,
+  }) async {
     await coreData.media.stop();
 
-    await coreData.stopPublishingStream(streamType: ZegoStreamType.media);
+    await coreData.stopPublishingStream(
+      targetRoomID: targetRoomID,
+      streamType: ZegoStreamType.media,
+    );
   }
 
-  Future<void> destroyMedia() async {
+  Future<void> destroyMedia({
+    required String targetRoomID,
+  }) async {
     await coreData.media.clear();
 
-    await coreData.stopPublishingStream(streamType: ZegoStreamType.media);
+    await coreData.stopPublishingStream(
+      targetRoomID: targetRoomID,
+      streamType: ZegoStreamType.media,
+    );
   }
 
   Future<void> pauseMedia() async {

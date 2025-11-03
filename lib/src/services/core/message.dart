@@ -84,7 +84,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
 
     return type == ZegoInRoomMessageType.broadcastMessage
         ? ZegoExpressEngine.instance
-            .sendBroadcastMessage(coreData.room.id, message)
+            .sendBroadcastMessage(targetRoomID, message)
             .then((ZegoIMSendBroadcastMessageResult result) {
             messageItem.state.value = (result.errorCode == 0)
                 ? ZegoInRoomMessageState.success
@@ -102,7 +102,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
             return result.errorCode;
           })
         : ZegoExpressEngine.instance
-            .sendBarrageMessage(coreData.room.id, message)
+            .sendBarrageMessage(targetRoomID, message)
             .then((ZegoIMSendBarrageMessageResult result) {
             messageItem.state.value = (result.errorCode == 0)
                 ? ZegoInRoomMessageState.success

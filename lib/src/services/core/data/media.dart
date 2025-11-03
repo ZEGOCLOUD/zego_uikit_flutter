@@ -16,6 +16,8 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+import '../defines/defines.dart';
+
 /// @nodoc
 mixin ZegoUIKitCoreDataMedia {
   final _mediaImpl = ZegoUIKitCoreDataMediaImpl();
@@ -495,6 +497,9 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
     String userID,
     Map<String, dynamic> sei,
   ) {
+    final targetRoomID =
+        ZegoUIKitCore.shared.coreData.queryRoomIDByStreamID(streamID);
+
     _ownerID ??=
         ZegoUIKitCore.shared.coreData.streamDic[streamID]?.userID ?? '';
     final isLocalMedia = _ownerID == ZegoUIKitCore.shared.coreData.localUser.id;
@@ -545,11 +550,14 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
       final soundLevel =
           sei[ZegoUIKitSEIDefines.keyMediaSoundLevel] as double? ?? 0.0;
       if (!isLocalMedia) {
-        final targetUserIndex = ZegoUIKitCore.shared.coreData.remoteUsersList
-            .indexWhere((user) => _ownerID == user.id);
+        final targetRoomRemoteUserList = ZegoUIKitCore
+            .shared.coreData.multiRoomUserInfo
+            .getRoom(targetRoomID)
+            .remoteUsersList;
+        final targetUserIndex =
+            targetRoomRemoteUserList.indexWhere((user) => _ownerID == user.id);
         if (-1 != targetUserIndex) {
-          final targetUser =
-              ZegoUIKitCore.shared.coreData.remoteUsersList[targetUserIndex];
+          final targetUser = targetRoomRemoteUserList[targetUserIndex];
           targetUser.auxChannel.soundLevelStream?.add(soundLevel);
         }
       }

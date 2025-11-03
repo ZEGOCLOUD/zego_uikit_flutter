@@ -6,5 +6,4 @@ export 'package:zego_express_engine/zego_express_engine.dart'
         ZegoRoomStateChangedReason;
 
 export 'defines/defines.dart';
-export 'defines/express_extension.dart';
 export 'uikit_service.dart';

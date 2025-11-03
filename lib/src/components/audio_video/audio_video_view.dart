@@ -19,6 +19,8 @@ import 'package:zego_uikit/src/components/widgets/flip_animation.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+import '../../services/core/defines/defines.dart';
+
 /// display user audio and video information,
 /// and z order of widget(from bottom to top) is:
 /// 1. background view

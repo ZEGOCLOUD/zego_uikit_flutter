@@ -154,7 +154,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       );
 
       await ZegoUIKit().setVideoConfig(
-        _config.video ?? ZegoUIKitVideoConfig.preset180P(),
+        _config.video ?? ZegoVideoConfigExtension.preset180P(),
       );
 
       sdkInitNotifier.value = true;

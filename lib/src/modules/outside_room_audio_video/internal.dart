@@ -9,6 +9,8 @@ import 'package:zego_uikit/src/modules/outside_room_audio_video/defines.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+import '../../services/core/defines/defines.dart';
+
 class ZegoOutsideRoomAudioVideoViewStream
     extends ZegoOutsideRoomAudioVideoViewStreamUser {
   /// stream is playing or not

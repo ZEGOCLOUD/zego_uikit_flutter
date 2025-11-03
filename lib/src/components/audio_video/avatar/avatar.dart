@@ -10,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/avatar/ripple_avatar.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
+import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 class ZegoAvatar extends StatelessWidget {

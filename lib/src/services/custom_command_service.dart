@@ -4,10 +4,14 @@ mixin ZegoCustomCommandService {
   /// [toUserIDs] send to everyone if empty
   Future<bool> sendInRoomCommand(
     String command,
-    List<String> toUserIDs,
-  ) async {
-    final resultErrorCode =
-        await ZegoUIKitCore.shared.sendInRoomCommand(command, toUserIDs);
+    List<String> toUserIDs, {
+    String? targetRoomID,
+  }) async {
+    final resultErrorCode = await ZegoUIKitCore.shared.sendInRoomCommand(
+      command,
+      toUserIDs,
+      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+    );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {
       ZegoUIKitCore.shared.error.errorStreamCtrl?.add(

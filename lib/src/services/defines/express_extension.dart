@@ -5,17 +5,6 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/defines/audio_video/audio_video.dart';
 import 'package:zego_uikit/src/services/defines/express.dart';
 
-extension ZegoUIKitExpressEngineStateExtension on ZegoUIKitExpressEngineState {
-  static ZegoUIKitExpressEngineState fromSDK(ZegoEngineState engineState) {
-    switch (engineState) {
-      case ZegoEngineState.Start:
-        return ZegoUIKitExpressEngineState.start;
-      case ZegoEngineState.Stop:
-        return ZegoUIKitExpressEngineState.stop;
-    }
-  }
-}
-
 extension ZegoMixerOutputVideoConfignExtension on ZegoMixerOutputVideoConfig {
   String toStringX() {
     return 'ZegoMixerTask{'
@@ -55,26 +44,6 @@ extension ZegoPublishStreamQualityExtension on ZegoPublishStreamQuality {
         'audioSendBytes:$audioSendBytes'
         'videoSendByte:$videoSendBytes'
         '}';
-  }
-
-  ZegoUIKitPublishStreamQuality toUIKit() {
-    return ZegoUIKitPublishStreamQuality(
-      videoCaptureFPS,
-      videoEncodeFPS,
-      videoSendFPS,
-      videoKBPS,
-      audioCaptureFPS,
-      audioSendFPS,
-      audioKBPS,
-      rtt,
-      packetLostRate,
-      level,
-      isHardwareEncode,
-      videoCodecID,
-      totalSendBytes,
-      audioSendBytes,
-      videoSendBytes,
-    );
   }
 
   static ZegoPublishStreamQuality empty() {

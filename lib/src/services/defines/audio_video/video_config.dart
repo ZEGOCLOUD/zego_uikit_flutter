@@ -1,98 +1,110 @@
 import 'package:zego_express_engine/zego_express_engine.dart';
 
-///  configuration parameters for audio and video streaming, such as Resolution, Frame rate, Bit rate..
-class ZegoUIKitVideoConfig {
-  /// Frame rate, control the frame rate of the camera and the frame rate of the encoder.
-  int fps;
-
-  /// Bit rate in kbps.
-  int bitrate;
-
-  /// resolution width, control the image width of camera image acquisition or encoder when publishing stream.
-  int width;
-
-  /// resolution height, control the image height of camera image acquisition or encoder when publishing stream.
-  int height;
-
-  ZegoUIKitVideoConfig({
-    required this.bitrate,
-    required this.fps,
-    required this.width,
-    required this.height,
-  });
-
-  ZegoUIKitVideoConfig.preset180P()
-      : width = 180,
-        height = 320,
-        bitrate = 300,
-        fps = 15;
-
-  ZegoUIKitVideoConfig.preset270P()
-      : width = 270,
-        height = 480,
-        bitrate = 400,
-        fps = 15;
-
-  ZegoUIKitVideoConfig.preset360P()
-      : width = 360,
-        height = 640,
-        bitrate = 600,
-        fps = 15;
-
-  ZegoUIKitVideoConfig.preset540P()
-      : width = 540,
-        height = 960,
-        bitrate = 1200,
-        fps = 15;
-
-  ZegoUIKitVideoConfig.preset720P()
-      : width = 720,
-        height = 1280,
-        bitrate = 1500,
-        fps = 15;
-
-  ZegoUIKitVideoConfig.preset1080P()
-      : width = 1080,
-        height = 1920,
-        bitrate = 3000,
-        fps = 15;
-
-  ZegoUIKitVideoConfig.preset2K()
-      : width = 1440,
-        height = 2560,
-        bitrate = 6000,
-        fps = 15;
-
-  ZegoUIKitVideoConfig.preset4K()
-      : width = 2160,
-        height = 3840,
-        bitrate = 12000,
-        fps = 15;
-
-  ZegoVideoConfig get toSDK {
-    final videoConfig = ZegoVideoConfig.preset(
-      ZegoVideoConfigPreset.Preset360P,
+extension ZegoVideoConfigExtension on ZegoVideoConfig {
+  static ZegoVideoConfig preset180P() {
+    return ZegoVideoConfig(
+      180,
+      320,
+      180,
+      320,
+      15,
+      300,
+      ZegoVideoCodecID.Default,
     );
-
-    videoConfig.bitrate = bitrate;
-    videoConfig.fps = fps;
-
-    videoConfig.encodeWidth = width;
-    videoConfig.captureWidth = width;
-
-    videoConfig.encodeHeight = height;
-    videoConfig.captureHeight = height;
-
-    return videoConfig;
   }
 
-  @override
-  String toString() {
+  static ZegoVideoConfig preset270P() {
+    return ZegoVideoConfig(
+      270,
+      480,
+      270,
+      480,
+      15,
+      400,
+      ZegoVideoCodecID.Default,
+    );
+  }
+
+  static ZegoVideoConfig preset360P() {
+    return ZegoVideoConfig(
+      360,
+      640,
+      360,
+      640,
+      15,
+      600,
+      ZegoVideoCodecID.Default,
+    );
+  }
+
+  static ZegoVideoConfig preset540P() {
+    return ZegoVideoConfig(
+      540,
+      960,
+      540,
+      960,
+      15,
+      1200,
+      ZegoVideoCodecID.Default,
+    );
+  }
+
+  static ZegoVideoConfig preset720P() {
+    return ZegoVideoConfig(
+      720,
+      1280,
+      720,
+      1280,
+      15,
+      1500,
+      ZegoVideoCodecID.Default,
+    );
+  }
+
+  static ZegoVideoConfig preset1080P() {
+    return ZegoVideoConfig(
+      1080,
+      1920,
+      1080,
+      1920,
+      15,
+      3000,
+      ZegoVideoCodecID.Default,
+    );
+  }
+
+  static ZegoVideoConfig preset2K() {
+    return ZegoVideoConfig(
+      1440,
+      2560,
+      1440,
+      2560,
+      15,
+      6000,
+      ZegoVideoCodecID.Default,
+    );
+  }
+
+  static ZegoVideoConfig preset4K() {
+    return ZegoVideoConfig(
+      2160,
+      3840,
+      2160,
+      3840,
+      15,
+      12000,
+      ZegoVideoCodecID.Default,
+    );
+  }
+
+  String toStringX() {
     return 'ZegoUIKitVideoConfig{'
         'fps:$fps, '
         'bitrate:$bitrate, '
-        'width:$width, '
-        'height:$height, '
+        'captureWidth:$captureWidth, '
+        'captureHeight:$captureHeight, '
+        'encodeWidth:$encodeWidth, '
+        'encodeHeight:$encodeHeight, '
         '}';
   }
 }

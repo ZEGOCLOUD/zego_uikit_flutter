@@ -1,15 +1,6 @@
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
 
-/// express engine state.
-enum ZegoUIKitExpressEngineState {
-  /// The engine has started
-  start,
-
-  /// The engine has stoped
-  stop
-}
-
 typedef ZegoUIKitMixerTask = ZegoMixerTask;
 typedef ZegoUIKitMixRenderMode = ZegoMixRenderMode;
 typedef ZegoUIKitMixerOutput = ZegoMixerOutput;
@@ -29,4 +20,10 @@ typedef ZegoUIKitRemoteDeviceState = ZegoRemoteDeviceState;
 typedef ZegoUIKitDeviceExceptionType = ZegoDeviceExceptionType;
 typedef ZegoUIKitAudioDeviceMode = ZegoAudioDeviceMode;
 
+typedef ZegoUIKitVideoConfig = ZegoVideoConfig;
+typedef ZegoUIKitPlayerState = ZegoPlayerState;
+typedef ZegoUIKitExpressEngineState = ZegoEngineState;
+typedef ZegoUIKitPublisherState = ZegoPublisherState;
+typedef ZegoUIKitPublishStreamQuality = ZegoPublishStreamQuality;
+typedef ZegoUIKitStreamQualityLevel = ZegoStreamQualityLevel;
 typedef ZegoUIKitMediaPlayerMediaInfo = ZegoMediaPlayerMediaInfo;

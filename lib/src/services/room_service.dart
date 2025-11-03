@@ -91,8 +91,14 @@ mixin ZegoRoomService {
     return leaveRoomResult;
   }
 
-  Future<void> renewRoomToken(String token) async {
-    await ZegoUIKitCore.shared.renewRoomToken(token);
+  Future<void> renewRoomToken(
+    String token, {
+    String? targetRoomID,
+  }) async {
+    await ZegoUIKitCore.shared.renewRoomToken(
+      token,
+      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+    );
   }
 
   /// get room object
@@ -106,14 +112,27 @@ mixin ZegoRoomService {
   }
 
   /// update one room property
-  Future<bool> setRoomProperty(String key, String value) async {
-    return ZegoUIKitCore.shared.setRoomProperty(key, value);
+  Future<bool> setRoomProperty(
+    String key,
+    String value, {
+    String? targetRoomID,
+  }) async {
+    return ZegoUIKitCore.shared.setRoomProperty(
+      key,
+      value,
+      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+    );
   }
 
   /// update room properties
-  Future<bool> updateRoomProperties(Map<String, String> properties) async {
-    return ZegoUIKitCore.shared
-        .updateRoomProperties(Map<String, String>.from(properties));
+  Future<bool> updateRoomProperties(
+    Map<String, String> properties, {
+    String? targetRoomID,
+  }) async {
+    return ZegoUIKitCore.shared.updateRoomProperties(
+      Map<String, String>.from(properties),
+      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+    );
   }
 
   /// get room properties

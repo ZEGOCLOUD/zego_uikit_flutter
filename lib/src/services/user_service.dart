@@ -17,10 +17,14 @@ mixin ZegoUserService {
   }
 
   /// get all users, include local user and remote users
-  List<ZegoUIKitUser> getAllUsers() {
+  List<ZegoUIKitUser> getAllUsers({
+    String? targetRoomID,
+  }) {
     return [
       ZegoUIKitCore.shared.coreData.localUser,
-      ...ZegoUIKitCore.shared.coreData.remoteUsersList
+      ...ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+          .remoteUsersList
     ]
         .where((user) => !user.isAnotherRoomUser)
         .map((user) => user.toZegoUikitUser())
@@ -28,28 +32,52 @@ mixin ZegoUserService {
   }
 
   /// get remote users, not include local user
-  List<ZegoUIKitUser> getRemoteUsers() {
-    return ZegoUIKitCore.shared.coreData.remoteUsersList
+  List<ZegoUIKitUser> getRemoteUsers({
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+        .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+        .remoteUsersList
         .where((user) => !user.isAnotherRoomUser)
         .map((user) => user.toZegoUikitUser())
         .toList();
   }
 
   /// get user by user id
-  ZegoUIKitUser getUser(String userID) {
-    return ZegoUIKitCore.shared.coreData.getUser(userID).toZegoUikitUser();
+  ZegoUIKitUser getUser(
+    String userID, {
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData
+        .getUser(
+          userID,
+          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+        )
+        .toZegoUikitUser();
   }
 
   /// get notifier of in-room user attributes
   ValueNotifier<ZegoUIKitUserAttributes> getInRoomUserAttributesNotifier(
-      String userID) {
-    return ZegoUIKitCore.shared.coreData.getUser(userID).inRoomAttributes;
+    String userID, {
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData
+        .getUser(
+          userID,
+          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+        )
+        .inRoomAttributes;
   }
 
   /// get user list notifier
-  Stream<List<ZegoUIKitUser>> getUserListStream() {
-    return ZegoUIKitCore.shared.coreData.userListStreamCtrl?.stream.map(
-            (users) => users
+  Stream<List<ZegoUIKitUser>> getUserListStream({
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+            .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+            .userListStreamCtrl
+            ?.stream
+            .map((users) => users
                 .where((user) => !user.isAnotherRoomUser)
                 .map((e) => e.toZegoUikitUser())
                 .toList()) ??
@@ -57,23 +85,38 @@ mixin ZegoUserService {
   }
 
   /// get user join notifier
-  Stream<List<ZegoUIKitUser>> getUserJoinStream() {
-    return ZegoUIKitCore.shared.coreData.userJoinStreamCtrl?.stream
+  Stream<List<ZegoUIKitUser>> getUserJoinStream({
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+            .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+            .userJoinStreamCtrl
+            ?.stream
             .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
         const Stream.empty();
   }
 
   /// get user leave notifier
-  Stream<List<ZegoUIKitUser>> getUserLeaveStream() {
-    return ZegoUIKitCore.shared.coreData.userLeaveStreamCtrl?.stream
+  Stream<List<ZegoUIKitUser>> getUserLeaveStream({
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+            .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+            .userLeaveStreamCtrl
+            ?.stream
             .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
         const Stream.empty();
   }
 
   /// remove user from room, kick out
-  Future<bool> removeUserFromRoom(List<String> userIDs) async {
-    final resultErrorCode =
-        await ZegoUIKitCore.shared.removeUserFromRoom(userIDs);
+  Future<bool> removeUserFromRoom(
+    List<String> userIDs, {
+    String? targetRoomID,
+  }) async {
+    final resultErrorCode = await ZegoUIKitCore.shared.removeUserFromRoom(
+      userIDs,
+      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+    );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {
       ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
@@ -90,8 +133,13 @@ mixin ZegoUserService {
   }
 
   /// get kicked out notifier
-  Stream<String> getMeRemovedFromRoomStream() {
-    return ZegoUIKitCore.shared.coreData.meRemovedFromRoomStreamCtrl?.stream ??
+  Stream<String> getMeRemovedFromRoomStream({
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+            .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+            .meRemovedFromRoomStreamCtrl
+            ?.stream ??
         const Stream.empty();
   }
 }

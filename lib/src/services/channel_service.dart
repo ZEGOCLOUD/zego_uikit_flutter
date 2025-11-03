@@ -83,7 +83,7 @@ mixin ZegoChannelService {
       return;
     }
 
-    if (ZegoUIKitExpressEngineState.start ==
+    if (ZegoUIKitExpressEngineState.Start ==
         ZegoUIKitCore.shared.coreData.engineStateNotifier.value) {
       /// this api does not allow setting after the express internal engine starts;
       /// if set after the internal engine starts, it will cause the custom

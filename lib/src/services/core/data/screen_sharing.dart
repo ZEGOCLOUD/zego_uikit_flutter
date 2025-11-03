@@ -13,6 +13,8 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+import '../defines/defines.dart';
+
 mixin ZegoUIKitCoreDataScreenSharing {
   StreamController<List<ZegoUIKitCoreUser>>? screenSharingListStreamCtrl;
 
@@ -44,7 +46,9 @@ mixin ZegoUIKitCoreDataScreenSharing {
   }
 
   //start screen share
-  Future<void> startSharingScreen() async {
+  Future<void> startSharingScreen({
+    required String targetRoomID,
+  }) async {
     ZegoLoggerService.logInfo(
       'try start',
       tag: 'uikit-screen-sharing',
@@ -57,6 +61,7 @@ mixin ZegoUIKitCoreDataScreenSharing {
     isScreenSharingQualityNormal.value = false;
     isScreenSharing.value = true;
     await ZegoUIKitCore.shared.coreData.startPublishingStream(
+      targetRoomID: targetRoomID,
       streamType: ZegoStreamType.screenSharing,
     );
     final config = ZegoScreenCaptureConfig(
@@ -72,8 +77,12 @@ mixin ZegoUIKitCoreDataScreenSharing {
 
     if (isFirstScreenSharing && Platform.isAndroid) {
       isFirstScreenSharing = false;
-      await stopSharingScreen();
-      await startSharingScreen();
+      await stopSharingScreen(
+        targetRoomID: targetRoomID,
+      );
+      await startSharingScreen(
+        targetRoomID: targetRoomID,
+      );
     }
 
     ZegoLoggerService.logInfo(
@@ -84,7 +93,9 @@ mixin ZegoUIKitCoreDataScreenSharing {
   }
 
   //stop screen share
-  Future<void> stopSharingScreen() async {
+  Future<void> stopSharingScreen({
+    required String targetRoomID,
+  }) async {
     ZegoLoggerService.logInfo(
       'try stop',
       tag: 'uikit-screen-sharing',
@@ -95,6 +106,7 @@ mixin ZegoUIKitCoreDataScreenSharing {
     isScreenSharing.value = false;
 
     await ZegoUIKitCore.shared.coreData.stopPublishingStream(
+      targetRoomID: targetRoomID,
       streamType: ZegoStreamType.screenSharing,
     );
 

@@ -2,48 +2,71 @@ part of 'uikit_service.dart';
 
 mixin ZegoAudioVideoService {
   /// start play all audio video
-  Future<void> startPlayAllAudioVideo() async {
+  Future<void> startPlayAllAudioVideo({
+    String? targetRoomID,
+  }) async {
     return ZegoUIKitCore.shared.startPlayAllAudioVideo();
   }
 
   /// stop play all audio video
-  Future<void> stopPlayAllAudioVideo() async {
+  Future<void> stopPlayAllAudioVideo({
+    String? targetRoomID,
+  }) async {
     return ZegoUIKitCore.shared.stopPlayAllAudioVideo();
   }
 
   /// start play all audio
-  Future<void> startPlayAllAudio() async {
+  Future<void> startPlayAllAudio({
+    String? targetRoomID,
+  }) async {
     return ZegoUIKitCore.shared.startPlayAllAudio();
   }
 
   /// stop play all audio
-  Future<void> stopPlayAllAudio() async {
+  Future<void> stopPlayAllAudio({
+    String? targetRoomID,
+  }) async {
     return ZegoUIKitCore.shared.stopPlayAllAudio();
   }
 
   /// When the [mute] is set to true, it means that the device is not actually turned off, but muted.
   /// The default value is false, which means the device is turned off.
   /// When either the camera or the microphone is muted, the audio and video views will still be visible.
-  Future<bool> muteUserAudioVideo(String userID, bool mute) async {
+  Future<bool> muteUserAudioVideo(
+    String userID,
+    bool mute, {
+    String? targetRoomID,
+  }) async {
     return ZegoUIKitCore.shared.muteUserAudioVideo(userID, mute);
   }
 
   /// When the [mute] is set to true, it means that the device is not actually turned off, but muted.
   /// The default value is false, which means the device is turned off.
   /// When either the camera or the microphone is muted, the audio and video views will still be visible.
-  Future<bool> muteUserAudio(String userID, bool mute) async {
+  Future<bool> muteUserAudio(
+    String userID,
+    bool mute, {
+    String? targetRoomID,
+  }) async {
     return ZegoUIKitCore.shared.muteUserAudio(userID, mute);
   }
 
   /// When the [mute] is set to true, it means that the device is not actually turned off, but muted.
   /// The default value is false, which means the device is turned off.
   /// When either the camera or the microphone is muted, the audio and video views will still be visible.
-  Future<bool> muteUserVideo(String userID, bool mute) async {
+  Future<bool> muteUserVideo(
+    String userID,
+    bool mute, {
+    String? targetRoomID,
+  }) async {
     return ZegoUIKitCore.shared.muteUserVideo(userID, mute);
   }
 
   /// set audio output to speaker
-  void setAudioOutputToSpeaker(bool isSpeaker) {
+  void setAudioOutputToSpeaker(
+    bool isSpeaker, {
+    String? targetRoomID,
+  }) {
     ZegoUIKitCore.shared.setAudioRouteToSpeaker(isSpeaker);
   }
 
@@ -51,6 +74,7 @@ mixin ZegoAudioVideoService {
   Future<void> setVideoConfig(
     ZegoUIKitVideoConfig config, {
     ZegoStreamType streamType = ZegoStreamType.main,
+    String? targetRoomID,
   }) async {
     await ZegoUIKitCore.shared.setVideoConfig(config, streamType);
   }
@@ -58,6 +82,7 @@ mixin ZegoAudioVideoService {
   Future<void> enableTrafficControl(
     bool enabled,
     List<ZegoUIKitTrafficControlProperty> properties, {
+    String? targetRoomID,
     ZegoUIKitVideoConfig? minimizeVideoConfig,
     bool isFocusOnRemote = true,
     ZegoStreamType streamType = ZegoStreamType.main,
@@ -72,7 +97,11 @@ mixin ZegoAudioVideoService {
   }
 
   /// turn on/off camera
-  void turnCameraOn(bool isOn, {String? userID}) {
+  void turnCameraOn(
+    bool isOn, {
+    String? userID,
+    String? targetRoomID,
+  }) {
     ZegoUIKitCore.shared.turnCameraOn(
       userID?.isEmpty ?? true
           ? ZegoUIKitCore.shared.coreData.localUser.id
@@ -86,7 +115,12 @@ mixin ZegoAudioVideoService {
   /// When the [muteMode] is set to true, it means that the device is not actually turned off, but muted.
   /// The default value is false, which means the device is turned off.
   /// When either the camera or the microphone is muted, the audio and video views will still be visible.
-  void turnMicrophoneOn(bool isOn, {String? userID, bool muteMode = false}) {
+  void turnMicrophoneOn(
+    bool isOn, {
+    String? targetRoomID,
+    String? userID,
+    bool muteMode = false,
+  }) {
     ZegoUIKitCore.shared.turnMicrophoneOn(
       userID?.isEmpty ?? true
           ? ZegoUIKitCore.shared.coreData.localUser.id
@@ -99,6 +133,8 @@ mixin ZegoAudioVideoService {
   /// local use front facing camera
   Future<bool> useFrontFacingCamera(
     bool isFrontFacing, {
+    String? targetRoomID,
+
     /// Whether to ignore the camera's open state;
     /// if not ignored, the operation will not be executed when the camera is not open
     bool ignoreCameraStatus = false,
@@ -110,11 +146,17 @@ mixin ZegoAudioVideoService {
   }
 
   /// set video mirror mode
-  void enableVideoMirroring(bool isVideoMirror) {
+  void enableVideoMirroring(
+    bool isVideoMirror, {
+    String? targetRoomID,
+  }) {
     ZegoUIKitCore.shared.enableVideoMirroring(isVideoMirror);
   }
 
-  void setAudioVideoResourceMode(ZegoUIKitStreamResourceMode mode) {
+  void setAudioVideoResourceMode(
+    ZegoUIKitStreamResourceMode mode, {
+    String? targetRoomID,
+  }) {
     ZegoUIKitCore.shared.setAudioVideoResourceMode(mode);
   }
 
@@ -122,6 +164,7 @@ mixin ZegoAudioVideoService {
   /// SEI data will  transmit by the audio and video stream
   Future<bool> sendCustomSEI(
     Map<String, dynamic> seiData, {
+    String? targetRoomID,
     ZegoStreamType streamType = ZegoStreamType.main,
   }) async {
     return ZegoUIKitCore.shared.coreData.sendSEI(
@@ -134,6 +177,7 @@ mixin ZegoAudioVideoService {
   /// get audio video view notifier
   ValueNotifier<Widget?> getAudioVideoViewNotifier(
     String? userID, {
+    String? targetRoomID,
     ZegoStreamType streamType = ZegoStreamType.main,
   }) {
     if (userID == null ||
@@ -149,7 +193,9 @@ mixin ZegoAudioVideoService {
               .shared.coreData.localUser.auxChannel.viewNotifier;
       }
     } else {
-      final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
+      final targetUser = ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+          .remoteUsersList
           .firstWhere((user) => user.id == userID,
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
@@ -167,6 +213,7 @@ mixin ZegoAudioVideoService {
   /// get audio video view id notifier
   ValueNotifier<int?> getAudioVideoViewIDNotifier(
     String? userID, {
+    String? targetRoomID,
     ZegoStreamType streamType = ZegoStreamType.main,
   }) {
     if (userID == null ||
@@ -182,7 +229,9 @@ mixin ZegoAudioVideoService {
               .shared.coreData.localUser.auxChannel.viewIDNotifier;
       }
     } else {
-      final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
+      final targetUser = ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+          .remoteUsersList
           .firstWhere((user) => user.id == userID,
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
@@ -199,6 +248,7 @@ mixin ZegoAudioVideoService {
 
   ValueNotifier<ZegoUIKitPublishStreamQuality> getAudioVideoQualityNotifier(
     String? userID, {
+    String? targetRoomID,
     ZegoStreamType streamType = ZegoStreamType.main,
   }) {
     if (userID == null ||
@@ -214,7 +264,9 @@ mixin ZegoAudioVideoService {
               .shared.coreData.localUser.auxChannel.qualityNotifier;
       }
     } else {
-      final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
+      final targetUser = ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+          .remoteUsersList
           .firstWhere((user) => user.id == userID,
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
@@ -230,6 +282,7 @@ mixin ZegoAudioVideoService {
 
   ValueNotifier<bool> getAudioVideoCapturedAudioFirstFrameNotifier(
     String? userID, {
+    String? targetRoomID,
     ZegoStreamType streamType = ZegoStreamType.main,
   }) {
     if (userID == null ||
@@ -245,7 +298,9 @@ mixin ZegoAudioVideoService {
               .isCapturedAudioFirstFrameNotifier;
       }
     } else {
-      final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
+      final targetUser = ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+          .remoteUsersList
           .firstWhere((user) => user.id == userID,
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
@@ -261,6 +316,7 @@ mixin ZegoAudioVideoService {
 
   ValueNotifier<bool> getAudioVideoCapturedVideoFirstFrameNotifier(
     String? userID, {
+    String? targetRoomID,
     ZegoStreamType streamType = ZegoStreamType.main,
   }) {
     if (userID == null ||
@@ -276,7 +332,9 @@ mixin ZegoAudioVideoService {
               .isCapturedVideoFirstFrameNotifier;
       }
     } else {
-      final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
+      final targetUser = ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+          .remoteUsersList
           .firstWhere((user) => user.id == userID,
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
@@ -292,6 +350,7 @@ mixin ZegoAudioVideoService {
 
   ValueNotifier<bool> getAudioVideoSendAudioFirstFrameNotifier(
     String? userID, {
+    String? targetRoomID,
     ZegoStreamType streamType = ZegoStreamType.main,
   }) {
     if (userID == null ||
@@ -307,7 +366,9 @@ mixin ZegoAudioVideoService {
               .isSendAudioFirstFrameNotifier;
       }
     } else {
-      final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
+      final targetUser = ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+          .remoteUsersList
           .firstWhere((user) => user.id == userID,
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
@@ -323,6 +384,7 @@ mixin ZegoAudioVideoService {
 
   ValueNotifier<bool> getAudioVideoSendVideoFirstFrameNotifier(
     String? userID, {
+    String? targetRoomID,
     ZegoStreamType streamType = ZegoStreamType.main,
   }) {
     if (userID == null ||
@@ -338,7 +400,9 @@ mixin ZegoAudioVideoService {
               .isSendVideoFirstFrameNotifier;
       }
     } else {
-      final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
+      final targetUser = ZegoUIKitCore.shared.coreData.multiRoomUserInfo
+          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+          .remoteUsersList
           .firstWhere((user) => user.id == userID,
               orElse: ZegoUIKitCoreUser.empty);
       switch (streamType) {
@@ -353,25 +417,55 @@ mixin ZegoAudioVideoService {
   }
 
   /// get camera state notifier
-  ValueNotifier<bool> getCameraStateNotifier(String userID) {
-    return ZegoUIKitCore.shared.coreData.getUser(userID).camera;
+  ValueNotifier<bool> getCameraStateNotifier(
+    String userID, {
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData
+        .getUser(
+          userID,
+          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+        )
+        .camera;
   }
 
   /// get front facing camera switch notifier
-  ValueNotifier<bool> getUseFrontFacingCameraStateNotifier(String userID) {
-    return ZegoUIKitCore.shared.coreData.getUser(userID).isFrontFacing;
+  ValueNotifier<bool> getUseFrontFacingCameraStateNotifier(
+    String userID, {
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData
+        .getUser(
+          userID,
+          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+        )
+        .isFrontFacing;
   }
 
   /// get microphone state notifier
-  ValueNotifier<bool> getMicrophoneStateNotifier(String userID) {
-    return ZegoUIKitCore.shared.coreData.getUser(userID).microphone;
+  ValueNotifier<bool> getMicrophoneStateNotifier(
+    String userID, {
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData
+        .getUser(
+          userID,
+          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+        )
+        .microphone;
   }
 
   /// get audio output device notifier
   ValueNotifier<ZegoUIKitAudioRoute> getAudioOutputDeviceNotifier(
-    String userID,
-  ) {
-    return ZegoUIKitCore.shared.coreData.getUser(userID).audioRoute;
+    String userID, {
+    String? targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData
+        .getUser(
+          userID,
+          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+        )
+        .audioRoute;
   }
 
   /// get screen share notifier
@@ -380,71 +474,108 @@ mixin ZegoAudioVideoService {
   }
 
   /// get sound level notifier
-  Stream<double> getSoundLevelStream(String userID) {
+  Stream<double> getSoundLevelStream(
+    String userID, {
+    String? targetRoomID,
+  }) {
     return ZegoUIKitCore.shared.coreData
-            .getUser(userID)
+            .getUser(
+              userID,
+              targetRoomID:
+                  targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+            )
             .mainChannel
             .soundLevelStream
             ?.stream ??
         const Stream.empty();
   }
 
-  Stream<List<ZegoUIKitUser>> getAudioVideoListStream() {
+  Stream<List<ZegoUIKitUser>> getAudioVideoListStream({
+    String? targetRoomID,
+  }) {
     return ZegoUIKitCore.shared.coreData.audioVideoListStreamCtrl?.stream
             .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
         const Stream.empty();
   }
 
   /// get audio video list
-  List<ZegoUIKitUser> getAudioVideoList() {
+  List<ZegoUIKitUser> getAudioVideoList({
+    String? targetRoomID,
+  }) {
     return ZegoUIKitCore.shared.coreData
-        .getAudioVideoList()
+        .getAudioVideoList(
+          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+        )
         .map((e) => e.toZegoUikitUser())
         .toList();
   }
 
-  Stream<List<ZegoUIKitUser>> getScreenSharingListStream() {
+  Stream<List<ZegoUIKitUser>> getScreenSharingListStream({
+    String? targetRoomID,
+  }) {
     return ZegoUIKitCore.shared.coreData.screenSharingListStreamCtrl?.stream
             .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
         const Stream.empty();
   }
 
   /// get screen sharing list
-  List<ZegoUIKitUser> getScreenSharingList() {
+  List<ZegoUIKitUser> getScreenSharingList({
+    String? targetRoomID,
+  }) {
     return ZegoUIKitCore.shared.coreData
-        .getAudioVideoList(streamType: ZegoStreamType.screenSharing)
+        .getAudioVideoList(
+          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+          streamType: ZegoStreamType.screenSharing,
+        )
         .map((e) => e.toZegoUikitUser())
         .toList();
   }
 
-  Stream<List<ZegoUIKitUser>> getMediaListStream() {
+  Stream<List<ZegoUIKitUser>> getMediaListStream({
+    String? targetRoomID,
+  }) {
     return ZegoUIKitCore.shared.coreData.media.mediaListStreamCtrl?.stream
             .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
         const Stream.empty();
   }
 
   /// get media list
-  List<ZegoUIKitUser> getMediaList() {
+  List<ZegoUIKitUser> getMediaList({
+    String? targetRoomID,
+  }) {
     return ZegoUIKitCore.shared.coreData
-        .getAudioVideoList(streamType: ZegoStreamType.media)
+        .getAudioVideoList(
+          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+          streamType: ZegoStreamType.media,
+        )
         .map((e) => e.toZegoUikitUser())
         .toList();
   }
 
   /// start share screen
-  Future<void> startSharingScreen() async {
+  Future<void> startSharingScreen({
+    String? targetRoomID,
+  }) async {
     return ZegoUIKitCore.shared.coreData.startSharingScreen();
   }
 
   /// stop share screen
-  Future<void> stopSharingScreen() async {
+  Future<void> stopSharingScreen({
+    String? targetRoomID,
+  }) async {
     return ZegoUIKitCore.shared.coreData.stopSharingScreen();
   }
 
   /// get video size notifier
-  ValueNotifier<Size> getVideoSizeNotifier(String userID) {
+  ValueNotifier<Size> getVideoSizeNotifier(
+    String userID, {
+    String? targetRoomID,
+  }) {
     return ZegoUIKitCore.shared.coreData
-        .getUser(userID)
+        .getUser(
+          userID,
+          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+        )
         .mainChannel
         .viewSizeNotifier;
   }

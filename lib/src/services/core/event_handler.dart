@@ -14,7 +14,10 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'package:zego_uikit/src/services/core/data/stream.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
+import 'package:zego_uikit/src/services/defines/express_extension.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
+import 'defines/defines.dart';
 
 /// @nodoc
 mixin ZegoUIKitCoreEventHandler {
@@ -84,8 +87,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       subTag: 'event',
     );
 
-    coreData.engineStateNotifier.value =
-        ZegoUIKitExpressEngineStateExtension.fromSDK(state);
+    coreData.engineStateNotifier.value = state;
 
     coreData.engineStateStreamCtrl.add(coreData.engineStateNotifier.value);
 
@@ -118,6 +120,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       subTag: 'event',
     );
 
+    final targetRemoteUserList =
+        coreData.multiRoomUserInfo.getRoom(roomID).remoteUsersList;
+
     if (updateType == ZegoUpdateType.Add) {
       for (final stream in streamList) {
         coreData.streamDic[stream.streamID] = ZegoUIKitCoreDataStreamData(
@@ -132,7 +137,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         );
 
         late ZegoUIKitCoreUser targetUser;
-        var targetUserIndex = coreData.remoteUsersList
+        var targetUserIndex = targetRemoteUserList
             .indexWhere((user) => stream.user.userID == user.id);
         if (-1 == targetUserIndex) {
           /// user is not exist before stream added
@@ -143,9 +148,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           );
 
           targetUser = ZegoUIKitCoreUser.fromZego(stream.user);
-          coreData.remoteUsersList.add(targetUser);
+          targetRemoteUserList.add(targetUser);
         } else {
-          targetUser = coreData.remoteUsersList[targetUserIndex];
+          targetUser = targetRemoteUserList[targetUserIndex];
         }
 
         final streamType = coreData.getStreamTypeByID(stream.streamID);
@@ -163,6 +168,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           await coreData.startPlayingStreamQueue(
             stream.streamID,
             stream.user.userID,
+            targetRoomID: roomID,
           );
         }
       }
@@ -170,7 +176,10 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       onRoomStreamExtraInfoUpdate(roomID, streamList);
     } else {
       for (final stream in streamList) {
-        coreData.stopPlayingStream(stream.streamID);
+        coreData.stopPlayingStream(
+          stream.streamID,
+          targetRoomID: roomID,
+        );
       }
     }
 
@@ -178,19 +187,25 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     if (-1 !=
         streamIDs.indexWhere(
             (streamID) => streamID.endsWith(ZegoStreamType.main.text))) {
-      coreData.audioVideoListStreamCtrl?.add(coreData.getAudioVideoList());
+      coreData.audioVideoListStreamCtrl?.add(coreData.getAudioVideoList(
+        targetRoomID: roomID,
+      ));
     }
     if (-1 !=
         streamIDs.indexWhere((streamID) =>
             streamID.endsWith(ZegoStreamType.screenSharing.text))) {
-      coreData.screenSharingListStreamCtrl?.add(
-          coreData.getAudioVideoList(streamType: ZegoStreamType.screenSharing));
+      coreData.screenSharingListStreamCtrl?.add(coreData.getAudioVideoList(
+        targetRoomID: roomID,
+        streamType: ZegoStreamType.screenSharing,
+      ));
     }
     if (-1 !=
         streamIDs.indexWhere(
             (streamID) => streamID.endsWith(ZegoStreamType.media.text))) {
-      coreData.media.mediaListStreamCtrl
-          ?.add(coreData.getAudioVideoList(streamType: ZegoStreamType.media));
+      coreData.media.mediaListStreamCtrl?.add(coreData.getAudioVideoList(
+        targetRoomID: roomID,
+        streamType: ZegoStreamType.media,
+      ));
     }
   }
 
@@ -200,48 +215,60 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     ZegoUpdateType updateType,
     List<ZegoUser> userList,
   ) {
+    final targetRoomInfo = coreData.multiRooms.getRoom(roomID);
+
     ZegoLoggerService.logInfo(
-      'onRoomUserUpdate, room id:"$roomID", update type:$updateType'
+      'onRoomUserUpdate, '
+      'room id:"$roomID", '
+      'update type:$updateType, '
       "user list:${userList.map((user) => '"${user.userID}":${user.userName}, ')}",
       tag: 'uikit-service-core',
       subTag: 'event',
     );
 
+    final targetRoomUserInfo = coreData.multiRoomUserInfo.getRoom(roomID);
     if (updateType == ZegoUpdateType.Add) {
       for (final user in userList) {
-        final targetUserIndex =
-            coreData.remoteUsersList.indexWhere((e) => user.userID == e.id);
+        final targetUserIndex = targetRoomUserInfo.remoteUsersList
+            .indexWhere((e) => user.userID == e.id);
         if (-1 != targetUserIndex) {
           continue;
         }
 
-        coreData.remoteUsersList.add(ZegoUIKitCoreUser.fromZego(user));
+        targetRoomUserInfo.remoteUsersList
+            .add(ZegoUIKitCoreUser.fromZego(user));
       }
 
-      if (coreData.remoteUsersList.length >= 499) {
+      if (targetRoomUserInfo.remoteUsersList.length >= 499) {
         /// turn to be a large room after more than 500 people, even if less than 500 people behind
         ZegoLoggerService.logInfo(
           'users is more than 500, turn to be a large room',
           tag: 'uikit-service-core',
           subTag: 'event',
         );
-        coreData.room.isLargeRoom = true;
+        targetRoomInfo.isLargeRoom = true;
       }
 
-      coreData.userJoinStreamCtrl?.add(
+      targetRoomUserInfo.userJoinStreamCtrl?.add(
         userList.map(ZegoUIKitCoreUser.fromZego).toList(),
       );
     } else {
       for (final user in userList) {
-        coreData.removeUser(user.userID);
+        coreData.removeUser(
+          user.userID,
+          targetRoomID: roomID,
+        );
       }
 
-      coreData.userLeaveStreamCtrl
+      targetRoomUserInfo.userLeaveStreamCtrl
           ?.add(userList.map(ZegoUIKitCoreUser.fromZego).toList());
     }
 
-    final allUserList = [coreData.localUser, ...coreData.remoteUsersList];
-    coreData.userListStreamCtrl?.add(allUserList);
+    final allUserList = [
+      coreData.localUser,
+      ...targetRoomUserInfo.remoteUsersList
+    ];
+    targetRoomUserInfo.userListStreamCtrl?.add(allUserList);
   }
 
   @override
@@ -249,17 +276,21 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     String roomID,
     int remainTimeInSecond,
   ) {
+    final targetRoomInfo = coreData.multiRooms.getRoom(roomID);
+
     ZegoLoggerService.logInfo(
-      'onRoomTokenWillExpire, room ID:$roomID, remainTimeInSecond:$remainTimeInSecond',
+      'onRoomTokenWillExpire, '
+      'room id:$roomID, '
+      'remainTimeInSecond:$remainTimeInSecond',
       tag: 'uikit-service-core',
       subTag: 'event',
     );
 
-    if (coreData.room.id == roomID) {
-      coreData.room.tokenExpiredStreamCtrl?.add(remainTimeInSecond);
+    if (targetRoomInfo.id == roomID) {
+      targetRoomInfo.tokenExpiredStreamCtrl?.add(remainTimeInSecond);
     } else {
       ZegoLoggerService.logWarn(
-        'onRoomTokenWillExpire, room ID($roomID) is not same as current room id(${coreData.room.id})',
+        'onRoomTokenWillExpire, room ID($roomID) is not same as current room id(${targetRoomInfo.id})',
         tag: 'uikit-service-core',
         subTag: 'event',
       );
@@ -304,7 +335,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           coreData.getStreamTypeByID(streamID),
         )
         .qualityNotifier
-        .value = quality.toUIKit();
+        .value = quality;
   }
 
   @override
@@ -403,6 +434,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     int errorCode,
     Map<String, dynamic> extendedData,
   ) {
+    final targetRoomID = coreData.queryRoomIDByStreamID(streamID);
+
     ZegoLoggerService.logInfo(
       'onPlayerStateUpdate, '
       'stream id:$streamID, '
@@ -417,7 +450,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     (coreData.playerStateUpdateCallbackList[streamID] ?? []).map(
       (cb) => cb.call(
-        ZegoUIKitPlayerStateExtension.fromZego(state),
+        state,
         errorCode,
         extendedData,
       ),
@@ -456,7 +489,11 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       );
 
       if (ZegoPlayerState.Playing == state) {
-        coreData.stopPlayingStream(streamID, removeDic: false);
+        coreData.stopPlayingStream(
+          streamID,
+          removeDic: false,
+          targetRoomID: targetRoomID,
+        );
       }
     }
   }
@@ -492,9 +529,12 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
   @override
   void onRemoteCameraStateUpdate(String streamID, ZegoRemoteDeviceState state) {
+    final targetRoomID = coreData.queryRoomIDByStreamID(streamID);
+
     ZegoLoggerService.logInfo(
       'onRemoteCameraStateUpdate, '
       'stream id:$streamID, '
+      'room id:$targetRoomID, '
       'state:{$state,${state.name}}',
       tag: 'uikit-service-core',
       subTag: 'event',
@@ -511,6 +551,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       return;
     }
 
+    final targetRemoteUserList =
+        coreData.multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList;
+
     /// update users' camera state
 
     if (!coreData.streamDic.containsKey(streamID)) {
@@ -522,7 +565,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       return;
     }
 
-    final targetUserIndex = coreData.remoteUsersList
+    final targetUserIndex = targetRemoteUserList
         .indexWhere((user) => coreData.streamDic[streamID]!.userID == user.id);
     if (-1 == targetUserIndex) {
       ZegoLoggerService.logInfo(
@@ -533,7 +576,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       return;
     }
 
-    final targetUser = coreData.remoteUsersList[targetUserIndex];
+    final targetUser = targetRemoteUserList[targetUserIndex];
     final oldCameraValue = targetUser.camera.value;
     final oldCameraMuteValue = targetUser.cameraMuteMode.value;
     ZegoLoggerService.logInfo(
@@ -573,18 +616,29 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     if (oldCameraValue != targetUser.camera.value ||
         oldCameraMuteValue != targetUser.cameraMuteMode.value) {
       /// notify outside to update audio video list
-      coreData.notifyStreamListControl(coreData.getStreamTypeByID(streamID));
+      coreData.notifyStreamListControl(
+        coreData.getStreamTypeByID(streamID),
+        targetRoomID: targetRoomID,
+      );
     }
 
-    coreData.syncCanvasViewCreateQueue(streamType: streamType);
+    coreData.syncCanvasViewCreateQueue(
+      streamType: streamType,
+      targetRoomID: targetRoomID,
+    );
 
     targetUser.cameraException.value?.remoteDeviceState = state;
   }
 
   @override
   void onRemoteMicStateUpdate(String streamID, ZegoRemoteDeviceState state) {
+    final targetRoomID = coreData.queryRoomIDByStreamID(streamID);
+
     ZegoLoggerService.logInfo(
-      'onRemoteMicStateUpdate, stream $streamID, state:$state',
+      'onRemoteMicStateUpdate, '
+      'stream id:$streamID, '
+      'room id:$targetRoomID, '
+      'state:$state',
       tag: 'uikit-service-core',
       subTag: 'event',
     );
@@ -600,6 +654,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       return;
     }
 
+    final targetRemoteUserList =
+        coreData.multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList;
+
     /// update users' camera state
 
     if (!coreData.streamDic.containsKey(streamID)) {
@@ -611,7 +668,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       return;
     }
 
-    final targetUserIndex = coreData.remoteUsersList
+    final targetUserIndex = targetRemoteUserList
         .indexWhere((user) => coreData.streamDic[streamID]!.userID == user.id);
     if (-1 == targetUserIndex) {
       ZegoLoggerService.logInfo(
@@ -622,7 +679,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       return;
     }
 
-    final targetUser = coreData.remoteUsersList[targetUserIndex];
+    final targetUser = targetRemoteUserList[targetUserIndex];
     ZegoLoggerService.logInfo(
       'onRemoteMicStateUpdate, stream id:$streamID, user:$targetUser, state:$state',
       tag: 'uikit-service-core',
@@ -657,7 +714,10 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     if (oldMicrophoneValue != targetUser.microphone.value ||
         oldMicrophoneMuteValue != targetUser.microphoneMuteMode.value) {
       /// notify outside to update audio video list
-      coreData.notifyStreamListControl(coreData.getStreamTypeByID(streamID));
+      coreData.notifyStreamListControl(
+        coreData.getStreamTypeByID(streamID),
+        targetRoomID: targetRoomID,
+      );
     }
 
     targetUser.microphoneException.value?.remoteDeviceState = state;
@@ -678,9 +738,13 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         return;
       }
 
+      final targetRoomID = coreData.queryRoomIDByStreamID(streamID);
+      final targetRemoteUserList =
+          coreData.multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList;
+
       final targetUserID = coreData.streamDic[streamID]!.userID;
-      final targetUserIndex = coreData.remoteUsersList
-          .indexWhere((user) => targetUserID == user.id);
+      final targetUserIndex =
+          targetRemoteUserList.indexWhere((user) => targetUserID == user.id);
       if (-1 == targetUserIndex) {
         // ZegoLoggerService.logInfo(
         //   'remote user does not contain $targetUserID',
@@ -691,7 +755,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       }
 
       coreData
-          .getUserStreamChannel(coreData.remoteUsersList[targetUserIndex],
+          .getUserStreamChannel(targetRemoteUserList[targetUserIndex],
               coreData.getStreamTypeByID(streamID))
           .soundLevelStream
           ?.add(soundLevel);
@@ -751,6 +815,10 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
   @override
   void onPlayerVideoSizeChanged(String streamID, int width, int height) {
+    final targetRoomID = coreData.queryRoomIDByStreamID(streamID);
+    final targetRemoteUserList =
+        coreData.multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList;
+
     if (!coreData.streamDic.containsKey(streamID)) {
       ZegoLoggerService.logInfo(
         'onPlayerVideoSizeChanged, stream $streamID is not exist',
@@ -759,7 +827,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       );
       return;
     }
-    final targetUserIndex = coreData.remoteUsersList
+    final targetUserIndex = targetRemoteUserList
         .indexWhere((user) => coreData.streamDic[streamID]!.userID == user.id);
     if (-1 == targetUserIndex) {
       ZegoLoggerService.logInfo(
@@ -770,7 +838,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       return;
     }
 
-    final targetUser = coreData.remoteUsersList[targetUserIndex];
+    final targetUser = targetRemoteUserList[targetUserIndex];
     ZegoLoggerService.logInfo(
       'onPlayerVideoSizeChanged streamID: $streamID width: $width height: $height',
       tag: 'uikit-service-core',
@@ -791,13 +859,19 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     int errorCode,
     Map<String, dynamic> extendedData,
   ) {
+    final targetRoomInfo = coreData.multiRooms.getRoom(roomID);
+
     ZegoLoggerService.logInfo(
-      'onRoomStateChanged roomID: $roomID, reason: $reason, errorCode: $errorCode, extendedData: $extendedData',
+      'onRoomStateChanged,'
+      'room id: $roomID, '
+      'reason: $reason, '
+      'errorCode: $errorCode, '
+      'extendedData: $extendedData',
       tag: 'uikit-service-core',
       subTag: 'event',
     );
 
-    coreData.room.state.value =
+    targetRoomInfo.state.value =
         ZegoUIKitRoomState(reason, errorCode, extendedData);
 
     if (reason == ZegoRoomStateChangedReason.KickOut) {
@@ -807,7 +881,10 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         subTag: 'event',
       );
 
-      coreData.meRemovedFromRoomStreamCtrl?.add('');
+      coreData.multiRoomUserInfo
+          .getRoom(roomID)
+          .meRemovedFromRoomStreamCtrl
+          ?.add('');
     }
 
     if (ZegoErrorCode.CommonSuccess != errorCode &&
@@ -827,14 +904,18 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     String roomID,
     List<ZegoRoomExtraInfo> roomExtraInfoList,
   ) {
-    coreData.room.roomExtraInfoHadArrived = true;
+    final targetRoomInfo = coreData.multiRooms.getRoom(roomID);
+
+    targetRoomInfo.roomExtraInfoHadArrived = true;
 
     final roomExtraInfoString = roomExtraInfoList.map((info) =>
         'key:${info.key}, value:${info.value}'
         ' update user:${info.updateUser.userID},${info.updateUser.userName}, '
         'update time:${info.updateTime}');
     ZegoLoggerService.logInfo(
-      'onRoomExtraInfoUpdate roomID: $roomID,roomExtraInfoList: $roomExtraInfoString',
+      'onRoomExtraInfoUpdate,'
+      'room id: $roomID,'
+      'roomExtraInfoList: $roomExtraInfoString',
       tag: 'uikit-service-core',
       subTag: 'event',
     );
@@ -854,8 +935,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         properties.forEach((key, v) {
           final value = v as String;
 
-          if (coreData.room.properties.containsKey(key) &&
-              coreData.room.properties[key]!.value == value) {
+          if (targetRoomInfo.properties.containsKey(key) &&
+              targetRoomInfo.properties[key]!.value == value) {
             ZegoLoggerService.logInfo(
               'room property not need update, key:$key, value:$value',
               tag: 'uikit-service-core',
@@ -869,19 +950,19 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
             tag: 'uikit-service-core',
             subTag: 'event',
           );
-          if (coreData.room.properties.containsKey(key)) {
-            final property = coreData.room.properties[key]!;
+          if (targetRoomInfo.properties.containsKey(key)) {
+            final property = targetRoomInfo.properties[key]!;
             if (extraInfo.updateTime > property.updateTime) {
-              coreData.room.properties[key]!.oldValue =
-                  coreData.room.properties[key]!.value;
-              coreData.room.properties[key]!.value = value;
-              coreData.room.properties[key]!.updateTime = extraInfo.updateTime;
-              coreData.room.properties[key]!.updateUserID =
+              targetRoomInfo.properties[key]!.oldValue =
+                  targetRoomInfo.properties[key]!.value;
+              targetRoomInfo.properties[key]!.value = value;
+              targetRoomInfo.properties[key]!.updateTime = extraInfo.updateTime;
+              targetRoomInfo.properties[key]!.updateUserID =
                   extraInfo.updateUser.userID;
-              coreData.room.properties[key]!.updateFromRemote = true;
+              targetRoomInfo.properties[key]!.updateFromRemote = true;
             }
           } else {
-            coreData.room.properties[key] = RoomProperty(
+            targetRoomInfo.properties[key] = RoomProperty(
               key,
               value,
               extraInfo.updateTime,
@@ -889,13 +970,13 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
               true,
             );
           }
-          updateProperties[key] = coreData.room.properties[key]!;
-          coreData.room.propertyUpdateStream
-              ?.add(coreData.room.properties[key]!);
+          updateProperties[key] = targetRoomInfo.properties[key]!;
+          targetRoomInfo.propertyUpdateStream
+              ?.add(targetRoomInfo.properties[key]!);
         });
 
         if (updateProperties.isNotEmpty) {
-          coreData.room.propertiesUpdatedStream?.add(updateProperties);
+          targetRoomInfo.propertiesUpdatedStream?.add(updateProperties);
         }
       }
     }
@@ -998,6 +1079,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     );
 
     coreData.customCommandReceivedStreamCtrl?.add(ZegoInRoomCommandReceivedData(
+      roomID: roomID,
       fromUser: ZegoUIKitUser.fromZego(fromUser),
       command: command,
     ));
@@ -1056,6 +1138,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     String userID,
     Map<String, dynamic> sei,
   ) {
+    final targetRoomID = coreData.queryRoomIDByStreamID(streamID);
+
     bool stateChanged = false;
     final cameraValue = sei[ZegoUIKitSEIDefines.keyCamera] ?? false;
     final microphoneValue = sei[ZegoUIKitSEIDefines.keyMicrophone] ?? false;
@@ -1080,23 +1164,28 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         user.microphone.value = microphoneValue;
       }
     } else {
+      final targetRemoteUserList =
+          coreData.multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList;
       final targetUserIndex =
-          coreData.remoteUsersList.indexWhere((user) => userID == user.id);
+          targetRemoteUserList.indexWhere((user) => userID == user.id);
       if (-1 != targetUserIndex) {
-        stateChanged = cameraValue !=
-                coreData.remoteUsersList[targetUserIndex].camera.value ||
-            microphoneValue !=
-                coreData.remoteUsersList[targetUserIndex].microphone.value;
+        stateChanged =
+            cameraValue != targetRemoteUserList[targetUserIndex].camera.value ||
+                microphoneValue !=
+                    targetRemoteUserList[targetUserIndex].microphone.value;
 
-        coreData.remoteUsersList[targetUserIndex].camera.value = cameraValue;
-        coreData.remoteUsersList[targetUserIndex].microphone.value =
+        targetRemoteUserList[targetUserIndex].camera.value = cameraValue;
+        targetRemoteUserList[targetUserIndex].microphone.value =
             microphoneValue;
       }
     }
 
     if (stateChanged) {
       /// notify outside to update audio video list
-      coreData.notifyStreamListControl(coreData.getStreamTypeByID(streamID));
+      coreData.notifyStreamListControl(
+        coreData.getStreamTypeByID(streamID),
+        targetRoomID: targetRoomID,
+      );
     }
   }
 }

@@ -20,10 +20,12 @@ const userIDCommandKey = 'zego_user_id';
 const muteModeCommandKey = 'zego_mute_mode';
 
 class ZegoInRoomCommandReceivedData {
+  String roomID;
   ZegoUIKitUser fromUser;
   String command;
 
   ZegoInRoomCommandReceivedData({
+    required this.roomID,
     required this.fromUser,
     required this.command,
   });

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
+import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier

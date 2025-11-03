@@ -3,6 +3,7 @@ part of '../core.dart';
 /// @nodoc
 class ZegoUIKitCoreData
     with
+        ZegoUIKitCoreDataRoom,
         ZegoUIKitCoreDataStream,
         ZegoUIKitCoreDataUser,
         ZegoUIKitCoreDataNetworkTimestamp,
@@ -13,8 +14,6 @@ class ZegoUIKitCoreData
 
   Timer? mixerSEITimer;
 
-  ZegoUIKitCoreRoom room = ZegoUIKitCoreRoom('');
-
   StreamController<ZegoInRoomCommandReceivedData>?
       customCommandReceivedStreamCtrl;
   final networkStateNotifier =
@@ -23,7 +22,8 @@ class ZegoUIKitCoreData
 
   ValueNotifier<ZegoUIKitExpressEngineState> engineStateNotifier =
       ValueNotifier<ZegoUIKitExpressEngineState>(
-          ZegoUIKitExpressEngineState.stop);
+    ZegoUIKitExpressEngineState.Stop,
+  );
   final engineStateStreamCtrl =
       StreamController<ZegoUIKitExpressEngineState>.broadcast();
 
@@ -95,17 +95,23 @@ class ZegoUIKitCoreData
       subTag: 'core data',
     );
 
-    clearStream();
     media.clear();
+
+    clearStream();
 
     isAllPlayStreamAudioVideoMuted = false;
     isAllPlayStreamAudioMuted = false;
 
-    remoteUsersList.clear();
+    multiRoomUserInfo.forEach((roomID, userInfo) {
+      userInfo.remoteUsersList.clear();
+    });
+
     streamDic.clear();
     streamExtraInfo.clear();
 
-    room.clear();
+    multiRooms.forEach((roomID, roomInfo) {
+      roomInfo.clear();
+    });
   }
 
   void setRoom(

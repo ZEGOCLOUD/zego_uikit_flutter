@@ -32,14 +32,14 @@ mixin ZegoUIKitCoreDataMessage {
   }
 
   void clearMessage({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     clearBroadcastMessage(targetRoomID: targetRoomID);
     clearBarrageMessage(targetRoomID: targetRoomID);
   }
 
   void clearBroadcastMessage({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     ZegoLoggerService.logInfo(
       'clear broadcast message, '
@@ -49,15 +49,15 @@ mixin ZegoUIKitCoreDataMessage {
     );
 
     multiRoomBroadcastMessages.forEach((roomID, roomMessages) {
-      if (targetRoomID == null || targetRoomID == roomID) {
+      if (targetRoomID == roomID) {
         roomMessages.clear();
       }
     });
-    multiRoomBroadcastMessages.removeRoom(targetRoomID ?? '');
+    multiRoomBroadcastMessages.removeRoom(targetRoomID);
   }
 
   void clearBarrageMessage({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     ZegoLoggerService.logInfo(
       'clear barrage message, '
@@ -67,11 +67,11 @@ mixin ZegoUIKitCoreDataMessage {
     );
 
     multiRoomBarrageMessages.forEach((roomID, roomMessages) {
-      if (targetRoomID == null || targetRoomID == roomID) {
+      if (targetRoomID == roomID) {
         roomMessages.clear();
       }
     });
-    multiRoomBarrageMessages.removeRoom(targetRoomID ?? '');
+    multiRoomBarrageMessages.removeRoom(targetRoomID);
   }
 
   void uninitMessage() {

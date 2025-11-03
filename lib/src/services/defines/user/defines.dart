@@ -12,6 +12,9 @@ import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import 'package:zego_uikit/src/services/defines/device/device.dart';
 
+import 'package:zego_uikit/src/services/core/defines/user_attributes.dart';
+import 'package:zego_uikit/src/services/core/defines/user.dart';
+
 extension ZegoUIKitUserList on List<ZegoUIKitUser> {
   String get ids => map((e) => e.id).toString();
 }

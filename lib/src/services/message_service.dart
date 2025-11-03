@@ -133,11 +133,16 @@ mixin ZegoMessageService {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
     bool clearRemote = true,
   }) async {
-    ZegoUIKitCore.shared.clearLocalMessage(type);
+    ZegoUIKitCore.shared.clearLocalMessage(
+      type,
+      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+    );
 
     if (clearRemote) {
-      final resultErrorCode =
-          await ZegoUIKitCore.shared.clearRemoteMessage(type);
+      final resultErrorCode = await ZegoUIKitCore.shared.clearRemoteMessage(
+        type,
+        targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+      );
 
       if (ZegoUIKitErrorCode.success != resultErrorCode) {
         ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
