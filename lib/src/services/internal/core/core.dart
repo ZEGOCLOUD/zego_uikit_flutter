@@ -166,6 +166,7 @@ class ZegoUIKitCore
           );
         });
 
+        /// 就算回调回来了，内部ve可能还没创建好，需要等待
         expressEngineCreatedNotifier.value = true;
       } catch (e) {
         ZegoLoggerService.logInfo(
@@ -1468,6 +1469,7 @@ class ZegoUIKitCore
     }
   }
 
+  ///
   Future<void> enableCustomVideoProcessing(bool enable) async {
     var type = ZegoVideoBufferType.CVPixelBuffer;
     if (Platform.isAndroid) {
@@ -1477,12 +1479,13 @@ class ZegoUIKitCore
     ZegoLoggerService.logInfo(
       '${enable ? "enable" : "disable"} custom video processing, '
       'buffer type:$type, '
-      'express engineState:${coreData.engineState}, ',
+      'express engineState:${coreData.engineStateNotifier.value}, ',
       tag: 'uikit-stream',
       subTag: 'custom video processing',
     );
 
-    if (ZegoUIKitExpressEngineState.stop == coreData.engineState) {
+    if (ZegoUIKitExpressEngineState.stop ==
+        coreData.engineStateNotifier.value) {
       /// this api does not allow setting after the express internal engine starts;
       /// if set after the internal engine starts, it will cause the external video preprocessing to not be truly turned off/turned on
       /// so turned off/turned on only effect when engine state is stop
@@ -1491,19 +1494,21 @@ class ZegoUIKitCore
         ZegoCustomVideoProcessConfig(type),
       );
     } else {
-      coreData.waitingEngineStopEnableCustomVideoProcessing = enable;
+      coreData.waitingEngineStopEnableValueOfCustomVideoProcessing = enable;
 
-      coreData.engineStateUpdatedSubscription?.cancel();
-      coreData.engineStateUpdatedSubscription = coreData
-          .engineStateStreamCtrl.stream
-          .listen(onWaitingEngineStopEnableCustomVideoProcessing);
+      coreData.engineStateUpdatedSubscriptionByEnableCustomVideoProcessing
+          ?.cancel();
+      coreData.engineStateUpdatedSubscriptionByEnableCustomVideoProcessing =
+          coreData.engineStateStreamCtrl.stream
+              .listen(onWaitingEngineStopEnableCustomVideoProcessing);
     }
   }
 
   void onWaitingEngineStopEnableCustomVideoProcessing(
     ZegoUIKitExpressEngineState engineState,
   ) {
-    final targetEnabled = coreData.waitingEngineStopEnableCustomVideoProcessing;
+    final targetEnabled =
+        coreData.waitingEngineStopEnableValueOfCustomVideoProcessing;
 
     ZegoLoggerService.logInfo(
       'onWaitingEngineStopEnableCustomVideoProcessing, '
@@ -1513,8 +1518,9 @@ class ZegoUIKitCore
       subTag: 'custom video processing',
     );
 
-    coreData.waitingEngineStopEnableCustomVideoProcessing = false;
-    coreData.engineStateUpdatedSubscription?.cancel();
+    coreData.waitingEngineStopEnableValueOfCustomVideoProcessing = false;
+    coreData.engineStateUpdatedSubscriptionByEnableCustomVideoProcessing
+        ?.cancel();
     enableCustomVideoProcessing(targetEnabled);
   }
 }

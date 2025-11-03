@@ -254,6 +254,12 @@ mixin ZegoUIKitCoreDataStream {
           : ZegoViewMode.AspectFit,
     );
 
+    ZegoLoggerService.logInfo(
+      'call express startPreview, for trace enableCustomVideoRender, '
+      'isEnableCustomVideoRender:${ZegoUIKitCore.shared.coreData.isEnableCustomVideoRender}',
+      tag: 'uikit-stream',
+      subTag: 'onViewCreatedByStartPreview',
+    );
     ZegoExpressEngine.instance
       ..enableCamera(ZegoUIKitCore.shared.coreData.localUser.camera.value)
       ..startPreview(canvas: previewCanvas).then((_) {
@@ -400,6 +406,12 @@ mixin ZegoUIKitCoreDataStream {
       subTag: 'start publish stream',
     );
 
+    ZegoLoggerService.logInfo(
+      'call express startPublishingStream, for trace enableCustomVideoRender, '
+      'isEnableCustomVideoRender:${ZegoUIKitCore.shared.coreData.isEnableCustomVideoRender}',
+      tag: 'uikit-stream',
+      subTag: 'start publish stream',
+    );
     await ZegoExpressEngine.instance
         .startPublishingStream(
       getLocalStreamID(streamType),
@@ -433,6 +445,12 @@ mixin ZegoUIKitCoreDataStream {
           viewMode: useVideoViewAspectFill
               ? ZegoViewMode.AspectFill
               : ZegoViewMode.AspectFit,
+        );
+        ZegoLoggerService.logInfo(
+          'call express startPreview, for trace enableCustomVideoRender, '
+          'isEnableCustomVideoRender:${ZegoUIKitCore.shared.coreData.isEnableCustomVideoRender}',
+          tag: 'uikit-stream',
+          subTag: 'start publish stream',
         );
         await ZegoExpressEngine.instance.startPreview(canvas: canvas).then((_) {
           isPreviewing = true;
@@ -1090,6 +1108,12 @@ mixin ZegoUIKitCoreDataStream {
       }
     }
 
+    ZegoLoggerService.logInfo(
+      'call express startPlayingStream, for trace enableCustomVideoRender, '
+      'isEnableCustomVideoRender:${ZegoUIKitCore.shared.coreData.isEnableCustomVideoRender}',
+      tag: 'uikit-stream',
+      subTag: 'start play stream',
+    );
     if (startPlayingStreamInIOSPIP) {
       ZegoUIKitPluginPlatform.instance
           .startPlayingStreamInPIP(streamID)

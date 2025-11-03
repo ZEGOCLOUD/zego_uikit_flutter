@@ -64,7 +64,7 @@ mixin ZegoChannelService {
   Future<void> enableCustomVideoRender(bool isEnabled) async {
     ZegoLoggerService.logInfo(
       'isEnabled:$isEnabled, '
-      'express engineState:${ZegoUIKitCore.shared.coreData.engineState}, '
+      'express engineState:${ZegoUIKitCore.shared.coreData.engineStateNotifier}, '
       'roomState:${ZegoUIKitCore.shared.coreData.room.state.value}, '
       'isPreviewing:${ZegoUIKitCore.shared.coreData.isPreviewing}, '
       'isPublishingStream:${ZegoUIKitCore.shared.coreData.isPublishingStream}, '
@@ -83,9 +83,49 @@ mixin ZegoChannelService {
       return;
     }
 
-    ZegoUIKitCore.shared.coreData.isEnableCustomVideoRender = isEnabled;
+    if (ZegoUIKitExpressEngineState.start ==
+        ZegoUIKitCore.shared.coreData.engineStateNotifier.value) {
+      /// this api does not allow setting after the express internal engine starts;
+      /// if set after the internal engine starts, it will cause the custom
+      /// video render to not be truly turned off/turned on
+      /// so turned off/turned on only effect when engine state is stop
+      ZegoUIKitCore.shared.coreData.isEnableCustomVideoRender = isEnabled;
+      await ZegoUIKitPluginPlatform.instance.enableCustomVideoRender(isEnabled);
+    } else {
+      ZegoUIKitCore.shared.coreData
+          .waitingEngineStopEnableValueOfCustomVideoRender = isEnabled;
 
-    await ZegoUIKitPluginPlatform.instance.enableCustomVideoRender(isEnabled);
+      ZegoUIKitCore.shared.coreData
+          .engineStateUpdatedSubscriptionByEnableCustomVideoRender
+          ?.cancel();
+      ZegoUIKitCore.shared.coreData
+              .engineStateUpdatedSubscriptionByEnableCustomVideoRender =
+          ZegoUIKitCore.shared.coreData.engineStateStreamCtrl.stream
+              .listen(onWaitingEngineStopEnableCustomVideoRender);
+    }
+  }
+
+  Future<void> onWaitingEngineStopEnableCustomVideoRender(
+    ZegoUIKitExpressEngineState engineState,
+  ) async {
+    final targetEnabled = ZegoUIKitCore
+        .shared.coreData.waitingEngineStopEnableValueOfCustomVideoRender;
+
+    ZegoLoggerService.logInfo(
+      'onWaitingEngineStopEnableCustomVideoRender, '
+      'target enabled:$targetEnabled, '
+      'engineState:$engineState, ',
+      tag: 'uikit-stream',
+      subTag: 'enableCustomVideoRender',
+    );
+
+    ZegoUIKitCore.shared.coreData
+        .waitingEngineStopEnableValueOfCustomVideoRender = false;
+    ZegoUIKitCore
+        .shared.coreData.engineStateUpdatedSubscriptionByEnableCustomVideoRender
+        ?.cancel();
+
+    await enableCustomVideoRender(targetEnabled);
   }
 
   Future<void> requestDismissKeyguard() async {
