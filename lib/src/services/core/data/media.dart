@@ -498,10 +498,12 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
     Map<String, dynamic> sei,
   ) {
     final targetRoomID =
-        ZegoUIKitCore.shared.coreData.queryRoomIDByStreamID(streamID);
+        ZegoUIKitCore.shared.coreData.queryRoomIDByStreamID(streamID) ??
+            ZegoUIKitCore.shared.coreData.currentRoomId;
+    final targetRoomStream =
+        ZegoUIKitCore.shared.coreData.multiRoomStreams.getRoom(targetRoomID);
 
-    _ownerID ??=
-        ZegoUIKitCore.shared.coreData.streamDic[streamID]?.userID ?? '';
+    _ownerID ??= targetRoomStream.streamDic[streamID]?.userID ?? '';
     final isLocalMedia = _ownerID == ZegoUIKitCore.shared.coreData.localUser.id;
 
     if (sei.keys.contains(ZegoUIKitSEIDefines.keyMediaStatus)) {

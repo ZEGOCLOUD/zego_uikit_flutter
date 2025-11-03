@@ -10,7 +10,7 @@ mixin ZegoCustomCommandService {
     final resultErrorCode = await ZegoUIKitCore.shared.sendInRoomCommand(
       command,
       toUserIDs,
-      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
     );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {

@@ -60,10 +60,9 @@ mixin ZegoUIKitCoreDataScreenSharing {
 
     isScreenSharingQualityNormal.value = false;
     isScreenSharing.value = true;
-    await ZegoUIKitCore.shared.coreData.startPublishingStream(
-      targetRoomID: targetRoomID,
-      streamType: ZegoStreamType.screenSharing,
-    );
+    await ZegoUIKitCore.shared.coreData.multiRoomStreams
+        .getRoom(targetRoomID)
+        .startPublishingStream(streamType: ZegoStreamType.screenSharing);
     final config = ZegoScreenCaptureConfig(
       true,
       true,
@@ -105,10 +104,9 @@ mixin ZegoUIKitCoreDataScreenSharing {
     isScreenSharingQualityNormal.value = false;
     isScreenSharing.value = false;
 
-    await ZegoUIKitCore.shared.coreData.stopPublishingStream(
-      targetRoomID: targetRoomID,
-      streamType: ZegoStreamType.screenSharing,
-    );
+    await ZegoUIKitCore.shared.coreData.multiRoomStreams
+        .getRoom(targetRoomID)
+        .stopPublishingStream(streamType: ZegoStreamType.screenSharing);
 
     screenCaptureSource?.stopCapture();
 

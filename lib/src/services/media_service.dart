@@ -16,6 +16,7 @@ mixin ZegoMediaService {
     bool autoStart = true,
   }) async {
     final playResult = await ZegoUIKitCore.shared.playMedia(
+      targetRoomID: ZegoUIKitCore.shared.coreData.currentRoomId,
       filePathOrURL: filePathOrURL,
       enableRepeat: enableRepeat,
       autoStart: autoStart,
@@ -39,7 +40,9 @@ mixin ZegoMediaService {
 
   /// Stop playing.
   Future<void> stopMedia() async {
-    return ZegoUIKitCore.shared.stopMedia();
+    return ZegoUIKitCore.shared.stopMedia(
+      targetRoomID: ZegoUIKitCore.shared.coreData.currentRoomId,
+    );
   }
 
   /// Pause playing.
@@ -54,7 +57,9 @@ mixin ZegoMediaService {
 
   /// Destroy current media
   Future<void> destroyMedia() async {
-    return ZegoUIKitCore.shared.destroyMedia();
+    return ZegoUIKitCore.shared.destroyMedia(
+      targetRoomID: ZegoUIKitCore.shared.coreData.currentRoomId,
+    );
   }
 
   /// Set the specified playback progress, Unit is millisecond.

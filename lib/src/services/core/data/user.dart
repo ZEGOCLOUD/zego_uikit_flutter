@@ -134,26 +134,27 @@ mixin ZegoUIKitCoreDataUser {
       return ZegoUIKitCoreUser.empty();
     }
 
+    final roomStreamInfo =
+        ZegoUIKitCore.shared.coreData.multiRoomStreams.getRoom(
+      targetRoomID,
+    );
     final targetUser = multiRoomUserInfo
         .getRoom(targetRoomID)
         .remoteUsersList
         .removeAt(targetIndex);
     if (targetUser.mainChannel.streamID.isNotEmpty) {
-      ZegoUIKitCore.shared.coreData.stopPlayingStream(
+      roomStreamInfo.stopPlayingStream(
         targetUser.mainChannel.streamID,
-        targetRoomID: targetRoomID,
       );
     }
     if (targetUser.auxChannel.streamID.isNotEmpty) {
-      ZegoUIKitCore.shared.coreData.stopPlayingStream(
+      roomStreamInfo.stopPlayingStream(
         targetUser.auxChannel.streamID,
-        targetRoomID: targetRoomID,
       );
     }
     if (targetUser.thirdChannel.streamID.isNotEmpty) {
-      ZegoUIKitCore.shared.coreData.stopPlayingStream(
+      roomStreamInfo.stopPlayingStream(
         targetUser.thirdChannel.streamID,
-        targetRoomID: targetRoomID,
       );
     }
 
@@ -174,18 +175,27 @@ mixin ZegoUIKitCoreDataUser {
   }
 
   /// todo multi room
-  ZegoUIKitCoreUser getUserInMixerStream(String userID) {
-    final user = getMixerStreamUsers().firstWhere(
+  ZegoUIKitCoreUser getUserInMixerStream(
+    String userID, {
+    required String targetRoomID,
+  }) {
+    final user = getMixerStreamUsers(
+      targetRoomID: targetRoomID,
+    ).firstWhere(
       (user) => user.id == userID,
       orElse: ZegoUIKitCoreUser.empty,
     );
     return user;
   }
 
-  List<ZegoUIKitCoreUser> getMixerStreamUsers() {
+  List<ZegoUIKitCoreUser> getMixerStreamUsers({
+    required String targetRoomID,
+  }) {
+    final roomStreamInfo =
+        ZegoUIKitCore.shared.coreData.multiRoomStreams.getRoom(targetRoomID);
+
     final users = <ZegoUIKitCoreUser>[];
-    ZegoUIKitCore.shared.coreData.mixerStreamDic
-        .forEach((key, mixerStreamInfo) {
+    roomStreamInfo.mixerStreamDic.forEach((key, mixerStreamInfo) {
       users.addAll(mixerStreamInfo.usersNotifier.value);
     });
 

@@ -23,7 +23,7 @@ mixin ZegoUserService {
     return [
       ZegoUIKitCore.shared.coreData.localUser,
       ...ZegoUIKitCore.shared.coreData.multiRoomUserInfo
-          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
           .remoteUsersList
     ]
         .where((user) => !user.isAnotherRoomUser)
@@ -36,7 +36,7 @@ mixin ZegoUserService {
     String? targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.multiRoomUserInfo
-        .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+        .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
         .remoteUsersList
         .where((user) => !user.isAnotherRoomUser)
         .map((user) => user.toZegoUikitUser())
@@ -51,7 +51,8 @@ mixin ZegoUserService {
     return ZegoUIKitCore.shared.coreData
         .getUser(
           userID,
-          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+          targetRoomID:
+              targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
         )
         .toZegoUikitUser();
   }
@@ -64,7 +65,8 @@ mixin ZegoUserService {
     return ZegoUIKitCore.shared.coreData
         .getUser(
           userID,
-          targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+          targetRoomID:
+              targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
         )
         .inRoomAttributes;
   }
@@ -74,7 +76,8 @@ mixin ZegoUserService {
     String? targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.multiRoomUserInfo
-            .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+            .getRoom(
+                targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
             .userListStreamCtrl
             ?.stream
             .map((users) => users
@@ -89,7 +92,8 @@ mixin ZegoUserService {
     String? targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.multiRoomUserInfo
-            .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+            .getRoom(
+                targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
             .userJoinStreamCtrl
             ?.stream
             .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
@@ -101,7 +105,8 @@ mixin ZegoUserService {
     String? targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.multiRoomUserInfo
-            .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+            .getRoom(
+                targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
             .userLeaveStreamCtrl
             ?.stream
             .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
@@ -115,7 +120,7 @@ mixin ZegoUserService {
   }) async {
     final resultErrorCode = await ZegoUIKitCore.shared.removeUserFromRoom(
       userIDs,
-      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id,
+      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
     );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {
@@ -137,7 +142,8 @@ mixin ZegoUserService {
     String? targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.multiRoomUserInfo
-            .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.id)
+            .getRoom(
+                targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
             .meRemovedFromRoomStreamCtrl
             ?.stream ??
         const Stream.empty();

@@ -53,9 +53,13 @@ class ZegoUIKitCoreData
     networkStateStreamCtrl ??=
         StreamController<ZegoUIKitNetworkState>.broadcast();
 
-    room.init();
+    multiRooms.forEach((roomID, roomInfo) {
+      roomInfo.init();
+    });
     initUser();
-    initStream();
+    multiRoomStreams.forEach((roomID, streamInfo) {
+      streamInfo.initStream();
+    });
     media.init();
     initMessage();
     initScreenSharing();
@@ -80,15 +84,21 @@ class ZegoUIKitCoreData
     networkStateStreamCtrl?.close();
     networkStateStreamCtrl = null;
 
-    room.uninit();
+    multiRooms.forEach((roomID, roomInfo) {
+      roomInfo.uninit();
+    });
     uninitUser();
-    uninitStream();
+    multiRoomStreams.forEach((roomID, streamInfo) {
+      streamInfo.uninitStream();
+    });
     media.uninit();
     uninitMessage();
     uninitScreenSharing();
   }
 
-  void clear() {
+  void clear({
+    required String targetRoomID,
+  }) {
     ZegoLoggerService.logInfo(
       'clear',
       tag: 'uikit',
@@ -97,19 +107,30 @@ class ZegoUIKitCoreData
 
     media.clear();
 
-    clearStream();
+    multiRoomStreams.forEach((roomID, streamInfo) {
+      if (targetRoomID != roomID) {
+        return;
+      }
 
-    isAllPlayStreamAudioVideoMuted = false;
-    isAllPlayStreamAudioMuted = false;
+      streamInfo.clearStream();
+
+      streamInfo.isAllPlayStreamAudioVideoMuted = false;
+      streamInfo.isAllPlayStreamAudioMuted = false;
+      streamInfo.streamDic.clear();
+      streamInfo.streamExtraInfo.clear();
+    });
 
     multiRoomUserInfo.forEach((roomID, userInfo) {
+      if (targetRoomID != roomID) {
+        return;
+      }
       userInfo.remoteUsersList.clear();
     });
 
-    streamDic.clear();
-    streamExtraInfo.clear();
-
     multiRooms.forEach((roomID, roomInfo) {
+      if (targetRoomID != roomID) {
+        return;
+      }
       roomInfo.clear();
     });
   }
@@ -142,7 +163,7 @@ class ZegoUIKitCoreData
     Map<String, dynamic> seiData, {
     ZegoStreamType streamType = ZegoStreamType.main,
   }) async {
-    if (getLocalStreamID(streamType).isEmpty) {
+    if (ZegoUIKitCoreDataStreamHelper.getLocalStreamID(streamType).isEmpty) {
       ZegoLoggerService.logError(
         'local user has not publish stream, send sei will be failed',
         tag: 'uikit-sei',

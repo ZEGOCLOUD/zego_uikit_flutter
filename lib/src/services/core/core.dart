@@ -27,6 +27,8 @@ import 'package:zego_uikit/src/services/core/event_handler.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 
+import 'data/stream.defines.dart';
+
 part 'data/data.dart';
 
 part 'defines.dart';
@@ -267,10 +269,17 @@ class ZegoUIKitCore
     );
   }
 
-  void clear() {
-    coreData.clear();
+  void clear({
+    required String targetRoomID,
+  }) {
+    coreData.clear(
+      targetRoomID: targetRoomID,
+    );
 
     coreData.multiRooms.allRoomIDs.forEach((roomID) {
+      if (targetRoomID != roomID) {
+        return;
+      }
       message.clear(targetRoomID: roomID);
     });
   }
@@ -428,15 +437,17 @@ class ZegoUIKitCore
   }) async {
     ZegoLoggerService.logInfo(
       'current room is ${coreData.currentRoomId}, '
+      'all room ids:${coreData.multiRooms.allRoomIDs}, '
       'target room id:$targetRoomID, '
       'network state:${ZegoUIKit().getNetworkState()}, ',
       tag: 'uikit-room',
       subTag: 'leave room',
     );
 
-    if (targetRoomID != null && targetRoomID != coreData.currentRoomId) {
+    if (targetRoomID != null &&
+        !coreData.multiRooms.allRoomIDs.contains(targetRoomID)) {
       ZegoLoggerService.logInfo(
-        'room id is different, not need to leave',
+        'room id not exist, not need to leave',
         tag: 'uikit-room',
         subTag: 'leave room',
       );
@@ -448,7 +459,10 @@ class ZegoUIKitCore
       WakelockPlus.disable();
     }
 
-    clear();
+    /// todo multi mode
+    clear(
+      targetRoomID: targetRoomID ?? coreData.currentRoomId,
+    );
     coreData.localUser.clearRoomAttribute();
     coreData.canvasViewCreateQueue.clear();
 

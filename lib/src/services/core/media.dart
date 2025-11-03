@@ -26,11 +26,10 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
         tag: 'uikit-media',
         subTag: 'playMedia',
       );
-      await coreData
-          .startPublishingStream(
-        targetRoomID: targetRoomID,
-        streamType: ZegoStreamType.media,
-      )
+      final roomStreamInfo = coreData.multiRoomStreams.getRoom(targetRoomID);
+
+      await roomStreamInfo
+          .startPublishingStream(streamType: ZegoStreamType.media)
           .then((value) async {
         /// sync media type via stream extra info
         final streamExtraInfo = <String, dynamic>{
@@ -45,11 +44,12 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
         );
 
         /// render
-        await coreData.createLocalUserVideoViewQueue(
-          targetRoomID: targetRoomID,
+        await roomStreamInfo.createLocalUserVideoViewQueue(
           streamType: ZegoStreamType.media,
           onViewCreated: (ZegoStreamType streamType) {
-            coreData.onViewCreatedByStartPublishingStream(ZegoStreamType.media);
+            roomStreamInfo.onViewCreatedByStartPublishingStream(
+              ZegoStreamType.media,
+            );
           },
         );
       });
@@ -67,10 +67,9 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
   }) async {
     await coreData.media.stop();
 
-    await coreData.stopPublishingStream(
-      targetRoomID: targetRoomID,
-      streamType: ZegoStreamType.media,
-    );
+    await coreData.multiRoomStreams.getRoom(targetRoomID).stopPublishingStream(
+          streamType: ZegoStreamType.media,
+        );
   }
 
   Future<void> destroyMedia({
@@ -78,10 +77,9 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
   }) async {
     await coreData.media.clear();
 
-    await coreData.stopPublishingStream(
-      targetRoomID: targetRoomID,
-      streamType: ZegoStreamType.media,
-    );
+    await coreData.multiRoomStreams.getRoom(targetRoomID).stopPublishingStream(
+          streamType: ZegoStreamType.media,
+        );
   }
 
   Future<void> pauseMedia() async {
