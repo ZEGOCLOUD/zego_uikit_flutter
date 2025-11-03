@@ -1,5 +1,5 @@
 // Project imports:
-import 'package:zego_uikit/src/services/defines/user.dart';
+import 'package:zego_uikit/src/services/defines/user/user.dart';
 
 /// The keys below are not allowed to be modified because they are compatible with the web.
 

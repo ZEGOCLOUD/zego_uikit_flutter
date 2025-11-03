@@ -149,7 +149,8 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
     );
   }
 
-  ZegoUIKitMediaInfo getMediaInfo() {
-    return ZegoUIKitMediaInfo.fromZego(coreData.media.mediaInfo);
+  ZegoUIKitMediaPlayerMediaInfo getMediaInfo() {
+    return coreData.media.mediaInfo ??
+        ZegoUIKitMediaPlayerMediaInfo.defaultInfo();
   }
 }

@@ -1,10 +1,21 @@
-// Dart imports:
 import 'dart:typed_data';
 
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
 
+import 'state.dart';
+
+class ZegoUIKitMediaPlayerEvent {
+  const ZegoUIKitMediaPlayerEvent({
+    this.onPlayStateChanged,
+  });
+
+  /// play state callback
+  final void Function(ZegoUIKitMediaPlayState)? onPlayStateChanged;
+}
+
 ///
+
 /// Example:
 /// ``` dart
 /// ...

@@ -1,17 +1,18 @@
-export 'audio_video.dart';
-export 'command.dart';
-export 'effect.dart';
-export 'error.dart';
+export 'audio_video/audio_video.dart';
+export 'user/user.dart';
+export 'device/device.dart';
+export 'in_room_message/in_room_message.dart';
+export 'effect/effect.dart';
+export 'media/media.dart';
+
 export 'express.dart';
 export 'express.event.dart';
-export 'media.dart';
-export 'media.event.dart';
-export 'message.dart';
+
+export 'command.dart';
+export 'error.dart';
 export 'permission.dart';
-export 'room.dart';
-export 'user.dart';
+export 'room/room.dart';
 export 'pip.dart';
-export 'device.dart';
 export 'reporter.dart';
 export 'network.dart';
 export 'log_exporter.dart';

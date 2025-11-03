@@ -8,26 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/services/defines/user.dart';
+import 'package:zego_uikit/src/services/defines/user/user.dart';
 
-/// in-room message send state
-enum ZegoInRoomMessageState {
-  idle,
-  sending,
-  success,
-  failed,
-}
-
-enum ZegoInRoomMessageType {
-  /// Messages are guaranteed to be reliable
-  /// 10 times/second for room
-  /// The room is not supported when the number of online people exceeds 500
-  broadcastMessage,
-
-  /// Messages are not guaranteed to be reliable
-  /// 20 times/second for room
-  barrageMessage
-}
+import 'state.dart';
 
 /// in-room message
 class ZegoInRoomMessage {
@@ -48,8 +31,9 @@ class ZegoInRoomMessage {
   int timestamp;
 
   ///
-  var state =
-      ValueNotifier<ZegoInRoomMessageState>(ZegoInRoomMessageState.success);
+  var state = ValueNotifier<ZegoInRoomMessageState>(
+    ZegoInRoomMessageState.success,
+  );
 
   ZegoInRoomMessage({
     required this.user,

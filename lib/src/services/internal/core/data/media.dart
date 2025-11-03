@@ -30,7 +30,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
 
   int _duration = 0;
   double _soundLevel = 0.0;
-  ZegoMediaPlayerMediaInfo? _mediaInfo;
+  ZegoUIKitMediaPlayerMediaInfo? _mediaInfo;
 
   StreamController<List<ZegoUIKitCoreUser>>? mediaListStreamCtrl;
 
@@ -50,7 +50,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
   List<String> get videoExtensions =>
       ['mp4', 'avi', 'mov', "flv", "mkv", "mpeg", "webm", "wmv"];
 
-  ZegoMediaPlayerMediaInfo? get mediaInfo => _mediaInfo;
+  ZegoUIKitMediaPlayerMediaInfo? get mediaInfo => _mediaInfo;
 
   String? get ownerID => _ownerID;
 

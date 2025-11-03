@@ -24,6 +24,7 @@ import 'package:zego_uikit/src/services/internal/core/data/stream.dart';
 import 'package:zego_uikit/src/services/internal/core/data/user.dart';
 import 'package:zego_uikit/src/services/internal/core/event/event.dart';
 import 'package:zego_uikit/src/services/internal/core/event_handler.dart';
+import 'package:zego_uikit/src/services/defines/device/device.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 part 'data/data.dart';

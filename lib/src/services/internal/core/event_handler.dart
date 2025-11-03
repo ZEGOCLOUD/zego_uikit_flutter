@@ -478,12 +478,12 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     switch (deviceType) {
       case ZegoDeviceType.Camera:
-        coreData.localUser.cameraException.value =
-            ZegoUIKitDeviceExceptionTypeExtension.fromSDKValue(exceptionType);
+        coreData.localUser.cameraException.value?.localDeviceExceptionType =
+            exceptionType;
         break;
       case ZegoDeviceType.Microphone:
-        coreData.localUser.microphoneException.value =
-            ZegoUIKitDeviceExceptionTypeExtension.fromSDKValue(exceptionType);
+        coreData.localUser.microphoneException.value?.localDeviceExceptionType =
+            exceptionType;
         break;
       default:
         break;
@@ -578,8 +578,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     coreData.syncCanvasViewCreateQueue(streamType: streamType);
 
-    targetUser.cameraException.value =
-        ZegoUIKitDeviceExceptionTypeExtension.fromDeviceState(state);
+    targetUser.cameraException.value?.remoteDeviceState = state;
   }
 
   @override
@@ -661,8 +660,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       coreData.notifyStreamListControl(coreData.getStreamTypeByID(streamID));
     }
 
-    targetUser.microphoneException.value =
-        ZegoUIKitDeviceExceptionTypeExtension.fromDeviceState(state);
+    targetUser.microphoneException.value?.remoteDeviceState = state;
   }
 
   @override

@@ -28,6 +28,7 @@ mixin ZegoUIKitCoreDataUser {
     return _userListStreamCtrl;
   }
 
+  /// local user been kick-out by some reason
   StreamController<String>? get meRemovedFromRoomStreamCtrl {
     _meRemovedFromRoomStreamCtrl ??= StreamController<String>.broadcast();
     return _meRemovedFromRoomStreamCtrl;

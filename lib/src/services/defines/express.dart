@@ -23,3 +23,10 @@ typedef ZegoUIKitStreamResourceMode = ZegoStreamResourceMode;
 
 typedef ZegoPresetResolution = ZegoVideoConfigPreset;
 typedef ZegoUIKitAudioRoute = ZegoAudioRoute;
+typedef ZegoUIKitRoomMode = ZegoRoomMode;
+
+typedef ZegoUIKitRemoteDeviceState = ZegoRemoteDeviceState;
+typedef ZegoUIKitDeviceExceptionType = ZegoDeviceExceptionType;
+typedef ZegoUIKitAudioDeviceMode = ZegoAudioDeviceMode;
+
+typedef ZegoUIKitMediaPlayerMediaInfo = ZegoMediaPlayerMediaInfo;

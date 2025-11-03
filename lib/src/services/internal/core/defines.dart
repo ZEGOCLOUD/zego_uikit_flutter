@@ -194,13 +194,13 @@ class ZegoUIKitCoreUser {
 
   ValueNotifier<bool> camera = ValueNotifier<bool>(false);
   ValueNotifier<bool> cameraMuteMode = ValueNotifier<bool>(false);
-  ValueNotifier<ZegoUIKitDeviceExceptionType?> cameraException =
-      ValueNotifier<ZegoUIKitDeviceExceptionType?>(null);
+  ValueNotifier<ZegoUIKitDeviceException?> cameraException =
+      ValueNotifier<ZegoUIKitDeviceException?>(null);
 
   ValueNotifier<bool> microphone = ValueNotifier<bool>(false);
   ValueNotifier<bool> microphoneMuteMode = ValueNotifier<bool>(false);
-  ValueNotifier<ZegoUIKitDeviceExceptionType?> microphoneException =
-      ValueNotifier<ZegoUIKitDeviceExceptionType?>(null);
+  ValueNotifier<ZegoUIKitDeviceException?> microphoneException =
+      ValueNotifier<ZegoUIKitDeviceException?>(null);
 
   ValueNotifier<ZegoUIKitUserAttributes> inRoomAttributes =
       ValueNotifier<ZegoUIKitUserAttributes>({});

@@ -156,7 +156,7 @@ mixin ZegoMediaService {
     );
   }
 
-  ZegoUIKitMediaInfo getMediaInfo() {
+  ZegoUIKitMediaPlayerMediaInfo getMediaInfo() {
     return ZegoUIKitCore.shared.getMediaInfo();
   }
 }
