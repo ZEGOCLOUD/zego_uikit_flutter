@@ -12,7 +12,7 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/modules/outside_room_audio_video/config.dart';
 import 'package:zego_uikit/src/modules/outside_room_audio_video/controller.event.dart';
 import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';
-import 'package:zego_uikit/src/services/internal/core/core.dart';
+import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 /// @nodoc

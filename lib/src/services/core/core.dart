@@ -16,14 +16,14 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';
-import 'package:zego_uikit/src/services/internal/core/data/media.dart';
-import 'package:zego_uikit/src/services/internal/core/data/message.dart';
-import 'package:zego_uikit/src/services/internal/core/data/network_timestamp.dart';
-import 'package:zego_uikit/src/services/internal/core/data/screen_sharing.dart';
-import 'package:zego_uikit/src/services/internal/core/data/stream.dart';
-import 'package:zego_uikit/src/services/internal/core/data/user.dart';
-import 'package:zego_uikit/src/services/internal/core/event/event.dart';
-import 'package:zego_uikit/src/services/internal/core/event_handler.dart';
+import 'package:zego_uikit/src/services/core/data/media.dart';
+import 'package:zego_uikit/src/services/core/data/message.dart';
+import 'package:zego_uikit/src/services/core/data/network_timestamp.dart';
+import 'package:zego_uikit/src/services/core/data/screen_sharing.dart';
+import 'package:zego_uikit/src/services/core/data/stream.dart';
+import 'package:zego_uikit/src/services/core/data/user.dart';
+import 'package:zego_uikit/src/services/core/event/event.dart';
+import 'package:zego_uikit/src/services/core/event_handler.dart';
 import 'package:zego_uikit/src/services/defines/device/device.dart';
 import 'package:zego_uikit/src/services/services.dart';
 

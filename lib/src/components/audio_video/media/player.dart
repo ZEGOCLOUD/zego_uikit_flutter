@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/services/internal/core/core.dart';
+import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 /// You can use this control to play audio or video.

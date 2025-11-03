@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/services/internal/core/core.dart';
+import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import 'package:zego_uikit/src/services/defines/device/device.dart';
 

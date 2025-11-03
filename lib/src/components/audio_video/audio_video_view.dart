@@ -16,7 +16,7 @@ import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
 import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
 import 'package:zego_uikit/src/components/widgets/flip_animation.dart';
-import 'package:zego_uikit/src/services/internal/core/core.dart';
+import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 /// display user audio and video information,
