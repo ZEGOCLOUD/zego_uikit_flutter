@@ -81,6 +81,14 @@ class ZegoBeautyPluginCoreData {
     }
   }
 
+  Stream<ZegoBeautyPluginFaceDetectionData> getFaceDetectionEventStream() {
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
+      return ZegoPluginAdapter().beautyPlugin!.getFaceDetectionEventStream();
+    }
+
+    return const Stream.empty();
+  }
+
   Stream<ZegoBeautyError> getErrorStream() {
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
       return ZegoPluginAdapter().beautyPlugin!.getErrorStream();

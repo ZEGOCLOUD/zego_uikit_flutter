@@ -1,3 +1,8 @@
+## 2.28.33
+
+- Features
+  - Add `face detection result` callback
+
 ## 2.28.32
 
 - Update dependency

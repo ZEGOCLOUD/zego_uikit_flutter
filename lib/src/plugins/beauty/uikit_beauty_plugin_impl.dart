@@ -35,6 +35,10 @@ class ZegoUIKitBeautyPluginImpl {
     ZegoBeautyPluginCore.shared.showBeautyUI(context);
   }
 
+  Stream<ZegoBeautyPluginFaceDetectionData> getFaceDetectionEventStream() {
+    return ZegoBeautyPluginCore.shared.getFaceDetectionEventStream();
+  }
+
   Stream<ZegoBeautyError> getErrorStream() {
     return ZegoBeautyPluginCore.shared.getErrorStream();
   }
