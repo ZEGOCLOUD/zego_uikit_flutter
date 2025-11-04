@@ -68,10 +68,11 @@ class ZegoUIKitCore
   Future<String> getZegoUIKitVersion() async {
     if (null == version) {
       final expressVersion = await ZegoExpressEngine.getVersion();
-      final mobileInfo = 'platform:${Platform.operatingSystem}, '
+      final mobileInfo =
+          'platform:${Platform.operatingSystem}, '
           'version:${Platform.operatingSystemVersion}';
 
-      const zegoUIKitVersion = 'zego_uikit: 2.28.32; ';
+      const zegoUIKitVersion = 'zego_uikit: 2.28.33; ';
       version ??=
           '${zegoUIKitVersion}zego_express:$expressVersion,mobile:$mobileInfo';
     }
@@ -139,9 +140,9 @@ class ZegoUIKitCore
     await device.init();
     initEventHandle();
 
-    ZegoExpressEngine.setEngineConfig(ZegoEngineConfig(advancedConfig: {
-      'vcap_external_mem_class': '1',
-    }));
+    ZegoExpressEngine.setEngineConfig(
+      ZegoEngineConfig(advancedConfig: {'vcap_external_mem_class': '1'}),
+    );
 
     ZegoLoggerService.logInfo(
       'create engine with profile,'
@@ -190,11 +191,15 @@ class ZegoUIKitCore
       }
     }
 
-    ZegoExpressEngine.setEngineConfig(ZegoEngineConfig(advancedConfig: {
-      'notify_remote_device_unknown_status': 'true',
-      'notify_remote_device_init_status': 'true',
-      'keep_audio_session_active': 'true',
-    }));
+    ZegoExpressEngine.setEngineConfig(
+      ZegoEngineConfig(
+        advancedConfig: {
+          'notify_remote_device_unknown_status': 'true',
+          'notify_remote_device_init_status': 'true',
+          'keep_audio_session_active': 'true',
+        },
+      ),
+    );
 
     ZegoLoggerService.logInfo(
       'get network time info',
@@ -432,9 +437,7 @@ class ZegoUIKitCore
     return joinRoomResult;
   }
 
-  Future<ZegoRoomLogoutResult> leaveRoom({
-    String? targetRoomID,
-  }) async {
+  Future<ZegoRoomLogoutResult> leaveRoom({String? targetRoomID}) async {
     ZegoLoggerService.logInfo(
       'current room is ${coreData.currentRoomId}, '
       'all room ids:${coreData.multiRooms.allRoomIDs}, '
@@ -617,11 +620,13 @@ class ZegoUIKitCore
         subTag: 'update room properties',
       );
 
-      error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.coreNotInit,
-        message: 'core not init',
-        method: 'updateRoomProperties',
-      ));
+      error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.coreNotInit,
+          message: 'core not init',
+          method: 'updateRoomProperties',
+        ),
+      );
 
       return false;
     }
@@ -633,11 +638,13 @@ class ZegoUIKitCore
         subTag: 'update room properties',
       );
 
-      error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.roomNotLogin,
-        message: 'room not login',
-        method: 'updateRoomProperties',
-      ));
+      error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.roomNotLogin,
+          message: 'room not login',
+          method: 'updateRoomProperties',
+        ),
+      );
 
       return false;
     }
@@ -687,7 +694,6 @@ class ZegoUIKitCore
           oldProperties[key]!.updateUserID = localUser.id;
         }
       })
-
       /// local update
       ..forEach((key, value) {
         if (targetRoomInfo.properties.containsKey(key)) {
@@ -750,13 +756,6 @@ class ZegoUIKitCore
               oldProperties.containsKey(key)) {
             targetRoomInfo.properties[key]!.copyFrom(oldProperties[key]!);
           }
-        });
-        ZegoLoggerService.logError(
-          'failed, properties:$properties, error code:${result.errorCode}',
-          tag: 'uikit-room-property',
-          subTag: 'update room properties',
-        );
-      }
 
       targetRoomInfo.propertiesAPIRequesting = false;
       if (targetRoomInfo.pendingProperties.isNotEmpty) {
@@ -821,9 +820,8 @@ class ZegoUIKitCore
           subTag: 'custom command',
         );
 
-        return result.errorCode;
-      },
-    );
+          return result.errorCode;
+        });
   }
 
   Future<bool> useFrontFacingCamera(
@@ -882,8 +880,8 @@ class ZegoUIKitCore
 
     final videoMirrorMode = isFrontFacing
         ? (coreData.localUser.isVideoMirror.value
-            ? ZegoVideoMirrorMode.BothMirror
-            : ZegoVideoMirrorMode.NoMirror)
+              ? ZegoVideoMirrorMode.BothMirror
+              : ZegoVideoMirrorMode.NoMirror)
         : ZegoVideoMirrorMode.NoMirror;
     ZegoLoggerService.logInfo(
       'update video mirror mode:$videoMirrorMode',
@@ -1004,11 +1002,13 @@ class ZegoUIKitCore
         subTag: 'set audio route to speaker:$useSpeaker',
       );
 
-      error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.coreNotInit,
-        message: 'core not init',
-        method: 'setAudioOutputToSpeaker',
-      ));
+      error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.coreNotInit,
+          message: 'core not init',
+          method: 'setAudioOutputToSpeaker',
+        ),
+      );
 
       return false;
     }
@@ -1116,11 +1116,13 @@ class ZegoUIKitCore
         subTag: 'switch camera',
       );
 
-      error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.coreNotInit,
-        message: 'core not init',
-        method: 'turnOnLocalCamera',
-      ));
+      error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.coreNotInit,
+          message: 'core not init',
+          method: 'turnOnLocalCamera',
+        ),
+      );
 
       return false;
     }
@@ -1193,12 +1195,10 @@ class ZegoUIKitCore
 
       if (isOn) {
         sendInRoomCommand(
-          const JsonEncoder().convert(
-            {
-              turnMicrophoneOnInRoomCommandKey: {
-                userIDCommandKey: userID,
-                muteModeCommandKey: muteMode,
-              },
+          const JsonEncoder().convert({
+            turnMicrophoneOnInRoomCommandKey: {
+              userIDCommandKey: userID,
+              muteModeCommandKey: muteMode,
             },
           ),
           targetRoomID: targetRoomID,
@@ -1206,12 +1206,10 @@ class ZegoUIKitCore
         );
       } else {
         sendInRoomCommand(
-          const JsonEncoder().convert(
-            {
-              turnMicrophoneOffInRoomCommandKey: {
-                userIDCommandKey: userID,
-                muteModeCommandKey: muteMode,
-              },
+          const JsonEncoder().convert({
+            turnMicrophoneOffInRoomCommandKey: {
+              userIDCommandKey: userID,
+              muteModeCommandKey: muteMode,
             },
           ),
           targetRoomID: targetRoomID,
@@ -1233,11 +1231,13 @@ class ZegoUIKitCore
         subTag: 'switch microphone',
       );
 
-      error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.coreNotInit,
-        message: 'core not init',
-        method: 'turnOnLocalMicrophone',
-      ));
+      error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.coreNotInit,
+          message: 'core not init',
+          method: 'turnOnLocalMicrophone',
+        ),
+      );
 
       return;
     }
@@ -1290,7 +1290,7 @@ class ZegoUIKitCore
     // sync device status via stream extra info
     final streamExtraInfo = <String, dynamic>{
       streamExtraInfoCameraKey: coreData.localUser.camera.value,
-      streamExtraInfoMicrophoneKey: coreData.localUser.microphone.value
+      streamExtraInfoMicrophoneKey: coreData.localUser.microphone.value,
     };
 
     final extraInfo = jsonEncode(streamExtraInfo);
@@ -1313,12 +1313,14 @@ class ZegoUIKitCore
   void updateTextureRendererOrientation(Orientation orientation) {
     switch (orientation) {
       case Orientation.portrait:
-        ZegoExpressEngine.instance
-            .setAppOrientation(DeviceOrientation.portraitUp);
+        ZegoExpressEngine.instance.setAppOrientation(
+          DeviceOrientation.portraitUp,
+        );
         break;
       case Orientation.landscape:
-        ZegoExpressEngine.instance
-            .setAppOrientation(DeviceOrientation.landscapeLeft);
+        ZegoExpressEngine.instance.setAppOrientation(
+          DeviceOrientation.landscapeLeft,
+        );
         break;
     }
   }
@@ -1560,11 +1562,12 @@ class ZegoUIKitCore
           subTag: 'custom command',
         );
 
-        coreData.turnOnYourMicrophoneRequestStreamCtrl
-            ?.add(ZegoUIKitReceiveTurnOnLocalMicrophoneEvent(
-          commandData.fromUser.id,
-          muteMode,
-        ));
+        coreData.turnOnYourMicrophoneRequestStreamCtrl?.add(
+          ZegoUIKitReceiveTurnOnLocalMicrophoneEvent(
+            commandData.fromUser.id,
+            muteMode,
+          ),
+        );
       }
     } else if (extraInfos.keys.contains(turnMicrophoneOffInRoomCommandKey)) {
       var userID = '';
@@ -1643,8 +1646,9 @@ class ZegoUIKitCore
       coreData.engineStateUpdatedSubscriptionByEnableCustomVideoProcessing
           ?.cancel();
       coreData.engineStateUpdatedSubscriptionByEnableCustomVideoProcessing =
-          coreData.engineStateStreamCtrl.stream
-              .listen(onWaitingEngineStopEnableCustomVideoProcessing);
+          coreData.engineStateStreamCtrl.stream.listen(
+            onWaitingEngineStopEnableCustomVideoProcessing,
+          );
     }
   }
 
@@ -1731,8 +1735,9 @@ extension ZegoUIKitCoreMixer on ZegoUIKitCore {
   }
 
   Future<ZegoMixerStopResult> stopMixerTask(ZegoMixerTask task) async {
-    final stopMixerResult =
-        await ZegoExpressEngine.instance.stopMixerTask(task);
+    final stopMixerResult = await ZegoExpressEngine.instance.stopMixerTask(
+      task,
+    );
     ZegoLoggerService.logInfo(
       'code:${stopMixerResult.errorCode}',
       tag: 'uikit-mixstream',

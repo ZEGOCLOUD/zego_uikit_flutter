@@ -48,6 +48,10 @@ class ZegoBeautyPluginCore {
     coreData.showBeautyUI(context);
   }
 
+  Stream<ZegoBeautyPluginFaceDetectionData> getFaceDetectionEventStream() {
+    return coreData.getFaceDetectionEventStream();
+  }
+
   Stream<ZegoBeautyError> getErrorStream() {
     return coreData.getErrorStream();
   }
