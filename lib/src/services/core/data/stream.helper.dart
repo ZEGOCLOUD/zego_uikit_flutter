@@ -3,41 +3,25 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
-import 'package:zego_uikit/src/services/services.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
-
-class ZegoUIKitCoreDataStreamData {
-  String userID;
-  ZegoPlayerState playerState;
-  ZegoPublisherState publisherState;
-
-  ZegoUIKitCoreDataStreamData({
-    required this.userID,
-    this.playerState = ZegoPlayerState.NoPlay,
-    this.publisherState = ZegoPublisherState.NoPublish,
-  });
-
-  @override
-  String toString() {
-    return 'user id:$userID, '
-        'player state:$playerState, '
-        'publisher state:$publisherState';
-  }
-}
+import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoUIKitCoreDataStreamHelper {
-  static String getLocalStreamID(ZegoStreamType streamType) {
-    return ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(streamType)
-        .streamID;
+  static String getLocalStreamID(
+    ZegoUIKitCoreUser user,
+    ZegoStreamType streamType,
+  ) {
+    return ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+      user,
+      streamType,
+    ).streamID;
   }
 
   static ZegoUIKitCoreStreamInfo getLocalStreamChannel(
+    ZegoUIKitCoreUser user,
     ZegoStreamType streamType,
   ) {
-    return ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      ZegoUIKitCore.shared.coreData.localUser,
-      streamType,
-    );
+    return ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(user, streamType);
   }
 
   static ZegoUIKitCoreStreamInfo getUserStreamChannel(

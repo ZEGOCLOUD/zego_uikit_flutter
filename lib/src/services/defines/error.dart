@@ -55,6 +55,9 @@ class ZegoUIKitErrorCode {
   static const int success = 0;
 
   ///
+  static const int paramsInvalid = -1;
+
+  ///
   static const int coreNotInit = 300001001;
 
   ///

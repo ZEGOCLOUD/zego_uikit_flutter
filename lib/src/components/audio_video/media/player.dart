@@ -96,7 +96,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
 
     hideSurfaceTimer?.cancel();
 
-    ZegoUIKitCore.shared.expressEngineCreatedNotifier
+    ZegoUIKitCore.shared.coreData.engine.createdNotifier
         .removeListener(onExpressEngineCreated);
 
     ZegoUIKit().getMediaPlayStateNotifier().removeListener(onPlayStateChanged);
@@ -656,10 +656,10 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
 
   void checkAndShareMedia() {
     if (widget.filePathOrURL?.isNotEmpty ?? false) {
-      if (ZegoUIKitCore.shared.expressEngineCreatedNotifier.value) {
+      if (ZegoUIKitCore.shared.coreData.engine.createdNotifier.value) {
         autoShareMedia();
       } else {
-        ZegoUIKitCore.shared.expressEngineCreatedNotifier
+        ZegoUIKitCore.shared.coreData.engine.createdNotifier
             .addListener(onExpressEngineCreated);
 
         ZegoLoggerService.logInfo(
@@ -672,7 +672,8 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
   }
 
   void onExpressEngineCreated() {
-    final isCreated = ZegoUIKitCore.shared.expressEngineCreatedNotifier.value;
+    final isCreated =
+        ZegoUIKitCore.shared.coreData.engine.createdNotifier.value;
     ZegoLoggerService.logInfo(
       'express engine created:$isCreated',
       tag: 'uikit-component',
@@ -680,7 +681,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
     );
 
     if (isCreated) {
-      ZegoUIKitCore.shared.expressEngineCreatedNotifier
+      ZegoUIKitCore.shared.coreData.engine.createdNotifier
           .removeListener(onExpressEngineCreated);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         autoShareMedia();

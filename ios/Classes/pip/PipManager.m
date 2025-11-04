@@ -242,10 +242,68 @@ API_AVAILABLE(ios(15.0))
     }
 }
 
-- (void)startPlayingStream:(NSString *)streamID {
-    NSLog(@"[PIPManager] startPlayingStream, stream id:%@", streamID);
-    
-    [[ZegoExpressEngine sharedEngine] startPlayingStream:streamID];
+- (void)startPlayingStream:(NSString *)streamID
+               resourceMode:(nullable NSNumber *)resourceMode
+                     roomID:(nullable NSString *)roomID
+                  cdnConfig:(nullable NSDictionary *)cdnConfig
+               videoCodecID:(nullable NSNumber *)videoCodecID {
+    NSLog(@"[PIPManager] startPlayingStream, stream id:%@, resourceMode:%@, roomID:%@, cdnConfig:%@, videoCodecID:%@",
+          streamID, resourceMode, roomID, cdnConfig, videoCodecID);
+
+    // 检查是否有任何配置参数
+    if (resourceMode != nil || roomID != nil || cdnConfig != nil || videoCodecID != nil) {
+        // 构建 ZegoPlayerConfig
+        ZegoPlayerConfig *playerConfig = [[ZegoPlayerConfig alloc] init];
+
+        // resourceMode
+        if (resourceMode != nil) {
+            playerConfig.resourceMode = (ZegoStreamResourceMode)[resourceMode integerValue];
+        }
+
+        // roomID
+        if (roomID != nil) {
+            playerConfig.roomID = roomID;
+        }
+
+        // cdnConfig
+        if (cdnConfig != nil) {
+            ZegoCDNConfig *cdnConfigObj = [[ZegoCDNConfig alloc] init];
+
+            if (cdnConfig[@"url"] != nil) {
+                cdnConfigObj.url = cdnConfig[@"url"];
+            }
+            if (cdnConfig[@"authParam"] != nil) {
+                cdnConfigObj.authParam = cdnConfig[@"authParam"];
+            }
+            if (cdnConfig[@"protocol"] != nil) {
+                cdnConfigObj.protocol = cdnConfig[@"protocol"];
+            }
+            if (cdnConfig[@"quicVersion"] != nil) {
+                cdnConfigObj.quicVersion = cdnConfig[@"quicVersion"];
+            }
+            if (cdnConfig[@"httpdns"] != nil) {
+                cdnConfigObj.httpdns = cdnConfig[@"httpdns"];
+            }
+            if (cdnConfig[@"quicConnectMode"] != nil) {
+                NSNumber *quicConnectModeValue = cdnConfig[@"quicConnectMode"];
+                cdnConfigObj.quicConnectMode = [quicConnectModeValue intValue];
+            }
+            if (cdnConfig[@"customParams"] != nil) {
+                cdnConfigObj.customParams = cdnConfig[@"customParams"];
+            }
+
+            playerConfig.cdnConfig = cdnConfigObj;
+        }
+
+        // videoCodecID
+        if (videoCodecID != nil) {
+            playerConfig.videoCodecID = (ZegoVideoCodecID)[videoCodecID integerValue];
+        }
+
+        [[ZegoExpressEngine sharedEngine] startPlayingStream:streamID canvas:nil config:playerConfig];
+    } else {
+        [[ZegoExpressEngine sharedEngine] startPlayingStream:streamID];
+    }
 }
 
 - (void)updatePlayingStreamView:(NSString *)streamID videoView:(UIView *)videoView viewMode:(NSNumber *)viewMode{
@@ -355,9 +413,8 @@ API_AVAILABLE(ios(15.0))
 
 - (void)onRemoteVideoFrameCVPixelBuffer:(CVPixelBufferRef)buffer param:(ZegoVideoFrameParam *)param streamID:(NSString *)streamID
 {
-//    NSLog(@"pixel buffer video frame callback. format:%d, width:%f, height:%f", (int)param.format, param.size.width, param.size.height);
+//    NSLog(@"[PIPManager] pixel buffer video frame callback. format:%d, width:%f, height:%f", (int)param.format, param.size.width, param.size.height);
 
-    
     CMSampleBufferRef sampleBuffer = [self createSampleBuffer:buffer];
     if (sampleBuffer) {
         UIView* flutterVideoView = [self.flutterVideoViewDictionary objectForKey:streamID];

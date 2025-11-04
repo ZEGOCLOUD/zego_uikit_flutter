@@ -39,7 +39,10 @@ class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier
   }
 
   void _listenNormalUser() {
-    _coreUser = ZegoUIKitCore.shared.coreData.getUser(_user.id);
+    _coreUser = ZegoUIKitCore.shared.coreData.user.getUser(
+      _user.id,
+      targetRoomID: ZegoUIKitCore.shared.coreData.room.currentID,
+    );
 
     _userListChangedSubscription?.cancel();
     if (_coreUser.isEmpty) {
@@ -51,7 +54,10 @@ class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier
   }
 
   void _listenMixerUser() {
-    _coreUser = ZegoUIKitCore.shared.coreData.getUserInMixerStream(_user.id);
+    _coreUser = ZegoUIKitCore.shared.coreData.user.getUserInMixerStream(
+      _user.id,
+      targetRoomID: ZegoUIKitCore.shared.coreData.room.currentID,
+    );
 
     _userListChangedSubscription?.cancel();
     if (_coreUser.isEmpty) {

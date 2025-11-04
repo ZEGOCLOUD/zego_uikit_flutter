@@ -8,18 +8,15 @@ typedef ZegoUIKitMixerInput = ZegoMixerInput;
 typedef ZegoUIKitMixerInputContentType = ZegoMixerInputContentType;
 typedef ZegoUIKitCDNConfig = ZegoCDNConfig;
 typedef ZegoUIKitVideoCodecID = ZegoVideoCodecID;
-
 typedef ZegoUIKitStreamResourceMode = ZegoStreamResourceMode;
-// typedef ZegoAudioVideoResourceMode = ZegoUIKitStreamResourceMode;
-
+typedef ZegoUIKitSRoomStateChangedReason = ZegoRoomStateChangedReason;
 typedef ZegoPresetResolution = ZegoVideoConfigPreset;
 typedef ZegoUIKitAudioRoute = ZegoAudioRoute;
 typedef ZegoUIKitRoomMode = ZegoRoomMode;
-
+typedef ZegoUIKitScenario = ZegoScenario;
 typedef ZegoUIKitRemoteDeviceState = ZegoRemoteDeviceState;
 typedef ZegoUIKitDeviceExceptionType = ZegoDeviceExceptionType;
 typedef ZegoUIKitAudioDeviceMode = ZegoAudioDeviceMode;
-
 typedef ZegoUIKitVideoConfig = ZegoVideoConfig;
 typedef ZegoUIKitPlayerState = ZegoPlayerState;
 typedef ZegoUIKitExpressEngineState = ZegoEngineState;
@@ -27,3 +24,4 @@ typedef ZegoUIKitPublisherState = ZegoPublisherState;
 typedef ZegoUIKitPublishStreamQuality = ZegoPublishStreamQuality;
 typedef ZegoUIKitStreamQualityLevel = ZegoStreamQualityLevel;
 typedef ZegoUIKitMediaPlayerMediaInfo = ZegoMediaPlayerMediaInfo;
+typedef ZegoUIKitExpressErrorCode = ZegoErrorCode;

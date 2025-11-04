@@ -1,14 +1,13 @@
-part of 'core.dart';
+// Dart imports:
+import 'dart:async';
 
-/// @nodoc
-mixin ZegoUIKitCoreDataError {
-  final _errorImpl = ZegoUIKitCoreDataErrorImpl();
+// Package imports:
+import 'package:zego_express_engine/zego_express_engine.dart';
 
-  ZegoUIKitCoreDataErrorImpl get error => _errorImpl;
-}
+// Project imports:
+import 'package:zego_uikit/src/services/services.dart';
 
-/// @nodoc
-class ZegoUIKitCoreDataErrorImpl extends ZegoUIKitExpressEventInterface {
+class ZegoUIKitCoreDataError extends ZegoUIKitExpressEventInterface {
   StreamController<ZegoUIKitError>? get errorStreamCtrl {
     _errorStreamCtrl ??= StreamController<ZegoUIKitError>.broadcast();
 

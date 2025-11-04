@@ -1,16 +1,42 @@
-part of '../core.dart';
+// Dart imports:
+import 'dart:async';
+import 'dart:convert';
+
+// Flutter imports:
+import 'package:flutter/foundation.dart';
+
+// Package imports:
+import 'package:zego_express_engine/zego_express_engine.dart';
+
+// Project imports:
+import 'package:zego_uikit/src/services/core/data/device.dart';
+import 'package:zego_uikit/src/services/core/data/engine.dart';
+import 'package:zego_uikit/src/services/core/data/error.dart';
+import 'package:zego_uikit/src/services/core/data/media.dart';
+import 'package:zego_uikit/src/services/core/data/message.dart';
+import 'package:zego_uikit/src/services/core/data/screen_sharing.dart';
+import 'package:zego_uikit/src/services/core/data/stream.dart';
+import 'package:zego_uikit/src/services/core/data/stream.helper.dart';
+import 'package:zego_uikit/src/services/core/data/timestamp.dart';
+import 'package:zego_uikit/src/services/core/data/user.dart';
+import 'package:zego_uikit/src/services/core/defines/defines.dart';
+import 'package:zego_uikit/src/services/services.dart';
 
 /// @nodoc
-class ZegoUIKitCoreData
-    with
-        ZegoUIKitCoreDataRoom,
-        ZegoUIKitCoreDataStream,
-        ZegoUIKitCoreDataUser,
-        ZegoUIKitCoreDataNetworkTimestamp,
-        ZegoUIKitCoreDataMedia,
-        ZegoUIKitCoreDataScreenSharing,
-        ZegoUIKitCoreDataMessage {
+class ZegoUIKitCoreData {
   bool isInit = false;
+
+  final message = ZegoUIKitCoreDataMessage();
+  final room = ZegoUIKitCoreDataRoom();
+  final stream = ZegoUIKitCoreDataStream();
+  final user = ZegoUIKitCoreDataUser();
+
+  final timestamp = ZegoUIKitCoreDataTimestamp();
+  final screenSharing = ZegoUIKitCoreDataScreenSharing();
+  final media = ZegoUIKitCoreDataMedia();
+  final device = ZegoUIKitCoreDataDevice();
+  final error = ZegoUIKitCoreDataError();
+  final engine = ZegoUIKitCoreDataEngine();
 
   Timer? mixerSEITimer;
 
@@ -20,22 +46,13 @@ class ZegoUIKitCoreData
       ValueNotifier<ZegoUIKitNetworkState>(ZegoUIKitNetworkState.online);
   StreamController<ZegoUIKitNetworkState>? networkStateStreamCtrl;
 
-  ValueNotifier<ZegoUIKitExpressEngineState> engineStateNotifier =
-      ValueNotifier<ZegoUIKitExpressEngineState>(
-    ZegoUIKitExpressEngineState.Stop,
-  );
-  final engineStateStreamCtrl =
-      StreamController<ZegoUIKitExpressEngineState>.broadcast();
-
-  bool waitingEngineStopEnableValueOfCustomVideoProcessing = false;
-  StreamSubscription?
-      engineStateUpdatedSubscriptionByEnableCustomVideoProcessing;
-  bool waitingEngineStopEnableValueOfCustomVideoRender = false;
-  StreamSubscription? engineStateUpdatedSubscriptionByEnableCustomVideoRender;
-
   ZegoEffectsBeautyParam beautyParam = ZegoEffectsBeautyParam.defaultParam();
 
-  void init() {
+  Future<void> init({
+    bool? enablePlatformView,
+    bool playingStreamInPIPUnderIOS = false,
+    ZegoUIKitRoomMode roomMode = ZegoUIKitRoomMode.SingleRoom,
+  }) async {
     if (isInit) {
       return;
     }
@@ -53,19 +70,22 @@ class ZegoUIKitCoreData
     networkStateStreamCtrl ??=
         StreamController<ZegoUIKitNetworkState>.broadcast();
 
-    multiRooms.forEach((roomID, roomInfo) {
-      roomInfo.init();
-    });
-    initUser();
-    multiRoomStreams.forEach((roomID, streamInfo) {
-      streamInfo.initStream();
-    });
+    await device.init();
+    room.init(
+      roomMode: roomMode,
+    );
+    user.init();
+    stream.init(
+      enablePlatformView: enablePlatformView,
+      playingStreamInPIPUnderIOS: playingStreamInPIPUnderIOS,
+    );
     media.init();
-    initMessage();
-    initScreenSharing();
+    message.init();
+    screenSharing.init();
+    error.init();
   }
 
-  void uninit() {
+  Future<void> uninit() async {
     if (!isInit) {
       return;
     }
@@ -84,16 +104,14 @@ class ZegoUIKitCoreData
     networkStateStreamCtrl?.close();
     networkStateStreamCtrl = null;
 
-    multiRooms.forEach((roomID, roomInfo) {
-      roomInfo.uninit();
-    });
-    uninitUser();
-    multiRoomStreams.forEach((roomID, streamInfo) {
-      streamInfo.uninitStream();
-    });
+    device.uninit();
+    await room.uninit();
+    user.uninit();
+    stream.uninit();
     media.uninit();
-    uninitMessage();
-    uninitScreenSharing();
+    message.uninit();
+    screenSharing.uninit();
+    error.uninit();
   }
 
   void clear({
@@ -105,57 +123,21 @@ class ZegoUIKitCoreData
       subTag: 'core data',
     );
 
-    media.clear();
-
-    multiRoomStreams.forEach((roomID, streamInfo) {
-      if (targetRoomID != roomID) {
-        return;
-      }
-
-      streamInfo.clearStream();
-
-      streamInfo.isAllPlayStreamAudioVideoMuted = false;
-      streamInfo.isAllPlayStreamAudioMuted = false;
-      streamInfo.streamDic.clear();
-      streamInfo.streamExtraInfo.clear();
-    });
-
-    multiRoomUserInfo.forEach((roomID, userInfo) {
-      if (targetRoomID != roomID) {
-        return;
-      }
-      userInfo.remoteUsersList.clear();
-    });
-
-    multiRooms.forEach((roomID, roomInfo) {
-      if (targetRoomID != roomID) {
-        return;
-      }
-      roomInfo.clear();
-    });
-  }
-
-  void setRoom(
-    String roomID, {
-    bool markAsLargeRoom = false,
-  }) {
-    ZegoLoggerService.logInfo(
-      'set room:"$roomID", markAsLargeRoom:$markAsLargeRoom}',
-      tag: 'uikit-room',
-      subTag: 'setRoom',
-    );
-
-    if (roomID.isEmpty) {
-      ZegoLoggerService.logError(
-        'room id is empty',
-        tag: 'uikit-room',
-        subTag: 'setRoom',
+    if (targetRoomID.isEmpty) {
+      ZegoLoggerService.logInfo(
+        'target room id is empty',
+        tag: 'uikit',
+        subTag: 'core data',
       );
+
+      return;
     }
 
-    room
-      ..id = roomID
-      ..markAsLargeRoom = markAsLargeRoom;
+    media.clear();
+    stream.clear(targetRoomID: targetRoomID);
+    user.clear(targetRoomID: targetRoomID);
+    room.clear(targetRoomID: targetRoomID);
+    message.clear(targetRoomID: targetRoomID);
   }
 
   Future<bool> sendSEI(
@@ -163,7 +145,10 @@ class ZegoUIKitCoreData
     Map<String, dynamic> seiData, {
     ZegoStreamType streamType = ZegoStreamType.main,
   }) async {
-    if (ZegoUIKitCoreDataStreamHelper.getLocalStreamID(streamType).isEmpty) {
+    if (ZegoUIKitCoreDataStreamHelper.getLocalStreamID(
+      user.localUser,
+      streamType,
+    ).isEmpty) {
       ZegoLoggerService.logError(
         'local user has not publish stream, send sei will be failed',
         tag: 'uikit-sei',
@@ -172,7 +157,7 @@ class ZegoUIKitCoreData
     }
 
     final dataJson = jsonEncode({
-      ZegoUIKitSEIDefines.keyUserID: localUser.id,
+      ZegoUIKitSEIDefines.keyUserID: user.localUser.id,
       ZegoUIKitSEIDefines.keyTypeIdentifier: typeIdentifier,
       ZegoUIKitSEIDefines.keySEI: seiData,
     });

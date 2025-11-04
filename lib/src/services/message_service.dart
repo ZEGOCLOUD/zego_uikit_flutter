@@ -10,21 +10,21 @@ mixin ZegoMessageService {
     final resultErrorCode = type == ZegoInRoomMessageType.broadcastMessage
         ? await ZegoUIKitCore.shared.message.sendBroadcastMessage(
             targetRoomID:
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
             message,
           )
         : await ZegoUIKitCore.shared.message.sendBarrageMessage(
             message,
             targetRoomID:
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
           );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+      ZegoUIKitCore.shared.coreData.error.errorStreamCtrl?.add(
         ZegoUIKitError(
           code: ZegoUIKitErrorCode.messageSendError,
           message: 'send in-room message error, '
-              'room id:${targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId}, '
+              'room id:${targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID}, '
               'code:$resultErrorCode, '
               'message:$message, '
               '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
@@ -43,17 +43,18 @@ mixin ZegoMessageService {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) async {
     final resultErrorCode = await ZegoUIKitCore.shared.message.resendMessage(
-      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+      targetRoomID:
+          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
       message,
       type,
     );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+      ZegoUIKitCore.shared.coreData.error.errorStreamCtrl?.add(
         ZegoUIKitError(
           code: ZegoUIKitErrorCode.messageReSendError,
           message: 'resend in-room message error,'
-              'room id:${targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId}, '
+              'room id:${targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID}, '
               'code:$resultErrorCode, '
               'message:$message, '
               '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
@@ -71,13 +72,13 @@ mixin ZegoMessageService {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return type == ZegoInRoomMessageType.broadcastMessage
-        ? ZegoUIKitCore.shared.coreData.multiRoomBroadcastMessages
+        ? ZegoUIKitCore.shared.coreData.message.roomBroadcastMessages
             .getRoom(
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
+                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
             .messageList
-        : ZegoUIKitCore.shared.coreData.multiRoomBarrageMessages
+        : ZegoUIKitCore.shared.coreData.message.roomBarrageMessages
             .getRoom(
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
+                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
             .messageList;
   }
 
@@ -87,14 +88,14 @@ mixin ZegoMessageService {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return (type == ZegoInRoomMessageType.broadcastMessage
-            ? ZegoUIKitCore.shared.coreData.multiRoomBroadcastMessages
-                .getRoom(
-                    targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
+            ? ZegoUIKitCore.shared.coreData.message.roomBroadcastMessages
+                .getRoom(targetRoomID ??
+                    ZegoUIKitCore.shared.coreData.room.currentID)
                 .streamControllerMessageList
                 ?.stream
-            : ZegoUIKitCore.shared.coreData.multiRoomBarrageMessages
-                .getRoom(
-                    targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
+            : ZegoUIKitCore.shared.coreData.message.roomBarrageMessages
+                .getRoom(targetRoomID ??
+                    ZegoUIKitCore.shared.coreData.room.currentID)
                 .streamControllerMessageList
                 ?.stream) ??
         const Stream.empty();
@@ -106,14 +107,14 @@ mixin ZegoMessageService {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return (type == ZegoInRoomMessageType.broadcastMessage
-            ? ZegoUIKitCore.shared.coreData.multiRoomBroadcastMessages
-                .getRoom(
-                    targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
+            ? ZegoUIKitCore.shared.coreData.message.roomBroadcastMessages
+                .getRoom(targetRoomID ??
+                    ZegoUIKitCore.shared.coreData.room.currentID)
                 .streamControllerRemoteMessage
                 ?.stream
-            : ZegoUIKitCore.shared.coreData.multiRoomBarrageMessages
-                .getRoom(
-                    targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
+            : ZegoUIKitCore.shared.coreData.message.roomBarrageMessages
+                .getRoom(targetRoomID ??
+                    ZegoUIKitCore.shared.coreData.room.currentID)
                 .streamControllerRemoteMessage
                 ?.stream) ??
         const Stream.empty();
@@ -125,14 +126,14 @@ mixin ZegoMessageService {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return (type == ZegoInRoomMessageType.broadcastMessage
-            ? ZegoUIKitCore.shared.coreData.multiRoomBroadcastMessages
-                .getRoom(
-                    targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
+            ? ZegoUIKitCore.shared.coreData.message.roomBroadcastMessages
+                .getRoom(targetRoomID ??
+                    ZegoUIKitCore.shared.coreData.room.currentID)
                 .streamControllerLocalMessage
                 ?.stream
-            : ZegoUIKitCore.shared.coreData.multiRoomBarrageMessages
-                .getRoom(
-                    targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId)
+            : ZegoUIKitCore.shared.coreData.message.roomBarrageMessages
+                .getRoom(targetRoomID ??
+                    ZegoUIKitCore.shared.coreData.room.currentID)
                 .streamControllerLocalMessage
                 ?.stream) ??
         const Stream.empty();
@@ -145,18 +146,19 @@ mixin ZegoMessageService {
   }) async {
     ZegoUIKitCore.shared.clearLocalMessage(
       type,
-      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+      targetRoomID:
+          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
     );
 
     if (clearRemote) {
       final resultErrorCode = await ZegoUIKitCore.shared.clearRemoteMessage(
         type,
         targetRoomID:
-            targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+            targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
       );
 
       if (ZegoUIKitErrorCode.success != resultErrorCode) {
-        ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+        ZegoUIKitCore.shared.coreData.error.errorStreamCtrl?.add(
           ZegoUIKitError(
             code: ZegoUIKitErrorCode.customCommandSendError,
             message: 'remove remote message error:$resultErrorCode, '

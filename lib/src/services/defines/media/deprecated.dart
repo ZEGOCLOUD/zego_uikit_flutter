@@ -1,7 +1,8 @@
-import 'state.dart';
-import 'results.dart';
-import 'defines.dart';
+// Project imports:
 import 'package:zego_uikit/src/services/defines/express.dart';
+import 'defines.dart';
+import 'results.dart';
+import 'state.dart';
 
 @Deprecated('Since 2.17.0, please use ZegoUIKitMediaInfo instead')
 typedef MediaInfo = ZegoUIKitMediaInfo;

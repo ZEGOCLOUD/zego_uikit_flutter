@@ -1,7 +1,10 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 
+// Project imports:
 import 'package:zego_uikit/src/services/defines/express.dart';
 import 'package:zego_uikit/src/services/defines/express_extension.dart';
 import 'package:zego_uikit/src/services/uikit_service.dart';
@@ -62,21 +65,19 @@ class ZegoUIKitCoreStreamInfo {
 
   void _onViewUpdate() {
     ZegoLoggerService.logInfo(
-      'view update, '
       'view:${viewNotifier.value}, '
       'stream id:$streamID, ',
-      tag: 'uikit-service-core',
-      subTag: 'core room',
+      tag: 'uikit-stream',
+      subTag: 'onViewUpdate',
     );
   }
 
   void _onViewIDUpdate() {
     ZegoLoggerService.logInfo(
-      'view id update, '
       'view id:${viewIDNotifier.value}, '
       'stream id:$streamID, ',
-      tag: 'uikit-service-core',
-      subTag: 'core room',
+      tag: 'uikit-stream',
+      subTag: 'onViewIDUpdate',
     );
   }
 }

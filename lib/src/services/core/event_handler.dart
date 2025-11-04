@@ -15,9 +15,9 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/defines/express_extension.dart';
 import 'package:zego_uikit/src/services/services.dart';
-import 'package:zego_uikit/src/services/core/data/stream.defines.dart';
-import 'package:zego_uikit/src/services/core/data/stream.dart';
-
+import 'data/data.dart';
+import 'data/stream.data.dart';
+import 'data/stream.helper.dart';
 import 'defines/defines.dart';
 
 /// @nodoc
@@ -30,6 +30,7 @@ mixin ZegoUIKitCoreEventHandler {
 /// @nodoc
 class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   final Connectivity _connectivity = Connectivity();
+  ZegoUIKitCoreData get coreData => ZegoUIKitCore.shared.coreData;
 
   Future<void> initConnectivity() async {
     ZegoLoggerService.logInfo(
@@ -75,10 +76,6 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     coreData.networkStateStreamCtrl?.add(coreData.networkStateNotifier.value);
   }
 
-  ZegoUIKitCoreData get coreData => ZegoUIKitCore.shared.coreData;
-
-  ZegoUIKitCoreDataErrorImpl get error => ZegoUIKitCore.shared.error;
-
   @override
   void onEngineStateUpdate(ZegoEngineState state) {
     ZegoLoggerService.logInfo(
@@ -88,9 +85,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       subTag: 'event',
     );
 
-    coreData.engineStateNotifier.value = state;
+    coreData.engine.stateNotifier.value = state;
 
-    coreData.engineStateStreamCtrl.add(coreData.engineStateNotifier.value);
+    coreData.engine.stateStreamCtrl.add(coreData.engine.stateNotifier.value);
 
     if (ZegoEngineState.Start == state) {
       ZegoExpressEngine.instance.getAudioRouteType().then((value) {
@@ -101,7 +98,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           subTag: 'event',
         );
 
-        coreData.localUser.initAudioRoute(value);
+        coreData.user.localUser.initAudioRoute(value);
       });
     }
   }
@@ -122,12 +119,13 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     );
 
     final targetRemoteUserList =
-        coreData.multiRoomUserInfo.getRoom(roomID).remoteUsersList;
-    final targetRoomStreamInfo = coreData.multiRoomStreams.getRoom(roomID);
+        coreData.user.roomUsers.getRoom(roomID).remoteUsers;
+    final targetRoomStreamInfo = coreData.stream.roomStreams.getRoom(roomID);
     if (updateType == ZegoUpdateType.Add) {
       for (final stream in streamList) {
         targetRoomStreamInfo.streamDic[stream.streamID] =
             ZegoUIKitCoreDataStreamData(
+          roomID: roomID,
           userID: stream.user.userID,
           playerState: ZegoPlayerState.NoPlay,
         );
@@ -160,7 +158,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
             targetUser, streamType)
           ..streamID = stream.streamID
-          ..streamTimestamp = coreData.networkDateTime_.millisecondsSinceEpoch;
+          ..streamTimestamp = coreData.timestamp.now.millisecondsSinceEpoch;
 
         if (targetRoomStreamInfo.isAllPlayStreamAudioVideoMuted) {
           ZegoLoggerService.logInfo(
@@ -193,7 +191,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     if (-1 !=
         streamIDs.indexWhere((streamID) =>
             streamID.endsWith(ZegoStreamType.screenSharing.text))) {
-      coreData.screenSharingListStreamCtrl
+      coreData.screenSharing.screenSharingListStreamCtrl
           ?.add(targetRoomStreamInfo.getAudioVideoList(
         streamType: ZegoStreamType.screenSharing,
       ));
@@ -214,7 +212,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     ZegoUpdateType updateType,
     List<ZegoUser> userList,
   ) {
-    final targetRoomInfo = coreData.multiRooms.getRoom(roomID);
+    final targetRoomInfo = coreData.room.rooms.getRoom(roomID);
 
     ZegoLoggerService.logInfo(
       'onRoomUserUpdate, '
@@ -225,20 +223,19 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       subTag: 'event',
     );
 
-    final targetRoomUserInfo = coreData.multiRoomUserInfo.getRoom(roomID);
+    final targetRoomUserInfo = coreData.user.roomUsers.getRoom(roomID);
     if (updateType == ZegoUpdateType.Add) {
       for (final user in userList) {
-        final targetUserIndex = targetRoomUserInfo.remoteUsersList
+        final targetUserIndex = targetRoomUserInfo.remoteUsers
             .indexWhere((e) => user.userID == e.id);
         if (-1 != targetUserIndex) {
           continue;
         }
 
-        targetRoomUserInfo.remoteUsersList
-            .add(ZegoUIKitCoreUser.fromZego(user));
+        targetRoomUserInfo.remoteUsers.add(ZegoUIKitCoreUser.fromZego(user));
       }
 
-      if (targetRoomUserInfo.remoteUsersList.length >= 499) {
+      if (targetRoomUserInfo.remoteUsers.length >= 499) {
         /// turn to be a large room after more than 500 people, even if less than 500 people behind
         ZegoLoggerService.logInfo(
           'users is more than 500, turn to be a large room',
@@ -248,26 +245,26 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         targetRoomInfo.isLargeRoom = true;
       }
 
-      targetRoomUserInfo.userJoinStreamCtrl?.add(
+      targetRoomUserInfo.joinStreamCtrl?.add(
         userList.map(ZegoUIKitCoreUser.fromZego).toList(),
       );
     } else {
       for (final user in userList) {
-        coreData.removeUser(
+        coreData.user.removeUser(
           user.userID,
           targetRoomID: roomID,
         );
       }
 
-      targetRoomUserInfo.userLeaveStreamCtrl
+      targetRoomUserInfo.leaveStreamCtrl
           ?.add(userList.map(ZegoUIKitCoreUser.fromZego).toList());
     }
 
     final allUserList = [
-      coreData.localUser,
-      ...targetRoomUserInfo.remoteUsersList
+      coreData.user.localUser,
+      ...targetRoomUserInfo.remoteUsers
     ];
-    targetRoomUserInfo.userListStreamCtrl?.add(allUserList);
+    targetRoomUserInfo.listStreamCtrl?.add(allUserList);
   }
 
   @override
@@ -275,7 +272,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     String roomID,
     int remainTimeInSecond,
   ) {
-    final targetRoomInfo = coreData.multiRooms.getRoom(roomID);
+    final targetRoomInfo = coreData.room.rooms.getRoom(roomID);
 
     ZegoLoggerService.logInfo(
       'onRoomTokenWillExpire, '
@@ -303,9 +300,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     int errorCode,
     Map<String, dynamic> extendedData,
   ) {
-    final targetRoomID =
-        coreData.queryRoomIDByStreamID(streamID) ?? coreData.currentRoomId;
-    final targetRoomStream = coreData.multiRoomStreams.getRoom(targetRoomID);
+    final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+        coreData.room.currentID;
+    final targetRoomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
 
     ZegoLoggerService.logInfo(
       'onPublisherStateUpdate, '
@@ -322,7 +319,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     if (ZegoErrorCode.CommonSuccess != errorCode &&
         ZegoErrorCode.RoomManualKickedOut != errorCode) {
-      error.errorStreamCtrl?.add(
+      coreData.error.errorStreamCtrl?.add(
         ZegoUIKitError(
           code: errorCode,
           message: 'state:${state.name}, extended data:$extendedData',
@@ -338,7 +335,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     ZegoPublishStreamQuality quality,
   ) {
     ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      ZegoUIKitCore.shared.coreData.localUser,
+      ZegoUIKitCore.shared.coreData.user.localUser,
       ZegoUIKitCoreDataStreamHelper.getStreamTypeByID(streamID),
     ).qualityNotifier.value = quality;
   }
@@ -346,7 +343,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onPublisherCapturedAudioFirstFrame() {
     ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      ZegoUIKitCore.shared.coreData.localUser,
+      ZegoUIKitCore.shared.coreData.user.localUser,
       ZegoStreamType.main,
     ).isCapturedAudioFirstFrameNotifier.value = true;
   }
@@ -354,9 +351,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onPublisherCapturedVideoFirstFrame(ZegoPublishChannel channel) {
     ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      ZegoUIKitCore.shared.coreData.localUser,
+      ZegoUIKitCore.shared.coreData.user.localUser,
       ZegoUIKitCoreDataStreamHelper.getStreamTypeByZegoPublishChannel(
-        ZegoUIKitCore.shared.coreData.localUser,
+        ZegoUIKitCore.shared.coreData.user.localUser,
         channel,
       ),
     ).isCapturedVideoFirstFrameNotifier.value = true;
@@ -365,9 +362,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       /// onPublisherRenderVideoFirstFrame only once callback
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-          ZegoUIKitCore.shared.coreData.localUser,
+          ZegoUIKitCore.shared.coreData.user.localUser,
           ZegoUIKitCoreDataStreamHelper.getStreamTypeByZegoPublishChannel(
-            ZegoUIKitCore.shared.coreData.localUser,
+            ZegoUIKitCore.shared.coreData.user.localUser,
             channel,
           ),
         ).isRenderedVideoFirstFrameNotifier.value = true;
@@ -384,9 +381,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onPublisherRenderVideoFirstFrame(ZegoPublishChannel channel) {
     ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      ZegoUIKitCore.shared.coreData.localUser,
+      ZegoUIKitCore.shared.coreData.user.localUser,
       ZegoUIKitCoreDataStreamHelper.getStreamTypeByZegoPublishChannel(
-        ZegoUIKitCore.shared.coreData.localUser,
+        ZegoUIKitCore.shared.coreData.user.localUser,
         channel,
       ),
     ).isRenderedVideoFirstFrameNotifier.value = true;
@@ -395,9 +392,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onPublisherSendAudioFirstFrame(ZegoPublishChannel channel) {
     ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      ZegoUIKitCore.shared.coreData.localUser,
+      ZegoUIKitCore.shared.coreData.user.localUser,
       ZegoUIKitCoreDataStreamHelper.getStreamTypeByZegoPublishChannel(
-        ZegoUIKitCore.shared.coreData.localUser,
+        ZegoUIKitCore.shared.coreData.user.localUser,
         channel,
       ),
     ).isSendAudioFirstFrameNotifier.value = true;
@@ -406,9 +403,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onPublisherSendVideoFirstFrame(ZegoPublishChannel channel) {
     ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      ZegoUIKitCore.shared.coreData.localUser,
+      ZegoUIKitCore.shared.coreData.user.localUser,
       ZegoUIKitCoreDataStreamHelper.getStreamTypeByZegoPublishChannel(
-        ZegoUIKitCore.shared.coreData.localUser,
+        ZegoUIKitCore.shared.coreData.user.localUser,
         channel,
       ),
     ).isSendVideoFirstFrameNotifier.value = true;
@@ -421,9 +418,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     int errorCode,
     Map<String, dynamic> extendedData,
   ) {
-    final targetRoomID =
-        coreData.queryRoomIDByStreamID(streamID) ?? coreData.currentRoomId;
-    final targetRoomStream = coreData.multiRoomStreams.getRoom(targetRoomID);
+    final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+        coreData.room.currentID;
+    final targetRoomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
 
     ZegoLoggerService.logInfo(
       'onPlayerStateUpdate, '
@@ -463,7 +460,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     if (ZegoErrorCode.CommonSuccess != errorCode &&
         ZegoErrorCode.RoomManualKickedOut != errorCode) {
-      error.errorStreamCtrl?.add(
+      coreData.error.errorStreamCtrl?.add(
         ZegoUIKitError(
           code: errorCode,
           message: 'state:${state.name}, extended data:$extendedData',
@@ -502,12 +499,12 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     switch (deviceType) {
       case ZegoDeviceType.Camera:
-        coreData.localUser.cameraException.value?.localDeviceExceptionType =
-            exceptionType;
+        coreData.user.localUser.cameraException.value
+            ?.localDeviceExceptionType = exceptionType;
         break;
       case ZegoDeviceType.Microphone:
-        coreData.localUser.microphoneException.value?.localDeviceExceptionType =
-            exceptionType;
+        coreData.user.localUser.microphoneException.value
+            ?.localDeviceExceptionType = exceptionType;
         break;
       default:
         break;
@@ -516,9 +513,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
   @override
   void onRemoteCameraStateUpdate(String streamID, ZegoRemoteDeviceState state) {
-    final targetRoomID =
-        coreData.queryRoomIDByStreamID(streamID) ?? coreData.currentRoomId;
-    final targetRoomStream = coreData.multiRoomStreams.getRoom(targetRoomID);
+    final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+        coreData.room.currentID;
+    final targetRoomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
 
     ZegoLoggerService.logInfo(
       'onRemoteCameraStateUpdate, '
@@ -542,7 +539,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     }
 
     final targetRemoteUserList =
-        coreData.multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList;
+        coreData.user.roomUsers.getRoom(targetRoomID).remoteUsers;
 
     /// update users' camera state
 
@@ -618,9 +615,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
   @override
   void onRemoteMicStateUpdate(String streamID, ZegoRemoteDeviceState state) {
-    final targetRoomID =
-        coreData.queryRoomIDByStreamID(streamID) ?? coreData.currentRoomId;
-    final targetRoomStream = coreData.multiRoomStreams.getRoom(targetRoomID);
+    final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+        coreData.room.currentID;
+    final targetRoomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
 
     ZegoLoggerService.logInfo(
       'onRemoteMicStateUpdate, '
@@ -645,7 +642,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     }
 
     final targetRemoteUserList =
-        coreData.multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList;
+        coreData.user.roomUsers.getRoom(targetRoomID).remoteUsers;
 
     /// update users' camera state
 
@@ -715,9 +712,10 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onRemoteSoundLevelUpdate(Map<String, double> soundLevels) {
     soundLevels.forEach((streamID, soundLevel) {
-      final targetRoomID =
-          coreData.queryRoomIDByStreamID(streamID) ?? coreData.currentRoomId;
-      final targetRoomStream = coreData.multiRoomStreams.getRoom(targetRoomID);
+      final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+          coreData.room.currentID;
+      final targetRoomStream =
+          coreData.stream.roomStreams.getRoom(targetRoomID);
 
       if (!targetRoomStream.streamDic.containsKey(streamID)) {
         if (targetRoomStream.mixerStreamDic.containsKey(streamID)) {
@@ -732,7 +730,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       }
 
       final targetRemoteUserList =
-          coreData.multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList;
+          coreData.user.roomUsers.getRoom(targetRoomID).remoteUsers;
 
       final targetUserID = targetRoomStream.streamDic[streamID]!.userID;
       final targetUserIndex =
@@ -756,42 +754,19 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
   @override
   void onCapturedSoundLevelUpdate(double soundLevel) {
-    if (coreData.localUser.microphoneMuteMode.value) {
+    if (coreData.user.localUser.microphoneMuteMode.value) {
       return;
     }
 
-    coreData.localUser.mainChannel.soundLevelStream?.add(soundLevel);
+    coreData.user.localUser.mainChannel.soundLevelStream?.add(soundLevel);
   }
 
+  /// Attribute–Value Pair of sound wave for each single stream in the mixed stream
+  /// key: the soundLevelID of each single stream
+  /// value: the corresponding sound wave value of the single stream
   @override
   void onMixerSoundLevelUpdate(Map<int, double> soundLevels) {
-    /// 0.0 ~ 100.0
-    if (coreData.mixerStreamDic.values.isEmpty) {
-      return;
-    }
-
-    final targetMixerStream = coreData.mixerStreamDic.values.first;
-    soundLevels.forEach((fromSoundLevelID, soundLevel) {
-      targetMixerStream.userSoundIDs.forEach((userID, soundLevelID) {
-        if (soundLevelID != fromSoundLevelID) {
-          return;
-        }
-
-        final index = targetMixerStream.usersNotifier.value
-            .indexWhere((user) => userID == user.id);
-        if (-1 == index) {
-          return;
-        }
-
-        targetMixerStream.usersNotifier.value
-            .elementAt(index)
-            .mainChannel
-            .soundLevelStream
-            ?.add(soundLevel);
-      });
-    });
-
-    targetMixerStream.soundLevels?.add(soundLevels);
+    coreData.stream.processMixerSoundLevelUpdate(soundLevels);
   }
 
   @override
@@ -802,16 +777,16 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       subTag: 'event',
     );
 
-    coreData.localUser.audioRoute.value = audioRoute;
+    coreData.user.localUser.audioRoute.value = audioRoute;
   }
 
   @override
   void onPlayerVideoSizeChanged(String streamID, int width, int height) {
-    final targetRoomID =
-        coreData.queryRoomIDByStreamID(streamID) ?? coreData.currentRoomId;
-    final targetRoomStream = coreData.multiRoomStreams.getRoom(targetRoomID);
+    final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+        coreData.room.currentID;
+    final targetRoomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
     final targetRemoteUserList =
-        coreData.multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList;
+        coreData.user.roomUsers.getRoom(targetRoomID).remoteUsers;
 
     if (!targetRoomStream.streamDic.containsKey(streamID)) {
       ZegoLoggerService.logInfo(
@@ -854,7 +829,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     int errorCode,
     Map<String, dynamic> extendedData,
   ) {
-    final targetRoomInfo = coreData.multiRooms.getRoom(roomID);
+    final targetRoomInfo = coreData.room.rooms.getRoom(roomID);
 
     ZegoLoggerService.logInfo(
       'onRoomStateChanged,'
@@ -866,8 +841,11 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       subTag: 'event',
     );
 
-    targetRoomInfo.state.value =
-        ZegoUIKitRoomState(reason, errorCode, extendedData);
+    targetRoomInfo.state.value = ZegoUIKitRoomState(
+      reason,
+      errorCode,
+      extendedData,
+    );
 
     if (reason == ZegoRoomStateChangedReason.KickOut) {
       ZegoLoggerService.logInfo(
@@ -876,7 +854,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         subTag: 'event',
       );
 
-      coreData.multiRoomUserInfo
+      coreData.user.roomUsers
           .getRoom(roomID)
           .meRemovedFromRoomStreamCtrl
           ?.add('');
@@ -884,7 +862,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     if (ZegoErrorCode.CommonSuccess != errorCode &&
         ZegoErrorCode.RoomManualKickedOut != errorCode) {
-      error.errorStreamCtrl?.add(
+      coreData.error.errorStreamCtrl?.add(
         ZegoUIKitError(
           code: errorCode,
           message: 'reason:${reason.name}, extended data:$extendedData',
@@ -899,7 +877,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     String roomID,
     List<ZegoRoomExtraInfo> roomExtraInfoList,
   ) {
-    final targetRoomInfo = coreData.multiRooms.getRoom(roomID);
+    final targetRoomInfo = coreData.room.rooms.getRoom(roomID);
 
     targetRoomInfo.roomExtraInfoHadArrived = true;
 
@@ -1015,11 +993,11 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       return;
     }
 
-    final targetRoomID =
-        coreData.queryRoomIDByStreamID(streamID) ?? coreData.currentRoomId;
-    final targetRoomStream = coreData.multiRoomStreams.getRoom(targetRoomID);
+    final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+        coreData.room.currentID;
+    final targetRoomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
 
-    targetRoomStream.streamExtraInfo[streamID] = extraInfo;
+    targetRoomStream.extraInfo[streamID] = extraInfo;
 
     ZegoLoggerService.logInfo(
       'try parse stream extra info($extraInfo),'
@@ -1087,19 +1065,25 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
   @override
   void onPlayerRecvVideoFirstFrame(String streamID) {
-    coreData.mixerStreamDic[streamID]?.loaded.value = true;
+    final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+        coreData.room.currentID;
+    final targetRoomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
+    targetRoomStream.mixerStreamDic[streamID]?.loaded.value = true;
   }
 
   @override
   void onPlayerRecvAudioFirstFrame(String streamID) {
-    coreData.mixerStreamDic[streamID]?.loaded.value = true;
+    final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+        coreData.room.currentID;
+    final targetRoomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
+    targetRoomStream.mixerStreamDic[streamID]?.loaded.value = true;
   }
 
   @override
   void onPlayerRecvSEI(String streamID, Uint8List data) {
-    final targetRoomID =
-        coreData.queryRoomIDByStreamID(streamID) ?? coreData.currentRoomId;
-    final targetRoomStream = coreData.multiRoomStreams.getRoom(targetRoomID);
+    final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+        coreData.room.currentID;
+    final targetRoomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
 
     debugPrint('onPlayerRecvSEI ,'
         'room id:$targetRoomID, '
@@ -1146,9 +1130,9 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     String userID,
     Map<String, dynamic> sei,
   ) {
-    final targetRoomID =
-        coreData.queryRoomIDByStreamID(streamID) ?? coreData.currentRoomId;
-    final targetRoomStream = coreData.multiRoomStreams.getRoom(targetRoomID);
+    final targetRoomID = coreData.stream.queryRoomIDByStreamID(streamID) ??
+        coreData.room.currentID;
+    final targetRoomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
 
     bool stateChanged = false;
     final cameraValue = sei[ZegoUIKitSEIDefines.keyCamera] ?? false;
@@ -1176,7 +1160,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       }
     } else {
       final targetRemoteUserList =
-          coreData.multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList;
+          coreData.user.roomUsers.getRoom(targetRoomID).remoteUsers;
       final targetUserIndex =
           targetRemoteUserList.indexWhere((user) => userID == user.id);
       if (-1 != targetUserIndex) {

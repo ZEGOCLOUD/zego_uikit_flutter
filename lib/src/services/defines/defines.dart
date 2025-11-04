@@ -7,6 +7,7 @@ export 'media/media.dart';
 
 export 'express.dart';
 export 'express.event.dart';
+export 'express_extension.dart';
 
 export 'command.dart';
 export 'error.dart';

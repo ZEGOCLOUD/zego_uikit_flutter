@@ -145,6 +145,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       appSign: _appSign,
       token: _token,
       scenario: _scenario,
+      roomMode: ZegoRoomMode.MultiRoom,
     )
         .then((value) async {
       ZegoLoggerService.logInfo(
@@ -180,7 +181,8 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       return false;
     }
 
-    if (ZegoUIKit().isRoomLogin) {
+    if (ZegoUIKit().isRoomLogin &&
+        roomID == ZegoUIKitCore.shared.coreData.room.currentID) {
       ZegoLoggerService.logInfo(
         'has already login',
         tag: 'outside room audio video controller.p',
@@ -215,9 +217,9 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       subTag: 'leaveRoom',
     );
 
-    if (ZegoUIKitCore.shared.coreData.room.id != roomID) {
+    if (ZegoUIKitCore.shared.coreData.room.currentID != roomID) {
       ZegoLoggerService.logInfo(
-        'is not current room, now is ${ZegoUIKitCore.shared.coreData.room.id}',
+        'is not current room, now is ${ZegoUIKitCore.shared.coreData.room.currentID}',
         tag: 'outside room audio video controller.p',
         subTag: 'leaveRoom',
       );

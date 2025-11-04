@@ -17,10 +17,10 @@ import 'package:zego_uikit/src/channel/platform_interface.dart';
 import 'package:zego_uikit/src/plugins/beauty/uikit_beauty_plugin_impl.dart';
 import 'package:zego_uikit/src/plugins/plugins.dart';
 import 'package:zego_uikit/src/plugins/signaling/impl/core/core.dart';
-import 'package:zego_uikit/src/services/defines/defines.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
-import 'package:zego_uikit/src/services/log_exporter/logs_share_manager.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
+import 'package:zego_uikit/src/services/defines/defines.dart';
+import 'package:zego_uikit/src/services/log_exporter/logs_share_manager.dart';
 
 part 'audio_video_service.dart';
 
@@ -103,7 +103,8 @@ class ZegoUIKit
     String token = '',
     bool? enablePlatformView,
     bool playingStreamInPIPUnderIOS = false,
-    ZegoScenario scenario = ZegoScenario.Default,
+    ZegoUIKitRoomMode roomMode = ZegoUIKitRoomMode.SingleRoom,
+    ZegoUIKitScenario scenario = ZegoScenario.Default,
 
     /// accept offline call invitation on android, will create in advance
     bool withoutCreateEngine = false,
@@ -113,6 +114,7 @@ class ZegoUIKit
       appSign: appSign,
       token: token,
       scenario: scenario,
+      roomMode: roomMode,
       playingStreamInPIPUnderIOS: playingStreamInPIPUnderIOS,
       enablePlatformView: enablePlatformView,
       withoutCreateEngine: withoutCreateEngine,
@@ -137,12 +139,12 @@ class ZegoUIKit
   }
 
   Stream<ZegoUIKitError> getErrorStream() {
-    return ZegoUIKitCore.shared.error.errorStreamCtrl?.stream ??
+    return ZegoUIKitCore.shared.coreData.error.errorStreamCtrl?.stream ??
         const Stream.empty();
   }
 
   Stream<ZegoUIKitExpressEngineState> getEngineStateStream() {
-    return ZegoUIKitCore.shared.coreData.engineStateStreamCtrl.stream;
+    return ZegoUIKitCore.shared.coreData.engine.stateStreamCtrl.stream;
   }
 
   ZegoUIKitReporter reporter() {
@@ -150,5 +152,5 @@ class ZegoUIKit
   }
 
   ValueNotifier<bool> get engineCreatedNotifier =>
-      ZegoUIKitCore.shared.expressEngineCreatedNotifier;
+      ZegoUIKitCore.shared.coreData.engine.createdNotifier;
 }

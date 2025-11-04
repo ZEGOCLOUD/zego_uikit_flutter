@@ -3,41 +3,69 @@ import 'dart:async';
 
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
-import 'package:zego_uikit/src/services/services.dart';
 import 'package:zego_uikit/src/services/core/data/room_map.dart';
-
+import 'package:zego_uikit/src/services/services.dart';
 import '../defines/defines.dart';
+import 'user.room.dart';
 
-mixin ZegoUIKitCoreDataUser {
+class ZegoUIKitCoreDataUser {
   ZegoUIKitCoreUser localUser = ZegoUIKitCoreUser.localDefault();
 
-  var multiRoomUserInfo =
-      ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomUserInfo>((String roomID) {
-    return ZegoUIKitCoreDataRoomUserInfo(roomID);
-  });
+  var roomUsers = ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomUser>(
+    name: 'core data user',
+    createDefault: (String roomID) {
+      final roomUser = ZegoUIKitCoreDataRoomUser(roomID);
+      roomUser.init();
+      return roomUser;
+    },
+    onUpgradeEmptyRoom: (ZegoUIKitCoreDataRoomUser emptyRoomUser, roomID) {
+      // 当预备房间被升级时，更新其 roomID
+      emptyRoomUser.roomID = roomID;
+      ZegoLoggerService.logInfo(
+        'empty room(${emptyRoomUser.hashCode}) has update id to $roomID, ',
+        tag: 'uikit-users',
+        subTag: 'room-map',
+      );
+    },
+  );
 
-  void initUser() {
+  void init() {
     ZegoLoggerService.logInfo(
-      'init user',
-      tag: 'uikit-user',
+      'init',
+      tag: 'uikit-users',
       subTag: 'init',
     );
 
-    multiRoomUserInfo.forEach((_, roomUserInfo) {
+    roomUsers.forEachSync((_, roomUserInfo) {
       roomUserInfo.init();
     });
   }
 
-  void uninitUser() {
+  void uninit() {
     ZegoLoggerService.logInfo(
-      'uninit user',
-      tag: 'uikit-user',
+      'uninit',
+      tag: 'uikit-users',
       subTag: 'uninit',
     );
 
-    multiRoomUserInfo.forEach((_, roomUserInfo) {
+    roomUsers.forEachSync((_, roomUserInfo) {
       roomUserInfo.uninit();
     });
+  }
+
+  void clear({
+    required String targetRoomID,
+  }) {
+    ZegoLoggerService.logInfo(
+      'clear, '
+      'room id:$targetRoomID, ',
+      tag: 'uikit-users',
+      subTag: 'uninit',
+    );
+
+    if (roomUsers.containsRoom(targetRoomID)) {
+      roomUsers.getRoom(targetRoomID).remoteUsers.clear();
+    }
   }
 
   ZegoUIKitCoreUser getUser(
@@ -47,7 +75,7 @@ mixin ZegoUIKitCoreDataUser {
     if (userID == localUser.id) {
       return localUser;
     } else {
-      return multiRoomUserInfo.getRoom(targetRoomID).remoteUsersList.firstWhere(
+      return roomUsers.getRoom(targetRoomID).remoteUsers.firstWhere(
             (user) => user.id == userID,
             orElse: ZegoUIKitCoreUser.empty,
           );
@@ -57,14 +85,14 @@ mixin ZegoUIKitCoreDataUser {
   ZegoUIKitCoreUser login(String id, String name) {
     ZegoLoggerService.logInfo(
       'id:"$id", name:$name',
-      tag: 'uikit-user',
+      tag: 'uikit-users',
       subTag: 'login',
     );
 
     if (id.isEmpty || name.isEmpty) {
       ZegoLoggerService.logError(
         'params is not valid',
-        tag: 'uikit-user',
+        tag: 'uikit-users',
         subTag: 'login',
       );
     }
@@ -72,7 +100,7 @@ mixin ZegoUIKitCoreDataUser {
     if (localUser.id == id && localUser.name == name) {
       ZegoLoggerService.logWarn(
         'user is same',
-        tag: 'uikit-user',
+        tag: 'uikit-users',
         subTag: 'login',
       );
 
@@ -83,7 +111,7 @@ mixin ZegoUIKitCoreDataUser {
         (localUser.name.isNotEmpty && localUser.name != name)) {
       ZegoLoggerService.logError(
         'already login, and not same user, auto logout...',
-        tag: 'uikit-user',
+        tag: 'uikit-users',
         subTag: 'login',
       );
       logout();
@@ -91,7 +119,7 @@ mixin ZegoUIKitCoreDataUser {
 
     ZegoLoggerService.logInfo(
       'login done',
-      tag: 'uikit-user',
+      tag: 'uikit-users',
       subTag: 'login',
     );
 
@@ -99,8 +127,8 @@ mixin ZegoUIKitCoreDataUser {
       ..id = id
       ..name = name;
 
-    multiRoomUserInfo.forEach((roomID, roomUserInfo) {
-      roomUserInfo.userJoinStreamCtrl?.add([localUser]);
+    roomUsers.forEachSync((roomID, roomUserInfo) {
+      roomUserInfo.joinStreamCtrl?.add([localUser]);
       notifyUserListStreamControl(targetRoomID: roomID);
     });
 
@@ -110,15 +138,15 @@ mixin ZegoUIKitCoreDataUser {
   void logout() {
     ZegoLoggerService.logInfo(
       'logout',
-      tag: 'uikit-user',
+      tag: 'uikit-users',
       subTag: 'logout',
     );
 
     localUser.clear();
 
-    multiRoomUserInfo.forEach((roomID, roomUserInfo) {
-      roomUserInfo.userLeaveStreamCtrl?.add([localUser]);
-      roomUserInfo.userListStreamCtrl?.add(roomUserInfo.remoteUsersList);
+    roomUsers.forEachSync((roomID, roomUserInfo) {
+      roomUserInfo.leaveStreamCtrl?.add([localUser]);
+      roomUserInfo.listStreamCtrl?.add(roomUserInfo.remoteUsers);
     });
   }
 
@@ -126,34 +154,31 @@ mixin ZegoUIKitCoreDataUser {
     String userID, {
     required String targetRoomID,
   }) {
-    final targetIndex = multiRoomUserInfo
+    final targetIndex = roomUsers
         .getRoom(targetRoomID)
-        .remoteUsersList
+        .remoteUsers
         .indexWhere((user) => userID == user.id);
     if (-1 == targetIndex) {
       return ZegoUIKitCoreUser.empty();
     }
 
-    final roomStreamInfo =
-        ZegoUIKitCore.shared.coreData.multiRoomStreams.getRoom(
+    final roomStream = ZegoUIKitCore.shared.coreData.stream.roomStreams.getRoom(
       targetRoomID,
     );
-    final targetUser = multiRoomUserInfo
-        .getRoom(targetRoomID)
-        .remoteUsersList
-        .removeAt(targetIndex);
+    final targetUser =
+        roomUsers.getRoom(targetRoomID).remoteUsers.removeAt(targetIndex);
     if (targetUser.mainChannel.streamID.isNotEmpty) {
-      roomStreamInfo.stopPlayingStream(
+      roomStream.stopPlayingStream(
         targetUser.mainChannel.streamID,
       );
     }
     if (targetUser.auxChannel.streamID.isNotEmpty) {
-      roomStreamInfo.stopPlayingStream(
+      roomStream.stopPlayingStream(
         targetUser.auxChannel.streamID,
       );
     }
     if (targetUser.thirdChannel.streamID.isNotEmpty) {
-      roomStreamInfo.stopPlayingStream(
+      roomStream.stopPlayingStream(
         targetUser.thirdChannel.streamID,
       );
     }
@@ -168,13 +193,12 @@ mixin ZegoUIKitCoreDataUser {
   void notifyUserListStreamControl({
     required String targetRoomID,
   }) {
-    final roomInfo = multiRoomUserInfo.getRoom(targetRoomID);
+    final roomInfo = roomUsers.getRoom(targetRoomID);
 
-    final allUserList = [localUser, ...roomInfo.remoteUsersList];
-    roomInfo.userListStreamCtrl?.add(allUserList);
+    final allUserList = [localUser, ...roomInfo.remoteUsers];
+    roomInfo.listStreamCtrl?.add(allUserList);
   }
 
-  /// todo multi room
   ZegoUIKitCoreUser getUserInMixerStream(
     String userID, {
     required String targetRoomID,
@@ -191,94 +215,14 @@ mixin ZegoUIKitCoreDataUser {
   List<ZegoUIKitCoreUser> getMixerStreamUsers({
     required String targetRoomID,
   }) {
-    final roomStreamInfo =
-        ZegoUIKitCore.shared.coreData.multiRoomStreams.getRoom(targetRoomID);
+    final roomStream =
+        ZegoUIKitCore.shared.coreData.stream.roomStreams.getRoom(targetRoomID);
 
     final users = <ZegoUIKitCoreUser>[];
-    roomStreamInfo.mixerStreamDic.forEach((key, mixerStreamInfo) {
+    roomStream.mixerStreamDic.forEach((key, mixerStreamInfo) {
       users.addAll(mixerStreamInfo.usersNotifier.value);
     });
 
     return users;
   }
-}
-
-class ZegoUIKitCoreDataRoomUserInfo {
-  String roomID;
-  ZegoUIKitCoreDataRoomUserInfo(this.roomID);
-
-  final List<ZegoUIKitCoreUser> remoteUsersList = [];
-
-  StreamController<List<ZegoUIKitCoreUser>>? get userJoinStreamCtrl {
-    _userJoinStreamCtrl ??=
-        StreamController<List<ZegoUIKitCoreUser>>.broadcast();
-    return _userJoinStreamCtrl;
-  }
-
-  StreamController<List<ZegoUIKitCoreUser>>? get userLeaveStreamCtrl {
-    _userLeaveStreamCtrl ??=
-        StreamController<List<ZegoUIKitCoreUser>>.broadcast();
-    return _userLeaveStreamCtrl;
-  }
-
-  StreamController<List<ZegoUIKitCoreUser>>? get userListStreamCtrl {
-    _userListStreamCtrl ??=
-        StreamController<List<ZegoUIKitCoreUser>>.broadcast();
-    return _userListStreamCtrl;
-  }
-
-  /// local user been kick-out by some reason
-  StreamController<String>? get meRemovedFromRoomStreamCtrl {
-    _meRemovedFromRoomStreamCtrl ??= StreamController<String>.broadcast();
-    return _meRemovedFromRoomStreamCtrl;
-  }
-
-  void init() {
-    ZegoLoggerService.logInfo(
-      'room id:$roomID',
-      tag: 'uikit-room-user-info',
-      subTag: 'init',
-    );
-
-    _userJoinStreamCtrl ??=
-        StreamController<List<ZegoUIKitCoreUser>>.broadcast();
-    _userLeaveStreamCtrl ??=
-        StreamController<List<ZegoUIKitCoreUser>>.broadcast();
-    _userListStreamCtrl ??=
-        StreamController<List<ZegoUIKitCoreUser>>.broadcast();
-    _meRemovedFromRoomStreamCtrl ??= StreamController<String>.broadcast();
-  }
-
-  void uninit() {
-    ZegoLoggerService.logInfo(
-      'room id:$roomID',
-      tag: 'uikit-room-user-info',
-      subTag: 'uninit',
-    );
-
-    _userJoinStreamCtrl?.close();
-    _userJoinStreamCtrl = null;
-
-    _userLeaveStreamCtrl?.close();
-    _userLeaveStreamCtrl = null;
-
-    _userListStreamCtrl?.close();
-    _userListStreamCtrl = null;
-
-    _meRemovedFromRoomStreamCtrl?.close();
-    _meRemovedFromRoomStreamCtrl = null;
-  }
-
-  void clear() {
-    ZegoLoggerService.logInfo(
-      'room id:$roomID',
-      tag: 'uikit-room-user-info',
-      subTag: 'clear',
-    );
-  }
-
-  StreamController<List<ZegoUIKitCoreUser>>? _userJoinStreamCtrl;
-  StreamController<List<ZegoUIKitCoreUser>>? _userLeaveStreamCtrl;
-  StreamController<List<ZegoUIKitCoreUser>>? _userListStreamCtrl;
-  StreamController<String>? _meRemovedFromRoomStreamCtrl;
 }

@@ -18,7 +18,6 @@ import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
 import 'package:zego_uikit/src/components/widgets/flip_animation.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
-
 import '../../services/core/defines/defines.dart';
 
 /// display user audio and video information,
@@ -70,19 +69,19 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       ZegoUIKit().getAudioVideoViewIDNotifier(widget.user?.id ?? '').value;
 
   ZegoUIKitCoreUser get localUserData =>
-      ZegoUIKitCore.shared.coreData.localUser;
+      ZegoUIKitCore.shared.coreData.user.localUser;
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
+
+  bool get userDebugMode => true;
 
   bool get isRenderOnCameraOff {
     if (Platform.isAndroid) {
       return false;
     }
 
-    return ZegoUIKitCore.shared.coreData.isEnablePlatformView;
+    return ZegoUIKitCore.shared.coreData.stream.isEnablePlatformView;
   }
-
-  bool get logEnabled => false;
 
   @override
   void initState() {
@@ -182,25 +181,23 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   }
 
   Widget testViewID() {
-    return Container();
+    if (userDebugMode) {
+      return ValueListenableBuilder<int?>(
+        valueListenable:
+            ZegoUIKit().getAudioVideoViewIDNotifier(widget.user!.id),
+        builder: (context, viewID, _) {
+          return Align(
+            alignment: Alignment.topRight,
+            child: Text(
+              "view id:$viewID",
+              style: TextStyle(fontSize: 30.zR, color: Colors.red),
+            ),
+          );
+        },
+      );
+    }
 
-    // if (kDebugMode) {
-    //   return ValueListenableBuilder<int?>(
-    //     valueListenable:
-    //         ZegoUIKit().getAudioVideoViewIDNotifier(widget.user!.id),
-    //     builder: (context, viewID, _) {
-    //       return Align(
-    //         alignment: Alignment.topRight,
-    //         child: Text(
-    //           "view id:$viewID",
-    //           style: TextStyle(fontSize: 30.zR, color: Colors.red),
-    //         ),
-    //       );
-    //     },
-    //   );
-    // }
-    //
-    // return Container();
+    return Container();
   }
 
   Widget localCameraFlipAnimation(Widget child) {
@@ -249,13 +246,13 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   }
 
   void onCapturedVideoFirstFrameAfterSwitchCamera() {
-    ZegoUIKitCore
-        .shared.coreData.localUser.mainChannel.isCapturedVideoFirstFrameNotifier
+    ZegoUIKitCore.shared.coreData.user.localUser.mainChannel
+        .isCapturedVideoFirstFrameNotifier
         .removeListener(onCapturedVideoFirstFrameAfterSwitchCamera);
 
     isLocalUserFlippedNotifier.value = !isLocalUserFlippedNotifier.value;
 
-    if (logEnabled) {
+    if (userDebugMode) {
       ZegoLoggerService.logInfo(
         'onCapturedVideoFirstFrameAfterSwitchCamera',
         tag: 'uikit-component',
@@ -280,7 +277,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
             ? Container()
             : LayoutBuilder(
                 builder: (context, constraints) {
-                  if (logEnabled) {
+                  if (userDebugMode) {
                     ZegoLoggerService.logInfo(
                       '${widget.user?.id}\'s constraints changed,'
                       'width:${constraints.maxWidth}, '
@@ -323,7 +320,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
           return Container(color: Colors.transparent);
         }
 
-        if (logEnabled) {
+        if (userDebugMode) {
           ZegoLoggerService.logInfo(
             'render ${widget.user?.id}\'s view ${userView.hashCode}',
             tag: 'uikit-component',
@@ -485,7 +482,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   }
 
   void runViewIDTimeGuard() {
-    if (logEnabled) {
+    if (userDebugMode) {
       ZegoLoggerService.logInfo(
         'guard run, ${widget.user?.id}\'s view id is:$userViewID',
         tag: 'uikit-component',
@@ -498,7 +495,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
     viewIDGuardTimer ??=
         Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      if (logEnabled) {
+      if (userDebugMode) {
         ZegoLoggerService.logInfo(
           'guard check, ${widget.user?.id}\'s view id is:$userViewID',
           tag: 'uikit-component',
@@ -509,7 +506,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       if (!userViewIDIsEmpty) {
         viewIDGuardTimer?.cancel();
       } else {
-        if (logEnabled) {
+        if (userDebugMode) {
           ZegoLoggerService.logInfo(
             'guard check, ${widget.user?.id}\'s view-id($userViewID) is not valid now, force update',
             tag: 'uikit-component',

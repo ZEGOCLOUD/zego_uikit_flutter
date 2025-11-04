@@ -26,9 +26,9 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
         tag: 'uikit-media',
         subTag: 'playMedia',
       );
-      final roomStreamInfo = coreData.multiRoomStreams.getRoom(targetRoomID);
+      final roomStream = coreData.stream.roomStreams.getRoom(targetRoomID);
 
-      await roomStreamInfo
+      await roomStream
           .startPublishingStream(streamType: ZegoStreamType.media)
           .then((value) async {
         /// sync media type via stream extra info
@@ -44,10 +44,11 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
         );
 
         /// render
-        await roomStreamInfo.createLocalUserVideoViewQueue(
+        await coreData.stream.createLocalUserVideoViewQueue(
+          targetRoomID: targetRoomID,
           streamType: ZegoStreamType.media,
           onViewCreated: (ZegoStreamType streamType) {
-            roomStreamInfo.onViewCreatedByStartPublishingStream(
+            roomStream.onViewCreatedByStartPublishingStream(
               ZegoStreamType.media,
             );
           },
@@ -67,7 +68,9 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
   }) async {
     await coreData.media.stop();
 
-    await coreData.multiRoomStreams.getRoom(targetRoomID).stopPublishingStream(
+    await coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .stopPublishingStream(
           streamType: ZegoStreamType.media,
         );
   }
@@ -77,7 +80,9 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
   }) async {
     await coreData.media.clear();
 
-    await coreData.multiRoomStreams.getRoom(targetRoomID).stopPublishingStream(
+    await coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .stopPublishingStream(
           streamType: ZegoStreamType.media,
         );
   }

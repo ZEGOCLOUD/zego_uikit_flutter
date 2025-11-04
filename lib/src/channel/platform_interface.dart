@@ -90,7 +90,13 @@ abstract class ZegoUIKitPluginPlatform extends PlatformInterface {
         'enableCustomVideoRender has not been implemented.');
   }
 
-  Future<void> startPlayingStreamInPIP(String streamID) {
+  Future<void> startPlayingStreamInPIP(
+    String streamID, {
+    int? resourceMode,
+    String? roomID,
+    Map<String, dynamic>? cdnConfig,
+    int? videoCodecID,
+  }) {
     throw UnimplementedError(
         'startPlayingStreamInPIP has not been implemented.');
   }

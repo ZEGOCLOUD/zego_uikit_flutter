@@ -107,12 +107,21 @@
         result(@(callResult));
     } else if ([@"startPlayingStreamInPIP" isEqualToString:call.method]) {
         NSDictionary *arguments = call.arguments;
-        
+
         NSString *streamID = arguments[@"stream_id"];
-        
-        NSLog(@"[UIKit Plugin] startPlayingStreamInPIP, streamID: %@", streamID);
-        [self startPlayingStreamInPIP:streamID];
-        
+        NSNumber *resourceMode = arguments[@"resourceMode"];
+        NSString *roomID = arguments[@"roomID"];
+        NSDictionary *cdnConfig = arguments[@"cdnConfig"];
+        NSNumber *videoCodecID = arguments[@"videoCodecID"];
+
+        NSLog(@"[UIKit Plugin] startPlayingStreamInPIP, streamID: %@, resourceMode: %@, roomID: %@, cdnConfig: %@, videoCodecID: %@",
+              streamID, resourceMode, roomID, cdnConfig, videoCodecID);
+        [self startPlayingStreamInPIP:streamID
+                         resourceMode:resourceMode
+                               roomID:roomID
+                            cdnConfig:cdnConfig
+                         videoCodecID:videoCodecID];
+
         result(nil);
     } else if ([@"updatePlayingStreamViewInPIP" isEqualToString:call.method]) {
         NSDictionary *arguments = call.arguments;
@@ -182,9 +191,17 @@
     [app performSelector:@selector(suspend)];
 }
 
-- (void)startPlayingStreamInPIP:(NSString *)streamID  {
+- (void)startPlayingStreamInPIP:(NSString *)streamID
+                   resourceMode:(nullable NSNumber *)resourceMode
+                         roomID:(nullable NSString *)roomID
+                      cdnConfig:(nullable NSDictionary *)cdnConfig
+                   videoCodecID:(nullable NSNumber *)videoCodecID {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[PipManager sharedInstance] startPlayingStream:streamID];
+        [[PipManager sharedInstance] startPlayingStream:streamID
+                                           resourceMode:resourceMode
+                                                 roomID:roomID
+                                              cdnConfig:cdnConfig
+                                           videoCodecID:videoCodecID];
     });
 }
 

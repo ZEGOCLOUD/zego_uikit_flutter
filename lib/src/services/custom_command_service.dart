@@ -10,11 +10,12 @@ mixin ZegoCustomCommandService {
     final resultErrorCode = await ZegoUIKitCore.shared.sendInRoomCommand(
       command,
       toUserIDs,
-      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+      targetRoomID:
+          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
     );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+      ZegoUIKitCore.shared.coreData.error.errorStreamCtrl?.add(
         ZegoUIKitError(
           code: ZegoUIKitErrorCode.customCommandSendError,
           message: 'send in-room command error:$resultErrorCode, '

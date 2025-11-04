@@ -14,19 +14,15 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
+import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
-
-import '../defines/defines.dart';
-
-/// @nodoc
-mixin ZegoUIKitCoreDataMedia {
-  final _mediaImpl = ZegoUIKitCoreDataMediaImpl();
-
-  ZegoUIKitCoreDataMediaImpl get media => _mediaImpl;
-}
+import 'error.dart';
+import 'room.dart';
+import 'stream.dart';
+import 'user.dart';
 
 /// @nodoc
-class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
+class ZegoUIKitCoreDataMedia extends ZegoUIKitMediaEventInterface {
   String? _ownerID;
   ZegoMediaPlayer? _currentPlayer;
 
@@ -47,16 +43,39 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
       ValueNotifier<ZegoUIKitMediaType>(ZegoUIKitMediaType.unknown);
   final muteNotifier = ValueNotifier<bool>(false);
 
-  List<String> get pureAudioExtensions => ['mp3', 'aac', 'wav', 'midi', "ogg"];
+  List<String> get pureAudioExtensions => [
+        'mp3',
+        'aac',
+        'wav',
+        'midi',
+        "ogg",
+      ];
 
-  List<String> get videoExtensions =>
-      ['mp4', 'avi', 'mov', "flv", "mkv", "mpeg", "webm", "wmv"];
+  List<String> get videoExtensions => [
+        'mp4',
+        'avi',
+        'mov',
+        "flv",
+        "mkv",
+        "mpeg",
+        "webm",
+        "wmv",
+      ];
 
   ZegoUIKitMediaPlayerMediaInfo? get mediaInfo => _mediaInfo;
 
   String? get ownerID => _ownerID;
 
   ZegoMediaPlayer? get currentPlayer => _currentPlayer;
+
+  ZegoUIKitCoreDataRoom get _roomCommonData =>
+      ZegoUIKitCore.shared.coreData.room;
+  ZegoUIKitCoreDataStream get _streamCommonData =>
+      ZegoUIKitCore.shared.coreData.stream;
+  ZegoUIKitCoreDataUser get _userCommonData =>
+      ZegoUIKitCore.shared.coreData.user;
+  ZegoUIKitCoreDataError get _errorCommonData =>
+      ZegoUIKitCore.shared.coreData.error;
 
   void init() {
     ZegoLoggerService.logInfo(
@@ -110,7 +129,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
 
   Future<void> clear() async {
     ZegoLoggerService.logInfo(
-      'clear',
+      'clear, ',
       tag: 'uikit-media',
       subTag: 'clear',
     );
@@ -154,7 +173,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
     _currentPlayer!.enableSoundLevelMonitor(true, 200);
     _currentPlayer!.enableRepeat(enableRepeat);
 
-    _ownerID = ZegoUIKitCore.shared.coreData.localUser.id;
+    _ownerID = _userCommonData.localUser.id;
 
     ZegoLoggerService.logInfo(
       'try load resource:$filePathOrURL',
@@ -356,8 +375,11 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
 
       _currentPlayer?.muteLocal(mute);
     } else {
-      // mute remote play stream
-      final mediaOwner = ZegoUIKitCore.shared.coreData.getUser(_ownerID ?? '');
+      /// mute remote play stream
+      final mediaOwner = _userCommonData.getUser(
+        _ownerID ?? '',
+        targetRoomID: _roomCommonData.currentID,
+      );
       ZegoLoggerService.logInfo(
         'mute remote, mute:$mute, owner:$mediaOwner',
         tag: 'uikit-media',
@@ -442,8 +464,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
   ) {
     _soundLevel = soundLevel;
 
-    ZegoUIKitCore.shared.coreData.localUser.auxChannel.soundLevelStream
-        ?.add(soundLevel);
+    _userCommonData.localUser.auxChannel.soundLevelStream?.add(soundLevel);
   }
 
   @override
@@ -497,14 +518,13 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
     String userID,
     Map<String, dynamic> sei,
   ) {
-    final targetRoomID =
-        ZegoUIKitCore.shared.coreData.queryRoomIDByStreamID(streamID) ??
-            ZegoUIKitCore.shared.coreData.currentRoomId;
+    final targetRoomID = _streamCommonData.queryRoomIDByStreamID(streamID) ??
+        _roomCommonData.currentID;
     final targetRoomStream =
-        ZegoUIKitCore.shared.coreData.multiRoomStreams.getRoom(targetRoomID);
+        ZegoUIKitCore.shared.coreData.stream.roomStreams.getRoom(targetRoomID);
 
     _ownerID ??= targetRoomStream.streamDic[streamID]?.userID ?? '';
-    final isLocalMedia = _ownerID == ZegoUIKitCore.shared.coreData.localUser.id;
+    final isLocalMedia = _ownerID == _userCommonData.localUser.id;
 
     if (sei.keys.contains(ZegoUIKitSEIDefines.keyMediaStatus)) {
       final playState = ZegoUIKitMediaPlayState
@@ -552,10 +572,8 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
       final soundLevel =
           sei[ZegoUIKitSEIDefines.keyMediaSoundLevel] as double? ?? 0.0;
       if (!isLocalMedia) {
-        final targetRoomRemoteUserList = ZegoUIKitCore
-            .shared.coreData.multiRoomUserInfo
-            .getRoom(targetRoomID)
-            .remoteUsersList;
+        final targetRoomRemoteUserList =
+            _userCommonData.roomUsers.getRoom(targetRoomID).remoteUsers;
         final targetUserIndex =
             targetRoomRemoteUserList.indexWhere((user) => _ownerID == user.id);
         if (-1 != targetUserIndex) {
@@ -662,7 +680,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
         subTag: 'pickMediaFiles',
       );
 
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
+      _errorCommonData.errorStreamCtrl?.add(ZegoUIKitError(
         code: ZegoUIKitErrorCode.mediaPickFilesError,
         message: 'exception:$e',
         method: 'pickMediaFiles',
@@ -674,7 +692,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
         subTag: 'pickMediaFiles',
       );
 
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
+      _errorCommonData.errorStreamCtrl?.add(ZegoUIKitError(
         code: ZegoUIKitErrorCode.mediaPickFilesError,
         message: 'exception:$e',
         method: 'pickMediaFiles',

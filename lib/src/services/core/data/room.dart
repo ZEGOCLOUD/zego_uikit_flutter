@@ -1,92 +1,355 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
+
+// Package imports:
+import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:zego_express_engine/zego_express_engine.dart';
+
+// Project imports:
+import 'package:zego_uikit/src/services/core/data/data.dart';
+import 'package:zego_uikit/src/services/core/data/device.dart';
 import 'package:zego_uikit/src/services/core/data/room_map.dart';
+import 'package:zego_uikit/src/services/core/data/stream.dart';
+import 'package:zego_uikit/src/services/core/data/user.dart';
 import 'package:zego_uikit/src/services/services.dart';
+import '../../../modules/outside_room_audio_video/internal.dart';
+import '../core.dart';
+import 'room.single.dart';
 
-mixin ZegoUIKitCoreDataRoom {
-  /// 具体房间对象在multiRooms.getRoom(roomID) 获取
-  String currentRoomId = '';
-
-  var multiRooms = ZegoUIKitCoreRoomMap<ZegoUIKitCoreRoomInfo>((String roomID) {
-    return ZegoUIKitCoreRoomInfo(roomID);
-  });
-}
-
+/// 多房间的房间信息
 /// @nodoc
-// room
-class ZegoUIKitCoreRoomInfo {
-  ZegoUIKitCoreRoomInfo(this.id) {
-    ZegoLoggerService.logInfo(
-      'create $id',
-      tag: 'uikit-service-core',
-      subTag: 'core room',
-    );
+class ZegoUIKitCoreDataRoom {
+  /// 具体房间对象在multiRooms.getRoom(roomID) 获取
+  ZegoUIKitRoomMode mode = ZegoUIKitRoomMode.SingleRoom;
+  bool isNeedDisableWakelock = false;
+
+  CurrentRoomIDQueryFuncInMultiRoomMode? currentIDQueryOfMultiRoom;
+  String get currentID {
+    final tempLoginRoomIDs = loginRoomIDs;
+    if (mode == ZegoUIKitRoomMode.SingleRoom) {
+      return tempLoginRoomIDs.isNotEmpty ? tempLoginRoomIDs.first : '';
+    }
+
+    assert(null != currentIDQueryOfMultiRoom);
+
+    /// 多房间的当前ID不可知，需要外部指定
+    return currentIDQueryOfMultiRoom?.call(tempLoginRoomIDs) ?? '';
   }
 
-  String id = '';
-
-  bool isLargeRoom = false;
-  bool markAsLargeRoom = false;
-
-  ValueNotifier<ZegoUIKitRoomState> state = ValueNotifier<ZegoUIKitRoomState>(
-    ZegoUIKitRoomState(ZegoRoomStateChangedReason.Logout, 0, {}),
+  var rooms = ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataSingleRoom>(
+    name: 'core data room',
+    createDefault: (String roomID) {
+      final room = ZegoUIKitCoreDataSingleRoom(roomID);
+      room.init();
+      return room;
+    },
+    onUpgradeEmptyRoom: (ZegoUIKitCoreDataSingleRoom emptyRoom, roomID) {
+      // 当预备房间被升级时，更新其 roomID
+      emptyRoom.id = roomID;
+      ZegoLoggerService.logInfo(
+        'empty room(${emptyRoom.hashCode}) has update id to $roomID, ',
+        tag: 'uikit-rooms',
+        subTag: 'room-map',
+      );
+    },
   );
 
-  bool roomExtraInfoHadArrived = false;
-  Map<String, RoomProperty> properties = {};
-  bool propertiesAPIRequesting = false;
-  Map<String, String> pendingProperties = {};
+  /// 缓存已登录的房间ID列表，避免频繁遍历
+  List<String> _cachedLoginRoomIDs = [];
 
-  StreamController<RoomProperty>? propertyUpdateStream;
-  StreamController<Map<String, RoomProperty>>? propertiesUpdatedStream;
-  StreamController<int>? tokenExpiredStreamCtrl;
+  /// 标记缓存是否有效
+  bool _loginRoomIDsCacheDirty = true;
 
-  void init() {
-    ZegoLoggerService.logInfo(
-      'init',
-      tag: 'uikit-service-core',
-      subTag: 'core room',
-    );
+  bool get hasLogin => loginCount > 0;
 
-    propertyUpdateStream ??= StreamController<RoomProperty>.broadcast();
-    propertiesUpdatedStream ??=
-        StreamController<Map<String, RoomProperty>>.broadcast();
-    tokenExpiredStreamCtrl ??= StreamController<int>.broadcast();
+  int get loginCount => loginRoomIDs.length;
+
+  /// 获取已登录的房间ID列表（带缓存优化）
+  List<String> get loginRoomIDs {
+    if (!_loginRoomIDsCacheDirty) {
+      return List.from(_cachedLoginRoomIDs); // 返回副本，避免外部修改
+    }
+
+    List<String> roomIDs = [];
+
+    rooms.forEachSync((roomID, room) {
+      if (room.isLogin) {
+        roomIDs.add(roomID);
+      }
+    });
+
+    _cachedLoginRoomIDs = roomIDs;
+    _loginRoomIDsCacheDirty = false;
+
+    return List.from(roomIDs); // 返回副本，避免外部修改
   }
 
-  void uninit() {
-    ZegoLoggerService.logInfo(
-      'uninit',
-      tag: 'uikit-service-core',
-      subTag: 'core room',
-    );
-
-    propertyUpdateStream?.close();
-    propertyUpdateStream = null;
-
-    propertiesUpdatedStream?.close();
-    propertiesUpdatedStream = null;
-
-    tokenExpiredStreamCtrl?.close();
-    tokenExpiredStreamCtrl = null;
+  /// 标记登录房间列表缓存为脏，下次访问时重新计算
+  void _markLoginRoomIDsCacheDirty() {
+    _loginRoomIDsCacheDirty = true;
   }
 
-  void clear() {
+  ZegoUIKitCoreData get _coreData => ZegoUIKitCore.shared.coreData;
+  ZegoUIKitCoreDataStream get _streamCommonData => _coreData.stream;
+  ZegoUIKitCoreDataUser get _userCommonData => _coreData.user;
+  ZegoUIKitCoreDataDevice get _deviceCommonData => _coreData.device;
+
+  void init({
+    ZegoUIKitRoomMode roomMode = ZegoUIKitRoomMode.SingleRoom,
+  }) {
     ZegoLoggerService.logInfo(
-      'clear',
-      tag: 'uikit-service-core',
-      subTag: 'core room',
+      'init, ',
+      tag: 'uikit-rooms',
+      subTag: 'uninit',
     );
 
-    id = '';
-
-    properties.clear();
-    propertiesAPIRequesting = false;
-    pendingProperties.clear();
+    mode = roomMode;
+    rooms.forEachSync((roomID, roomInfo) {
+      roomInfo.init();
+    });
   }
 
-  ZegoUIKitRoom toUIKitRoom() {
-    return ZegoUIKitRoom(id: id);
+  Future<void> uninit() async {
+    ZegoLoggerService.logInfo(
+      'uninit, ',
+      tag: 'uikit-rooms',
+      subTag: 'uninit',
+    );
+
+    mode = ZegoUIKitRoomMode.SingleRoom;
+    await rooms.forEachAsync((roomID, roomInfo) async {
+      await roomInfo.leave();
+      roomInfo.uninit();
+    });
+
+    // 所有房间都已退出，标记缓存失效
+    _markLoginRoomIDsCacheDirty();
+  }
+
+  void clear({
+    required String targetRoomID,
+  }) {
+    if (rooms.containsRoom(targetRoomID)) {
+      rooms.getRoom(targetRoomID).clear();
+    }
+
+    // 房间状态可能改变，标记缓存失效
+    _markLoginRoomIDsCacheDirty();
+  }
+
+  Future<ZegoRoomLoginResult> join({
+    required String targetRoomID,
+    String token = '',
+    bool markAsLargeRoom = false,
+    bool keepWakeScreen = true,
+    bool isSimulated = false,
+    bool tryReLoginIfCountExceed = false,
+  }) async {
+    ZegoLoggerService.logInfo(
+      'try join room, '
+      'mode:$mode, '
+      'target room id:"$targetRoomID", '
+      'has token:${token.isNotEmpty}, '
+      'markAsLargeRoom:$markAsLargeRoom, '
+      'network state:${ZegoUIKit().getNetworkState()}, ',
+      tag: 'uikit-rooms',
+      subTag: 'join',
+    );
+
+    if (targetRoomID.isEmpty) {
+      ZegoLoggerService.logError(
+        'target room id is empty',
+        tag: 'uikit-rooms',
+        subTag: 'join',
+      );
+
+      return ZegoRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
+    }
+
+    if (loginRoomIDs.contains(targetRoomID)) {
+      ZegoLoggerService.logInfo(
+        'already in room, ignore, '
+        'room id:$targetRoomID, '
+        'room:$rooms, ',
+        tag: 'uikit-rooms',
+        subTag: 'join',
+      );
+
+      return ZegoRoomLoginResult(ZegoUIKitErrorCode.success, {});
+    }
+
+    if (currentID.isNotEmpty && mode == ZegoRoomMode.SingleRoom) {
+      /// clear old room data
+      _coreData.clear(targetRoomID: currentID);
+
+      if (ZegoAudioVideoViewOutsideRoomID.isRandomRoomID(currentID)) {
+        ZegoLoggerService.logInfo(
+          'has join outside room, leaving first...',
+          tag: 'uikit-rooms',
+          subTag: 'join',
+        );
+
+        await leave(targetRoomID: currentID);
+      }
+    }
+
+    final hasRoomLoginBefore = hasLogin;
+
+    // 房间登录状态可能改变，标记缓存失效
+    _markLoginRoomIDsCacheDirty();
+
+    final result = await rooms.getRoom(targetRoomID).join(
+          targetRoomID: targetRoomID,
+          token: token,
+          markAsLargeRoom: markAsLargeRoom,
+          isSimulated: isSimulated,
+        );
+
+    if (ZegoUIKitExpressErrorCode.CommonSuccess == result.errorCode) {
+      enableWakeLock();
+
+      await _streamCommonData.roomStreams
+          .getRoom(targetRoomID)
+          .startPublishOrNot();
+      await _deviceCommonData.syncDeviceStatusByStreamExtraInfo();
+
+      if (isSimulated) {
+        /// at this time, express will not throw the stream event again,
+        /// and it is necessary to actively obtain
+        await _streamCommonData.roomStreams
+            .getRoom(targetRoomID)
+            .syncRoomStream();
+      }
+
+      if (!hasRoomLoginBefore) {
+        await ZegoExpressEngine.instance.startSoundLevelMonitor();
+      }
+    } else {
+      if (result.errorCode == ZegoErrorCode.RoomCountExceed) {
+        ZegoLoggerService.logInfo(
+          'room count exceed',
+          tag: 'uikit-rooms',
+          subTag: 'join room',
+        );
+
+        if (ZegoUIKitRoomMode.SingleRoom == mode) {
+          /// 单房间，退房重进
+          await leave(targetRoomID: targetRoomID);
+          return join(
+            targetRoomID: targetRoomID,
+            token: token,
+            markAsLargeRoom: markAsLargeRoom,
+            keepWakeScreen: keepWakeScreen,
+            isSimulated: isSimulated,
+            tryReLoginIfCountExceed: false,
+          );
+        }
+      }
+    }
+
+    return result;
+  }
+
+  Future<ZegoRoomLogoutResult> leave({
+    required String targetRoomID,
+  }) async {
+    ZegoLoggerService.logInfo(
+      'try leave room, '
+      'mode:$mode, '
+      'target room id:"$targetRoomID", '
+      'network state:${ZegoUIKit().getNetworkState()}, ',
+      tag: 'uikit-rooms',
+      subTag: 'leave',
+    );
+
+    clearAfterLeave() async {
+      if (hasLogin) {
+        /// 还有房间处于登录中
+      } else {
+        /// 没有任何房间登录中
+        disableWakeLock();
+
+        _userCommonData.localUser.clearRoomAttribute();
+        _streamCommonData.canvasViewCreateQueue.clear();
+
+        await ZegoExpressEngine.instance.stopSoundLevelMonitor();
+      }
+    }
+
+    if (!rooms.allRoomIDs.contains(targetRoomID)) {
+      ZegoLoggerService.logInfo(
+        'room id is not exist, not need to leave',
+        tag: 'uikit-rooms',
+        subTag: 'leave',
+      );
+
+      await clearAfterLeave();
+      return ZegoRoomLogoutResult(ZegoUIKitErrorCode.success, {});
+    }
+
+    _coreData.clear(targetRoomID: targetRoomID);
+
+    final result = await rooms.getRoom(targetRoomID).leave();
+    rooms.removeRoom(targetRoomID);
+
+    // 房间登录状态改变，标记缓存失效
+    _markLoginRoomIDsCacheDirty();
+
+    await clearAfterLeave();
+
+    return result;
+  }
+
+  Future<void> renewToken(
+    String token, {
+    required String targetRoomID,
+  }) async {
+    if (currentID.isEmpty) {
+      ZegoLoggerService.logInfo(
+        'not in room now',
+        tag: 'uikit-rooms',
+        subTag: 'renewToken',
+      );
+    }
+
+    if (token.isEmpty) {
+      ZegoLoggerService.logInfo(
+        'token is empty',
+        tag: 'uikit-rooms',
+        subTag: 'renewToken',
+      );
+    }
+
+    ZegoLoggerService.logInfo(
+      'renew now',
+      tag: 'uikit-rooms',
+      subTag: 'renewToken',
+    );
+
+    await ZegoExpressEngine.instance.renewToken(
+      targetRoomID,
+      token,
+    );
+  }
+
+  Future<void> enableWakeLock() async {
+    final originWakelockEnabled = await WakelockPlus.enabled;
+    if (originWakelockEnabled) {
+      isNeedDisableWakelock = false;
+    } else {
+      isNeedDisableWakelock = true;
+      WakelockPlus.enable();
+    }
+  }
+
+  void disableWakeLock() {
+    if (isNeedDisableWakelock) {
+      WakelockPlus.disable();
+
+      isNeedDisableWakelock = false;
+    }
   }
 }

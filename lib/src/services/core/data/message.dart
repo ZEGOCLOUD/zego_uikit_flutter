@@ -1,149 +1,119 @@
-// Dart imports:
-import 'dart:async';
-
 // Project imports:
-import 'package:zego_uikit/src/services/services.dart';
-
 import 'package:zego_uikit/src/services/core/data/room_map.dart';
+import 'package:zego_uikit/src/services/services.dart';
+import 'message.room.dart';
 
-mixin ZegoUIKitCoreDataMessage {
-  var multiRoomBroadcastMessages =
-      ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomMessageInfo>((String roomID) {
-    return ZegoUIKitCoreDataRoomMessageInfo(roomID);
-  });
-  var multiRoomBarrageMessages =
-      ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomMessageInfo>((String roomID) {
-    return ZegoUIKitCoreDataRoomMessageInfo(roomID);
-  });
+/// 多房间的消息
+/// @nodoc
+class ZegoUIKitCoreDataMessage {
+  var roomBroadcastMessages =
+      ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomMessage>(
+    name: 'core data broadcast message',
+    createDefault: (String roomID) {
+      final roomMessage = ZegoUIKitCoreDataRoomMessage(roomID);
+      roomMessage.init();
+      return roomMessage;
+    },
+    onUpgradeEmptyRoom:
+        (ZegoUIKitCoreDataRoomMessage emptyRoomMessage, roomID) {
+      // 当预备房间被升级时，更新其 roomID
+      emptyRoomMessage.roomID = roomID;
+      ZegoLoggerService.logInfo(
+        'empty room(${emptyRoomMessage.hashCode}) has update id to $roomID, ',
+        tag: 'uikit-room',
+        subTag: 'room-map',
+      );
+    },
+  );
+  var roomBarrageMessages = ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomMessage>(
+    name: 'core data barrage message',
+    createDefault: (String roomID) {
+      final roomMessage = ZegoUIKitCoreDataRoomMessage(roomID);
+      roomMessage.init();
+      return roomMessage;
+    },
+    onUpgradeEmptyRoom:
+        (ZegoUIKitCoreDataRoomMessage emptyRoomMessage, roomID) {
+      // 当预备房间被升级时，更新其 roomID
+      emptyRoomMessage.roomID = roomID;
+      ZegoLoggerService.logInfo(
+        'empty room(${emptyRoomMessage.hashCode}) has update id to $roomID, ',
+        tag: 'uikit-room',
+        subTag: 'room-map',
+      );
+    },
+  );
 
-  void initMessage() {
+  void init() {
     ZegoLoggerService.logInfo(
       'init message',
-      tag: 'uikit-message',
+      tag: 'uikit-messages',
       subTag: 'init',
     );
 
-    multiRoomBroadcastMessages.forEach((_, roomMessages) {
+    roomBroadcastMessages.forEachSync((_, roomMessages) {
       roomMessages.init();
     });
-    multiRoomBarrageMessages.forEach((_, roomMessages) {
+    roomBarrageMessages.forEachSync((_, roomMessages) {
       roomMessages.init();
     });
   }
 
-  void clearMessage({
+  void clear({
     required String targetRoomID,
   }) {
-    clearBroadcastMessage(targetRoomID: targetRoomID);
-    clearBarrageMessage(targetRoomID: targetRoomID);
+    clearBroadcast(targetRoomID: targetRoomID);
+    clearBarrage(targetRoomID: targetRoomID);
   }
 
-  void clearBroadcastMessage({
+  void clearBroadcast({
     required String targetRoomID,
   }) {
     ZegoLoggerService.logInfo(
       'clear broadcast message, '
       'room id:$targetRoomID',
-      tag: 'uikit-message',
+      tag: 'uikit-messages',
       subTag: 'uninit',
     );
 
-    multiRoomBroadcastMessages.forEach((roomID, roomMessages) {
-      if (targetRoomID == roomID) {
-        roomMessages.clear();
-      }
-    });
-    multiRoomBroadcastMessages.removeRoom(targetRoomID);
+    if (roomBroadcastMessages.containsRoom(targetRoomID)) {
+      roomBroadcastMessages.getRoom(targetRoomID).clear();
+    }
+    roomBroadcastMessages.removeRoom(targetRoomID);
   }
 
-  void clearBarrageMessage({
+  void clearBarrage({
     required String targetRoomID,
   }) {
     ZegoLoggerService.logInfo(
       'clear barrage message, '
       'room id:$targetRoomID',
-      tag: 'uikit-message',
+      tag: 'uikit-messages',
       subTag: 'uninit',
     );
 
-    multiRoomBarrageMessages.forEach((roomID, roomMessages) {
-      if (targetRoomID == roomID) {
-        roomMessages.clear();
-      }
-    });
-    multiRoomBarrageMessages.removeRoom(targetRoomID);
-  }
-
-  void uninitMessage() {
-    ZegoLoggerService.logInfo(
-      'uninit message, '
-      'room ids:${multiRoomBroadcastMessages.allRoomIDs}',
-      tag: 'uikit-message',
-      subTag: 'uninit',
-    );
-
-    multiRoomBroadcastMessages.forEach((_, roomMessages) {
-      roomMessages.uninit();
-    });
-    multiRoomBroadcastMessages.clearRooms();
-
-    multiRoomBarrageMessages.forEach((_, roomMessages) {
-      roomMessages.uninit();
-    });
-    multiRoomBarrageMessages.clearRooms();
-  }
-}
-
-class ZegoUIKitCoreDataRoomMessageInfo {
-  String roomID;
-  ZegoUIKitCoreDataRoomMessageInfo(this.roomID);
-
-  int localMessageId = 0;
-  List<ZegoInRoomMessage> messageList = []; // uid:user
-  StreamController<List<ZegoInRoomMessage>>? streamControllerMessageList;
-  StreamController<ZegoInRoomMessage>? streamControllerRemoteMessage;
-  StreamController<ZegoInRoomMessage>? streamControllerLocalMessage;
-
-  void init() {
-    ZegoLoggerService.logInfo(
-      'room id:$roomID',
-      tag: 'uikit-room-message-info',
-      subTag: 'init',
-    );
-
-    streamControllerMessageList ??=
-        StreamController<List<ZegoInRoomMessage>>.broadcast();
-    streamControllerRemoteMessage ??=
-        StreamController<ZegoInRoomMessage>.broadcast();
-    streamControllerLocalMessage ??=
-        StreamController<ZegoInRoomMessage>.broadcast();
+    if (roomBarrageMessages.containsRoom(targetRoomID)) {
+      roomBarrageMessages.getRoom(targetRoomID).clear();
+    }
+    roomBarrageMessages.removeRoom(targetRoomID);
   }
 
   void uninit() {
     ZegoLoggerService.logInfo(
-      'room id:$roomID',
-      tag: 'uikit-room-message-info',
+      'uninit message, '
+      'room ids:${roomBroadcastMessages.allRoomIDs}',
+      tag: 'uikit-messages',
       subTag: 'uninit',
     );
 
-    streamControllerMessageList?.close();
-    streamControllerMessageList = null;
+    roomBroadcastMessages.forEachSync((_, roomMessages) {
+      roomMessages.uninit();
+    });
+    roomBroadcastMessages.clearRooms();
 
-    streamControllerRemoteMessage?.close();
-    streamControllerRemoteMessage = null;
-
-    streamControllerLocalMessage?.close();
-    streamControllerLocalMessage = null;
-  }
-
-  void clear() {
-    ZegoLoggerService.logInfo(
-      'room id:$roomID',
-      tag: 'uikit-room-message-info',
-      subTag: 'clear',
-    );
-
-    messageList.clear();
-    streamControllerMessageList?.add(List<ZegoInRoomMessage>.from(messageList));
+    roomBarrageMessages.forEachSync((_, roomMessages) {
+      roomMessages.uninit();
+    });
+    roomBarrageMessages.clearRooms();
   }
 }

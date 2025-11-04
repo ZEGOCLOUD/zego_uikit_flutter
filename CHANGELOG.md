@@ -1,8 +1,13 @@
+## 3.0.0
+
+- Feature
+  - Support multi-room mode, lots of API had changed.
+
 ## 2.28.33
 
 - Features
   - Add `face detection result` callback
-
+  - 
 ## 2.28.32
 
 - Update dependency

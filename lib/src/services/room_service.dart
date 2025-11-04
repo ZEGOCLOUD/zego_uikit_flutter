@@ -1,7 +1,8 @@
 part of 'uikit_service.dart';
 
 mixin ZegoRoomService {
-  bool get isRoomLogin => ZegoUIKitCore.shared.coreData.room.id.isNotEmpty;
+  bool get isRoomLogin =>
+      ZegoUIKitCore.shared.coreData.room.currentID.isNotEmpty;
 
   /// join room
   ///
@@ -35,7 +36,7 @@ mixin ZegoRoomService {
     );
 
     if (ZegoErrorCode.CommonSuccess != joinRoomResult.errorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
+      ZegoUIKitCore.shared.coreData.error.errorStreamCtrl?.add(ZegoUIKitError(
         code: ZegoUIKitErrorCode.roomLoginError,
         message: 'login room error:${joinRoomResult.errorCode}, '
             'room id:$roomID, large room:$markAsLargeRoom, '
@@ -64,14 +65,14 @@ mixin ZegoRoomService {
     String? targetRoomID,
   }) async {
     final leavingRoomID =
-        targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId;
+        targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID;
 
     final leaveRoomResult = await ZegoUIKitCore.shared.leaveRoom(
       targetRoomID: leavingRoomID,
     );
 
     if (ZegoErrorCode.CommonSuccess != leaveRoomResult.errorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
+      ZegoUIKitCore.shared.coreData.error.errorStreamCtrl?.add(ZegoUIKitError(
         code: ZegoUIKitErrorCode.roomLeaveError,
         message: 'leave room error:${leaveRoomResult.errorCode}, '
             '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
@@ -96,9 +97,10 @@ mixin ZegoRoomService {
     String token, {
     String? targetRoomID,
   }) async {
-    await ZegoUIKitCore.shared.renewRoomToken(
+    await ZegoUIKitCore.shared.coreData.room.renewToken(
       token,
-      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+      targetRoomID:
+          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
     );
   }
 
@@ -106,9 +108,9 @@ mixin ZegoRoomService {
   ZegoUIKitRoom getRoom({
     String? targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.multiRooms
+    return ZegoUIKitCore.shared.coreData.room.rooms
         .getRoom(
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
         )
         .toUIKitRoom();
   }
@@ -117,9 +119,9 @@ mixin ZegoRoomService {
   ValueNotifier<ZegoUIKitRoomState> getRoomStateStream({
     String? targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.multiRooms
+    return ZegoUIKitCore.shared.coreData.room.rooms
         .getRoom(
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
         )
         .state;
   }
@@ -133,7 +135,8 @@ mixin ZegoRoomService {
     return ZegoUIKitCore.shared.setRoomProperty(
       key,
       value,
-      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+      targetRoomID:
+          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
     );
   }
 
@@ -144,7 +147,8 @@ mixin ZegoRoomService {
   }) async {
     return ZegoUIKitCore.shared.updateRoomProperties(
       Map<String, String>.from(properties),
-      targetRoomID: targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+      targetRoomID:
+          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
     );
   }
 
@@ -153,9 +157,9 @@ mixin ZegoRoomService {
     String? targetRoomID,
   }) {
     return Map<String, RoomProperty>.from(
-        ZegoUIKitCore.shared.coreData.multiRooms
+        ZegoUIKitCore.shared.coreData.room.rooms
             .getRoom(
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
             )
             .properties);
   }
@@ -165,9 +169,9 @@ mixin ZegoRoomService {
   Stream<RoomProperty> getRoomPropertyStream({
     String? targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.multiRooms
+    return ZegoUIKitCore.shared.coreData.room.rooms
             .getRoom(
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
             )
             .propertyUpdateStream
             ?.stream ??
@@ -178,9 +182,9 @@ mixin ZegoRoomService {
   Stream<int> getRoomTokenExpiredStream({
     String? targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.multiRooms
+    return ZegoUIKitCore.shared.coreData.room.rooms
             .getRoom(
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
             )
             .tokenExpiredStreamCtrl
             ?.stream ??
@@ -192,9 +196,9 @@ mixin ZegoRoomService {
   Stream<Map<String, RoomProperty>> getRoomPropertiesStream({
     String? targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.multiRooms
+    return ZegoUIKitCore.shared.coreData.room.rooms
             .getRoom(
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.currentRoomId,
+              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
             )
             .propertiesUpdatedStream
             ?.stream ??

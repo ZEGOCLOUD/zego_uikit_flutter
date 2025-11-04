@@ -1,8 +1,11 @@
-import 'package:zego_express_engine/zego_express_engine.dart';
+// Package imports:
+
+// Project imports:
+import 'package:zego_uikit/src/services/defines/express.dart';
 
 class ZegoUIKitRoomState {
   ///  Room state change reason.
-  ZegoRoomStateChangedReason reason;
+  ZegoUIKitSRoomStateChangedReason reason;
 
   /// Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
   int errorCode;

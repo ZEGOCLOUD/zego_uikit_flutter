@@ -106,3 +106,17 @@ extension ZegoMixerStartResultExtesion on ZegoMixerStartResult {
         '}';
   }
 }
+
+extension ZegoCDNConfigExtension on ZegoCDNConfig {
+  String toStringX() {
+    return 'ZegoCDNConfig{'
+        'url:$url, '
+        'authParam:$authParam, '
+        'protocol:$protocol, '
+        'quicVersion:$quicVersion, '
+        'httpdns:$httpdns, '
+        'quicConnectMode:$quicConnectMode, '
+        'customParams:$customParams, '
+        '}';
+  }
+}

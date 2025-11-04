@@ -9,11 +9,10 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
-import 'package:zego_uikit/src/services/services.dart';
-import 'package:zego_uikit/src/services/defines/device/device.dart';
-
-import 'package:zego_uikit/src/services/core/defines/user_attributes.dart';
 import 'package:zego_uikit/src/services/core/defines/user.dart';
+import 'package:zego_uikit/src/services/core/defines/user_attributes.dart';
+import 'package:zego_uikit/src/services/defines/device/device.dart';
+import 'package:zego_uikit/src/services/services.dart';
 
 extension ZegoUIKitUserList on List<ZegoUIKitUser> {
   String get ids => map((e) => e.id).toString();
@@ -85,9 +84,15 @@ class ZegoUIKitUser {
         );
 
   ZegoUIKitCoreUser get _tryGetUser {
-    final user = ZegoUIKitCore.shared.coreData.getUser(id);
+    final user = ZegoUIKitCore.shared.coreData.user.getUser(
+      id,
+      targetRoomID: ZegoUIKitCore.shared.coreData.room.currentID,
+    );
     if (user.isEmpty) {
-      final mixerUser = ZegoUIKitCore.shared.coreData.getUserInMixerStream(id);
+      final mixerUser = ZegoUIKitCore.shared.coreData.user.getUserInMixerStream(
+        id,
+        targetRoomID: ZegoUIKitCore.shared.coreData.room.currentID,
+      );
       return mixerUser.isEmpty ? user : mixerUser;
     }
 

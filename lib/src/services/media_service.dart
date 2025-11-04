@@ -16,14 +16,14 @@ mixin ZegoMediaService {
     bool autoStart = true,
   }) async {
     final playResult = await ZegoUIKitCore.shared.playMedia(
-      targetRoomID: ZegoUIKitCore.shared.coreData.currentRoomId,
+      targetRoomID: ZegoUIKitCore.shared.coreData.room.currentID,
       filePathOrURL: filePathOrURL,
       enableRepeat: enableRepeat,
       autoStart: autoStart,
     );
 
     if (ZegoUIKitErrorCode.success != playResult.errorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
+      ZegoUIKitCore.shared.coreData.error.errorStreamCtrl?.add(ZegoUIKitError(
         code: ZegoUIKitErrorCode.mediaPlayError,
         message: playResult.message,
         method: 'playMedia',
@@ -41,7 +41,7 @@ mixin ZegoMediaService {
   /// Stop playing.
   Future<void> stopMedia() async {
     return ZegoUIKitCore.shared.stopMedia(
-      targetRoomID: ZegoUIKitCore.shared.coreData.currentRoomId,
+      targetRoomID: ZegoUIKitCore.shared.coreData.room.currentID,
     );
   }
 
@@ -58,7 +58,7 @@ mixin ZegoMediaService {
   /// Destroy current media
   Future<void> destroyMedia() async {
     return ZegoUIKitCore.shared.destroyMedia(
-      targetRoomID: ZegoUIKitCore.shared.coreData.currentRoomId,
+      targetRoomID: ZegoUIKitCore.shared.coreData.room.currentID,
     );
   }
 
@@ -69,7 +69,7 @@ mixin ZegoMediaService {
     final seekResult = await ZegoUIKitCore.shared.mediaSeekTo(millisecond);
 
     if (ZegoErrorCode.CommonSuccess != seekResult.errorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
+      ZegoUIKitCore.shared.coreData.error.errorStreamCtrl?.add(ZegoUIKitError(
         code: ZegoUIKitErrorCode.mediaSeekError,
         message: 'seek result:${seekResult.errorCode}',
         method: 'seekTo',

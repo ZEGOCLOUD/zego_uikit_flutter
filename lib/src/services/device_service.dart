@@ -2,16 +2,26 @@ part of 'uikit_service.dart';
 
 mixin ZegoDeviceService {
   /// protocol: String is 'operator'
-  Stream<String> getTurnOnYourCameraRequestStream() {
-    return ZegoUIKitCore
-            .shared.coreData.turnOnYourCameraRequestStreamCtrl?.stream ??
+  Stream<String> getTurnOnYourCameraRequestStream({
+    String? targetRoomID,
+  }) {
+    final targetRoomStringInfo =
+        ZegoUIKitCore.shared.coreData.stream.roomStreams.getRoom(
+      targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+    );
+    return targetRoomStringInfo.turnOnYourCameraRequestStreamCtrl?.stream ??
         const Stream.empty();
   }
 
   Stream<ZegoUIKitReceiveTurnOnLocalMicrophoneEvent>
-      getTurnOnYourMicrophoneRequestStream() {
-    return ZegoUIKitCore
-            .shared.coreData.turnOnYourMicrophoneRequestStreamCtrl?.stream ??
+      getTurnOnYourMicrophoneRequestStream({
+    String? targetRoomID,
+  }) {
+    final targetRoomStringInfo =
+        ZegoUIKitCore.shared.coreData.stream.roomStreams.getRoom(
+      targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+    );
+    return targetRoomStringInfo.turnOnYourMicrophoneRequestStreamCtrl?.stream ??
         const Stream.empty();
   }
 
@@ -25,13 +35,14 @@ mixin ZegoDeviceService {
     if (parsedByFlutter.isEmpty) {
       if (Platform.isAndroid) {
         final parsedVersion = _parseMobileSystemVersion(
-          ZegoUIKitCore.shared.device.androidDeviceInfo?.version.incremental ??
+          ZegoUIKitCore.shared.coreData.device.androidDeviceInfo?.version
+                  .incremental ??
               '',
         );
         if (parsedVersion.isEmpty) {
           return ZegoMobileSystemVersion(
-            major: int.tryParse(ZegoUIKitCore
-                        .shared.device.androidDeviceInfo?.version.release ??
+            major: int.tryParse(ZegoUIKitCore.shared.coreData.device
+                        .androidDeviceInfo?.version.release ??
                     '') ??
                 0,
             minor: 0,

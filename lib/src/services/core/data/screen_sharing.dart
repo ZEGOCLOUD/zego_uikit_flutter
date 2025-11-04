@@ -12,10 +12,9 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
-
 import '../defines/defines.dart';
 
-mixin ZegoUIKitCoreDataScreenSharing {
+class ZegoUIKitCoreDataScreenSharing {
   StreamController<List<ZegoUIKitCoreUser>>? screenSharingListStreamCtrl;
 
   ZegoScreenCaptureSource? screenCaptureSource;
@@ -23,7 +22,7 @@ mixin ZegoUIKitCoreDataScreenSharing {
   ValueNotifier<bool> isScreenSharingQualityNormal = ValueNotifier(false);
   bool isFirstScreenSharing = true;
 
-  void initScreenSharing() {
+  void init() {
     ZegoLoggerService.logInfo(
       'init screen sharing',
       tag: 'uikit-screen-sharing',
@@ -34,7 +33,7 @@ mixin ZegoUIKitCoreDataScreenSharing {
         StreamController<List<ZegoUIKitCoreUser>>.broadcast();
   }
 
-  void uninitScreenSharing() {
+  void uninit() {
     ZegoLoggerService.logInfo(
       'uninit screen sharing',
       tag: 'uikit-screen-sharing',
@@ -60,7 +59,7 @@ mixin ZegoUIKitCoreDataScreenSharing {
 
     isScreenSharingQualityNormal.value = false;
     isScreenSharing.value = true;
-    await ZegoUIKitCore.shared.coreData.multiRoomStreams
+    await ZegoUIKitCore.shared.coreData.stream.roomStreams
         .getRoom(targetRoomID)
         .startPublishingStream(streamType: ZegoStreamType.screenSharing);
     final config = ZegoScreenCaptureConfig(
@@ -104,7 +103,7 @@ mixin ZegoUIKitCoreDataScreenSharing {
     isScreenSharingQualityNormal.value = false;
     isScreenSharing.value = false;
 
-    await ZegoUIKitCore.shared.coreData.multiRoomStreams
+    await ZegoUIKitCore.shared.coreData.stream.roomStreams
         .getRoom(targetRoomID)
         .stopPublishingStream(streamType: ZegoStreamType.screenSharing);
 

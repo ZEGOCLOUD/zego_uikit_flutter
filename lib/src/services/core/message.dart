@@ -15,7 +15,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
   void clear({
     required String targetRoomID,
   }) {
-    coreData.clearMessage(targetRoomID: targetRoomID);
+    coreData.message.clear(targetRoomID: targetRoomID);
   }
 
   Future<int> sendBarrageMessage(
@@ -24,7 +24,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
   }) async {
     return _sendMessage(
       message,
-      coreData.multiRoomBarrageMessages.getRoom(targetRoomID),
+      coreData.message.roomBarrageMessages.getRoom(targetRoomID),
       ZegoInRoomMessageType.barrageMessage,
       targetRoomID: targetRoomID,
     );
@@ -37,7 +37,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
   }) async {
     return _sendMessage(
       message,
-      coreData.multiRoomBroadcastMessages.getRoom(targetRoomID),
+      coreData.message.roomBroadcastMessages.getRoom(targetRoomID),
       ZegoInRoomMessageType.broadcastMessage,
       targetRoomID: targetRoomID,
     );
@@ -45,7 +45,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
 
   Future<int> _sendMessage(
     String message,
-    ZegoUIKitCoreDataRoomMessageInfo roomMessageInfo,
+    ZegoUIKitCoreDataRoomMessage roomMessageInfo,
     ZegoInRoomMessageType type, {
     required String targetRoomID,
   }) async {
@@ -58,9 +58,9 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
 
     final messageItem = ZegoInRoomMessage(
       messageID: roomMessageInfo.localMessageId.toString(),
-      user: coreData.localUser.toZegoUikitUser(),
+      user: coreData.user.localUser.toZegoUikitUser(),
       message: message,
-      timestamp: coreData.networkDateTime_.millisecondsSinceEpoch,
+      timestamp: coreData.timestamp.now.millisecondsSinceEpoch,
     );
     messageItem.state.value = ZegoInRoomMessageState.idle;
 
@@ -129,7 +129,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
   }) async {
     switch (type) {
       case ZegoInRoomMessageType.broadcastMessage:
-        coreData.multiRoomBroadcastMessages
+        coreData.message.roomBroadcastMessages
             .getRoom(targetRoomID)
             .messageList
             .removeWhere(
@@ -141,7 +141,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
           targetRoomID: targetRoomID,
         );
       case ZegoInRoomMessageType.barrageMessage:
-        coreData.multiRoomBarrageMessages
+        coreData.message.roomBarrageMessages
             .getRoom(targetRoomID)
             .messageList
             .removeWhere(
@@ -170,7 +170,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
       true,
       roomID,
       _messageList,
-      coreData.multiRoomBroadcastMessages.getRoom(roomID),
+      coreData.message.roomBroadcastMessages.getRoom(roomID),
     );
   }
 
@@ -189,7 +189,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
       false,
       roomID,
       _messageList,
-      coreData.multiRoomBarrageMessages.getRoom(roomID),
+      coreData.message.roomBarrageMessages.getRoom(roomID),
     );
   }
 
@@ -197,7 +197,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
     bool localCache,
     String roomID,
     List<ZegoInRoomMessage> messageList,
-    ZegoUIKitCoreDataRoomMessageInfo messageInfo,
+    ZegoUIKitCoreDataRoomMessage messageInfo,
   ) {
     debugPrint('on im recv message, '
         'room id:$roomID, '

@@ -11,10 +11,10 @@ import 'package:visibility_detector/visibility_detector.dart';
 // Project imports:
 import 'package:zego_uikit/src/components/components.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
-import 'package:zego_uikit/src/modules/outside_room_audio_video/style.dart';
 import 'package:zego_uikit/src/modules/outside_room_audio_video/config.dart';
 import 'package:zego_uikit/src/modules/outside_room_audio_video/controller.dart';
 import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';
+import 'package:zego_uikit/src/modules/outside_room_audio_video/style.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 /// display user audio and video information without join room(live/conference),
