@@ -2,11 +2,11 @@
 import 'package:zego_uikit/src/services/services.dart';
 
 /// stream information to pull
-class ZegoOutsideRoomAudioVideoViewStreamUser {
+class ZegoUIKitHallRoomListStreamUser {
   ZegoUIKitUser user;
   String roomID;
 
-  ZegoOutsideRoomAudioVideoViewStreamUser({
+  ZegoUIKitHallRoomListStreamUser({
     required this.user,
     required this.roomID,
   });

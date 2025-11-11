@@ -9,15 +9,17 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/services/core/data/data.dart';
-import 'package:zego_uikit/src/services/core/data/device.dart';
-import 'package:zego_uikit/src/services/core/data/room_map.dart';
-import 'package:zego_uikit/src/services/core/data/stream.dart';
-import 'package:zego_uikit/src/services/core/data/user.dart';
 import 'package:zego_uikit/src/services/services.dart';
-import '../../../modules/outside_room_audio_video/internal.dart';
-import '../core.dart';
+import 'package:zego_uikit/src/modules/hall_room/internal.dart';
+import 'package:zego_uikit/src/services/core/core.dart';
+import 'package:zego_uikit/src/services/core/defines/room.dart';
+
 import 'room.single.dart';
+import 'data.dart';
+import 'device.dart';
+import 'room_map.dart';
+import 'stream.dart';
+import 'user.dart';
 
 /// 多房间的房间信息
 /// @nodoc
@@ -39,6 +41,9 @@ class ZegoUIKitCoreDataRoom {
     return currentIDQueryOfMultiRoom?.call(tempLoginRoomIDs) ?? '';
   }
 
+  final roomsStateNotifier = ValueNotifier<ZegoUIKitRoomsState>(
+    ZegoUIKitRoomsState(),
+  );
   var rooms = ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataSingleRoom>(
     name: 'core data room',
     createDefault: (String roomID) {
@@ -185,7 +190,7 @@ class ZegoUIKitCoreDataRoom {
       /// clear old room data
       _coreData.clear(targetRoomID: currentID);
 
-      if (ZegoAudioVideoViewOutsideRoomID.isRandomRoomID(currentID)) {
+      if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(currentID)) {
         ZegoLoggerService.logInfo(
           'has join outside room, leaving first...',
           tag: 'uikit-rooms',
@@ -333,6 +338,15 @@ class ZegoUIKitCoreDataRoom {
       targetRoomID,
       token,
     );
+  }
+
+  void syncRoomsState() {
+    Map<String, ZegoUIKitRoomState> roomsState = {};
+    rooms.forEachSync((roomID, room) {
+      roomsState[roomID] = room.state.value;
+    });
+
+    roomsStateNotifier.value.states = roomsState;
   }
 
   Future<void> enableWakeLock() async {

@@ -9,21 +9,21 @@ import 'package:flutter/foundation.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/modules/outside_room_audio_video/config.dart';
-import 'package:zego_uikit/src/modules/outside_room_audio_video/controller.event.dart';
-import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';
+import 'package:zego_uikit/src/modules/hall_room/config.dart';
+import 'package:zego_uikit/src/modules/hall_room/controller.event.dart';
+import 'package:zego_uikit/src/modules/hall_room/internal.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 /// @nodoc
-class ZegoOutsideRoomAudioVideoViewControllerPrivate {
+class ZegoUIKitHallRoomListControllerPrivate {
   String get roomID {
-    _tempRoomID ??= ZegoAudioVideoViewOutsideRoomID.randomRoomID();
+    _tempRoomID ??= ZegoUIKitHallRoomIDHelper.randomRoomID();
     return _tempRoomID!;
   }
 
   ZegoUIKitUser get localUser {
-    final tempUserID = ZegoAudioVideoViewOutsideRoomID.randomUserID();
+    final tempUserID = ZegoUIKitHallRoomIDHelper.randomUserID();
     _tempUser ??= ZegoUIKitUser(
       id: tempUserID,
       name: tempUserID,
@@ -36,10 +36,9 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
   final sdkInitNotifier = ValueNotifier<bool>(false);
   final roomLoginNotifier = ValueNotifier<bool>(false);
 
-  List<ZegoOutsideRoomAudioVideoViewStream> previousStreams = [];
-  final streamsNotifier =
-      ValueNotifier<List<ZegoOutsideRoomAudioVideoViewStream>>([]);
-  final event = ZegoOutsideRoomAudioVideoViewExpressEvent();
+  List<ZegoUIKitHallRoomListStream> previousStreams = [];
+  final streamsNotifier = ValueNotifier<List<ZegoUIKitHallRoomListStream>>([]);
+  final event = ZegoUIKitHallRoomExpressEvent();
 
   String? _tempRoomID;
   ZegoUIKitUser? _tempUser;
@@ -48,8 +47,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
   String _appSign = '';
   String _token = '';
   ZegoScenario _scenario = ZegoScenario.Default;
-  ZegoOutsideRoomAudioVideoViewListConfig _config =
-      const ZegoOutsideRoomAudioVideoViewListConfig();
+  ZegoUIKitHallRoomListConfig _config = const ZegoUIKitHallRoomListConfig();
 
   Future<bool> init() async {
     return initSDK().then((_) async {
@@ -90,7 +88,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
     required String appSign,
     required String token,
     required ZegoScenario scenario,
-    required ZegoOutsideRoomAudioVideoViewListConfig config,
+    required ZegoUIKitHallRoomListConfig config,
   }) {
     _appID = appID;
     _appSign = appSign;
@@ -122,7 +120,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
     if (ZegoUIKitCore.shared.isInit) {
       ZegoLoggerService.logInfo(
         'has already init',
-        tag: 'outside room audio video controller.p',
+        tag: 'hall controller',
         subTag: 'initSDK',
       );
 
@@ -135,7 +133,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'outside room audio video controller.p',
+      tag: 'hall controller',
       subTag: 'initSDK',
     );
 
@@ -150,7 +148,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
         .then((value) async {
       ZegoLoggerService.logInfo(
         'init done',
-        tag: 'outside room audio video controller.p',
+        tag: 'hall controller',
         subTag: 'initSDK',
       );
 
@@ -174,18 +172,17 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
     if (!ZegoUIKitCore.shared.isInit) {
       ZegoLoggerService.logInfo(
         'has already init sdk',
-        tag: 'outside room audio video controller.p',
+        tag: 'hall controller',
         subTag: 'joinRoom',
       );
 
       return false;
     }
 
-    if (ZegoUIKit().isRoomLogin &&
-        roomID == ZegoUIKitCore.shared.coreData.room.currentID) {
+    if (ZegoUIKit().getRoom(targetRoomID: roomID).isLogin) {
       ZegoLoggerService.logInfo(
         'has already login',
-        tag: 'outside room audio video controller.p',
+        tag: 'hall controller',
         subTag: 'joinRoom',
       );
 
@@ -194,13 +191,13 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
 
     ZegoLoggerService.logInfo(
       'try join room($roomID) with a temp user $localUser',
-      tag: 'outside room audio video controller.p',
+      tag: 'hall controller',
       subTag: 'joinRoom',
     );
     return ZegoUIKit().joinRoom(roomID, token: _token).then((result) {
       ZegoLoggerService.logInfo(
         'join room result:${result.errorCode} ${result.extendedData}',
-        tag: 'outside room audio video controller.p',
+        tag: 'hall controller',
         subTag: 'loginRoom',
       );
 
@@ -213,14 +210,14 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
   Future<bool> leaveRoom() async {
     ZegoLoggerService.logInfo(
       'try leave room $roomID',
-      tag: 'outside room audio video controller.p',
+      tag: 'hall controller',
       subTag: 'leaveRoom',
     );
 
-    if (ZegoUIKitCore.shared.coreData.room.currentID != roomID) {
+    if (!ZegoUIKit().getRoom(targetRoomID: roomID).isLogin) {
       ZegoLoggerService.logInfo(
-        'is not current room, now is ${ZegoUIKitCore.shared.coreData.room.currentID}',
-        tag: 'outside room audio video controller.p',
+        'room is not login room',
+        tag: 'hall controller',
         subTag: 'leaveRoom',
       );
 
@@ -228,10 +225,12 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       return true;
     }
 
-    return ZegoUIKit().leaveRoom().then((ZegoRoomLogoutResult result) {
+    return ZegoUIKit()
+        .leaveRoom(targetRoomID: roomID)
+        .then((ZegoRoomLogoutResult result) {
       ZegoLoggerService.logInfo(
         'leave room result:$result',
-        tag: 'outside room audio video controller.p',
+        tag: 'hall controller',
         subTag: 'leaveRoom',
       );
 
@@ -244,17 +243,17 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
     if (!ZegoUIKitCore.shared.isInit) {
       ZegoLoggerService.logInfo(
         'has not init sdk',
-        tag: 'outside room audio video controller.p',
+        tag: 'hall controller',
         subTag: isPlay ? 'startPlayAll' : 'stopPlayAll',
       );
 
       return false;
     }
 
-    if (!ZegoUIKit().isRoomLogin) {
+    if (!ZegoUIKit().getRoom(targetRoomID: roomID).isLogin) {
       ZegoLoggerService.logInfo(
         'has not login room',
-        tag: 'outside room audio video controller.p',
+        tag: 'hall controller',
         subTag: isPlay ? 'startPlayAll' : 'stopPlayAll',
       );
 
@@ -265,7 +264,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       if (isPlay && streamInfo.isPlaying) {
         ZegoLoggerService.logInfo(
           '${streamInfo.targetStreamID} is playing',
-          tag: 'outside room audio video controller.p',
+          tag: 'hall controller',
           subTag: isPlay ? 'startPlayAll' : 'stopPlayAll',
         );
 
@@ -273,7 +272,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       } else if (!isPlay && !streamInfo.isPlaying) {
         ZegoLoggerService.logInfo(
           '${streamInfo.targetStreamID} is not playing',
-          tag: 'outside room audio video controller.p',
+          tag: 'hall controller',
           subTag: isPlay ? 'startPlayAll' : 'stopPlayAll',
         );
 
@@ -282,7 +281,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
 
       ZegoLoggerService.logInfo(
         'stream id:${streamInfo.targetStreamID}',
-        tag: 'outside room audio video controller.p',
+        tag: 'hall controller',
         subTag: isPlay ? 'startPlayAll' : 'stopPlayAll',
       );
 
@@ -311,7 +310,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       if (withLog) {
         ZegoLoggerService.logInfo(
           'has not init sdk',
-          tag: 'outside room audio video controller.p',
+          tag: 'hall controller',
           subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
         );
       }
@@ -319,11 +318,11 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       return false;
     }
 
-    if (!ZegoUIKit().isRoomLogin) {
+    if (!ZegoUIKit().getRoom(targetRoomID: roomID).isLogin) {
       if (withLog) {
         ZegoLoggerService.logInfo(
           'has not login room',
-          tag: 'outside room audio video controller.p',
+          tag: 'hall controller',
           subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
         );
       }
@@ -337,7 +336,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       if (withLog) {
         ZegoLoggerService.logInfo(
           'user not exist',
-          tag: 'outside room audio video controller.p',
+          tag: 'hall controller',
           subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
         );
       }
@@ -351,7 +350,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       if (withLog) {
         ZegoLoggerService.logInfo(
           '${streamInfo.targetStreamID} is playing',
-          tag: 'outside room audio video controller.p',
+          tag: 'hall controller',
           subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
         );
       }
@@ -361,7 +360,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       if (withLog) {
         ZegoLoggerService.logInfo(
           '${streamInfo.targetStreamID} is not playing',
-          tag: 'outside room audio video controller.p',
+          tag: 'hall controller',
           subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
         );
       }
@@ -371,7 +370,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
 
     ZegoLoggerService.logInfo(
       'stream id:${streamInfo.targetStreamID}',
-      tag: 'outside room audio video controller.p',
+      tag: 'hall controller',
       subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
     );
 
@@ -404,12 +403,11 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
     }
     onStreamVisibleStateUpdate();
     previousStreams =
-        List<ZegoOutsideRoomAudioVideoViewStream>.from(streamsNotifier.value);
+        List<ZegoUIKitHallRoomListStream>.from(streamsNotifier.value);
   }
 
   Future<void> onStreamVisibleStateUpdate() async {
-    if (ZegoOutsideRoomAudioVideoViewListPlayMode.autoPlay ==
-        _config.playMode) {
+    if (ZegoUIKitHallRoomListPlayMode.autoPlay == _config.playMode) {
       for (final stream in streamsNotifier.value) {
         await playOne(
           user: stream.user,

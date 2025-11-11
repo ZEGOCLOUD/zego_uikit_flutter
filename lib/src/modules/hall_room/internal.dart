@@ -5,20 +5,19 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/modules/outside_room_audio_video/defines.dart';
+import 'package:zego_uikit/src/modules/hall_room/defines.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import '../../services/core/defines/defines.dart';
 
-class ZegoOutsideRoomAudioVideoViewStream
-    extends ZegoOutsideRoomAudioVideoViewStreamUser {
+class ZegoUIKitHallRoomListStream extends ZegoUIKitHallRoomListStreamUser {
   /// stream is playing or not
   bool isPlaying = false;
 
   /// view can visible or not
   final isVisibleNotifier = ValueNotifier<bool>(false);
 
-  ZegoOutsideRoomAudioVideoViewStream({
+  ZegoUIKitHallRoomListStream({
     required ZegoUIKitUser user,
     required String roomID,
   }) : super(user: user, roomID: roomID);
@@ -36,7 +35,8 @@ class ZegoOutsideRoomAudioVideoViewStream
   }
 }
 
-class ZegoAudioVideoViewOutsideRoomID {
+/// room hall
+class ZegoUIKitHallRoomIDHelper {
   static bool isRandomUserID(String userID) {
     RegExp regex = RegExp(r'^zg_t_u_[a-zA-Z0-9]{5}$');
     return regex.hasMatch(userID);

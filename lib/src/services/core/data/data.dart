@@ -14,6 +14,7 @@ import 'package:zego_uikit/src/services/core/data/engine.dart';
 import 'package:zego_uikit/src/services/core/data/error.dart';
 import 'package:zego_uikit/src/services/core/data/media.dart';
 import 'package:zego_uikit/src/services/core/data/message.dart';
+import 'package:zego_uikit/src/services/core/data/room.dart';
 import 'package:zego_uikit/src/services/core/data/screen_sharing.dart';
 import 'package:zego_uikit/src/services/core/data/stream.dart';
 import 'package:zego_uikit/src/services/core/data/stream.helper.dart';

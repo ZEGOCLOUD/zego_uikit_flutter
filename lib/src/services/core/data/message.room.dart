@@ -2,8 +2,9 @@
 import 'dart:async';
 
 // Project imports:
-import 'package:zego_uikit/src/services/core/data/room_map.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
+import 'room_map.dart';
 
 /// 单个房间的消息
 class ZegoUIKitCoreDataRoomMessage {
@@ -18,6 +19,7 @@ class ZegoUIKitCoreDataRoomMessage {
 
   void init() {
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'room id:$roomID',
       tag: 'uikit-messages-room',
       subTag: 'init',
@@ -33,6 +35,7 @@ class ZegoUIKitCoreDataRoomMessage {
 
   void uninit() {
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'room id:$roomID',
       tag: 'uikit-messages-room',
       subTag: 'uninit',
@@ -50,6 +53,7 @@ class ZegoUIKitCoreDataRoomMessage {
 
   void clear() {
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'room id:$roomID',
       tag: 'uikit-messages-room',
       subTag: 'clear',

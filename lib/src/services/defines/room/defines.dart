@@ -13,13 +13,25 @@ class ZegoUIKitRoomStatusResult {
 
 class ZegoUIKitRoom {
   String id = '';
+  bool isLogin = false;
 
-  ZegoUIKitRoom({required this.id});
+  ZegoUIKitRoom({
+    required this.id,
+    required this.isLogin,
+  });
+
+  static ZegoUIKitRoom empty() {
+    return ZegoUIKitRoom(
+      id: '',
+      isLogin: false,
+    );
+  }
 
   @override
   String toString() {
     return 'ZegoUIKitRoom:{'
         'id:$id, '
+        'isLogin:$isLogin, '
         '}';
   }
 }

@@ -15,7 +15,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';
+import 'package:zego_uikit/src/modules/hall_room/internal.dart';
 import 'package:zego_uikit/src/services/core/data/data.dart';
 import 'package:zego_uikit/src/services/core/data/message.room.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';

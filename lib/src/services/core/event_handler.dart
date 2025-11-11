@@ -846,6 +846,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       errorCode,
       extendedData,
     );
+    coreData.room.syncRoomsState();
 
     if (reason == ZegoRoomStateChangedReason.KickOut) {
       ZegoLoggerService.logInfo(
@@ -878,6 +879,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     List<ZegoRoomExtraInfo> roomExtraInfoList,
   ) {
     final targetRoomInfo = coreData.room.rooms.getRoom(roomID);
+    final testHashCode = targetRoomInfo.hashCode;
 
     targetRoomInfo.roomExtraInfoHadArrived = true;
 

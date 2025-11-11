@@ -8,9 +8,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/services/core/data/user.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import '../core.dart';
+
+import 'user.dart';
 
 /// 单房间的房间信息
 /// @nodoc
@@ -58,6 +59,7 @@ class ZegoUIKitCoreDataSingleRoom {
 
   void init() {
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'room id:$id, ',
       tag: 'uikit-rooms-room',
       subTag: 'init',
@@ -71,6 +73,7 @@ class ZegoUIKitCoreDataSingleRoom {
 
   void uninit() {
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'room id:$id, ',
       tag: 'uikit-rooms-room',
       subTag: 'uninit',
@@ -88,6 +91,7 @@ class ZegoUIKitCoreDataSingleRoom {
 
   void clear() {
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'room id:$id, ',
       tag: 'uikit-rooms-room',
       subTag: 'clear',
@@ -107,6 +111,7 @@ class ZegoUIKitCoreDataSingleRoom {
     this.markAsLargeRoom = markAsLargeRoom;
 
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'joining, '
       'room id:"$id", '
       'markAsLargeRoom:$markAsLargeRoom, '
@@ -127,6 +132,7 @@ class ZegoUIKitCoreDataSingleRoom {
       config: ZegoRoomConfig(0, true, token),
     );
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'result:${result.errorCode},'
       'extendedData:${result.extendedData}',
       tag: 'uikit-rooms-room',
@@ -138,6 +144,7 @@ class ZegoUIKitCoreDataSingleRoom {
 
   Future<ZegoRoomLogoutResult> leave() async {
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'leaving, '
       'room id:"$id", ',
       tag: 'uikit-rooms-room',
@@ -146,6 +153,7 @@ class ZegoUIKitCoreDataSingleRoom {
 
     final result = await ZegoExpressEngine.instance.logoutRoom(id);
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'result:${result.errorCode},'
       'extendedData:${result.extendedData}',
       tag: 'uikit-rooms-room',
@@ -154,12 +162,17 @@ class ZegoUIKitCoreDataSingleRoom {
 
     if (result.errorCode == ZegoUIKitExpressErrorCode.CommonSuccess) {
       state.value.reason = ZegoUIKitSRoomStateChangedReason.Logout;
+    } else {
+      state.value.reason = ZegoUIKitSRoomStateChangedReason.LogoutFailed;
     }
 
     return result;
   }
 
   ZegoUIKitRoom toUIKitRoom() {
-    return ZegoUIKitRoom(id: id);
+    return ZegoUIKitRoom(
+      id: id,
+      isLogin: isLogin,
+    );
   }
 }

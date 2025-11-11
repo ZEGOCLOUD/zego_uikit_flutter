@@ -6,7 +6,7 @@ import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 /// view style
-class ZegoOutsideRoomAudioVideoViewListStyle {
+class ZegoUIKitHallRoomListStyle {
   /// scroll direction, default is horizontal
   final Axis scrollDirection;
 
@@ -36,9 +36,9 @@ class ZegoOutsideRoomAudioVideoViewListStyle {
   final Widget? Function(BuildContext context)? loadingBuilder;
 
   ///  item style
-  final ZegoOutsideRoomAudioVideoViewListItemStyle item;
+  final ZegoUIKitHallRoomListItemStyle item;
 
-  const ZegoOutsideRoomAudioVideoViewListStyle({
+  const ZegoUIKitHallRoomListStyle({
     this.scrollDirection = Axis.horizontal,
     this.borderRadius = 0,
     this.borderColor = Colors.transparent,
@@ -48,12 +48,12 @@ class ZegoOutsideRoomAudioVideoViewListStyle {
     this.loadingBuilder,
     this.scrollAxisCount = 1,
     this.itemAspectRatio = 16 / 9.0,
-    this.item = const ZegoOutsideRoomAudioVideoViewListItemStyle(),
+    this.item = const ZegoUIKitHallRoomListItemStyle(),
   });
 }
 
 /// item style
-class ZegoOutsideRoomAudioVideoViewListItemStyle {
+class ZegoUIKitHallRoomListItemStyle {
   /// Video view mode.
   ///
   /// Set it to true if you want the video view to scale proportionally to fill the entire view, potentially resulting in partial cropping.
@@ -103,7 +103,7 @@ class ZegoOutsideRoomAudioVideoViewListItemStyle {
   /// custom avatar
   final ZegoAvatarConfig? avatar;
 
-  const ZegoOutsideRoomAudioVideoViewListItemStyle({
+  const ZegoUIKitHallRoomListItemStyle({
     this.useVideoViewAspectFill = true,
     this.sizeAspectRatio = 16 / 9,
     this.backgroundBuilder,

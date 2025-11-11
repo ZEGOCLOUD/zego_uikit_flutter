@@ -14,6 +14,7 @@ import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/channel/platform_interface.dart';
+import 'package:zego_uikit/src/modules/hall_room/internal.dart';
 import 'package:zego_uikit/src/plugins/beauty/uikit_beauty_plugin_impl.dart';
 import 'package:zego_uikit/src/plugins/plugins.dart';
 import 'package:zego_uikit/src/plugins/signaling/impl/core/core.dart';
@@ -21,6 +22,8 @@ import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/defines/defines.dart';
 import 'package:zego_uikit/src/services/log_exporter/logs_share_manager.dart';
+
+import 'core/defines/room.dart';
 
 part 'audio_video_service.dart';
 

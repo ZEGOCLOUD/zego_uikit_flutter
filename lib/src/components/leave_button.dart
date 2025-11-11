@@ -9,6 +9,7 @@ import 'package:zego_uikit/src/services/services.dart';
 
 /// quit room/channel/group
 class ZegoLeaveButton extends StatelessWidget {
+  final String roomID;
   final ButtonIcon? icon;
 
   ///  You can do what you want before clicked.
@@ -29,6 +30,7 @@ class ZegoLeaveButton extends StatelessWidget {
 
   const ZegoLeaveButton({
     Key? key,
+    required this.roomID,
     this.onLeaveConfirmation,
     this.onPress,
     this.icon,
@@ -76,7 +78,7 @@ class ZegoLeaveButton extends StatelessWidget {
   }
 
   void quit() {
-    ZegoUIKit().leaveRoom().then((result) {
+    ZegoUIKit().leaveRoom(targetRoomID: roomID).then((result) {
       ZegoLoggerService.logInfo(
         'leave room result, ${result.errorCode} ${result.extendedData}',
         tag: 'uikit-component',

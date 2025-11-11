@@ -5,15 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';
+import 'package:zego_uikit/src/modules/hall_room/internal.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
-class ZegoOutsideRoomAudioVideoViewExpressEvent
-    extends ZegoUIKitExpressEventInterface {
-  ValueNotifier<List<ZegoOutsideRoomAudioVideoViewStream>>? _streamsNotifier;
+class ZegoUIKitHallRoomExpressEvent extends ZegoUIKitExpressEventInterface {
+  ValueNotifier<List<ZegoUIKitHallRoomListStream>>? _streamsNotifier;
   void init({
-    required ValueNotifier<List<ZegoOutsideRoomAudioVideoViewStream>>
-        streamsNotifier,
+    required ValueNotifier<List<ZegoUIKitHallRoomListStream>> streamsNotifier,
   }) {
     _streamsNotifier = streamsNotifier;
   }

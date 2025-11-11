@@ -3,9 +3,10 @@ import 'dart:async';
 
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
-import 'package:zego_uikit/src/services/core/data/room_map.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import '../defines/defines.dart';
+
+import 'room_map.dart';
 
 class ZegoUIKitCoreDataRoomUser {
   String roomID;
@@ -36,6 +37,7 @@ class ZegoUIKitCoreDataRoomUser {
 
   void init() {
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'room id:$roomID',
       tag: 'uikit-users-room',
       subTag: 'init',
@@ -49,6 +51,7 @@ class ZegoUIKitCoreDataRoomUser {
 
   void uninit() {
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'room id:$roomID',
       tag: 'uikit-users-room',
       subTag: 'uninit',
@@ -69,6 +72,7 @@ class ZegoUIKitCoreDataRoomUser {
 
   void clear() {
     ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
       'room id:$roomID',
       tag: 'uikit-users-room',
       subTag: 'clear',

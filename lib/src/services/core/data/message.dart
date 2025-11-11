@@ -1,6 +1,7 @@
 // Project imports:
-import 'package:zego_uikit/src/services/core/data/room_map.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
+import 'room_map.dart';
 import 'message.room.dart';
 
 /// 多房间的消息

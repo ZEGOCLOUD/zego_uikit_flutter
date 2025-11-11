@@ -11,10 +11,10 @@ import 'package:visibility_detector/visibility_detector.dart';
 // Project imports:
 import 'package:zego_uikit/src/components/components.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
-import 'package:zego_uikit/src/modules/outside_room_audio_video/config.dart';
-import 'package:zego_uikit/src/modules/outside_room_audio_video/controller.dart';
-import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';
-import 'package:zego_uikit/src/modules/outside_room_audio_video/style.dart';
+import 'package:zego_uikit/src/modules/hall_room/config.dart';
+import 'package:zego_uikit/src/modules/hall_room/controller.dart';
+import 'package:zego_uikit/src/modules/hall_room/internal.dart';
+import 'package:zego_uikit/src/modules/hall_room/style.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 /// display user audio and video information without join room(live/conference),
@@ -22,18 +22,18 @@ import 'package:zego_uikit/src/services/services.dart';
 /// 1. background view
 /// 2. video view
 /// 3. foreground view
-class ZegoOutsideRoomAudioVideoViewList extends StatefulWidget {
-  const ZegoOutsideRoomAudioVideoViewList({
+class ZegoUIKitHallRoomList extends StatefulWidget {
+  const ZegoUIKitHallRoomList({
     Key? key,
     required this.appID,
     required this.controller,
     this.appSign = '',
     this.token = '',
     this.scenario = ZegoScenario.Default,
-    ZegoOutsideRoomAudioVideoViewListStyle? style,
-    ZegoOutsideRoomAudioVideoViewListConfig? config,
-  })  : style = style ?? const ZegoOutsideRoomAudioVideoViewListStyle(),
-        config = config ?? const ZegoOutsideRoomAudioVideoViewListConfig(),
+    ZegoUIKitHallRoomListStyle? style,
+    ZegoUIKitHallRoomListConfig? config,
+  })  : style = style ?? const ZegoUIKitHallRoomListStyle(),
+        config = config ?? const ZegoUIKitHallRoomListConfig(),
         super(key: key);
 
   /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
@@ -60,21 +60,19 @@ class ZegoOutsideRoomAudioVideoViewList extends StatefulWidget {
   final ZegoScenario scenario;
 
   ///  style
-  final ZegoOutsideRoomAudioVideoViewListStyle style;
+  final ZegoUIKitHallRoomListStyle style;
 
   /// config
-  final ZegoOutsideRoomAudioVideoViewListConfig config;
+  final ZegoUIKitHallRoomListConfig config;
 
   /// controller
-  final ZegoOutsideRoomAudioVideoViewListController controller;
+  final ZegoUIKitHallRoomListController controller;
 
   @override
-  State<ZegoOutsideRoomAudioVideoViewList> createState() =>
-      _ZegoOutsideRoomAudioVideoViewListState();
+  State<ZegoUIKitHallRoomList> createState() => _ZegoUIKitHallRoomListState();
 }
 
-class _ZegoOutsideRoomAudioVideoViewListState
-    extends State<ZegoOutsideRoomAudioVideoViewList> {
+class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
   @override
   void initState() {
     super.initState();
@@ -87,14 +85,13 @@ class _ZegoOutsideRoomAudioVideoViewListState
       config: widget.config,
     );
     widget.controller.private.init().then((_) {
-      if (ZegoOutsideRoomAudioVideoViewListPlayMode.autoPlay ==
-          widget.config.playMode) {
+      if (ZegoUIKitHallRoomListPlayMode.autoPlay == widget.config.playMode) {
         widget.controller.private.forceUpdate();
       } else {
         ZegoLoggerService.logInfo(
           'play mode is not auto',
-          tag: 'outside room audio video view',
-          subTag: 'outside room audio video view',
+          tag: 'hall list',
+          subTag: 'hall list',
         );
       }
     });
@@ -147,8 +144,8 @@ class _ZegoOutsideRoomAudioVideoViewListState
         ZegoLoggerService.logInfo(
           'layout ${constraints.maxWidth} x ${constraints.maxHeight}, '
           'item:$itemWidth x $itemHeight',
-          tag: 'outside room audio video view',
-          subTag: 'outside room audio video view',
+          tag: 'hall list',
+          subTag: 'hall list',
         );
 
         return SingleChildScrollView(
@@ -173,8 +170,7 @@ class _ZegoOutsideRoomAudioVideoViewListState
               context: context,
               removeTop: true,
               removeBottom: true,
-              child: ValueListenableBuilder<
-                  List<ZegoOutsideRoomAudioVideoViewStream>>(
+              child: ValueListenableBuilder<List<ZegoUIKitHallRoomListStream>>(
                 valueListenable: widget.controller.private.streamsNotifier,
                 builder: (context, streams, _) {
                   return GridView.builder(
@@ -206,7 +202,7 @@ class _ZegoOutsideRoomAudioVideoViewListState
   }
 
   Widget listItem(
-    ZegoOutsideRoomAudioVideoViewStream stream,
+    ZegoUIKitHallRoomListStream stream,
     double width,
     double height,
   ) {
@@ -267,7 +263,7 @@ class _ZegoOutsideRoomAudioVideoViewListState
     );
   }
 
-  Widget videoView(ZegoOutsideRoomAudioVideoViewStream stream) {
+  Widget videoView(ZegoUIKitHallRoomListStream stream) {
     return StreamBuilder<List<ZegoUIKitUser>>(
       stream: ZegoUIKit().getUserListStream(),
       builder: (context, snapshot) {
@@ -302,7 +298,7 @@ class _ZegoOutsideRoomAudioVideoViewListState
                     ZegoLoggerService.logInfo(
                       '${stream.user.id}\'s camera is not open',
                       tag: 'uikit-component',
-                      subTag: 'outside room audio video view',
+                      subTag: 'hall list',
                     );
 
                     return Container();
@@ -319,7 +315,7 @@ class _ZegoOutsideRoomAudioVideoViewListState
                               ZegoLoggerService.logError(
                                 '${stream.user.id}\'s view is null',
                                 tag: 'uikit-component',
-                                subTag: 'outside room audio video view',
+                                subTag: 'hall list',
                               );
 
                               return Center(
@@ -335,7 +331,7 @@ class _ZegoOutsideRoomAudioVideoViewListState
                             ZegoLoggerService.logInfo(
                               'render ${stream.user.id}\'s view',
                               tag: 'uikit-component',
-                              subTag: 'outside room audio video view',
+                              subTag: 'hall list',
                             );
 
                             return StreamBuilder(
@@ -370,7 +366,7 @@ class _ZegoOutsideRoomAudioVideoViewListState
     );
   }
 
-  Widget background(ZegoOutsideRoomAudioVideoViewStream stream) {
+  Widget background(ZegoUIKitHallRoomListStream stream) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Stack(
@@ -396,7 +392,7 @@ class _ZegoOutsideRoomAudioVideoViewListState
     );
   }
 
-  Widget foreground(ZegoOutsideRoomAudioVideoViewStream stream) {
+  Widget foreground(ZegoUIKitHallRoomListStream stream) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return widget.style.item.foregroundBuilder?.call(
@@ -411,7 +407,7 @@ class _ZegoOutsideRoomAudioVideoViewListState
   }
 
   Widget avatar(
-    ZegoOutsideRoomAudioVideoViewStream stream,
+    ZegoUIKitHallRoomListStream stream,
     double maxWidth,
     double maxHeight,
   ) {

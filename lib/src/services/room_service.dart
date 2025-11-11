@@ -1,8 +1,70 @@
 part of 'uikit_service.dart';
 
 mixin ZegoRoomService {
-  bool get isRoomLogin =>
-      ZegoUIKitCore.shared.coreData.room.currentID.isNotEmpty;
+  /// 当前是否有房间登录
+  bool get hasRoomLogin {
+    bool value = false;
+
+    ZegoUIKitCore.shared.coreData.room.rooms.forEachSync((roomID, room) {
+      if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(roomID)) {
+        /// 跳过大厅房间
+        return;
+      }
+
+      if (value) {
+        /// 已经有房间登录了，不需要再更新值
+        return;
+      }
+
+      if (room.isLogin) {
+        value = true;
+      }
+    });
+
+    return value;
+  }
+
+  /// 当前已登录的房间数量
+  /// 跳过大厅房间
+  int get loginRoomCount {
+    int count = 0;
+
+    ZegoUIKitCore.shared.coreData.room.rooms.forEachSync((roomID, room) {
+      if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(roomID)) {
+        /// 跳过大厅房间
+        return;
+      }
+
+      if (!room.isLogin) {
+        return;
+      }
+
+      count++;
+    });
+
+    return count;
+  }
+
+  /// get room object
+  /// 只针对单房间模式，如果是多房间模式，请通过[getRoom]
+  ZegoUIKitRoom getCurrentRoom() {
+    ZegoUIKitRoom currentRoom = ZegoUIKitRoom.empty();
+    ZegoUIKitCore.shared.coreData.room.rooms.forEachSync((roomID, room) {
+      if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(roomID)) {
+        /// 跳过大厅房间
+        return;
+      }
+
+      if (!room.isLogin) {
+        /// 跳过没登录的房间
+        return;
+      }
+
+      currentRoom = room.toUIKitRoom();
+    });
+
+    return currentRoom;
+  }
 
   /// join room
   ///
@@ -62,13 +124,10 @@ mixin ZegoRoomService {
 
   /// leave room
   Future<ZegoRoomLogoutResult> leaveRoom({
-    String? targetRoomID,
+    required String targetRoomID,
   }) async {
-    final leavingRoomID =
-        targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID;
-
     final leaveRoomResult = await ZegoUIKitCore.shared.leaveRoom(
-      targetRoomID: leavingRoomID,
+      targetRoomID: targetRoomID,
     );
 
     if (ZegoErrorCode.CommonSuccess != leaveRoomResult.errorCode) {
@@ -83,7 +142,7 @@ mixin ZegoRoomService {
     ZegoUIKit().reporter().report(
       event: ZegoUIKitReporter.eventLogoutRoom,
       params: {
-        ZegoUIKitReporter.eventKeyRoomID: leavingRoomID,
+        ZegoUIKitReporter.eventKeyRoomID: targetRoomID,
         ZegoUIKitReporter.eventKeyErrorCode: leaveRoomResult.errorCode,
         ZegoUIKitReporter.eventKeyErrorMsg:
             leaveRoomResult.extendedData.toString(),
@@ -95,84 +154,76 @@ mixin ZegoRoomService {
 
   Future<void> renewRoomToken(
     String token, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) async {
     await ZegoUIKitCore.shared.coreData.room.renewToken(
       token,
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
     );
   }
 
   /// get room object
   ZegoUIKitRoom getRoom({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.room.rooms
-        .getRoom(
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-        )
+        .getRoom(targetRoomID)
         .toUIKitRoom();
   }
 
   /// get room state notifier
+  ValueNotifier<ZegoUIKitRoomsState> getRoomsStateStream() {
+    return ZegoUIKitCore.shared.coreData.room.roomsStateNotifier;
+  }
+
+  /// get room state notifier
   ValueNotifier<ZegoUIKitRoomState> getRoomStateStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.room.rooms
-        .getRoom(
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-        )
-        .state;
+    return ZegoUIKitCore.shared.coreData.room.rooms.getRoom(targetRoomID).state;
   }
 
   /// update one room property
   Future<bool> setRoomProperty(
     String key,
     String value, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) async {
     return ZegoUIKitCore.shared.setRoomProperty(
       key,
       value,
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
     );
   }
 
   /// update room properties
   Future<bool> updateRoomProperties(
     Map<String, String> properties, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) async {
     return ZegoUIKitCore.shared.updateRoomProperties(
       Map<String, String>.from(properties),
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
     );
   }
 
   /// get room properties
   Map<String, RoomProperty> getRoomProperties({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
-    return Map<String, RoomProperty>.from(
-        ZegoUIKitCore.shared.coreData.room.rooms
-            .getRoom(
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-            )
-            .properties);
+    return Map<String, RoomProperty>.from(ZegoUIKitCore
+        .shared.coreData.room.rooms
+        .getRoom(targetRoomID)
+        .properties);
   }
 
   /// only notify the property which changed
   /// you can get full properties by getRoomProperties() function
   Stream<RoomProperty> getRoomPropertyStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.room.rooms
-            .getRoom(
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-            )
+            .getRoom(targetRoomID)
             .propertyUpdateStream
             ?.stream ??
         const Stream.empty();
@@ -180,12 +231,10 @@ mixin ZegoRoomService {
 
   /// the room Token authentication is about to expire will be sent 30 seconds before the Token expires
   Stream<int> getRoomTokenExpiredStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.room.rooms
-            .getRoom(
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-            )
+            .getRoom(targetRoomID)
             .tokenExpiredStreamCtrl
             ?.stream ??
         const Stream.empty();
@@ -194,12 +243,10 @@ mixin ZegoRoomService {
   /// only notify the properties which changed
   /// you can get full properties by getRoomProperties() function
   Stream<Map<String, RoomProperty>> getRoomPropertiesStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.room.rooms
-            .getRoom(
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-            )
+            .getRoom(targetRoomID)
             .propertiesUpdatedStream
             ?.stream ??
         const Stream.empty();

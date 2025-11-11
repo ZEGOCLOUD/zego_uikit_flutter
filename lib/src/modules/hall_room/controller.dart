@@ -2,18 +2,18 @@
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/modules/outside_room_audio_video/controller.p.dart';
-import 'package:zego_uikit/src/modules/outside_room_audio_video/defines.dart';
-import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';
+import 'package:zego_uikit/src/modules/hall_room/controller.p.dart';
+import 'package:zego_uikit/src/modules/hall_room/defines.dart';
+import 'package:zego_uikit/src/modules/hall_room/internal.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
-class ZegoOutsideRoomAudioVideoViewListController {
-  ZegoOutsideRoomAudioVideoViewListController({
+class ZegoUIKitHallRoomListController {
+  ZegoUIKitHallRoomListController({
     /// stream information to pull
-    List<ZegoOutsideRoomAudioVideoViewStreamUser> streams = const [],
+    List<ZegoUIKitHallRoomListStreamUser> streams = const [],
   }) {
     private.streamsNotifier.value = streams
-        .map((stream) => ZegoOutsideRoomAudioVideoViewStream(
+        .map((stream) => ZegoUIKitHallRoomListStream(
               user: stream.user,
               roomID: stream.roomID,
             ))
@@ -22,7 +22,7 @@ class ZegoOutsideRoomAudioVideoViewListController {
 
   /// DO NOT CALL!!!
   /// Please do not call this. It is the internal logic.
-  final private = ZegoOutsideRoomAudioVideoViewControllerPrivate();
+  final private = ZegoUIKitHallRoomListControllerPrivate();
 
   ValueNotifier<bool> get sdkInitNotifier => private.sdkInitNotifier;
   ValueNotifier<bool> get roomLoginNotifier => private.roomLoginNotifier;
@@ -33,7 +33,7 @@ class ZegoOutsideRoomAudioVideoViewListController {
   Future<bool> startPlayAll() async {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'outside room audio video controller',
+      tag: 'hall controller',
       subTag: 'startPlayAll',
     );
 
@@ -44,7 +44,7 @@ class ZegoOutsideRoomAudioVideoViewListController {
   Future<bool> stopPlayAll() async {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'outside room audio video controller',
+      tag: 'hall controller',
       subTag: 'stopPlayAll',
     );
 
@@ -54,11 +54,11 @@ class ZegoOutsideRoomAudioVideoViewListController {
   /// start play target stream
   /// if not in streams, it would not play, use [addStream].
   Future<bool> startPlayOne(
-    ZegoOutsideRoomAudioVideoViewStreamUser stream,
+    ZegoUIKitHallRoomListStreamUser stream,
   ) async {
     ZegoLoggerService.logInfo(
       'stream:$stream',
-      tag: 'outside room audio video controller',
+      tag: 'hall controller',
       subTag: 'startPlayOne',
     );
 
@@ -71,11 +71,11 @@ class ZegoOutsideRoomAudioVideoViewListController {
 
   /// stop play target stream
   Future<bool> stopPlayOne(
-    ZegoOutsideRoomAudioVideoViewStreamUser stream,
+    ZegoUIKitHallRoomListStreamUser stream,
   ) async {
     ZegoLoggerService.logInfo(
       'stream:$stream',
-      tag: 'outside room audio video controller',
+      tag: 'hall controller',
       subTag: 'stopPlayOne',
     );
 
@@ -88,17 +88,17 @@ class ZegoOutsideRoomAudioVideoViewListController {
 
   /// update streams
   void updateStreams(
-    List<ZegoOutsideRoomAudioVideoViewStreamUser> streams, {
+    List<ZegoUIKitHallRoomListStreamUser> streams, {
     bool startPlay = true,
   }) {
     ZegoLoggerService.logInfo(
       'streams:$streams, startPlay:$startPlay',
-      tag: 'outside room audio video controller',
+      tag: 'hall controller',
       subTag: 'updateStreams',
     );
 
     private.streamsNotifier.value = streams
-        .map((stream) => ZegoOutsideRoomAudioVideoViewStream(
+        .map((stream) => ZegoUIKitHallRoomListStream(
               user: stream.user,
               roomID: stream.roomID,
             ))
@@ -111,18 +111,18 @@ class ZegoOutsideRoomAudioVideoViewListController {
 
   /// add a stream
   void addStream(
-    ZegoOutsideRoomAudioVideoViewStreamUser stream, {
+    ZegoUIKitHallRoomListStreamUser stream, {
     bool startPlay = true,
   }) {
     ZegoLoggerService.logInfo(
       'stream:$stream, startPlay:$startPlay',
-      tag: 'outside room audio video controller',
+      tag: 'hall controller',
       subTag: 'addStream',
     );
 
     private.streamsNotifier.value = [
       ...private.streamsNotifier.value,
-      ZegoOutsideRoomAudioVideoViewStream(
+      ZegoUIKitHallRoomListStream(
         user: stream.user,
         roomID: stream.roomID,
       ),
@@ -134,10 +134,10 @@ class ZegoOutsideRoomAudioVideoViewListController {
   }
 
   /// remove a stream
-  void removeStream(ZegoOutsideRoomAudioVideoViewStreamUser stream) {
+  void removeStream(ZegoUIKitHallRoomListStreamUser stream) {
     ZegoLoggerService.logInfo(
       'stream:$stream',
-      tag: 'outside room audio video controller',
+      tag: 'hall controller',
       subTag: 'removeStream',
     );
 

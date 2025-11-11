@@ -1,6 +1,5 @@
 export 'mixer_stream.dart';
 export 'network_state.dart';
-export '../data/room.dart';
 export 'sei.dart';
 export 'stream.dart';
 export 'stream_info.dart';

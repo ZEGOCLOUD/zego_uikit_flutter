@@ -68,7 +68,8 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
       });
 
       ZegoLoggerService.logInfo(
-        'hash:$hashCode, name:$name, '
+        'hash:$hashCode, '
+        'name:$name, '
         'create empty room(${_emptyRoomCache.hashCode}), ',
         tag: 'uikit-room',
         subTag: 'room-map',
@@ -97,7 +98,8 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
         _innerRoomMap[roomID] = _emptyRoomCache!;
 
         ZegoLoggerService.logInfo(
-          'hash:$hashCode, name:$name, '
+          'hash:$hashCode, '
+          'name:$name, '
           'use empty room(${_emptyRoomCache.hashCode}), id:$roomID',
           tag: 'uikit-room',
           subTag: 'room-map',
