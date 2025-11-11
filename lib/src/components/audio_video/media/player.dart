@@ -18,6 +18,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 class ZegoUIKitMediaPlayer extends StatefulWidget {
   const ZegoUIKitMediaPlayer({
     Key? key,
+    required this.roomID,
     required this.size,
     required this.config,
     this.filePathOrURL,
@@ -27,6 +28,8 @@ class ZegoUIKitMediaPlayer extends StatefulWidget {
   })  : style = style ?? const ZegoUIKitMediaPlayerStyle(),
         event = event ?? const ZegoUIKitMediaPlayerEvent(),
         super(key: key);
+
+  final String roomID;
 
   /// load the absolute path to the local resource or the URL of the network resource
   /// is null, will pop-up and pick files from local
@@ -169,12 +172,12 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
   }
 
   Widget media() {
-    return const Positioned(
+    return Positioned(
       top: 0,
       bottom: 0,
       left: 0,
       right: 0,
-      child: ZegoUIKitMediaContainer(),
+      child: ZegoUIKitMediaContainer(roomID: widget.roomID),
     );
   }
 

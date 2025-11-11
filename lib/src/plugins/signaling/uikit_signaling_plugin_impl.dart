@@ -43,8 +43,12 @@ class ZegoUIKitSignalingPluginImpl
   }
 
   /// init
-  Future<void> init(int appID, {String appSign = ''}) async {
-    initUserInRoomAttributes();
+  Future<void> init(
+    int appID, {
+    required String roomID,
+    String appSign = '',
+  }) async {
+    initUserInRoomAttributes(roomID: roomID);
     return ZegoSignalingPluginCore.shared.init(appID: appID, appSign: appSign);
   }
 

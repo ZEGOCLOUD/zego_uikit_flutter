@@ -12,6 +12,7 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoInRoomMessageInput extends StatefulWidget {
   const ZegoInRoomMessageInput({
     Key? key,
+    required this.roomID,
     this.placeHolder = 'Say something...',
     this.payloadAttributes,
     this.backgroundColor,
@@ -28,6 +29,7 @@ class ZegoInRoomMessageInput extends StatefulWidget {
     this.focusNotifier,
   }) : super(key: key);
 
+  final String roomID;
   final String placeHolder;
   final Map<String, String>? payloadAttributes;
   final Color? backgroundColor;
@@ -198,9 +200,13 @@ class _ZegoInRoomMessageInputState extends State<ZegoInRoomMessageInput> {
     }
 
     if (widget.payloadAttributes?.isEmpty ?? true) {
-      ZegoUIKit().sendInRoomMessage(textController.text);
+      ZegoUIKit().sendInRoomMessage(
+        targetRoomID: widget.roomID,
+        textController.text,
+      );
     } else {
       ZegoUIKit().sendInRoomMessage(
+        targetRoomID: widget.roomID,
         ZegoInRoomMessage.jsonBody(
           message: textController.text,
           attributes: widget.payloadAttributes!,

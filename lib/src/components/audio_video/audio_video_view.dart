@@ -28,6 +28,7 @@ import '../../services/core/defines/defines.dart';
 class ZegoAudioVideoView extends StatefulWidget {
   const ZegoAudioVideoView({
     Key? key,
+    required this.roomID,
     required this.user,
     this.backgroundBuilder,
     this.foregroundBuilder,
@@ -36,6 +37,8 @@ class ZegoAudioVideoView extends StatefulWidget {
     this.extraInfo,
     this.avatarConfig,
   }) : super(key: key);
+
+  final String roomID;
 
   final ZegoUIKitUser? user;
 
@@ -61,12 +64,22 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   final isLocalUserFlippedNotifier = ValueNotifier<bool>(false);
 
   int get userViewID =>
-      ZegoUIKit().getAudioVideoViewIDNotifier(widget.user?.id ?? '').value ??
+      ZegoUIKit()
+          .getAudioVideoViewIDNotifier(
+            targetRoomID: widget.roomID,
+            widget.user?.id ?? '',
+          )
+          .value ??
       -1;
 
   bool get userViewIDIsEmpty =>
       -1 ==
-      ZegoUIKit().getAudioVideoViewIDNotifier(widget.user?.id ?? '').value;
+      ZegoUIKit()
+          .getAudioVideoViewIDNotifier(
+            targetRoomID: widget.roomID,
+            widget.user?.id ?? '',
+          )
+          .value;
 
   ZegoUIKitCoreUser get localUserData =>
       ZegoUIKitCore.shared.coreData.user.localUser;
@@ -88,9 +101,11 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     super.initState();
 
     subscriptions
-      ..add(ZegoUIKit().getUserListStream().listen(onUserListUpdated))
       ..add(ZegoUIKit()
-          .getAudioVideoListStream()
+          .getUserListStream(targetRoomID: widget.roomID)
+          .listen(onUserListUpdated))
+      ..add(ZegoUIKit()
+          .getAudioVideoListStream(targetRoomID: widget.roomID)
           .listen(onAudioVideoListUpdated));
   }
 
@@ -115,7 +130,12 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
   @override
   Widget build(BuildContext context) {
-    if (ZegoUIKit().getUser(widget.user?.id ?? '').isEmpty()) {
+    if (ZegoUIKit()
+        .getUser(
+          targetRoomID: widget.roomID,
+          widget.user?.id ?? '',
+        )
+        .isEmpty()) {
       ZegoLoggerService.logInfo(
         'use id:(${widget.user?.id}) is null',
         tag: 'uikit-component',
@@ -140,8 +160,10 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
     return circleBorder(
       child: ValueListenableBuilder<bool>(
-        valueListenable:
-            ZegoUIKit().getCameraStateNotifier(widget.user?.id ?? ''),
+        valueListenable: ZegoUIKit().getCameraStateNotifier(
+          targetRoomID: widget.roomID,
+          widget.user?.id ?? '',
+        ),
         builder: (context, isCameraOn, _) {
           ZegoLoggerService.logInfo(
             '${widget.user?.id}\'s camera changed $isCameraOn,',
@@ -183,8 +205,10 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   Widget testViewID() {
     if (userDebugMode) {
       return ValueListenableBuilder<int?>(
-        valueListenable:
-            ZegoUIKit().getAudioVideoViewIDNotifier(widget.user!.id),
+        valueListenable: ZegoUIKit().getAudioVideoViewIDNotifier(
+          targetRoomID: widget.roomID,
+          widget.user!.id,
+        ),
         builder: (context, viewID, _) {
           return Align(
             alignment: Alignment.topRight,
@@ -273,7 +297,9 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
           runViewIDTimeGuard();
         }
 
-        return ZegoUIKit().getUser(widget.user!.id).isEmpty()
+        return ZegoUIKit()
+                .getUser(targetRoomID: widget.roomID, widget.user!.id)
+                .isEmpty()
             ? Container()
             : LayoutBuilder(
                 builder: (context, constraints) {
@@ -307,7 +333,10 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     ) childBuilder,
   }) {
     return ValueListenableBuilder<Widget?>(
-      valueListenable: ZegoUIKit().getAudioVideoViewNotifier(widget.user!.id),
+      valueListenable: ZegoUIKit().getAudioVideoViewNotifier(
+        targetRoomID: widget.roomID,
+        widget.user!.id,
+      ),
       builder: (context, userView, _) {
         if (userView == null) {
           ZegoLoggerService.logError(
@@ -364,6 +393,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
           children: [
             ValueListenableBuilder(
               valueListenable: ZegoUIKitUserPropertiesNotifier(
+                roomID: widget.roomID,
                 widget.user ?? ZegoUIKitUser.empty(),
               ),
               builder: (context, _, __) {
@@ -390,6 +420,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
           return Stack(children: [
             ValueListenableBuilder(
               valueListenable: ZegoUIKitUserPropertiesNotifier(
+                roomID: widget.roomID,
                 widget.user ?? ZegoUIKitUser.empty(),
               ),
               builder: (context, _, __) {
@@ -456,6 +487,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         width: sizedWidth,
         height: sizedHeight,
         child: ZegoAvatar(
+          roomID: widget.roomID,
           avatarSize: widget.avatarConfig?.size ?? avatarSize,
           user: widget.user,
           showAvatar: widget.avatarConfig?.showInAudioMode ?? true,

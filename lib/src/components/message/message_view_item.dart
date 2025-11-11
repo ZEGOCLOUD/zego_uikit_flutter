@@ -16,6 +16,7 @@ typedef ZegoInRoomMessageViewItemPressEvent = void Function(
 class ZegoInRoomMessageViewItem extends StatefulWidget {
   const ZegoInRoomMessageViewItem({
     Key? key,
+    required this.roomID,
     required this.message,
     this.avatarLeadingBuilder,
     this.avatarTailingBuilder,
@@ -40,6 +41,7 @@ class ZegoInRoomMessageViewItem extends StatefulWidget {
     this.onItemLongPress,
   }) : super(key: key);
 
+  final String roomID;
   final String? namePrefix;
   final ZegoInRoomMessage message;
   final bool isHorizontal;
@@ -185,6 +187,7 @@ class _ZegoInRoomLiveMessageViewItemState
                 width: 26.zR + padding.vertical / 2 - 1,
                 height: 26.zR + padding.vertical / 2 - 1,
                 child: ZegoAvatar(
+                  roomID: widget.roomID,
                   user: widget.message.user,
                   avatarSize: Size(30.zR, 30.zR),
                   avatarBuilder: widget.avatarBuilder,
@@ -362,7 +365,10 @@ class _ZegoInRoomLiveMessageViewItemState
         return GestureDetector(
           onTap: () {
             if (state == ZegoInRoomMessageState.failed) {
-              ZegoUIKit().resendInRoomMessage(widget.message);
+              ZegoUIKit().resendInRoomMessage(
+                targetRoomID: widget.roomID,
+                widget.message,
+              );
             }
           },
           child: null != widget.resendIcon

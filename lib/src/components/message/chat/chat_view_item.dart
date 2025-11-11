@@ -11,10 +11,12 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoInRoomChatViewItem extends StatefulWidget {
   const ZegoInRoomChatViewItem({
     Key? key,
+    required this.roomID,
     required this.message,
     required this.avatarBuilder,
   }) : super(key: key);
 
+  final String roomID;
   final ZegoInRoomMessage message;
   final ZegoAvatarBuilder? avatarBuilder;
 
@@ -58,7 +60,10 @@ class _ZegoCallMessageListState extends State<ZegoInRoomChatViewItem> {
 
   Widget avatar() {
     return ValueListenableBuilder(
-      valueListenable: ZegoUIKitUserPropertiesNotifier(widget.message.user),
+      valueListenable: ZegoUIKitUserPropertiesNotifier(
+        roomID: widget.roomID,
+        widget.message.user,
+      ),
       builder: (context, _, __) {
         return widget.avatarBuilder
                 ?.call(context, Size(56.zR, 56.zR), widget.message.user, {}) ??
@@ -145,7 +150,10 @@ class _ZegoCallMessageListState extends State<ZegoInRoomChatViewItem> {
         return GestureDetector(
           onTap: () {
             if (widget.message.state.value == ZegoInRoomMessageState.failed) {
-              ZegoUIKit().resendInRoomMessage(widget.message);
+              ZegoUIKit().resendInRoomMessage(
+                targetRoomID: widget.roomID,
+                widget.message,
+              );
             }
           },
           child: Container(

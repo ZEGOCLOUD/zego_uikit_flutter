@@ -9,6 +9,7 @@ import 'package:zego_uikit/src/services/services.dart';
 /// monitor the camera status changes,
 /// when the status changes, the corresponding icon is automatically switched
 class ZegoCameraStateIcon extends ZegoServiceValueIcon {
+  final String roomID;
   final ZegoUIKitUser? targetUser;
 
   final Image? iconCameraOn;
@@ -16,12 +17,16 @@ class ZegoCameraStateIcon extends ZegoServiceValueIcon {
 
   ZegoCameraStateIcon({
     Key? key,
+    required this.roomID,
     required this.targetUser,
     this.iconCameraOn,
     this.iconCameraOff,
   }) : super(
           key: key,
-          notifier: ZegoUIKit().getCameraStateNotifier(targetUser?.id ?? ''),
+          notifier: ZegoUIKit().getCameraStateNotifier(
+            targetRoomID: roomID,
+            targetUser?.id ?? '',
+          ),
           normalIcon: iconCameraOff ??
               UIKitImage.asset(StyleIconUrls.iconVideoViewCameraOff),
           checkedIcon: iconCameraOn ??

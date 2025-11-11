@@ -23,6 +23,7 @@ const isScreenSharingExtraInfoKey = 'isScreenSharing';
 class ZegoScreenSharingView extends StatefulWidget {
   const ZegoScreenSharingView({
     Key? key,
+    required this.roomID,
     required this.user,
     this.foregroundBuilder,
     this.backgroundBuilder,
@@ -34,6 +35,7 @@ class ZegoScreenSharingView extends StatefulWidget {
     this.controller,
   }) : super(key: key);
 
+  final String roomID;
   final ZegoUIKitUser? user;
 
   /// foreground builder, you can display something you want on top of the view,
@@ -65,6 +67,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
 
     ZegoUIKit()
         .getAudioVideoSendVideoFirstFrameNotifier(
+          targetRoomID: widget.roomID,
           ZegoUIKit().getLocalUser().id,
           streamType: ZegoStreamType.screenSharing,
         )
@@ -78,6 +81,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
 
     ZegoUIKit()
         .getAudioVideoSendVideoFirstFrameNotifier(
+          targetRoomID: widget.roomID,
           ZegoUIKit().getLocalUser().id,
           streamType: ZegoStreamType.screenSharing,
         )
@@ -85,6 +89,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
 
     ZegoUIKit()
         .getAudioVideoQualityNotifier(
+          targetRoomID: widget.roomID,
           ZegoUIKit().getLocalUser().id,
           streamType: ZegoStreamType.screenSharing,
         )
@@ -154,6 +159,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
         builder: (context, constraints) {
           return ValueListenableBuilder<Widget?>(
             valueListenable: ZegoUIKit().getAudioVideoViewNotifier(
+              targetRoomID: widget.roomID,
               widget.user!.id,
               streamType: ZegoStreamType.screenSharing,
             ),
@@ -196,6 +202,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
           children: [
             ValueListenableBuilder(
               valueListenable: ZegoUIKitUserPropertiesNotifier(
+                roomID: widget.roomID,
                 widget.user ?? ZegoUIKitUser.empty(),
               ),
               builder: (context, _, __) {
@@ -236,6 +243,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
             ),
             ValueListenableBuilder(
               valueListenable: ZegoUIKitUserPropertiesNotifier(
+                roomID: widget.roomID,
                 widget.user ?? ZegoUIKitUser.empty(),
               ),
               builder: (context, _, __) {
@@ -311,7 +319,9 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
                   Padding(padding: EdgeInsets.only(top: 20.zR)),
                   GestureDetector(
                     onTap: () {
-                      ZegoUIKit.instance.stopSharingScreen();
+                      ZegoUIKit.instance.stopSharingScreen(
+                        targetRoomID: widget.roomID,
+                      );
                     },
                     child: Container(
                       padding: EdgeInsets.all(30.zR),
@@ -465,6 +475,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
   void onSendVideoFirstFrame() {
     final value = ZegoUIKit()
         .getAudioVideoSendVideoFirstFrameNotifier(
+          targetRoomID: widget.roomID,
           ZegoUIKit().getLocalUser().id,
           streamType: ZegoStreamType.screenSharing,
         )
@@ -474,6 +485,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
       /// start publishing
       ZegoUIKit()
           .getAudioVideoSendVideoFirstFrameNotifier(
+            targetRoomID: widget.roomID,
             ZegoUIKit().getLocalUser().id,
             streamType: ZegoStreamType.screenSharing,
           )
@@ -482,6 +494,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
       /// listen for system stop screen sharing
       ZegoUIKit()
           .getAudioVideoQualityNotifier(
+            targetRoomID: widget.roomID,
             ZegoUIKit().getLocalUser().id,
             streamType: ZegoStreamType.screenSharing,
           )
@@ -492,6 +505,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
   void onQualityUpdated() {
     final value = ZegoUIKit()
         .getAudioVideoQualityNotifier(
+          targetRoomID: widget.roomID,
           ZegoUIKit().getLocalUser().id,
           streamType: ZegoStreamType.screenSharing,
         )
@@ -508,6 +522,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
     if (invalidQualityCount >= settings.invalidCount) {
       ZegoUIKit()
           .getAudioVideoQualityNotifier(
+            targetRoomID: widget.roomID,
             ZegoUIKit().getLocalUser().id,
             streamType: ZegoStreamType.screenSharing,
           )
@@ -515,7 +530,9 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
 
       if (settings.canEnd?.call() ?? true) {
         /// system stopped
-        ZegoUIKit.instance.stopSharingScreen();
+        ZegoUIKit.instance.stopSharingScreen(
+          targetRoomID: widget.roomID,
+        );
       }
     }
   }

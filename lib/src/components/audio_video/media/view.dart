@@ -17,6 +17,7 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoUIKitMediaView extends StatefulWidget {
   const ZegoUIKitMediaView({
     Key? key,
+    required this.roomID,
     required this.user,
     this.backgroundBuilder,
     this.foregroundBuilder,
@@ -25,6 +26,7 @@ class ZegoUIKitMediaView extends StatefulWidget {
     this.extraInfo,
   }) : super(key: key);
 
+  final String roomID;
   final ZegoUIKitUser? user;
 
   /// foreground builder, you can display something you want on top of the view,
@@ -76,6 +78,7 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
           return mediaType == ZegoUIKitMediaType.video
               ? ValueListenableBuilder<Widget?>(
                   valueListenable: ZegoUIKit().getAudioVideoViewNotifier(
+                    targetRoomID: widget.roomID,
                     widget.user!.id,
                     streamType: ZegoStreamType.media,
                   ),
@@ -111,6 +114,7 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
             children: [
               ValueListenableBuilder(
                 valueListenable: ZegoUIKitUserPropertiesNotifier(
+                  roomID: widget.roomID,
                   widget.user ?? ZegoUIKitUser.empty(),
                 ),
                 builder: (context, _, __) {
@@ -139,6 +143,7 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
           return Stack(children: [
             ValueListenableBuilder(
               valueListenable: ZegoUIKitUserPropertiesNotifier(
+                roomID: widget.roomID,
                 widget.user ?? ZegoUIKitUser.empty(),
               ),
               builder: (context, _, __) {

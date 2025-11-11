@@ -11,6 +11,7 @@ import 'package:zego_uikit/src/components/message/notification/notification_view
 import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoInRoomNotificationView extends StatefulWidget {
+  final String roomID;
   final int maxCount;
   final int itemMaxLine;
   final int itemDisappearTime; // ms
@@ -22,6 +23,7 @@ class ZegoInRoomNotificationView extends StatefulWidget {
 
   const ZegoInRoomNotificationView({
     Key? key,
+    required this.roomID,
     this.maxCount = 3,
     this.itemMaxLine = 3,
     this.itemDisappearTime = 3000,
@@ -64,11 +66,16 @@ class _ZegoInRoomNotificationViewState
         Timer.periodic(const Duration(seconds: 1), clearTimeoutMessage);
 
     streamSubscriptions
-      ..add(ZegoUIKit().getInRoomMessageStream().listen(onInRoomMessage))
-      ..add(ZegoUIKit().getUserJoinStream().listen(onUserJoin));
+      ..add(ZegoUIKit()
+          .getInRoomMessageStream(targetRoomID: widget.roomID)
+          .listen(onInRoomMessage))
+      ..add(ZegoUIKit()
+          .getUserJoinStream(targetRoomID: widget.roomID)
+          .listen(onUserJoin));
     if (widget.notifyUserLeave) {
-      streamSubscriptions
-          .add(ZegoUIKit().getUserLeaveStream().listen(onUserLeave));
+      streamSubscriptions.add(ZegoUIKit()
+          .getUserLeaveStream(targetRoomID: widget.roomID)
+          .listen(onUserLeave));
     }
   }
 

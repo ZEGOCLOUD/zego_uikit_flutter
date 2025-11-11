@@ -12,6 +12,7 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoLayoutPIPSmallItem extends StatefulWidget {
   const ZegoLayoutPIPSmallItem({
     Key? key,
+    required this.roomID,
     required this.targetUser,
     required this.localUser,
     required this.defaultPosition,
@@ -26,6 +27,7 @@ class ZegoLayoutPIPSmallItem extends StatefulWidget {
     this.avatarConfig,
   }) : super(key: key);
 
+  final String roomID;
   final bool draggable;
   final bool showOnlyVideo;
   final ZegoUIKitUser? targetUser;
@@ -63,8 +65,10 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
   Widget build(BuildContext context) {
     if (widget.showOnlyVideo) {
       return ValueListenableBuilder<bool>(
-        valueListenable:
-            ZegoUIKit().getCameraStateNotifier(widget.targetUser?.id ?? ''),
+        valueListenable: ZegoUIKit().getCameraStateNotifier(
+          targetRoomID: widget.roomID,
+          widget.targetUser?.id ?? '',
+        ),
         builder: (context, cameraEnabled, _) {
           if (cameraEnabled) {
             return view();
@@ -90,6 +94,7 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
             child: calculateSize(
               user: widget.targetUser,
               child: ZegoAudioVideoView(
+                roomID: widget.roomID,
                 user: widget.targetUser,
                 borderRadius: widget.borderRadius ?? 18.0.zR,
                 backgroundBuilder: widget.backgroundBuilder,
@@ -116,7 +121,10 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
       return SizedBox.fromSize(size: defaultSize, child: child);
     } else {
       return ValueListenableBuilder<Size>(
-        valueListenable: ZegoUIKit().getVideoSizeNotifier(user.id),
+        valueListenable: ZegoUIKit().getVideoSizeNotifier(
+          targetRoomID: widget.roomID,
+          user.id,
+        ),
         builder: (context, Size size, _) {
           late double width, height;
           if (size.width > size.height) {

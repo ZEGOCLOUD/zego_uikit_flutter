@@ -13,9 +13,12 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoUIKitMediaContainer extends StatefulWidget {
   const ZegoUIKitMediaContainer({
     Key? key,
+    required this.roomID,
     this.foregroundBuilder,
     this.backgroundBuilder,
   }) : super(key: key);
+
+  final String roomID;
 
   /// foreground builder of audio video view
   final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
@@ -32,14 +35,16 @@ class _ZegoUIKitMediaContainerState extends State<ZegoUIKitMediaContainer> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ZegoUIKitUser>>(
-      stream: ZegoUIKit().getMediaListStream(),
+      stream: ZegoUIKit().getMediaListStream(targetRoomID: widget.roomID),
       builder: (context, snapshot) {
-        final mediaUsers = ZegoUIKit().getMediaList();
+        final mediaUsers =
+            ZegoUIKit().getMediaList(targetRoomID: widget.roomID);
         if (mediaUsers.isEmpty) {
           return Container();
         }
 
         return ZegoUIKitMediaView(
+          roomID: widget.roomID,
           user: mediaUsers.first,
           backgroundBuilder: widget.backgroundBuilder,
           foregroundBuilder: widget.foregroundBuilder,

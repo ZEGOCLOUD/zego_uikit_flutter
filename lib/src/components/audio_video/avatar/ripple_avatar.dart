@@ -12,6 +12,7 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoRippleAvatar extends StatefulWidget {
   const ZegoRippleAvatar({
     Key? key,
+    required this.roomID,
     required this.user,
     required this.child,
     this.color,
@@ -19,7 +20,7 @@ class ZegoRippleAvatar extends StatefulWidget {
     this.radiusIncrement = 0.2,
     this.mixerStreamID,
   }) : super(key: key);
-
+  final String roomID;
   final Widget child;
 
   final ZegoUIKitUser? user;
@@ -154,23 +155,38 @@ class _ZegoRippleAvatarState extends State<ZegoRippleAvatar> {
     if (widget.mixerStreamID?.isNotEmpty ?? false) {
       if (-1 ==
           ZegoUIKit()
-              .getMixerStreamUsers(widget.mixerStreamID ?? '')
+              .getMixerStreamUsers(
+                targetRoomID: widget.roomID,
+                widget.mixerStreamID ?? '',
+              )
               .indexWhere((e) => e.id == widget.user?.id)) {
         userListUpdateSubscription = ZegoUIKit()
-            .getMixerUserListStream(widget.mixerStreamID ?? '')
+            .getMixerUserListStream(
+              targetRoomID: widget.roomID,
+              widget.mixerStreamID ?? '',
+            )
             .listen(onUserListUpdated);
       } else {
         soundLevelStreamSubscription = ZegoUIKit()
-            .getMixedSoundLevelStream(widget.user?.id ?? '')
+            .getMixedSoundLevelStream(
+              targetRoomID: widget.roomID,
+              widget.user?.id ?? '',
+            )
             .listen(onSoundLevelChanged);
       }
     } else {
-      if (ZegoUIKit().getUser(widget.user?.id ?? '').isEmpty()) {
-        userListUpdateSubscription =
-            ZegoUIKit().getUserListStream().listen(onUserListUpdated);
+      if (ZegoUIKit()
+          .getUser(targetRoomID: widget.roomID, widget.user?.id ?? '')
+          .isEmpty()) {
+        userListUpdateSubscription = ZegoUIKit()
+            .getUserListStream(targetRoomID: widget.roomID)
+            .listen(onUserListUpdated);
       } else {
         soundLevelStreamSubscription = ZegoUIKit()
-            .getSoundLevelStream(widget.user?.id ?? '')
+            .getSoundLevelStream(
+              targetRoomID: widget.roomID,
+              widget.user?.id ?? '',
+            )
             .listen(onSoundLevelChanged);
       }
     }

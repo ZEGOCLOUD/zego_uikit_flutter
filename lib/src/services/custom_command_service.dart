@@ -5,13 +5,12 @@ mixin ZegoCustomCommandService {
   Future<bool> sendInRoomCommand(
     String command,
     List<String> toUserIDs, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) async {
     final resultErrorCode = await ZegoUIKitCore.shared.sendInRoomCommand(
       command,
       toUserIDs,
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
     );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {

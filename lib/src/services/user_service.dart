@@ -18,12 +18,12 @@ mixin ZegoUserService {
 
   /// get all users, include local user and remote users
   List<ZegoUIKitUser> getAllUsers({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return [
       ZegoUIKitCore.shared.coreData.user.localUser,
       ...ZegoUIKitCore.shared.coreData.user.roomUsers
-          .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+          .getRoom(targetRoomID)
           .remoteUsers
     ]
         .where((user) => !user.isAnotherRoomUser)
@@ -33,10 +33,10 @@ mixin ZegoUserService {
 
   /// get remote users, not include local user
   List<ZegoUIKitUser> getRemoteUsers({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.user.roomUsers
-        .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+        .getRoom(targetRoomID)
         .remoteUsers
         .where((user) => !user.isAnotherRoomUser)
         .map((user) => user.toZegoUikitUser())
@@ -46,13 +46,12 @@ mixin ZegoUserService {
   /// get user by user id
   ZegoUIKitUser getUser(
     String userID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.user
         .getUser(
           userID,
-          targetRoomID:
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+          targetRoomID: targetRoomID,
         )
         .toZegoUikitUser();
   }
@@ -60,25 +59,22 @@ mixin ZegoUserService {
   /// get notifier of in-room user attributes
   ValueNotifier<ZegoUIKitUserAttributes> getInRoomUserAttributesNotifier(
     String userID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.user
         .getUser(
           userID,
-          targetRoomID:
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+          targetRoomID: targetRoomID,
         )
         .inRoomAttributes;
   }
 
   /// get user list notifier
   Stream<List<ZegoUIKitUser>> getUserListStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.user.roomUsers
-            .getRoom(
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-            )
+            .getRoom(targetRoomID)
             .listStreamCtrl
             ?.stream
             .map((users) => users
@@ -90,11 +86,10 @@ mixin ZegoUserService {
 
   /// get user join notifier
   Stream<List<ZegoUIKitUser>> getUserJoinStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.user.roomUsers
-            .getRoom(
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+            .getRoom(targetRoomID)
             .joinStreamCtrl
             ?.stream
             .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
@@ -103,11 +98,10 @@ mixin ZegoUserService {
 
   /// get user leave notifier
   Stream<List<ZegoUIKitUser>> getUserLeaveStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.user.roomUsers
-            .getRoom(
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+            .getRoom(targetRoomID)
             .leaveStreamCtrl
             ?.stream
             .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
@@ -117,12 +111,11 @@ mixin ZegoUserService {
   /// remove user from room, kick out
   Future<bool> removeUserFromRoom(
     List<String> userIDs, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) async {
     final resultErrorCode = await ZegoUIKitCore.shared.removeUserFromRoom(
       userIDs,
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
     );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {
@@ -141,11 +134,10 @@ mixin ZegoUserService {
 
   /// get kicked out notifier
   Stream<String> getMeRemovedFromRoomStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.user.roomUsers
-            .getRoom(
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+            .getRoom(targetRoomID)
             .meRemovedFromRoomStreamCtrl
             ?.stream ??
         const Stream.empty();

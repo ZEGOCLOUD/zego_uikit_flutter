@@ -5,26 +5,24 @@ mixin ZegoMixerService {
     String roomID,
     String userID, {
     String userName = '',
-    String? targetRoomID,
+    required String targetRoomID,
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     return ZegoUIKitCore.shared.startPlayAnotherRoomAudioVideo(
       roomID,
       userID,
       userName,
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
     );
   }
 
   Future<void> stopPlayAnotherRoomAudioVideo(
     String userID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) async {
     return ZegoUIKitCore.shared.stopPlayAnotherRoomAudioVideo(
       userID,
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
     );
   }
 
@@ -41,36 +39,33 @@ mixin ZegoMixerService {
     String mixerID,
     List<ZegoUIKitUser> users,
     Map<String, int> userSoundIDs, {
-    String? targetRoomID,
+    required String targetRoomID,
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     return ZegoUIKitCore.shared.startPlayMixAudioVideo(
       mixerID,
       users.map((e) => ZegoUIKitCoreUser(e.id, e.name)).toList(),
       userSoundIDs,
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
     );
   }
 
   Future<void> stopPlayMixAudioVideo(
     String mixerID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) async {
     return ZegoUIKitCore.shared.stopPlayMixAudioVideo(
       mixerID,
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
     );
   }
 
   ValueNotifier<Widget?> getMixAudioVideoViewNotifier(
     String mixerID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.stream.roomStreams
-            .getRoom(
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+            .getRoom(targetRoomID)
             .mixerStreamDic[mixerID]
             ?.view ??
         ValueNotifier(null);
@@ -79,10 +74,10 @@ mixin ZegoMixerService {
   ValueNotifier<bool> getMixAudioVideoCameraStateNotifier(
     String mixerID,
     String userID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     final targetUser = ZegoUIKitCore.shared.coreData.stream.roomStreams
-        .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+        .getRoom(targetRoomID)
         .mixerStreamDic[mixerID]
         ?.usersNotifier
         .value
@@ -94,11 +89,10 @@ mixin ZegoMixerService {
   ValueNotifier<bool> getMixAudioVideoMicrophoneStateNotifier(
     String mixerID,
     String userID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.stream.roomStreams
-            .getRoom(
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+            .getRoom(targetRoomID)
             .mixerStreamDic[mixerID]
             ?.usersNotifier
             .value
@@ -110,11 +104,10 @@ mixin ZegoMixerService {
 
   ValueNotifier<bool> getMixAudioVideoLoadedNotifier(
     String mixerID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.stream.roomStreams
-            .getRoom(
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+            .getRoom(targetRoomID)
             .mixerStreamDic[mixerID]
             ?.loaded ??
         ValueNotifier(false);
@@ -122,10 +115,10 @@ mixin ZegoMixerService {
 
   /// get mixed sound level notifier
   Stream<Map<int, double>> getMixedSoundLevelsStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     final mixStreams = ZegoUIKitCore.shared.coreData.stream.roomStreams
-        .getRoom(targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+        .getRoom(targetRoomID)
         .mixerStreamDic
         .values;
     if (mixStreams.isEmpty) {
@@ -137,14 +130,10 @@ mixin ZegoMixerService {
   /// get sound level notifier
   Stream<double> getMixedSoundLevelStream(
     String userID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.user
-            .getUserInMixerStream(
-              userID,
-              targetRoomID:
-                  targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-            )
+            .getUserInMixerStream(userID, targetRoomID: targetRoomID)
             .mainChannel
             .soundLevelStream
             ?.stream ??
@@ -153,24 +142,19 @@ mixin ZegoMixerService {
 
   ZegoUIKitUser getUserInMixerStream(
     String userID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.user
-        .getUserInMixerStream(
-          userID,
-          targetRoomID:
-              targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-        )
+        .getUserInMixerStream(userID, targetRoomID: targetRoomID)
         .toZegoUikitUser();
   }
 
   List<ZegoUIKitUser> getMixerStreamUsers(
     String mixerStreamID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.stream.roomStreams
-            .getRoom(
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+            .getRoom(targetRoomID)
             .mixerStreamDic[mixerStreamID]
             ?.usersNotifier
             .value
@@ -182,11 +166,10 @@ mixin ZegoMixerService {
   /// get user list notifier
   Stream<List<ZegoUIKitUser>> getMixerUserListStream(
     String mixerStreamID, {
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     return ZegoUIKitCore.shared.coreData.stream.roomStreams
-            .getRoom(
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID)
+            .getRoom(targetRoomID)
             .mixerStreamDic[mixerStreamID]
             ?.userListStreamCtrl
             ?.stream

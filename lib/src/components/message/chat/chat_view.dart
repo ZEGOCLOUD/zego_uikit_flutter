@@ -10,12 +10,14 @@ import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoInRoomChatView extends StatefulWidget {
+  final String roomID;
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoInRoomMessageItemBuilder? itemBuilder;
   final ScrollController? scrollController;
 
   const ZegoInRoomChatView({
     Key? key,
+    required this.roomID,
     this.avatarBuilder,
     this.itemBuilder,
     this.scrollController,
@@ -29,8 +31,11 @@ class _ZegoInRoomChatViewState extends State<ZegoInRoomChatView> {
   @override
   Widget build(BuildContext context) {
     return ZegoInRoomMessageView(
-      historyMessages: ZegoUIKit().getInRoomMessages(),
-      stream: ZegoUIKit().getInRoomMessageListStream(),
+      historyMessages:
+          ZegoUIKit().getInRoomMessages(targetRoomID: widget.roomID),
+      stream: ZegoUIKit().getInRoomMessageListStream(
+        targetRoomID: widget.roomID,
+      ),
       scrollController: widget.scrollController,
       itemBuilder: widget.itemBuilder ??
           (BuildContext context, ZegoInRoomMessage message, _) {
@@ -38,6 +43,7 @@ class _ZegoInRoomChatViewState extends State<ZegoInRoomChatView> {
               padding:
                   EdgeInsets.symmetric(horizontal: 0.0.zR, vertical: 20.0.zR),
               child: ZegoInRoomChatViewItem(
+                roomID: widget.roomID,
                 avatarBuilder: widget.avatarBuilder,
                 message: message,
               ),

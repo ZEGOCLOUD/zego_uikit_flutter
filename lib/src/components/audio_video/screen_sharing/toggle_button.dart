@@ -10,6 +10,7 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoScreenSharingToggleButton extends StatefulWidget {
   const ZegoScreenSharingToggleButton({
     Key? key,
+    required this.roomID,
     this.iconStartSharing,
     this.iconStopSharing,
     this.buttonSize,
@@ -17,6 +18,7 @@ class ZegoScreenSharingToggleButton extends StatefulWidget {
     this.onPressed,
   }) : super(key: key);
 
+  final String roomID;
   final ButtonIcon? iconStartSharing;
   final ButtonIcon? iconStopSharing;
 
@@ -72,10 +74,12 @@ class _ZegoScreenSharingToggleButtonState
   }
 
   Future<void> onPressed() async {
-    if (ZegoUIKit().getScreenSharingList().isNotEmpty) {
+    if (ZegoUIKit()
+        .getScreenSharingList(targetRoomID: widget.roomID)
+        .isNotEmpty) {
       ZegoLoggerService.logInfo(
         "some user is sharing in room, "
-        "${ZegoUIKit().getScreenSharingList().map((e) => "${e.toString()},")}",
+        "${ZegoUIKit().getScreenSharingList(targetRoomID: widget.roomID).map((e) => "${e.toString()},")}",
         tag: 'uikit-component',
         subTag: 'ZegoScreenSharingToggleButton',
       );
@@ -90,9 +94,9 @@ class _ZegoScreenSharingToggleButtonState
 
     /// reverse current state
     if (targetState) {
-      await ZegoUIKit().startSharingScreen();
+      await ZegoUIKit().startSharingScreen(targetRoomID: widget.roomID);
     } else {
-      await ZegoUIKit().stopSharingScreen();
+      await ZegoUIKit().stopSharingScreen(targetRoomID: widget.roomID);
     }
 
     if (widget.onPressed != null) {

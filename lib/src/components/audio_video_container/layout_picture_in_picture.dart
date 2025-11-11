@@ -68,13 +68,14 @@ class ZegoLayoutPictureInPictureConfig extends ZegoLayout {
 class ZegoLayoutPictureInPicture extends StatefulWidget {
   const ZegoLayoutPictureInPicture({
     Key? key,
+    required this.roomID,
     required this.userList,
     required this.layoutConfig,
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.avatarConfig,
   }) : super(key: key);
-
+  final String roomID;
   final List<ZegoUIKitUser> userList;
   final ZegoLayoutPictureInPictureConfig layoutConfig;
 
@@ -129,6 +130,7 @@ class _ZegoLayoutPictureInPictureState
         else
           LayoutBuilder(builder: (context, constraints) {
             return ZegoAudioVideoView(
+              roomID: widget.roomID,
               user: largeViewUser,
               backgroundBuilder: widget.backgroundBuilder,
               foregroundBuilder: widget.foregroundBuilder,
@@ -139,6 +141,7 @@ class _ZegoLayoutPictureInPictureState
           Container()
         else
           ZegoLayoutPIPSmallItem(
+            roomID: widget.roomID,
             targetUser: smallViewUser,
             localUser: localUser,
             defaultPosition: widget.layoutConfig.smallViewPosition,
@@ -186,6 +189,7 @@ class _ZegoLayoutPictureInPictureState
       children: [
         LayoutBuilder(builder: (context, constraints) {
           return ZegoAudioVideoView(
+            roomID: widget.roomID,
             user: largeViewUser,
             backgroundBuilder: widget.backgroundBuilder,
             foregroundBuilder: widget.foregroundBuilder,
@@ -193,6 +197,7 @@ class _ZegoLayoutPictureInPictureState
           );
         }),
         ZegoLayoutPIPSmallItemList(
+          roomID: widget.roomID,
           targetUsers: smallViewList,
           defaultPosition: widget.layoutConfig.smallViewPosition,
           showOnlyVideo: false,

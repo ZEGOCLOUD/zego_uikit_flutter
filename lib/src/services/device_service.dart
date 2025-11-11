@@ -3,24 +3,20 @@ part of 'uikit_service.dart';
 mixin ZegoDeviceService {
   /// protocol: String is 'operator'
   Stream<String> getTurnOnYourCameraRequestStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     final targetRoomStringInfo =
-        ZegoUIKitCore.shared.coreData.stream.roomStreams.getRoom(
-      targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-    );
+        ZegoUIKitCore.shared.coreData.stream.roomStreams.getRoom(targetRoomID);
     return targetRoomStringInfo.turnOnYourCameraRequestStreamCtrl?.stream ??
         const Stream.empty();
   }
 
   Stream<ZegoUIKitReceiveTurnOnLocalMicrophoneEvent>
       getTurnOnYourMicrophoneRequestStream({
-    String? targetRoomID,
+    required String targetRoomID,
   }) {
     final targetRoomStringInfo =
-        ZegoUIKitCore.shared.coreData.stream.roomStreams.getRoom(
-      targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
-    );
+        ZegoUIKitCore.shared.coreData.stream.roomStreams.getRoom(targetRoomID);
     return targetRoomStringInfo.turnOnYourMicrophoneRequestStreamCtrl?.stream ??
         const Stream.empty();
   }

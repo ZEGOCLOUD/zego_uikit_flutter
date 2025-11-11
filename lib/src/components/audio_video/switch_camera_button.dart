@@ -13,12 +13,15 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoSwitchCameraButton extends StatefulWidget {
   const ZegoSwitchCameraButton({
     Key? key,
+    required this.roomID,
     this.onPressed,
     this.icon,
     this.defaultUseFrontFacingCamera = true,
     this.iconSize,
     this.buttonSize,
   }) : super(key: key);
+
+  final String roomID;
 
   final ButtonIcon? icon;
 
@@ -56,12 +59,16 @@ class _ZegoSwitchCameraButtonState extends State<ZegoSwitchCameraButton>
     final sizeBoxSize = widget.iconSize ?? Size(56.zR, 56.zR);
 
     return ValueListenableBuilder<bool>(
-        valueListenable:
-            ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id),
+        valueListenable: ZegoUIKit().getCameraStateNotifier(
+          targetRoomID: widget.roomID,
+          ZegoUIKit().getLocalUser().id,
+        ),
         builder: (context, isCameraOn, _) {
           return ValueListenableBuilder<bool>(
             valueListenable: ZegoUIKit().getUseFrontFacingCameraStateNotifier(
-                ZegoUIKit().getLocalUser().id),
+              targetRoomID: widget.roomID,
+              ZegoUIKit().getLocalUser().id,
+            ),
             builder: (context, isFrontFacing, _) {
               return GestureDetector(
                 onTap: isCameraOn

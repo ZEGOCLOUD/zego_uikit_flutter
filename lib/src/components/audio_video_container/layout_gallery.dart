@@ -46,6 +46,7 @@ class ZegoLayoutGalleryConfig extends ZegoLayout {
 class ZegoLayoutGallery extends StatefulWidget {
   const ZegoLayoutGallery({
     Key? key,
+    required this.roomID,
     required this.maxItemCount,
     required this.userList,
     required this.layoutConfig,
@@ -55,7 +56,7 @@ class ZegoLayoutGallery extends StatefulWidget {
     this.avatarConfig,
     this.screenSharingViewController,
   }) : super(key: key);
-
+  final String roomID;
   final int maxItemCount;
   final List<ZegoUIKitUser> userList;
   final ZegoLayoutGalleryConfig layoutConfig;
@@ -144,10 +145,14 @@ class _ZegoLayoutGalleryState extends State<ZegoLayoutGallery> {
     var lastUsers = <ZegoUIKitUser>[];
 
     final screenSharingLayoutItems = <LayoutId>[];
-    final audioVideoListUserIDs =
-        ZegoUIKit().getAudioVideoList().map((e) => e.id).toList();
-    final screenSharingListUserIDs =
-        ZegoUIKit().getScreenSharingList().map((e) => e.id).toList();
+    final audioVideoListUserIDs = ZegoUIKit()
+        .getAudioVideoList(targetRoomID: widget.roomID)
+        .map((e) => e.id)
+        .toList();
+    final screenSharingListUserIDs = ZegoUIKit()
+        .getScreenSharingList(targetRoomID: widget.roomID)
+        .map((e) => e.id)
+        .toList();
     for (var index = 0; index < layoutUsers.length; index++) {
       final layoutUser = layoutUsers.elementAt(index);
 
@@ -158,6 +163,7 @@ class _ZegoLayoutGalleryState extends State<ZegoLayoutGallery> {
           !widget.layoutConfig.showOnlyOnAudioVideo) {
         final audioVideoView = LayoutBuilder(builder: (context, constraints) {
           return ZegoAudioVideoView(
+            roomID: widget.roomID,
             user: layoutUser,
             backgroundBuilder: widget.backgroundBuilder,
             foregroundBuilder: widget.foregroundBuilder,
@@ -179,6 +185,7 @@ class _ZegoLayoutGalleryState extends State<ZegoLayoutGallery> {
       if (screenSharingListUserIDs.contains(layoutUser.id)) {
         final audioVideoView = LayoutBuilder(builder: (context, constraints) {
           return ZegoScreenSharingView(
+            roomID: widget.roomID,
             user: layoutUser,
             backgroundBuilder: widget.backgroundBuilder,
             foregroundBuilder: widget.foregroundBuilder,

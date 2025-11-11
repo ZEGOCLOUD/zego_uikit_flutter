@@ -14,6 +14,7 @@ import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 class ZegoAvatar extends StatelessWidget {
+  final String roomID;
   final Size avatarSize;
   final ZegoUIKitUser? user;
   final bool showAvatar;
@@ -26,6 +27,7 @@ class ZegoAvatar extends StatelessWidget {
 
   const ZegoAvatar({
     Key? key,
+    required this.roomID,
     required this.avatarSize,
     this.user,
     this.showAvatar = true,
@@ -52,6 +54,7 @@ class ZegoAvatar extends StatelessWidget {
         size: showSoundLevel ? soundLevelSize : avatarSize,
         child: showSoundLevel
             ? ZegoRippleAvatar(
+                roomID: roomID,
                 user: user,
                 color: soundLevelColor ?? const Color(0xff6a6b6f),
                 minRadius: min(avatarSize.width, avatarSize.height) / 2,
@@ -72,6 +75,7 @@ class ZegoAvatar extends StatelessWidget {
   ) {
     return ValueListenableBuilder(
       valueListenable: ZegoUIKitUserPropertiesNotifier(
+        roomID: roomID,
         user ?? ZegoUIKitUser.empty(),
       ),
       builder: (context, _, __) {

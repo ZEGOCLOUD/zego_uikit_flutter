@@ -11,6 +11,8 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier
     implements ValueListenable<int> {
+  final String roomID;
+
   int _updateTimestamp = 0;
 
   final String? _mixerStreamID;
@@ -22,6 +24,7 @@ class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier
 
   ZegoUIKitUserPropertiesNotifier(
     ZegoUIKitUser user, {
+    required this.roomID,
     String? mixerStreamID,
   })  : _user = user,
         _mixerStreamID = mixerStreamID {
@@ -46,8 +49,9 @@ class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier
 
     _userListChangedSubscription?.cancel();
     if (_coreUser.isEmpty) {
-      _userListChangedSubscription =
-          ZegoUIKit().getUserListStream().listen(onUserListUpdated);
+      _userListChangedSubscription = ZegoUIKit()
+          .getUserListStream(targetRoomID: roomID)
+          .listen(onUserListUpdated);
     } else {
       _listenUserProperty();
     }
@@ -62,7 +66,7 @@ class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier
     _userListChangedSubscription?.cancel();
     if (_coreUser.isEmpty) {
       _userListChangedSubscription = ZegoUIKit()
-          .getMixerUserListStream(_mixerStreamID!)
+          .getMixerUserListStream(targetRoomID: roomID, _mixerStreamID!)
           .listen(onUserListUpdated);
     } else {
       _listenUserProperty();

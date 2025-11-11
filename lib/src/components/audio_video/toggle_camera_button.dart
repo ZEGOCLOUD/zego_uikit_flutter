@@ -16,6 +16,7 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoToggleCameraButton extends StatefulWidget {
   const ZegoToggleCameraButton({
     Key? key,
+    required this.roomID,
     this.normalIcon,
     this.offIcon,
     this.onPressed,
@@ -24,6 +25,7 @@ class ZegoToggleCameraButton extends StatefulWidget {
     this.buttonSize,
   }) : super(key: key);
 
+  final String roomID;
   final ButtonIcon? normalIcon;
   final ButtonIcon? offIcon;
 
@@ -51,7 +53,7 @@ class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton>
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       /// synchronizing the default status
-      ZegoUIKit().turnCameraOn(widget.defaultOn);
+      ZegoUIKit().turnCameraOn(targetRoomID: widget.roomID, widget.defaultOn);
     });
   }
 
@@ -62,8 +64,10 @@ class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton>
 
     /// listen local camera state changes
     return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id),
+      valueListenable: ZegoUIKit().getCameraStateNotifier(
+        targetRoomID: widget.roomID,
+        ZegoUIKit().getLocalUser().id,
+      ),
       builder: (context, isCameraOn, _) {
         /// update if camera state changed
         return GestureDetector(
@@ -97,19 +101,21 @@ class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton>
   void onPressed() {
     if (!executeWithRateLimit(() {
       /// get current camera state
-      final valueNotifier =
-          ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id);
+      final valueNotifier = ZegoUIKit().getCameraStateNotifier(
+        targetRoomID: widget.roomID,
+        ZegoUIKit().getLocalUser().id,
+      );
 
       final targetState = !valueNotifier.value;
 
       if (targetState) {
         requestPermission(Permission.camera).then((value) {
           /// reverse current state
-          ZegoUIKit().turnCameraOn(true);
+          ZegoUIKit().turnCameraOn(targetRoomID: widget.roomID, true);
         });
       } else {
         /// reverse current state
-        ZegoUIKit().turnCameraOn(false);
+        ZegoUIKit().turnCameraOn(targetRoomID: widget.roomID, false);
       }
 
       if (widget.onPressed != null) {

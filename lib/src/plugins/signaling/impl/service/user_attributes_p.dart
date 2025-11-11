@@ -9,6 +9,12 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 /// @nodoc
 class ZegoUIKitUserInRoomAttributesPluginServicePrivate {
+  ZegoUIKitUserInRoomAttributesPluginServicePrivate({
+    required this.roomID,
+  });
+
+  final String roomID;
+
   final bool isInit = false;
   final List<StreamSubscription<dynamic>?> subscriptions = [];
   final Map<String, Map<String, String>> pendingUserRoomAttributes = {};
@@ -21,7 +27,9 @@ class ZegoUIKitUserInRoomAttributesPluginServicePrivate {
 
     debugPrint('[core] user in-room private init');
     subscriptions
-      ..add(ZegoUIKit().getUserListStream().listen(_onUserListUpdated))
+      ..add(ZegoUIKit()
+          .getUserListStream(targetRoomID: roomID)
+          .listen(_onUserListUpdated))
       ..add(ZegoUIKit()
           .getSignalingPlugin()
           .getUsersInRoomAttributesStream()
@@ -52,7 +60,7 @@ class ZegoUIKitUserInRoomAttributesPluginServicePrivate {
         debugPrint('[core] exist pending user attribute, user id: $userID, '
             'attributes: $userAttributes');
 
-        final user = ZegoUIKit().getUser(userID);
+        final user = ZegoUIKit().getUser(targetRoomID: roomID, userID);
         if (!user.isEmpty()) {
           updateUserInRoomAttributes({userID: userAttributes});
 
@@ -64,7 +72,10 @@ class ZegoUIKitUserInRoomAttributesPluginServicePrivate {
 
   void updateUserInRoomAttributes(Map<String, Map<String, String>> infos) {
     infos.forEach((updateUserID, updateUserAttributes) {
-      final updateUser = ZegoUIKit().getUser(updateUserID);
+      final updateUser = ZegoUIKit().getUser(
+        targetRoomID: roomID,
+        updateUserID,
+      );
       if (updateUser.isEmpty()) {
         pendingUserRoomAttributes[updateUserID] = updateUserAttributes;
         return;

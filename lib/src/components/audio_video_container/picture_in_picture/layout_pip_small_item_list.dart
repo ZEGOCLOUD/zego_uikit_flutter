@@ -14,6 +14,7 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoLayoutPIPSmallItemList extends StatefulWidget {
   const ZegoLayoutPIPSmallItemList({
     Key? key,
+    required this.roomID,
     required this.targetUsers,
     required this.defaultPosition,
     required this.showOnlyVideo,
@@ -29,6 +30,7 @@ class ZegoLayoutPIPSmallItemList extends StatefulWidget {
     this.avatarConfig,
   }) : super(key: key);
 
+  final String roomID;
   final bool showOnlyVideo;
   final bool scrollable;
   final int visibleItemCount;
@@ -185,6 +187,7 @@ class _ZegoLayoutPIPSmallItemListState
                 child: calculateSize(
                   user: targetUser,
                   child: ZegoAudioVideoView(
+                    roomID: widget.roomID,
                     user: targetUser,
                     borderRadius: widget.borderRadius ?? 18.0.zW,
                     backgroundBuilder: widget.backgroundBuilder,
@@ -212,7 +215,10 @@ class _ZegoLayoutPIPSmallItemListState
       return SizedBox.fromSize(size: defaultSize, child: child);
     } else {
       return ValueListenableBuilder<Size>(
-        valueListenable: ZegoUIKit().getVideoSizeNotifier(user.id),
+        valueListenable: ZegoUIKit().getVideoSizeNotifier(
+          targetRoomID: widget.roomID,
+          user.id,
+        ),
         builder: (context, Size size, _) {
           late double width, height;
           if (size.width > size.height) {
@@ -267,7 +273,7 @@ class _ZegoLayoutPIPSmallItemListState
     if (widget.showOnlyVideo) {
       for (final user in widget.targetUsers) {
         ZegoUIKit()
-            .getCameraStateNotifier(user.id)
+            .getCameraStateNotifier(targetRoomID: widget.roomID, user.id)
             .addListener(onUserCameraStateChanged);
       }
     }
@@ -277,7 +283,7 @@ class _ZegoLayoutPIPSmallItemListState
     if (widget.showOnlyVideo) {
       for (final user in widget.targetUsers) {
         ZegoUIKit()
-            .getCameraStateNotifier(user.id)
+            .getCameraStateNotifier(targetRoomID: widget.roomID, user.id)
             .removeListener(onUserCameraStateChanged);
       }
     }
@@ -288,7 +294,9 @@ class _ZegoLayoutPIPSmallItemListState
       final targetUsers = List<ZegoUIKitUser>.from(widget.targetUsers)
         ..removeWhere((user) {
           /// hide if user's camera close
-          return !ZegoUIKit().getCameraStateNotifier(user.id).value;
+          return !ZegoUIKit()
+              .getCameraStateNotifier(targetRoomID: widget.roomID, user.id)
+              .value;
         });
 
       displayUsersNotifier.value = targetUsers;

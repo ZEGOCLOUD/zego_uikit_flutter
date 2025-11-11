@@ -52,7 +52,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
   Future<bool> init() async {
     return initSDK().then((_) async {
       /// audio should not be played
-      ZegoUIKit().stopPlayAllAudio();
+      ZegoUIKit().stopPlayAllAudio(targetRoomID: roomID);
 
       return await joinRoom().then((result) {
         onStreamsUpdated();
@@ -76,7 +76,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
     return playAll(isPlay: false).then((_) async {
       return leaveRoom().then((_) async {
         /// restore audio state to not muted
-        ZegoUIKit().startPlayAllAudio();
+        ZegoUIKit().startPlayAllAudio(targetRoomID: roomID);
 
         return await uninitSDK();
       });
@@ -143,7 +143,9 @@ class ZegoUIKitHallRoomListControllerPrivate {
       appSign: _appSign,
       token: _token,
       scenario: _scenario,
-      roomMode: ZegoRoomMode.MultiRoom,
+
+      /// todo: multi mode
+      // roomMode: ZegoRoomMode.MultiRoom,
     )
         .then((value) async {
       ZegoLoggerService.logInfo(
@@ -288,11 +290,13 @@ class ZegoUIKitHallRoomListControllerPrivate {
       streamInfo.isPlaying = isPlay;
       isPlay
           ? await ZegoUIKit().startPlayAnotherRoomAudioVideo(
+              targetRoomID: roomID,
               streamInfo.roomID,
               streamInfo.user.id,
               userName: streamInfo.user.name,
             )
           : await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
+              targetRoomID: roomID,
               streamInfo.user.id,
             );
     }
@@ -377,11 +381,13 @@ class ZegoUIKitHallRoomListControllerPrivate {
     streamInfo.isPlaying = toPlay;
     toPlay
         ? await ZegoUIKit().startPlayAnotherRoomAudioVideo(
+            targetRoomID: roomID,
             streamInfo.roomID,
             streamInfo.user.id,
             userName: streamInfo.user.name,
           )
         : await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
+            targetRoomID: roomID,
             streamInfo.user.id,
           );
 

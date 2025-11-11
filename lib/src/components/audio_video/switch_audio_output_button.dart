@@ -13,6 +13,7 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoSwitchAudioOutputButton extends StatefulWidget {
   const ZegoSwitchAudioOutputButton({
     Key? key,
+    required this.roomID,
     this.speakerIcon,
     this.headphoneIcon,
     this.bluetoothIcon,
@@ -22,6 +23,7 @@ class ZegoSwitchAudioOutputButton extends StatefulWidget {
     this.buttonSize,
   }) : super(key: key);
 
+  final String roomID;
   final ButtonIcon? speakerIcon;
   final ButtonIcon? headphoneIcon;
   final ButtonIcon? bluetoothIcon;
@@ -70,8 +72,10 @@ class _ZegoSwitchAudioOutputButtonState
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ZegoUIKitAudioRoute>(
       /// listen local audio output route changes
-      valueListenable: ZegoUIKit()
-          .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id),
+      valueListenable: ZegoUIKit().getAudioOutputDeviceNotifier(
+        targetRoomID: widget.roomID,
+        ZegoUIKit().getLocalUser().id,
+      ),
       builder: (context, audioRoute, _) {
         /// update icon/background if route changed
         return getAudioRouteButtonByRoute(audioRoute);
@@ -135,7 +139,10 @@ class _ZegoSwitchAudioOutputButtonState
       }
 
       final audioRoute = ZegoUIKit()
-          .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
+          .getAudioOutputDeviceNotifier(
+            targetRoomID: widget.roomID,
+            ZegoUIKit().getLocalUser().id,
+          )
           .value;
       final targetIsSpeaker = audioRoute != ZegoUIKitAudioRoute.Speaker;
       ZegoLoggerService.logInfo(
@@ -159,7 +166,10 @@ class _ZegoSwitchAudioOutputButtonState
 
   bool canUpdateAudioRoute() {
     final audioRoute = ZegoUIKit()
-        .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
+        .getAudioOutputDeviceNotifier(
+          targetRoomID: widget.roomID,
+          ZegoUIKit().getLocalUser().id,
+        )
         .value;
     if (ZegoUIKitAudioRoute.Headphone == audioRoute ||
         ZegoUIKitAudioRoute.Bluetooth == audioRoute) {

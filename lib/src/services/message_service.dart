@@ -4,19 +4,17 @@ mixin ZegoMessageService {
   /// send in-room message
   Future<bool> sendInRoomMessage(
     String message, {
-    String? targetRoomID,
+    required String targetRoomID,
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) async {
     final resultErrorCode = type == ZegoInRoomMessageType.broadcastMessage
         ? await ZegoUIKitCore.shared.message.sendBroadcastMessage(
-            targetRoomID:
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+            targetRoomID: targetRoomID,
             message,
           )
         : await ZegoUIKitCore.shared.message.sendBarrageMessage(
             message,
-            targetRoomID:
-                targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+            targetRoomID: targetRoomID,
           );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {
@@ -39,12 +37,11 @@ mixin ZegoMessageService {
   /// re-send in-room message
   Future<bool> resendInRoomMessage(
     ZegoInRoomMessage message, {
-    String? targetRoomID,
+    required String targetRoomID,
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) async {
     final resultErrorCode = await ZegoUIKitCore.shared.message.resendMessage(
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
       message,
       type,
     );
@@ -68,7 +65,7 @@ mixin ZegoMessageService {
 
   /// get history messages
   List<ZegoInRoomMessage> getInRoomMessages({
-    String? targetRoomID,
+    required String targetRoomID,
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return type == ZegoInRoomMessageType.broadcastMessage
@@ -84,7 +81,7 @@ mixin ZegoMessageService {
 
   /// messages notifier
   Stream<List<ZegoInRoomMessage>> getInRoomMessageListStream({
-    String? targetRoomID,
+    required String targetRoomID,
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return (type == ZegoInRoomMessageType.broadcastMessage
@@ -103,7 +100,7 @@ mixin ZegoMessageService {
 
   /// latest message received notifier
   Stream<ZegoInRoomMessage> getInRoomMessageStream({
-    String? targetRoomID,
+    required String targetRoomID,
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return (type == ZegoInRoomMessageType.broadcastMessage
@@ -122,7 +119,7 @@ mixin ZegoMessageService {
 
   /// local message sent notifier
   Stream<ZegoInRoomMessage> getInRoomLocalMessageStream({
-    String? targetRoomID,
+    required String targetRoomID,
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return (type == ZegoInRoomMessageType.broadcastMessage
@@ -140,21 +137,19 @@ mixin ZegoMessageService {
   }
 
   Future<bool> clearMessage({
-    String? targetRoomID,
+    required String targetRoomID,
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
     bool clearRemote = true,
   }) async {
     ZegoUIKitCore.shared.clearLocalMessage(
       type,
-      targetRoomID:
-          targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: targetRoomID,
     );
 
     if (clearRemote) {
       final resultErrorCode = await ZegoUIKitCore.shared.clearRemoteMessage(
         type,
-        targetRoomID:
-            targetRoomID ?? ZegoUIKitCore.shared.coreData.room.currentID,
+        targetRoomID: targetRoomID,
       );
 
       if (ZegoUIKitErrorCode.success != resultErrorCode) {

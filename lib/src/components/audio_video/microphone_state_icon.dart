@@ -11,6 +11,7 @@ import 'package:zego_uikit/src/services/services.dart';
 /// monitor the microphone status changes,
 /// when the status changes, the corresponding icon is automatically switched
 class ZegoMicrophoneStateIcon extends StatefulWidget {
+  final String roomID;
   final ZegoUIKitUser? targetUser;
 
   final Image? iconMicrophoneOn;
@@ -19,6 +20,7 @@ class ZegoMicrophoneStateIcon extends StatefulWidget {
 
   const ZegoMicrophoneStateIcon({
     Key? key,
+    required this.roomID,
     required this.targetUser,
     this.iconMicrophoneOn,
     this.iconMicrophoneOff,
@@ -42,7 +44,10 @@ class _ZegoMicrophoneStateIconState extends State<ZegoMicrophoneStateIcon> {
     super.initState();
 
     soundLevelStreamSubscription = ZegoUIKit()
-        .getSoundLevelStream(widget.targetUser?.id ?? '')
+        .getSoundLevelStream(
+          targetRoomID: widget.roomID,
+          widget.targetUser?.id ?? '',
+        )
         .listen(onSoundLevelChanged);
   }
 
@@ -57,8 +62,10 @@ class _ZegoMicrophoneStateIconState extends State<ZegoMicrophoneStateIcon> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKit().getMicrophoneStateNotifier(widget.targetUser?.id ?? ''),
+      valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+        targetRoomID: widget.roomID,
+        widget.targetUser?.id ?? '',
+      ),
       builder: (context, isMicrophoneOn, _) {
         return ValueListenableBuilder<int>(
           valueListenable: soundLevelNotifier,

@@ -221,7 +221,9 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
       ),
       margin: widget.style.item.margin,
       child: StreamBuilder<List<ZegoUIKitUser>>(
-        stream: ZegoUIKit().getAudioVideoListStream(),
+        stream: ZegoUIKit().getAudioVideoListStream(
+          targetRoomID: widget.controller.roomID,
+        ),
         builder: (context, snapshot) {
           return Stack(
             children: [
@@ -265,10 +267,14 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
 
   Widget videoView(ZegoUIKitHallRoomListStream stream) {
     return StreamBuilder<List<ZegoUIKitUser>>(
-      stream: ZegoUIKit().getUserListStream(),
+      stream: ZegoUIKit().getUserListStream(
+        targetRoomID: widget.controller.roomID,
+      ),
       builder: (context, snapshot) {
         final queryIndex = ZegoUIKit()
-            .getAudioVideoList()
+            .getAudioVideoList(
+              targetRoomID: widget.controller.roomID,
+            )
             .indexWhere((e) => e.id == stream.user.id);
         if (-1 == queryIndex) {
           return Center(
@@ -281,7 +287,12 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
           );
         }
 
-        return ZegoUIKit().getUser(stream.user.id).isEmpty()
+        return ZegoUIKit()
+                .getUser(
+                  targetRoomID: widget.controller.roomID,
+                  stream.user.id,
+                )
+                .isEmpty()
             ? Center(
                 child: widget.style.item.loadingBuilder?.call(
                       context,
@@ -291,8 +302,10 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
                     const CircularProgressIndicator(),
               )
             : ValueListenableBuilder<bool>(
-                valueListenable:
-                    ZegoUIKit().getCameraStateNotifier(stream.user.id),
+                valueListenable: ZegoUIKit().getCameraStateNotifier(
+                  targetRoomID: widget.controller.roomID,
+                  stream.user.id,
+                ),
                 builder: (context, isCameraOn, _) {
                   if (!isCameraOn) {
                     ZegoLoggerService.logInfo(
@@ -308,8 +321,11 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         return ValueListenableBuilder<Widget?>(
-                          valueListenable: ZegoUIKit()
-                              .getAudioVideoViewNotifier(stream.user.id),
+                          valueListenable:
+                              ZegoUIKit().getAudioVideoViewNotifier(
+                            targetRoomID: widget.controller.roomID,
+                            stream.user.id,
+                          ),
                           builder: (context, userView, _) {
                             if (userView == null) {
                               ZegoLoggerService.logError(
@@ -373,6 +389,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
           children: [
             ValueListenableBuilder(
               valueListenable: ZegoUIKitUserPropertiesNotifier(
+                roomID: widget.controller.roomID,
                 stream.user,
               ),
               builder: (context, _, __) {
@@ -427,7 +444,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
     }
 
     final queryIndex = ZegoUIKit()
-        .getAudioVideoList()
+        .getAudioVideoList(targetRoomID: widget.controller.roomID)
         .indexWhere((e) => e.id == stream.user.id);
     if (-1 == queryIndex) {
       return Container();
@@ -440,6 +457,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
         width: sizedWidth,
         height: sizedHeight,
         child: ZegoAvatar(
+          roomID: widget.controller.roomID,
           avatarSize: widget.style.item.avatar?.size ?? avatarSize,
           user: stream.user,
           showAvatar: widget.style.item.avatar?.showInAudioMode ?? true,

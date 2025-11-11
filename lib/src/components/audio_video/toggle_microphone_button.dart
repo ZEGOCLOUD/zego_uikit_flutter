@@ -16,6 +16,7 @@ import 'package:zego_uikit/src/services/services.dart';
 class ZegoToggleMicrophoneButton extends StatefulWidget {
   const ZegoToggleMicrophoneButton({
     Key? key,
+    required this.roomID,
     this.normalIcon,
     this.offIcon,
     this.onPressed,
@@ -25,6 +26,7 @@ class ZegoToggleMicrophoneButton extends StatefulWidget {
     this.muteMode = false,
   }) : super(key: key);
 
+  final String roomID;
   final ButtonIcon? normalIcon;
   final ButtonIcon? offIcon;
 
@@ -56,7 +58,11 @@ class _ZegoToggleMicrophoneButtonState extends State<ZegoToggleMicrophoneButton>
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       /// synchronizing the default status
-      ZegoUIKit().turnMicrophoneOn(widget.defaultOn, muteMode: widget.muteMode);
+      ZegoUIKit().turnMicrophoneOn(
+        targetRoomID: widget.roomID,
+        widget.defaultOn,
+        muteMode: widget.muteMode,
+      );
     });
   }
 
@@ -67,8 +73,10 @@ class _ZegoToggleMicrophoneButtonState extends State<ZegoToggleMicrophoneButton>
 
     /// listen local microphone state changes
     return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKit().getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id),
+      valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+        targetRoomID: widget.roomID,
+        ZegoUIKit().getLocalUser().id,
+      ),
       builder: (context, isMicrophoneOn, _) {
         /// update if microphone state changed
         return GestureDetector(
@@ -103,8 +111,10 @@ class _ZegoToggleMicrophoneButtonState extends State<ZegoToggleMicrophoneButton>
   void onPressed() {
     if (!executeWithRateLimit(() {
       /// get current microphone state
-      final valueNotifier =
-          ZegoUIKit().getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id);
+      final valueNotifier = ZegoUIKit().getMicrophoneStateNotifier(
+        targetRoomID: widget.roomID,
+        ZegoUIKit().getLocalUser().id,
+      );
 
       final targetState = !valueNotifier.value;
 
@@ -113,7 +123,11 @@ class _ZegoToggleMicrophoneButtonState extends State<ZegoToggleMicrophoneButton>
       }
 
       /// reverse current state
-      ZegoUIKit().turnMicrophoneOn(targetState, muteMode: widget.muteMode);
+      ZegoUIKit().turnMicrophoneOn(
+        targetRoomID: widget.roomID,
+        targetState,
+        muteMode: widget.muteMode,
+      );
 
       if (widget.onPressed != null) {
         widget.onPressed!(targetState);
