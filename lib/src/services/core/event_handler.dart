@@ -118,47 +118,14 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       subTag: 'event',
     );
 
-    final targetRemoteUserList =
-        coreData.user.roomUsers.getRoom(roomID).remoteUsers;
     final targetRoomStreamInfo = coreData.stream.roomStreams.getRoom(roomID);
     if (updateType == ZegoUpdateType.Add) {
       for (final stream in streamList) {
-        targetRoomStreamInfo.streamDic[stream.streamID] =
-            ZegoUIKitCoreDataStreamData(
+        targetRoomStreamInfo.addPlayingStreamDataInDict(
           roomID: roomID,
-          userID: stream.user.userID,
-          playerState: ZegoPlayerState.NoPlay,
+          stream: stream,
+          isFromAnotherRoom: false,
         );
-        ZegoLoggerService.logInfo(
-          'stream dict add ${stream.streamID} for ${stream.user.userID}, '
-          'dict: ${targetRoomStreamInfo.streamDic}',
-          tag: 'uikit-service-core',
-          subTag: 'event',
-        );
-
-        late ZegoUIKitCoreUser targetUser;
-        var targetUserIndex = targetRemoteUserList
-            .indexWhere((user) => stream.user.userID == user.id);
-        if (-1 == targetUserIndex) {
-          /// user is not exist before stream added
-          ZegoLoggerService.logInfo(
-            "stream's user ${stream.user.userID}  ${stream.user.userName} is not exist, create",
-            tag: 'uikit-service-core',
-            subTag: 'event',
-          );
-
-          targetUser = ZegoUIKitCoreUser.fromZego(stream.user);
-          targetRemoteUserList.add(targetUser);
-        } else {
-          targetUser = targetRemoteUserList[targetUserIndex];
-        }
-
-        final streamType =
-            ZegoUIKitCoreDataStreamHelper.getStreamTypeByID(stream.streamID);
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-            targetUser, streamType)
-          ..streamID = stream.streamID
-          ..streamTimestamp = coreData.timestamp.now.millisecondsSinceEpoch;
 
         if (targetRoomStreamInfo.isAllPlayStreamAudioVideoMuted) {
           ZegoLoggerService.logInfo(

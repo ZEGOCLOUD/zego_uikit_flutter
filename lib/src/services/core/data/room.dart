@@ -188,7 +188,10 @@ class ZegoUIKitCoreDataRoom {
 
     if (currentID.isNotEmpty && mode == ZegoRoomMode.SingleRoom) {
       /// clear old room data
-      _coreData.clear(targetRoomID: currentID);
+      _coreData.clear(
+        targetRoomID: currentID,
+        stopPlayingAnotherRoomStream: true,
+      );
 
       if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(currentID)) {
         ZegoLoggerService.logInfo(
@@ -295,7 +298,10 @@ class ZegoUIKitCoreDataRoom {
       return ZegoRoomLogoutResult(ZegoUIKitErrorCode.success, {});
     }
 
-    _coreData.clear(targetRoomID: targetRoomID);
+    _coreData.clear(
+      targetRoomID: targetRoomID,
+      stopPlayingAnotherRoomStream: true,
+    );
 
     final result = await rooms.getRoom(targetRoomID).leave();
     rooms.removeRoom(targetRoomID);

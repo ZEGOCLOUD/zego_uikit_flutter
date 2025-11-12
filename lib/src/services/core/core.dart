@@ -166,7 +166,10 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     uninitEventHandle();
 
     /// clear old room data
-    coreData.clear(targetRoomID: coreData.room.currentID);
+    coreData.clear(
+      targetRoomID: coreData.room.currentID,
+      stopPlayingAnotherRoomStream: true,
+    );
 
     for (final subscription in subscriptions) {
       subscription?.cancel();
@@ -1485,7 +1488,7 @@ extension ZegoUIKitCoreMixer on ZegoUIKitCore {
 
 /// @nodoc
 extension ZegoUIKitCoreAudioVideo on ZegoUIKitCore {
-  Future<void> startPlayAnotherRoomAudioVideo(
+  Future<void> startPlayingAnotherRoomStream(
     String roomID,
     String userID,
     String userName, {
@@ -1494,7 +1497,7 @@ extension ZegoUIKitCoreAudioVideo on ZegoUIKitCore {
   }) async {
     return coreData.stream.roomStreams
         .getRoom(targetRoomID)
-        .startPlayAnotherRoomAudioVideo(
+        .startPlayingAnotherRoomStream(
           roomID,
           userID,
           userName,
@@ -1502,13 +1505,13 @@ extension ZegoUIKitCoreAudioVideo on ZegoUIKitCore {
         );
   }
 
-  Future<void> stopPlayAnotherRoomAudioVideo(
+  Future<void> stopPlayingAnotherRoomStream(
     String userID, {
     required String targetRoomID,
   }) async {
     return coreData.stream.roomStreams
         .getRoom(targetRoomID)
-        .stopPlayAnotherRoomAudioVideo(
+        .stopPlayingAnotherRoomStream(
           userID,
         );
   }

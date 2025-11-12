@@ -264,12 +264,12 @@ mixin ZegoAudioVideoService {
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.user.roomUsers
-          .getRoom(
-            targetRoomID,
-          )
+          .getRoom(targetRoomID)
           .remoteUsers
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.viewNotifier;
@@ -302,12 +302,12 @@ mixin ZegoAudioVideoService {
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.user.roomUsers
-          .getRoom(
-            targetRoomID,
-          )
+          .getRoom(targetRoomID)
           .remoteUsers
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.viewIDNotifier;
@@ -339,12 +339,12 @@ mixin ZegoAudioVideoService {
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.user.roomUsers
-          .getRoom(
-            targetRoomID,
-          )
+          .getRoom(targetRoomID)
           .remoteUsers
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.qualityNotifier;
@@ -375,12 +375,12 @@ mixin ZegoAudioVideoService {
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.user.roomUsers
-          .getRoom(
-            targetRoomID,
-          )
+          .getRoom(targetRoomID)
           .remoteUsers
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.isCapturedAudioFirstFrameNotifier;
@@ -411,12 +411,12 @@ mixin ZegoAudioVideoService {
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.user.roomUsers
-          .getRoom(
-            targetRoomID,
-          )
+          .getRoom(targetRoomID)
           .remoteUsers
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.isCapturedVideoFirstFrameNotifier;
@@ -447,12 +447,12 @@ mixin ZegoAudioVideoService {
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.user.roomUsers
-          .getRoom(
-            targetRoomID,
-          )
+          .getRoom(targetRoomID)
           .remoteUsers
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.isSendAudioFirstFrameNotifier;
@@ -483,12 +483,12 @@ mixin ZegoAudioVideoService {
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.user.roomUsers
-          .getRoom(
-            targetRoomID,
-          )
+          .getRoom(targetRoomID)
           .remoteUsers
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.isSendVideoFirstFrameNotifier;

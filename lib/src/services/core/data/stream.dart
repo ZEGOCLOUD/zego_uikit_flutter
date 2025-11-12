@@ -104,6 +104,7 @@ class ZegoUIKitCoreDataStream {
 
   void clear({
     required String targetRoomID,
+    required bool stopPlayingAnotherRoomStream,
   }) {
     ZegoLoggerService.logInfo(
       'clear, '
@@ -116,7 +117,9 @@ class ZegoUIKitCoreDataStream {
 
     if (roomStreams.containsRoom(targetRoomID)) {
       final streamInfo = roomStreams.getRoom(targetRoomID);
-      streamInfo.clear();
+      streamInfo.clear(
+        stopPlayingAnotherRoomStream: stopPlayingAnotherRoomStream,
+      );
       streamInfo.isAllPlayStreamAudioVideoMuted = false;
       streamInfo.isAllPlayStreamAudioMuted = false;
       streamInfo.streamDic.clear();
