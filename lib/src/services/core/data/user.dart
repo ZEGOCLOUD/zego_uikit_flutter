@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Project imports:
+import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import '../defines/defines.dart';
@@ -11,6 +12,8 @@ import 'room_map.dart';
 
 class ZegoUIKitCoreDataUser {
   ZegoUIKitCoreUser localUser = ZegoUIKitCoreUser.localDefault();
+  final localZegoUserNotifier =
+      ValueNotifier<ZegoUIKitUser>(ZegoUIKitUser.empty());
 
   var roomUsers = ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomUser>(
     name: 'core data user',
@@ -127,6 +130,7 @@ class ZegoUIKitCoreDataUser {
     localUser
       ..id = id
       ..name = name;
+    localZegoUserNotifier.value = localUser.toZegoUikitUser();
 
     roomUsers.forEachSync((roomID, roomUserInfo) {
       roomUserInfo.joinStreamCtrl?.add([localUser]);
@@ -144,6 +148,7 @@ class ZegoUIKitCoreDataUser {
     );
 
     localUser.clear();
+    localZegoUserNotifier.value = localUser.toZegoUikitUser();
 
     roomUsers.forEachSync((roomID, roomUserInfo) {
       roomUserInfo.leaveStreamCtrl?.add([localUser]);

@@ -145,15 +145,17 @@ class ZegoUIKitCoreDataRoomStream {
   Future<void> startPublishingStream({
     required ZegoStreamType streamType,
   }) async {
-    final targetStreamID = ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+    final localUserStreamChannel =
+        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
-    ).streamID;
-    if (targetStreamID.isNotEmpty) {
+    );
+
+    if (localUserStreamChannel.streamID.isNotEmpty) {
       ///  stream id had generated, that mean is publishing
       ZegoLoggerService.logWarn(
         'hash:$hashCode, '
-        'local user stream id($targetStreamID) of $streamType is not empty, '
+        'local user stream id(${localUserStreamChannel.streamID}) of $streamType is not empty, '
         'local user is publishing...',
         tag: 'uikit-streams-room',
         subTag: 'start publish stream',
@@ -161,16 +163,12 @@ class ZegoUIKitCoreDataRoomStream {
       return;
     }
 
-    final localTargetStreamViewID =
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-              _userCommonData.localUser,
-              streamType,
-            ).viewIDNotifier.value ??
-            -1;
+    final localUserStreamViewID =
+        localUserStreamChannel.viewIDNotifier.value ?? -1;
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'updateConfigBeforeStartPublishingStream, '
-      'view id:$localTargetStreamViewID, ',
+      'view id:$localUserStreamViewID, ',
       tag: 'uikit-streams-room',
       subTag: 'start publish stream',
     );
@@ -226,10 +224,7 @@ class ZegoUIKitCoreDataRoomStream {
     }
 
     /// generate stream id
-    ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      _userCommonData.localUser,
-      streamType,
-    )
+    localUserStreamChannel
       ..streamID = generateStreamID(
         _userCommonData.localUser.id,
         roomID,
@@ -237,10 +232,7 @@ class ZegoUIKitCoreDataRoomStream {
       )
       ..streamTimestamp =
           ZegoUIKitCore.shared.coreData.timestamp.now.millisecondsSinceEpoch;
-    streamDic[ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      _userCommonData.localUser,
-      streamType,
-    ).streamID] = ZegoUIKitCoreDataStreamData(
+    streamDic[localUserStreamChannel.streamID] = ZegoUIKitCoreDataStreamData(
       roomID: roomID,
       userID: _userCommonData.localUser.id,
       publisherState: ZegoPublisherState.NoPublish,
@@ -248,10 +240,7 @@ class ZegoUIKitCoreDataRoomStream {
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'stream dict add $streamType ${ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-        _userCommonData.localUser,
-        streamType,
-      ).streamID} for ${_userCommonData.localUser.id}, '
+      'stream dict add $streamType ${localUserStreamChannel.streamID} for ${_userCommonData.localUser.id}, '
       'now stream dict:$streamDic',
       tag: 'uikit-streams-room',
       subTag: 'start publish stream',
@@ -260,10 +249,7 @@ class ZegoUIKitCoreDataRoomStream {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'start publish, '
-      '${ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-        _userCommonData.localUser,
-        streamType,
-      ).streamID}, '
+      '${localUserStreamChannel.streamID}, '
       'network state:${ZegoUIKit().getNetworkState()}, ',
       tag: 'uikit-streams-room',
       subTag: 'start publish stream',
@@ -278,10 +264,7 @@ class ZegoUIKitCoreDataRoomStream {
     );
     await ZegoExpressEngine.instance
         .startPublishingStream(
-      ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-        _userCommonData.localUser,
-        streamType,
-      ).streamID,
+      localUserStreamChannel.streamID,
       channel: streamType.channel,
       config: ZegoPublisherConfig(roomID: roomID),
     )
@@ -348,10 +331,12 @@ class ZegoUIKitCoreDataRoomStream {
   Future<void> stopPublishingStream({
     required ZegoStreamType streamType,
   }) async {
-    final targetStreamID = ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+    final localUserStreamChannel =
+        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
-    ).streamID;
+    );
+    final targetStreamID = localUserStreamChannel.streamID;
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'stop $streamType $targetStreamID}, '
@@ -391,10 +376,7 @@ class ZegoUIKitCoreDataRoomStream {
       subTag: 'stop publish stream',
     );
 
-    ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      _userCommonData.localUser,
-      streamType,
-    )
+    localUserStreamChannel
       ..streamID = ''
       ..viewCreatingNotifier.value = false
       ..streamTimestamp = 0;
@@ -445,10 +427,12 @@ class ZegoUIKitCoreDataRoomStream {
   }
 
   Future<void> startPublishOrNot() async {
-    if (roomID.isEmpty) {
+    final roomInfo = _roomCommonData.rooms.getRoom(roomID);
+    if (!roomInfo.isLogin) {
       ZegoLoggerService.logWarn(
         'hash:$hashCode, '
-        'room id is empty',
+        'room id: $roomID, state:${roomInfo.state}, '
+        'room is not login',
         tag: 'uikit-streams-room',
         subTag: 'publish stream',
       );

@@ -51,9 +51,12 @@ class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton>
   void initState() {
     super.initState();
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
       /// synchronizing the default status
-      ZegoUIKit().turnCameraOn(targetRoomID: widget.roomID, widget.defaultOn);
+      await ZegoUIKit().turnCameraOn(
+        targetRoomID: widget.roomID,
+        widget.defaultOn,
+      );
     });
   }
 

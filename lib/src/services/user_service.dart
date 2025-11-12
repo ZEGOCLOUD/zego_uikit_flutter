@@ -16,6 +16,11 @@ mixin ZegoUserService {
     return ZegoUIKitCore.shared.coreData.user.localUser.toZegoUikitUser();
   }
 
+  /// get local user update notifier
+  ValueNotifier<ZegoUIKitUser> getLocalUserNotifier() {
+    return ZegoUIKitCore.shared.coreData.user.localZegoUserNotifier;
+  }
+
   /// get all users, include local user and remote users
   List<ZegoUIKitUser> getAllUsers({
     required String targetRoomID,

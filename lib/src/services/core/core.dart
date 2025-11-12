@@ -860,7 +860,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     required bool onlyPreview,
   }) async {
     if (coreData.user.localUser.id == userID) {
-      return turnOnLocalCamera(
+      return await turnOnLocalCamera(
         isOn,
         targetRoomID: targetRoomID,
         onlyPreview: onlyPreview,
@@ -966,15 +966,15 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     return true;
   }
 
-  void turnMicrophoneOn(
+  Future<void> turnMicrophoneOn(
     String userID,
     bool isOn, {
     required String targetRoomID,
     required bool onlyPreview,
     bool muteMode = false,
-  }) {
+  }) async {
     if (coreData.user.localUser.id == userID) {
-      turnOnLocalMicrophone(
+      await turnOnLocalMicrophone(
         isOn,
         targetRoomID: targetRoomID,
         muteMode: muteMode,
@@ -994,7 +994,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       );
 
       if (isOn) {
-        sendInRoomCommand(
+        await sendInRoomCommand(
           const JsonEncoder().convert({
             turnMicrophoneOnInRoomCommandKey: {
               userIDCommandKey: userID,
@@ -1005,7 +1005,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
           isLargeRoom ? [userID] : [],
         );
       } else {
-        sendInRoomCommand(
+        await sendInRoomCommand(
           const JsonEncoder().convert({
             turnMicrophoneOffInRoomCommandKey: {
               userIDCommandKey: userID,

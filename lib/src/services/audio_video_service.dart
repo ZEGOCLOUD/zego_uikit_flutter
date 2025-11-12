@@ -113,14 +113,14 @@ mixin ZegoAudioVideoService {
   }
 
   /// turn on/off camera
-  void turnCameraOn(
+  Future<void> turnCameraOn(
     bool isOn, {
     String? userID,
     required String targetRoomID,
-  }) {
+  }) async {
     assert(targetRoomID.isNotEmpty);
 
-    ZegoUIKitCore.shared.turnCameraOn(
+    await ZegoUIKitCore.shared.turnCameraOn(
       userID?.isEmpty ?? true
           ? ZegoUIKitCore.shared.coreData.user.localUser.id
           : userID!,
@@ -145,15 +145,15 @@ mixin ZegoAudioVideoService {
   /// When the [muteMode] is set to true, it means that the device is not actually turned off, but muted.
   /// The default value is false, which means the device is turned off.
   /// When either the camera or the microphone is muted, the audio and video views will still be visible.
-  void turnMicrophoneOn(
+  Future<void> turnMicrophoneOn(
     bool isOn, {
     required String targetRoomID,
     String? userID,
     bool muteMode = false,
-  }) {
+  }) async {
     assert(targetRoomID.isNotEmpty);
 
-    ZegoUIKitCore.shared.turnMicrophoneOn(
+    await ZegoUIKitCore.shared.turnMicrophoneOn(
       userID?.isEmpty ?? true
           ? ZegoUIKitCore.shared.coreData.user.localUser.id
           : userID!,

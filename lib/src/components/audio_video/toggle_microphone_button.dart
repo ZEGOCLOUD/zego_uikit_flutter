@@ -56,9 +56,9 @@ class _ZegoToggleMicrophoneButtonState extends State<ZegoToggleMicrophoneButton>
   void initState() {
     super.initState();
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
       /// synchronizing the default status
-      ZegoUIKit().turnMicrophoneOn(
+      await ZegoUIKit().turnMicrophoneOn(
         targetRoomID: widget.roomID,
         widget.defaultOn,
         muteMode: widget.muteMode,
