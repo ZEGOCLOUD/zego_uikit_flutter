@@ -9,7 +9,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 mixin ZegoUIKitUserInRoomAttributesPluginService {
   ZegoUIKitUserInRoomAttributesPluginServicePrivate? _private;
 
-  void initUserInRoomAttributes({
+  void _initUserInRoomAttributes({
     required String roomID,
   }) {
     ZegoLoggerService.logInfo(
@@ -35,11 +35,12 @@ mixin ZegoUIKitUserInRoomAttributesPluginService {
 
   /// set users in-room attributes
   Future<ZegoSignalingPluginSetUsersInRoomAttributesResult>
-      setUsersInRoomAttributes(
-          {required String roomID,
-          required String key,
-          required String value,
-          required List<String> userIDs}) async {
+      setUsersInRoomAttributes({
+    required String roomID,
+    required String key,
+    required String value,
+    required List<String> userIDs,
+  }) async {
     return ZegoPluginAdapter().signalingPlugin!.setUsersInRoomAttributes(
           roomID: roomID,
           setAttributes: {key: value},
@@ -62,6 +63,7 @@ mixin ZegoUIKitUserInRoomAttributesPluginService {
             );
 
     if (result.error == null) {
+      _initUserInRoomAttributes(roomID: roomID);
       _private?.updateUserInRoomAttributes(result.attributes);
     }
 

@@ -3,6 +3,12 @@
 // Project imports:
 import 'package:zego_uikit/src/services/defines/express.dart';
 
+/// multi room state
+class ZegoUIKitRoomsState {
+  Map<String, ZegoUIKitRoomState> states = {};
+}
+
+/// single room state
 class ZegoUIKitRoomState {
   ///  Room state change reason.
   ZegoUIKitSRoomStateChangedReason reason;

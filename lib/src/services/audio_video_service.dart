@@ -118,12 +118,25 @@ mixin ZegoAudioVideoService {
     String? userID,
     required String targetRoomID,
   }) {
+    assert(targetRoomID.isNotEmpty);
+
     ZegoUIKitCore.shared.turnCameraOn(
       userID?.isEmpty ?? true
           ? ZegoUIKitCore.shared.coreData.user.localUser.id
           : userID!,
       isOn,
       targetRoomID: targetRoomID,
+      onlyPreview: false,
+    );
+  }
+
+  /// turn on/off camera only for preview
+  void turnLocalCameraOnForPreview(bool isOn) {
+    ZegoUIKitCore.shared.turnCameraOn(
+      ZegoUIKitCore.shared.coreData.user.localUser.id,
+      isOn,
+      targetRoomID: '',
+      onlyPreview: true,
     );
   }
 
@@ -138,6 +151,8 @@ mixin ZegoAudioVideoService {
     String? userID,
     bool muteMode = false,
   }) {
+    assert(targetRoomID.isNotEmpty);
+
     ZegoUIKitCore.shared.turnMicrophoneOn(
       userID?.isEmpty ?? true
           ? ZegoUIKitCore.shared.coreData.user.localUser.id
@@ -145,6 +160,25 @@ mixin ZegoAudioVideoService {
       isOn,
       muteMode: muteMode,
       targetRoomID: targetRoomID,
+      onlyPreview: false,
+    );
+  }
+
+  /// turn on/off microphone only for preview
+  ///
+  /// When the [muteMode] is set to true, it means that the device is not actually turned off, but muted.
+  /// The default value is false, which means the device is turned off.
+  /// When either the camera or the microphone is muted, the audio and video views will still be visible.
+  void turnLocalMicrophoneOnForPreview(
+    bool isOn, {
+    bool muteMode = false,
+  }) {
+    ZegoUIKitCore.shared.turnMicrophoneOn(
+      ZegoUIKitCore.shared.coreData.user.localUser.id,
+      isOn,
+      muteMode: muteMode,
+      targetRoomID: '',
+      onlyPreview: true,
     );
   }
 

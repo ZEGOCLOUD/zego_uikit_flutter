@@ -857,11 +857,13 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     String userID,
     bool isOn, {
     required String targetRoomID,
+    required bool onlyPreview,
   }) async {
     if (coreData.user.localUser.id == userID) {
       return turnOnLocalCamera(
         isOn,
         targetRoomID: targetRoomID,
+        onlyPreview: onlyPreview,
       );
     } else {
       final targetRoomInfo = coreData.room.rooms.getRoom(targetRoomID);
@@ -899,6 +901,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   Future<bool> turnOnLocalCamera(
     bool isOn, {
     required String targetRoomID,
+    required bool onlyPreview,
   }) async {
     if (!isInit) {
       ZegoLoggerService.logError(
@@ -925,9 +928,11 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         subTag: 'switch camera',
       );
 
-      await coreData.stream.roomStreams
-          .getRoom(targetRoomID)
-          .startPublishOrNot();
+      if (!onlyPreview) {
+        await coreData.stream.roomStreams
+            .getRoom(targetRoomID)
+            .startPublishOrNot();
+      }
 
       return true;
     }
@@ -950,9 +955,13 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
     await ZegoExpressEngine.instance.enableCamera(isOn);
 
-    await coreData.stream.roomStreams.getRoom(targetRoomID).startPublishOrNot();
+    if (!onlyPreview) {
+      await coreData.stream.roomStreams
+          .getRoom(targetRoomID)
+          .startPublishOrNot();
 
-    await coreData.device.syncDeviceStatusByStreamExtraInfo();
+      await coreData.device.syncDeviceStatusByStreamExtraInfo();
+    }
 
     return true;
   }
@@ -960,14 +969,16 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   void turnMicrophoneOn(
     String userID,
     bool isOn, {
-    bool muteMode = false,
     required String targetRoomID,
+    required bool onlyPreview,
+    bool muteMode = false,
   }) {
     if (coreData.user.localUser.id == userID) {
       turnOnLocalMicrophone(
         isOn,
         targetRoomID: targetRoomID,
         muteMode: muteMode,
+        onlyPreview: onlyPreview,
       );
     } else {
       final targetRoomInfo = coreData.room.rooms.getRoom(targetRoomID);
@@ -1011,6 +1022,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   Future<void> turnOnLocalMicrophone(
     bool isOn, {
     required String targetRoomID,
+    required bool onlyPreview,
     bool muteMode = false,
   }) async {
     if (!isInit) {
@@ -1040,9 +1052,11 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         subTag: 'switch microphone',
       );
 
-      await coreData.stream.roomStreams
-          .getRoom(targetRoomID)
-          .startPublishOrNot();
+      if (!onlyPreview) {
+        await coreData.stream.roomStreams
+            .getRoom(targetRoomID)
+            .startPublishOrNot();
+      }
 
       return;
     }
@@ -1073,9 +1087,14 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     }
 
     coreData.user.localUser.microphone.value = isOn;
-    await coreData.stream.roomStreams.getRoom(targetRoomID).startPublishOrNot();
 
-    await coreData.device.syncDeviceStatusByStreamExtraInfo();
+    if (!onlyPreview) {
+      await coreData.stream.roomStreams
+          .getRoom(targetRoomID)
+          .startPublishOrNot();
+
+      await coreData.device.syncDeviceStatusByStreamExtraInfo();
+    }
   }
 
   void updateTextureRendererOrientation(Orientation orientation) {
@@ -1319,6 +1338,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         coreData.user.localUser.id,
         false,
         targetRoomID: commandData.roomID,
+        onlyPreview: false,
       );
     } else if (extraInfos.keys.contains(turnMicrophoneOnInRoomCommandKey)) {
       final mapData =
@@ -1368,6 +1388,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
           false,
           muteMode: muteMode,
           targetRoomID: commandData.roomID,
+          onlyPreview: false,
         );
       }
     } else if (extraInfos.keys.contains(clearMessageInRoomCommandKey)) {

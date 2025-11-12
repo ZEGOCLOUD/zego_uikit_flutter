@@ -20,6 +20,7 @@ mixin ZegoUserService {
   List<ZegoUIKitUser> getAllUsers({
     required String targetRoomID,
   }) {
+    assert(targetRoomID.isNotEmpty);
     return [
       ZegoUIKitCore.shared.coreData.user.localUser,
       ...ZegoUIKitCore.shared.coreData.user.roomUsers
@@ -35,6 +36,8 @@ mixin ZegoUserService {
   List<ZegoUIKitUser> getRemoteUsers({
     required String targetRoomID,
   }) {
+    assert(targetRoomID.isNotEmpty);
+
     return ZegoUIKitCore.shared.coreData.user.roomUsers
         .getRoom(targetRoomID)
         .remoteUsers
@@ -48,6 +51,7 @@ mixin ZegoUserService {
     String userID, {
     required String targetRoomID,
   }) {
+    assert(targetRoomID.isNotEmpty);
     return ZegoUIKitCore.shared.coreData.user
         .getUser(
           userID,
@@ -61,6 +65,7 @@ mixin ZegoUserService {
     String userID, {
     required String targetRoomID,
   }) {
+    assert(targetRoomID.isNotEmpty);
     return ZegoUIKitCore.shared.coreData.user
         .getUser(
           userID,
@@ -73,6 +78,7 @@ mixin ZegoUserService {
   Stream<List<ZegoUIKitUser>> getUserListStream({
     required String targetRoomID,
   }) {
+    assert(targetRoomID.isNotEmpty);
     return ZegoUIKitCore.shared.coreData.user.roomUsers
             .getRoom(targetRoomID)
             .listStreamCtrl
@@ -88,6 +94,7 @@ mixin ZegoUserService {
   Stream<List<ZegoUIKitUser>> getUserJoinStream({
     required String targetRoomID,
   }) {
+    assert(targetRoomID.isNotEmpty);
     return ZegoUIKitCore.shared.coreData.user.roomUsers
             .getRoom(targetRoomID)
             .joinStreamCtrl
@@ -100,6 +107,7 @@ mixin ZegoUserService {
   Stream<List<ZegoUIKitUser>> getUserLeaveStream({
     required String targetRoomID,
   }) {
+    assert(targetRoomID.isNotEmpty);
     return ZegoUIKitCore.shared.coreData.user.roomUsers
             .getRoom(targetRoomID)
             .leaveStreamCtrl
@@ -113,6 +121,7 @@ mixin ZegoUserService {
     List<String> userIDs, {
     required String targetRoomID,
   }) async {
+    assert(targetRoomID.isNotEmpty);
     final resultErrorCode = await ZegoUIKitCore.shared.removeUserFromRoom(
       userIDs,
       targetRoomID: targetRoomID,
@@ -136,6 +145,7 @@ mixin ZegoUserService {
   Stream<String> getMeRemovedFromRoomStream({
     required String targetRoomID,
   }) {
+    assert(targetRoomID.isNotEmpty);
     return ZegoUIKitCore.shared.coreData.user.roomUsers
             .getRoom(targetRoomID)
             .meRemovedFromRoomStreamCtrl
