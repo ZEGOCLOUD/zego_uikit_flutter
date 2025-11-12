@@ -31,10 +31,10 @@ class ZegoUIKitCoreDataSingleRoom {
   }
 
   bool get isLogin =>
-      state.value.reason == ZegoUIKitSRoomStateChangedReason.Logining ||
-      state.value.reason == ZegoUIKitSRoomStateChangedReason.Logined ||
-      state.value.reason == ZegoUIKitSRoomStateChangedReason.Reconnecting ||
-      state.value.reason == ZegoUIKitSRoomStateChangedReason.Reconnected;
+      state.value.reason == ZegoUIKitRoomStateChangedReason.Logining ||
+      state.value.reason == ZegoUIKitRoomStateChangedReason.Logined ||
+      state.value.reason == ZegoUIKitRoomStateChangedReason.Reconnecting ||
+      state.value.reason == ZegoUIKitRoomStateChangedReason.Reconnected;
 
   String id = '';
 
@@ -102,7 +102,7 @@ class ZegoUIKitCoreDataSingleRoom {
     pendingProperties.clear();
   }
 
-  Future<ZegoRoomLoginResult> join({
+  Future<ZegoUIKitRoomLoginResult> join({
     required String targetRoomID,
     String token = '',
     bool markAsLargeRoom = false,
@@ -121,11 +121,11 @@ class ZegoUIKitCoreDataSingleRoom {
     );
 
     if (isSimulated) {
-      state.value.reason = ZegoUIKitSRoomStateChangedReason.Logined;
-      return ZegoRoomLoginResult(0, {});
+      state.value.reason = ZegoUIKitRoomStateChangedReason.Logined;
+      return ZegoUIKitRoomLoginResult(0, {});
     }
 
-    state.value.reason = ZegoUIKitSRoomStateChangedReason.Logining;
+    state.value.reason = ZegoUIKitRoomStateChangedReason.Logining;
     final result = await ZegoExpressEngine.instance.loginRoom(
       targetRoomID,
       _userCommonData.localUser.toZegoUser(),
@@ -139,7 +139,7 @@ class ZegoUIKitCoreDataSingleRoom {
       subTag: 'join',
     );
 
-    return result;
+    return ZegoUIKitRoomLoginResult(result.errorCode, result.extendedData);
   }
 
   Future<ZegoRoomLogoutResult> leave() async {
@@ -161,9 +161,9 @@ class ZegoUIKitCoreDataSingleRoom {
     );
 
     if (result.errorCode == ZegoUIKitExpressErrorCode.CommonSuccess) {
-      state.value.reason = ZegoUIKitSRoomStateChangedReason.Logout;
+      state.value.reason = ZegoUIKitRoomStateChangedReason.Logout;
     } else {
-      state.value.reason = ZegoUIKitSRoomStateChangedReason.LogoutFailed;
+      state.value.reason = ZegoUIKitRoomStateChangedReason.LogoutFailed;
     }
 
     return result;

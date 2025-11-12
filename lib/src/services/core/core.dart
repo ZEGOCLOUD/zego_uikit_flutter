@@ -65,7 +65,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     bool? enablePlatformView,
     bool playingStreamInPIPUnderIOS = false,
     ZegoUIKitRoomMode roomMode = ZegoUIKitRoomMode.SingleRoom,
-    ZegoScenario scenario = ZegoScenario.Default,
+    ZegoUIKitScenario scenario = ZegoUIKitScenario.Default,
     bool withoutCreateEngine = false,
   }) async {
     if (isInit) {
@@ -223,7 +223,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     return coreData.room.currentID == roomID;
   }
 
-  Future<ZegoRoomLoginResult> joinRoom(
+  Future<ZegoUIKitRoomLoginResult> joinRoom(
     String roomID, {
     String token = '',
     bool markAsLargeRoom = false,
@@ -244,8 +244,9 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     return joinRoomResult;
   }
 
-  Future<ZegoRoomLogoutResult> leaveRoom({
+  Future<ZegoUIKitRoomLogoutResult> leaveRoom({
     required String targetRoomID,
+    required bool stopPlayingAnotherRoomStream,
   }) async {
     ZegoLoggerService.logInfo(
       'current room is ${coreData.room.currentID}, '
@@ -258,6 +259,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
     final leaveResult = await coreData.room.leave(
       targetRoomID: targetRoomID,
+      stopPlayingAnotherRoomStream: stopPlayingAnotherRoomStream,
     );
 
     if (!coreData.room.hasLogin) {
@@ -1219,7 +1221,10 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
           tag: 'uikit-service-core',
           subTag: 'custom command',
         );
-        leaveRoom(targetRoomID: commandData.roomID);
+        leaveRoom(
+          targetRoomID: commandData.roomID,
+          stopPlayingAnotherRoomStream: true,
+        );
 
         coreData.user.roomUsers
             .getRoom(commandData.roomID)

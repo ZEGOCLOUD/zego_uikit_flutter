@@ -76,7 +76,7 @@ class ZegoUIKitCoreDataUser {
     String userID, {
     required String targetRoomID,
   }) {
-    if (userID == localUser.id) {
+    if (userID.isEmpty || userID == localUser.id) {
       return localUser;
     } else {
       return roomUsers.getRoom(targetRoomID).remoteUsers.firstWhere(

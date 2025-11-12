@@ -11,7 +11,7 @@ class ZegoUIKitRoomsState {
 /// single room state
 class ZegoUIKitRoomState {
   ///  Room state change reason.
-  ZegoUIKitSRoomStateChangedReason reason;
+  ZegoUIKitRoomStateChangedReason reason;
 
   /// Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
   int errorCode;

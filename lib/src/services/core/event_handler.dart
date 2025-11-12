@@ -121,9 +121,13 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     final targetRoomStreamInfo = coreData.stream.roomStreams.getRoom(roomID);
     if (updateType == ZegoUpdateType.Add) {
       for (final stream in streamList) {
+        final targetUser = coreData.user.roomUsers.getRoom(roomID).query(
+              stream.user.userID,
+            );
         targetRoomStreamInfo.addPlayingStreamDataInDict(
-          roomID: roomID,
+          streamRoomID: roomID,
           stream: stream,
+          streamUser: targetUser,
           isFromAnotherRoom: false,
         );
 

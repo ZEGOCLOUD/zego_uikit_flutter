@@ -78,7 +78,12 @@ class ZegoLeaveButton extends StatelessWidget {
   }
 
   void quit() {
-    ZegoUIKit().leaveRoom(targetRoomID: roomID).then((result) {
+    ZegoUIKit()
+        .leaveRoom(
+      targetRoomID: roomID,
+      stopPlayingAnotherRoomStream: true,
+    )
+        .then((result) {
       ZegoLoggerService.logInfo(
         'leave room result, ${result.errorCode} ${result.extendedData}',
         tag: 'uikit-component',

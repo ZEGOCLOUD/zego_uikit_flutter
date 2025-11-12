@@ -73,7 +73,7 @@ mixin ZegoRoomService {
   /// For the generation rules, please refer to [Using Token Authentication] (https://doc-zh.zego.im/article/10360), the default is an empty string, that is, no authentication.
   ///
   /// if appSign is not passed in or if appSign is empty, this parameter must be set for authentication when logging in to a room.
-  Future<ZegoRoomLoginResult> joinRoom(
+  Future<ZegoUIKitRoomLoginResult> joinRoom(
     String roomID, {
     String token = '',
     bool markAsLargeRoom = false,
@@ -123,11 +123,13 @@ mixin ZegoRoomService {
   }
 
   /// leave room
-  Future<ZegoRoomLogoutResult> leaveRoom({
+  Future<ZegoUIKitRoomLogoutResult> leaveRoom({
     required String targetRoomID,
+    required bool stopPlayingAnotherRoomStream,
   }) async {
     final leaveRoomResult = await ZegoUIKitCore.shared.leaveRoom(
       targetRoomID: targetRoomID,
+      stopPlayingAnotherRoomStream: stopPlayingAnotherRoomStream,
     );
 
     if (ZegoErrorCode.CommonSuccess != leaveRoomResult.errorCode) {

@@ -29,7 +29,7 @@ class ZegoUIKitHallRoomList extends StatefulWidget {
     required this.controller,
     this.appSign = '',
     this.token = '',
-    this.scenario = ZegoScenario.Default,
+    this.scenario = ZegoUIKitScenario.Default,
     ZegoUIKitHallRoomListStyle? style,
     ZegoUIKitHallRoomListConfig? config,
   })  : style = style ?? const ZegoUIKitHallRoomListStyle(),
@@ -57,7 +57,7 @@ class ZegoUIKitHallRoomList extends StatefulWidget {
   final String token;
 
   ///
-  final ZegoScenario scenario;
+  final ZegoUIKitScenario scenario;
 
   ///  style
   final ZegoUIKitHallRoomListStyle style;

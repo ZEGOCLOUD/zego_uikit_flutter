@@ -10,7 +10,7 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/data/data.dart';
 import 'package:zego_uikit/src/services/core/defines/sei.dart';
-import 'package:zego_uikit/src/services/core/defines/stream.dart';
+import 'package:zego_uikit/src/services/defines/stream.dart';
 import 'package:zego_uikit/src/services/defines/audio_video/sei.dart';
 import 'package:zego_uikit/src/services/defines/audio_video/stream_type.dart';
 import 'package:zego_uikit/src/services/uikit_service.dart';

@@ -11,6 +11,7 @@ export 'express_extension.dart';
 
 export 'command.dart';
 export 'error.dart';
+export 'stream.dart';
 export 'permission.dart';
 export 'room/room.dart';
 export 'pip.dart';

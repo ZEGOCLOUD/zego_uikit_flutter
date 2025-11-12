@@ -41,7 +41,7 @@ class ZegoUIKitCoreDataEngine {
     bool withoutCreateEngine = false,
     bool? enablePlatformView,
     ZegoUIKitRoomMode roomMode = ZegoUIKitRoomMode.SingleRoom,
-    ZegoScenario scenario = ZegoScenario.Default,
+    ZegoUIKitScenario scenario = ZegoUIKitScenario.Default,
   }) async {
     ZegoExpressEngine.setEngineConfig(
       ZegoEngineConfig(advancedConfig: {'vcap_external_mem_class': '1'}),

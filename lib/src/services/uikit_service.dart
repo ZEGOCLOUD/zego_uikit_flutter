@@ -107,7 +107,7 @@ class ZegoUIKit
     bool? enablePlatformView,
     bool playingStreamInPIPUnderIOS = false,
     ZegoUIKitRoomMode roomMode = ZegoUIKitRoomMode.SingleRoom,
-    ZegoUIKitScenario scenario = ZegoScenario.Default,
+    ZegoUIKitScenario scenario = ZegoUIKitScenario.Default,
 
     /// accept offline call invitation on android, will create in advance
     bool withoutCreateEngine = false,

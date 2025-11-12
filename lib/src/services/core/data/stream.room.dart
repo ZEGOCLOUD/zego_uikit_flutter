@@ -1211,15 +1211,16 @@ class ZegoUIKitCoreDataRoomStream {
   }
 
   void addPlayingStreamDataInDict({
-    required String roomID,
+    required String streamRoomID,
     required ZegoStream stream,
+    required ZegoUIKitCoreUser streamUser,
     required bool isFromAnotherRoom,
   }) {
     final targetRemoteUserList =
-        _userCommonData.roomUsers.getRoom(this.roomID).remoteUsers;
+        _userCommonData.roomUsers.getRoom(roomID).remoteUsers;
 
     streamDic[stream.streamID] = ZegoUIKitCoreDataStreamData(
-      roomID: roomID,
+      roomID: streamRoomID,
       userID: stream.user.userID,
       userName: stream.user.userName,
       playerState: ZegoPlayerState.NoPlay,
@@ -1243,19 +1244,21 @@ class ZegoUIKitCoreDataRoomStream {
         subTag: 'event',
       );
 
-      targetUser = ZegoUIKitCoreUser.fromZego(stream.user)
-        ..isAnotherRoomUser = isFromAnotherRoom;
+      targetUser = streamUser;
       targetRemoteUserList.add(targetUser);
     } else {
       targetUser = targetRemoteUserList[targetUserIndex];
     }
+    targetUser.isAnotherRoomUser = isFromAnotherRoom;
 
     final streamType =
         ZegoUIKitCoreDataStreamHelper.getStreamTypeByID(stream.streamID);
-    ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+    final targetUserStreamChannel =
+        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       targetUser,
       streamType,
-    )
+    );
+    targetUserStreamChannel
       ..streamID = stream.streamID
       ..streamTimestamp = _commonData.timestamp.now.millisecondsSinceEpoch;
   }
@@ -1270,7 +1273,8 @@ class ZegoUIKitCoreDataRoomStream {
       subTag: 'stop play all stream',
     );
 
-    for (final user in _userCommonData.roomUsers.getRoom(roomID).remoteUsers) {
+    final currentRoomUserInfo = _userCommonData.roomUsers.getRoom(roomID);
+    for (final user in currentRoomUserInfo.remoteUsers) {
       bool needStop = true;
       if (user.isAnotherRoomUser && !stopPlayingAnotherRoom) {
         needStop = false;
@@ -1302,12 +1306,13 @@ class ZegoUIKitCoreDataRoomStream {
         _streamCommonData.roomStreams
             .getRoom(streamData.roomID)
             .addPlayingStreamDataInDict(
-              roomID: streamData.roomID,
+              streamRoomID: streamData.roomID,
               stream: ZegoStream(
                 ZegoUser(streamData.userID, streamData.userName),
                 streamID,
                 '',
               ),
+              streamUser: currentRoomUserInfo.query(streamData.userID),
               isFromAnotherRoom: false,
             );
 
@@ -1332,14 +1337,40 @@ class ZegoUIKitCoreDataRoomStream {
     );
   }
 
+  void copyToAnotherRoom({
+    required String fromStreamID,
+    required String toRoomID,
+  }) {
+    final fromStreamData = streamDic[fromStreamID];
+    if (null == fromStreamData) {
+      return;
+    }
+
+    final currentRoomUserInfo = _userCommonData.roomUsers.getRoom(roomID);
+    _streamCommonData.roomStreams.getRoom(toRoomID).addPlayingStreamDataInDict(
+          streamRoomID: fromStreamData.roomID,
+          stream: ZegoStream(
+            ZegoUser(fromStreamData.userID, fromStreamData.userName),
+            fromStreamID,
+            '',
+          ),
+          streamUser: currentRoomUserInfo.query(fromStreamData.userID),
+          isFromAnotherRoom: true,
+        );
+  }
+
   Future<void> startPlayingAnotherRoomStream(
     String anotherRoomID,
     String userID,
     String userName, {
+    bool copyToAnotherRoom = false,
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     final currentRoomRemoteUserList =
         _userCommonData.roomUsers.getRoom(roomID).remoteUsers;
+
+    final anotherRoomUser =
+        _userCommonData.roomUsers.getRoom(anotherRoomID).query(userID);
 
     final streamID = generateStreamID(
       userID,
@@ -1347,10 +1378,23 @@ class ZegoUIKitCoreDataRoomStream {
       ZegoStreamType.main,
     );
     addPlayingStreamDataInDict(
-      roomID: anotherRoomID,
+      streamRoomID: anotherRoomID,
       stream: ZegoStream(ZegoUser(userID, userName), streamID, ''),
+      streamUser: anotherRoomUser,
       isFromAnotherRoom: true,
     );
+
+    if (copyToAnotherRoom) {
+      /// 跨房拉流的，转移到对应房间
+      _streamCommonData.roomStreams
+          .getRoom(anotherRoomID)
+          .addPlayingStreamDataInDict(
+            streamRoomID: anotherRoomID,
+            stream: ZegoStream(ZegoUser(userID, userName), streamID, ''),
+            streamUser: anotherRoomUser,
+            isFromAnotherRoom: false,
+          );
+    }
 
     await playStreamOnViewWillCreated(
       streamID: streamID,

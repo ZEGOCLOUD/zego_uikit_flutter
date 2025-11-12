@@ -46,7 +46,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
   int _appID = 0;
   String _appSign = '';
   String _token = '';
-  ZegoScenario _scenario = ZegoScenario.Default;
+  ZegoUIKitScenario _scenario = ZegoUIKitScenario.Default;
   ZegoUIKitHallRoomListConfig _config = const ZegoUIKitHallRoomListConfig();
 
   Future<bool> init() async {
@@ -87,7 +87,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
     required int appID,
     required String appSign,
     required String token,
-    required ZegoScenario scenario,
+    required ZegoUIKitScenario scenario,
     required ZegoUIKitHallRoomListConfig config,
   }) {
     _appID = appID;
@@ -110,7 +110,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
     _appID = 0;
     _appSign = '';
     _token = '';
-    _scenario = ZegoScenario.Default;
+    _scenario = ZegoUIKitScenario.Default;
 
     sdkInitNotifier.value = false;
     roomLoginNotifier.value = false;
@@ -228,7 +228,10 @@ class ZegoUIKitHallRoomListControllerPrivate {
     }
 
     return ZegoUIKit()
-        .leaveRoom(targetRoomID: roomID)
+        .leaveRoom(
+      targetRoomID: roomID,
+      stopPlayingAnotherRoomStream: false,
+    )
         .then((ZegoRoomLogoutResult result) {
       ZegoLoggerService.logInfo(
         'leave room result:$result',

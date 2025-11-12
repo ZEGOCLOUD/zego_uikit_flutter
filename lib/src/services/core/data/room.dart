@@ -145,7 +145,7 @@ class ZegoUIKitCoreDataRoom {
     _markLoginRoomIDsCacheDirty();
   }
 
-  Future<ZegoRoomLoginResult> join({
+  Future<ZegoUIKitRoomLoginResult> join({
     required String targetRoomID,
     String token = '',
     bool markAsLargeRoom = false,
@@ -171,7 +171,7 @@ class ZegoUIKitCoreDataRoom {
         subTag: 'join',
       );
 
-      return ZegoRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
+      return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
     }
 
     if (loginRoomIDs.contains(targetRoomID)) {
@@ -183,11 +183,12 @@ class ZegoUIKitCoreDataRoom {
         subTag: 'join',
       );
 
-      return ZegoRoomLoginResult(ZegoUIKitErrorCode.success, {});
+      return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.success, {});
     }
 
     if (currentID.isNotEmpty && mode == ZegoRoomMode.SingleRoom) {
       /// clear old room data
+      /// todo 转移host给直播大厅
       _coreData.clear(
         targetRoomID: currentID,
         stopPlayingAnotherRoomStream: true,
@@ -200,7 +201,10 @@ class ZegoUIKitCoreDataRoom {
           subTag: 'join',
         );
 
-        await leave(targetRoomID: currentID);
+        await leave(
+          targetRoomID: currentID,
+          stopPlayingAnotherRoomStream: false,
+        );
       }
     }
 
@@ -245,7 +249,10 @@ class ZegoUIKitCoreDataRoom {
 
         if (ZegoUIKitRoomMode.SingleRoom == mode) {
           /// 单房间，退房重进
-          await leave(targetRoomID: targetRoomID);
+          await leave(
+            targetRoomID: targetRoomID,
+            stopPlayingAnotherRoomStream: true,
+          );
           return join(
             targetRoomID: targetRoomID,
             token: token,
@@ -261,8 +268,9 @@ class ZegoUIKitCoreDataRoom {
     return result;
   }
 
-  Future<ZegoRoomLogoutResult> leave({
+  Future<ZegoUIKitRoomLogoutResult> leave({
     required String targetRoomID,
+    required bool stopPlayingAnotherRoomStream,
   }) async {
     ZegoLoggerService.logInfo(
       'try leave room, '
@@ -295,12 +303,13 @@ class ZegoUIKitCoreDataRoom {
       );
 
       await clearAfterLeave();
-      return ZegoRoomLogoutResult(ZegoUIKitErrorCode.success, {});
+      return ZegoUIKitRoomLogoutResult(ZegoUIKitErrorCode.success, {});
     }
 
+    /// todo 转移host给直播大厅
     _coreData.clear(
       targetRoomID: targetRoomID,
-      stopPlayingAnotherRoomStream: true,
+      stopPlayingAnotherRoomStream: stopPlayingAnotherRoomStream,
     );
 
     final result = await rooms.getRoom(targetRoomID).leave();
@@ -311,7 +320,7 @@ class ZegoUIKitCoreDataRoom {
 
     await clearAfterLeave();
 
-    return result;
+    return ZegoUIKitRoomLogoutResult(result.errorCode, result.extendedData);
   }
 
   Future<void> renewToken(

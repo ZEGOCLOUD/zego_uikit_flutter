@@ -7,12 +7,16 @@ import 'package:zego_uikit/src/services/services.dart';
 import '../defines/defines.dart';
 
 import 'room_map.dart';
+import 'user.dart';
 
 class ZegoUIKitCoreDataRoomUser {
   String roomID;
   ZegoUIKitCoreDataRoomUser(this.roomID);
 
   final List<ZegoUIKitCoreUser> remoteUsers = [];
+
+  ZegoUIKitCoreDataUser get _userCommonData =>
+      ZegoUIKitCore.shared.coreData.user;
 
   StreamController<List<ZegoUIKitCoreUser>>? get joinStreamCtrl {
     _joinStreamCtrl ??= StreamController<List<ZegoUIKitCoreUser>>.broadcast();
@@ -76,6 +80,17 @@ class ZegoUIKitCoreDataRoomUser {
       'room id:$roomID',
       tag: 'uikit-users-room',
       subTag: 'clear',
+    );
+  }
+
+  ZegoUIKitCoreUser query(String userID) {
+    if (userID.isEmpty || userID == _userCommonData.localUser.id) {
+      return _userCommonData.localUser;
+    }
+
+    return remoteUsers.firstWhere(
+      (user) => user.id == userID,
+      orElse: ZegoUIKitCoreUser.empty,
     );
   }
 

@@ -1,7 +1,7 @@
 export 'mixer_stream.dart';
 export 'network_state.dart';
 export 'sei.dart';
-export 'stream.dart';
+export '../../defines/stream.dart';
 export 'stream_info.dart';
 export 'user.dart';
 export 'user_attributes.dart';
