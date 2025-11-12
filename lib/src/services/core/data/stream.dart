@@ -214,7 +214,7 @@ class ZegoUIKitCoreDataStream {
 
       canvasViewCreateQueue.completeCurrentTask();
 
-      ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+      ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
         _userCommonData.localUser,
         ZegoStreamType.main,
       ).viewCreatingNotifier.value = false;
@@ -281,7 +281,7 @@ class ZegoUIKitCoreDataStream {
     required void Function(ZegoStreamType) onViewCreated,
   }) async {
     final localStreamChannel =
-        ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
     );
@@ -340,7 +340,7 @@ class ZegoUIKitCoreDataStream {
     required void Function(ZegoStreamType) onViewCreated,
   }) async {
     final localStreamChannel =
-        ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
     );

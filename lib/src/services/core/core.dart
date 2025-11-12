@@ -925,6 +925,10 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         subTag: 'switch camera',
       );
 
+      await coreData.stream.roomStreams
+          .getRoom(targetRoomID)
+          .startPublishOrNot();
+
       return true;
     }
 
@@ -1035,6 +1039,11 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         tag: 'uikit-microphone',
         subTag: 'switch microphone',
       );
+
+      await coreData.stream.roomStreams
+          .getRoom(targetRoomID)
+          .startPublishOrNot();
+
       return;
     }
 

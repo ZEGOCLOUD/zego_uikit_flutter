@@ -145,22 +145,24 @@ class ZegoUIKitCoreDataRoomStream {
   Future<void> startPublishingStream({
     required ZegoStreamType streamType,
   }) async {
-    final targetStreamID = ZegoUIKitCoreDataStreamHelper.getLocalStreamID(
+    final targetStreamID = ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
-    );
+    ).streamID;
     if (targetStreamID.isNotEmpty) {
       ///  stream id had generated, that mean is publishing
       ZegoLoggerService.logWarn(
         'hash:$hashCode, '
-        'local user stream id($targetStreamID) of $streamType is not empty',
+        'local user stream id($targetStreamID) of $streamType is not empty, '
+        'local user is publishing...',
         tag: 'uikit-streams-room',
         subTag: 'start publish stream',
       );
       return;
     }
+
     final localTargetStreamViewID =
-        ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
               _userCommonData.localUser,
               streamType,
             ).viewIDNotifier.value ??
@@ -224,7 +226,7 @@ class ZegoUIKitCoreDataRoomStream {
     }
 
     /// generate stream id
-    ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+    ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
     )
@@ -235,7 +237,7 @@ class ZegoUIKitCoreDataRoomStream {
       )
       ..streamTimestamp =
           ZegoUIKitCore.shared.coreData.timestamp.now.millisecondsSinceEpoch;
-    streamDic[ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+    streamDic[ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
     ).streamID] = ZegoUIKitCoreDataStreamData(
@@ -246,7 +248,7 @@ class ZegoUIKitCoreDataRoomStream {
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'stream dict add $streamType ${ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+      'stream dict add $streamType ${ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
         _userCommonData.localUser,
         streamType,
       ).streamID} for ${_userCommonData.localUser.id}, '
@@ -258,7 +260,7 @@ class ZegoUIKitCoreDataRoomStream {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'start publish, '
-      '${ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+      '${ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
         _userCommonData.localUser,
         streamType,
       ).streamID}, '
@@ -276,10 +278,10 @@ class ZegoUIKitCoreDataRoomStream {
     );
     await ZegoExpressEngine.instance
         .startPublishingStream(
-      ZegoUIKitCoreDataStreamHelper.getLocalStreamID(
+      ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
         _userCommonData.localUser,
         streamType,
-      ),
+      ).streamID,
       channel: streamType.channel,
       config: ZegoPublisherConfig(roomID: roomID),
     )
@@ -294,7 +296,7 @@ class ZegoUIKitCoreDataRoomStream {
     ZegoStreamType streamType,
   ) async {
     final localTargetStreamViewID =
-        ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
               _userCommonData.localUser,
               streamType,
             ).viewIDNotifier.value ??
@@ -346,10 +348,10 @@ class ZegoUIKitCoreDataRoomStream {
   Future<void> stopPublishingStream({
     required ZegoStreamType streamType,
   }) async {
-    final targetStreamID = ZegoUIKitCoreDataStreamHelper.getLocalStreamID(
+    final targetStreamID = ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
-    );
+    ).streamID;
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'stop $streamType $targetStreamID}, '
@@ -389,7 +391,7 @@ class ZegoUIKitCoreDataRoomStream {
       subTag: 'stop publish stream',
     );
 
-    ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
+    ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
     )

@@ -146,10 +146,10 @@ class ZegoUIKitCoreData {
     Map<String, dynamic> seiData, {
     ZegoStreamType streamType = ZegoStreamType.main,
   }) async {
-    if (ZegoUIKitCoreDataStreamHelper.getLocalStreamID(
+    if (ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
       user.localUser,
       streamType,
-    ).isEmpty) {
+    ).streamID.isEmpty) {
       ZegoLoggerService.logError(
         'local user has not publish stream, send sei will be failed',
         tag: 'uikit-sei',

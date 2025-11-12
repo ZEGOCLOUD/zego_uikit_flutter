@@ -20,11 +20,11 @@ class ZegoScreenSharingViewController {
   void showScreenSharingViewInFullscreenMode(
     String userID,
     bool isFullscreen, {
-    required String roomID,
+    required String targetRoomID,
   }) {
     _fullscreenUserNotifier.value = isFullscreen
         ? ZegoUIKit().getUser(
-            targetRoomID: roomID,
+            targetRoomID: targetRoomID,
             userID,
           )
         : null;

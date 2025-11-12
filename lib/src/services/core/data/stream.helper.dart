@@ -7,23 +7,6 @@ import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoUIKitCoreDataStreamHelper {
-  static String getLocalStreamID(
-    ZegoUIKitCoreUser user,
-    ZegoStreamType streamType,
-  ) {
-    return ZegoUIKitCoreDataStreamHelper.getLocalStreamChannel(
-      user,
-      streamType,
-    ).streamID;
-  }
-
-  static ZegoUIKitCoreStreamInfo getLocalStreamChannel(
-    ZegoUIKitCoreUser user,
-    ZegoStreamType streamType,
-  ) {
-    return ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(user, streamType);
-  }
-
   static ZegoUIKitCoreStreamInfo getUserStreamChannel(
     ZegoUIKitCoreUser user,
     ZegoStreamType streamType,
