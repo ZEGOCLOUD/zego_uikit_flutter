@@ -52,7 +52,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
   Future<bool> init() async {
     return initSDK().then((_) async {
       /// audio should not be played
-      ZegoUIKit().stopPlayAllAudio(targetRoomID: roomID);
+      ZegoUIKit().muteAllRemoteAudio(targetRoomID: roomID);
 
       return await joinRoom().then((result) {
         onStreamsUpdated();
@@ -76,7 +76,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
     return playAll(isPlay: false).then((_) async {
       return leaveRoom().then((_) async {
         /// restore audio state to not muted
-        ZegoUIKit().startPlayAllAudio(targetRoomID: roomID);
+        ZegoUIKit().unmuteAllRemoteAudio(targetRoomID: roomID);
 
         return await uninitSDK();
       });

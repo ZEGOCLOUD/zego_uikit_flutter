@@ -3,12 +3,12 @@ part of 'uikit_service.dart';
 mixin ZegoUserService {
   /// login
   void login(String id, String name) {
-    ZegoUIKitCore.shared.login(id, name);
+    ZegoUIKitCore.shared.coreData.user.login(id, name);
   }
 
   /// logout
   void logout() {
-    ZegoUIKitCore.shared.logout();
+    ZegoUIKitCore.shared.coreData.user.logout();
   }
 
   /// get local user

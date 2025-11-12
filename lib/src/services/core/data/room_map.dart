@@ -1,5 +1,9 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:synchronized/synchronized.dart';
@@ -27,13 +31,29 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
   /// 当 roomID 为空时返回此实例，当第一次使用非空 roomID 时会被"升级"
   T? _emptyRoomCache;
 
+  /// 定时器，用于定期输出 _innerRoomMap
+  Timer? _debugTimer;
+
   /// 构造函数：必须传入创建 T 实例的方法
   /// [onUpgradeEmptyRoom] 可选的升级回调，用于更新预备房间的 roomID 等属性
   ZegoUIKitCoreRoomMap({
     required this.name,
     required this.createDefault,
     void Function(T room, String roomID)? onUpgradeEmptyRoom,
-  }) : _onUpgradeEmptyRoom = onUpgradeEmptyRoom;
+  }) : _onUpgradeEmptyRoom = onUpgradeEmptyRoom {
+    // 启动定时器，每秒输出一次 _innerRoomMap
+    if (kDebugMode) {
+      _debugTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        ZegoLoggerService.logInfo(
+          'hash:$hashCode, '
+          'name:$name, '
+          '_innerRoomMap: $_innerRoomMap',
+          tag: 'uikit-room',
+          subTag: 'room-map-debug',
+        );
+      });
+    }
+  }
 
   /// 添加或更新房间数据
   void putRoom(String roomID, T value) {

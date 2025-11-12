@@ -216,18 +216,6 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     event.media.unregister(coreData.media);
   }
 
-  ValueNotifier<DateTime?> getNetworkTime() {
-    return coreData.timestamp.notifier;
-  }
-
-  void login(String id, String name) {
-    coreData.user.login(id, name);
-  }
-
-  void logout() {
-    coreData.user.logout();
-  }
-
   bool hasLoginSameRoom(String roomID) {
     return coreData.room.currentID == roomID;
   }
@@ -700,85 +688,6 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       tag: 'uikit-service-core',
       subTag: 'set audio video resource mode',
     );
-  }
-
-  Future<void> startPlayAllAudioVideo({
-    required String targetRoomID,
-  }) async {
-    await coreData.stream.roomStreams
-        .getRoom(targetRoomID)
-        .muteAllPlayStreamAudioVideo(false);
-  }
-
-  Future<void> stopPlayAllAudioVideo({
-    required String targetRoomID,
-  }) async {
-    await coreData.stream.roomStreams
-        .getRoom(targetRoomID)
-        .muteAllPlayStreamAudioVideo(
-          true,
-        );
-  }
-
-  Future<void> startPlayAllAudio({
-    required String targetRoomID,
-  }) async {
-    await coreData.stream.roomStreams
-        .getRoom(targetRoomID)
-        .muteAllPlayStreamAudio(false);
-  }
-
-  Future<void> stopPlayAllAudio({
-    required String targetRoomID,
-  }) async {
-    await coreData.stream.roomStreams
-        .getRoom(targetRoomID)
-        .muteAllPlayStreamAudio(true);
-  }
-
-  Future<bool> muteUserAudioVideo(
-    String userID,
-    bool mute, {
-    required String targetRoomID,
-  }) async {
-    return coreData.stream.roomStreams
-        .getRoom(targetRoomID)
-        .mutePlayStreamAudioVideo(
-          userID,
-          mute,
-          forAudio: true,
-          forVideo: true,
-        );
-  }
-
-  Future<bool> muteUserAudio(
-    String userID,
-    bool mute, {
-    required String targetRoomID,
-  }) async {
-    return coreData.stream.roomStreams
-        .getRoom(targetRoomID)
-        .mutePlayStreamAudioVideo(
-          userID,
-          mute,
-          forAudio: true,
-          forVideo: false,
-        );
-  }
-
-  Future<bool> muteUserVideo(
-    String userID,
-    bool mute, {
-    required String targetRoomID,
-  }) async {
-    return coreData.stream.roomStreams
-        .getRoom(targetRoomID)
-        .mutePlayStreamAudioVideo(
-          userID,
-          mute,
-          forAudio: false,
-          forVideo: true,
-        );
   }
 
   bool setAudioRouteToSpeaker(bool useSpeaker) {

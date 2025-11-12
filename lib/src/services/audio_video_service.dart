@@ -2,39 +2,41 @@ part of 'uikit_service.dart';
 
 mixin ZegoAudioVideoService {
   /// start play all audio video
-  Future<void> startPlayAllAudioVideo({
+  Future<void> unmuteAllRemoteAudioVideo({
     required String targetRoomID,
   }) async {
-    return ZegoUIKitCore.shared.startPlayAllAudioVideo(
-      targetRoomID: targetRoomID,
-    );
+    return ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .muteAllPlayStreamAudioVideo(false);
   }
 
   /// stop play all audio video
-  Future<void> stopPlayAllAudioVideo({
+  Future<void> muteAllRemoteAudioVideo({
     required String targetRoomID,
   }) async {
-    return ZegoUIKitCore.shared.stopPlayAllAudioVideo(
-      targetRoomID: targetRoomID,
-    );
+    return ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .muteAllPlayStreamAudioVideo(
+          true,
+        );
   }
 
   /// start play all audio
-  Future<void> startPlayAllAudio({
+  Future<void> unmuteAllRemoteAudio({
     required String targetRoomID,
   }) async {
-    return ZegoUIKitCore.shared.startPlayAllAudio(
-      targetRoomID: targetRoomID,
-    );
+    return ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .muteAllPlayStreamAudio(false);
   }
 
   /// stop play all audio
-  Future<void> stopPlayAllAudio({
+  Future<void> muteAllRemoteAudio({
     required String targetRoomID,
   }) async {
-    return ZegoUIKitCore.shared.stopPlayAllAudio(
-      targetRoomID: targetRoomID,
-    );
+    await ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .muteAllPlayStreamAudio(true);
   }
 
   /// When the [mute] is set to true, it means that the device is not actually turned off, but muted.
@@ -45,11 +47,14 @@ mixin ZegoAudioVideoService {
     bool mute, {
     required String targetRoomID,
   }) async {
-    return ZegoUIKitCore.shared.muteUserAudioVideo(
-      userID,
-      mute,
-      targetRoomID: targetRoomID,
-    );
+    return ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .mutePlayStreamAudioVideo(
+          userID,
+          mute,
+          forAudio: true,
+          forVideo: true,
+        );
   }
 
   /// When the [mute] is set to true, it means that the device is not actually turned off, but muted.
@@ -60,11 +65,14 @@ mixin ZegoAudioVideoService {
     bool mute, {
     required String targetRoomID,
   }) async {
-    return ZegoUIKitCore.shared.muteUserAudio(
-      userID,
-      mute,
-      targetRoomID: targetRoomID,
-    );
+    return ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .mutePlayStreamAudioVideo(
+          userID,
+          mute,
+          forAudio: true,
+          forVideo: false,
+        );
   }
 
   /// When the [mute] is set to true, it means that the device is not actually turned off, but muted.
@@ -75,11 +83,14 @@ mixin ZegoAudioVideoService {
     bool mute, {
     required String targetRoomID,
   }) async {
-    return ZegoUIKitCore.shared.muteUserVideo(
-      userID,
-      mute,
-      targetRoomID: targetRoomID,
-    );
+    return ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .mutePlayStreamAudioVideo(
+          userID,
+          mute,
+          forAudio: false,
+          forVideo: true,
+        );
   }
 
   /// set audio output to speaker

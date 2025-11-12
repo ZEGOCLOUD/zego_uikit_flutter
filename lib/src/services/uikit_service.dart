@@ -138,7 +138,7 @@ class ZegoUIKit
   }
 
   ValueNotifier<DateTime?> getNetworkTime() {
-    return ZegoUIKitCore.shared.getNetworkTime();
+    return ZegoUIKitCore.shared.coreData.timestamp.notifier;
   }
 
   Stream<ZegoUIKitError> getErrorStream() {
