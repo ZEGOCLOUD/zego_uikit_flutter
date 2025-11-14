@@ -28,7 +28,7 @@ class ZegoUIKitCoreDataEngine {
   StreamSubscription? stateUpdatedSubscriptionByEnableCustomVideoProcessing;
 
   /// for custom video render
-  bool waitingEngineStartEnableValueOfCustomVideoRender = false;
+  bool waitingEngineStopEnableValueOfCustomVideoRender = false;
   StreamSubscription? stateUpdatedSubscriptionByEnableCustomVideoRender;
 
   ZegoUIKitCoreDataError get _errorCommonData =>

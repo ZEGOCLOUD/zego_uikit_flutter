@@ -1340,7 +1340,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       'buffer type:$type, '
       'express engineState:${coreData.engine.stateNotifier.value}, ',
       tag: 'uikit-stream',
-      subTag: 'custom video processing',
+      subTag: 'enableCustomVideoProcessing',
     );
 
     if (ZegoUIKitExpressEngineState.Stop ==
@@ -1368,21 +1368,32 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   void onWaitingEngineStopEnableCustomVideoProcessing(
     ZegoUIKitExpressEngineState engineState,
   ) {
-    final targetEnabled =
-        coreData.engine.waitingEngineStopEnableValueOfCustomVideoProcessing;
+    if (ZegoUIKitExpressEngineState.Stop ==
+        coreData.engine.stateNotifier.value) {
+      final targetEnabled =
+          coreData.engine.waitingEngineStopEnableValueOfCustomVideoProcessing;
 
-    ZegoLoggerService.logInfo(
-      'onWaitingEngineStopEnableCustomVideoProcessing, '
-      'target enabled:$targetEnabled, '
-      'engineState:$engineState, ',
-      tag: 'uikit-stream',
-      subTag: 'custom video processing',
-    );
+      ZegoLoggerService.logInfo(
+        'onWaitingEngineStopEnableCustomVideoProcessing, '
+        'target enabled:$targetEnabled, '
+        'engineState:$engineState, ',
+        tag: 'uikit-stream',
+        subTag: 'enableCustomVideoProcessing',
+      );
 
-    coreData.engine.waitingEngineStopEnableValueOfCustomVideoProcessing = false;
-    coreData.engine.stateUpdatedSubscriptionByEnableCustomVideoProcessing
-        ?.cancel();
-    enableCustomVideoProcessing(targetEnabled);
+      coreData.engine.waitingEngineStopEnableValueOfCustomVideoProcessing =
+          false;
+      coreData.engine.stateUpdatedSubscriptionByEnableCustomVideoProcessing
+          ?.cancel();
+      enableCustomVideoProcessing(targetEnabled);
+    } else {
+      ZegoLoggerService.logInfo(
+        'onWaitingEngineStopEnableCustomVideoProcessing, '
+        'engineState:$engineState, keep waiting...',
+        tag: 'uikit-stream',
+        subTag: 'enableCustomVideoProcessing',
+      );
+    }
   }
 }
 
