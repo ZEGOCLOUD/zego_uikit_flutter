@@ -1,13 +1,19 @@
 ## 3.0.0
 
 - Feature
-  - Support multi-room mode, lots of API had changed.
+    - Support multi-room mode, lots of API had changed.
+
+## 2.28.34
+
+- Features
+    - Fixed the black render issue when beauty open on iOS
 
 ## 2.28.33
 
 - Features
-  - Add `face detection result` callback
-  - 
+    - Add `face detection result` callback
+    -
+
 ## 2.28.32
 
 - Update dependency
@@ -15,104 +21,104 @@
 ## 2.28.31
 
 - Bugs
-  - Fixed the issue where the earpiece/speaker could still be switched while using headphones
+    - Fixed the issue where the earpiece/speaker could still be switched while using headphones
 
 ## 2.28.30
 
 - Features
-  - Support 'setAudioDeviceMode'
+    - Support 'setAudioDeviceMode'
 
 ## 2.28.29
 
 - Features
-  - Support export log by `ZegoUIKit().exportLogs()`
+    - Support export log by `ZegoUIKit().exportLogs()`
 
 ## 2.28.28
 
 - Update environment
 - Bugs
-  - Fixed the issue of duplicate key
+    - Fixed the issue of duplicate key
 
 ## 2.28.27
 
 - Bugs
-  - Fixed the issue where iOS would get stuck during play streaming when has remote user which camera is turned off
+    - Fixed the issue where iOS would get stuck during play streaming when has remote user which camera is turned off
 
 ## 2.28.26
 
 - Bugs
-  - fix a crash error
+    - fix a crash error
 
 ## 2.28.25
 
 - Bugs
-  - fix compile error
+    - fix compile error
 
 ## 2.28.24
 
 - Features
-  - When the camera is turned off, switching between the front and rear cameras is not allowed.
-  - Remove zpns dependency
-  - The location for generating iOS logs has been changed to the same directory as the Zego SDK, and the folder name has been changed to ZegoUIKits
+    - When the camera is turned off, switching between the front and rear cameras is not allowed.
+    - Remove zpns dependency
+    - The location for generating iOS logs has been changed to the same directory as the Zego SDK, and the folder name has been changed to ZegoUIKits
 - Update dependency
 
 ## 2.28.23
 
 - Bugs
-  - Fixed the issue where the menu was obscured when the navigation bar was enabled on some Android devices
+    - Fixed the issue where the menu was obscured when the navigation bar was enabled on some Android devices
 
 ## 2.28.22
 
 - Bugs
-  - Fixed the issue where the useVideoViewAspectFill configuration item does not take effect in iOS play streaming
+    - Fixed the issue where the useVideoViewAspectFill configuration item does not take effect in iOS play streaming
 
 ## 2.28.21
 
 - Bugs
-  - return error if invitation id is empty on invitation API
+    - return error if invitation id is empty on invitation API
 
 ## 2.28.20
 
 - Features
-  - support onWillPress on invitation's button
+    - support onWillPress on invitation's button
 
 ## 2.28.19
 
 - Features
-  - add openAppSettings
+    - add openAppSettings
 
 ## 2.28.18
 
 - Bugs
-  - Fix black issue on local side when sharing media
+    - Fix black issue on local side when sharing media
 
 ## 2.28.17
 
 - Bugs
-  - Fix occasional video black render screen issue in live streaming
+    - Fix occasional video black render screen issue in live streaming
 
 ## 2.28.16
 
 - Bugs
-  - Fix occasional video black render screen issue in live streaming
-  - Fix the crash on screen sharing when exist someone in screen sharing
-  - Fix black background issue in audio room
+    - Fix occasional video black render screen issue in live streaming
+    - Fix the crash on screen sharing when exist someone in screen sharing
+    - Fix black background issue in audio room
 
 ## 2.28.15
 
 - Bugs
-  - Fix screen sharing failure iOS PIP mode
-  - Fix the issue where there is no sound in pure audio
+    - Fix screen sharing failure iOS PIP mode
+    - Fix the issue where there is no sound in pure audio
 
 ## 2.28.14
 
 - Bugs
-  - Fix the issue of strange base color in audio & video window when audio call
+    - Fix the issue of strange base color in audio & video window when audio call
 
 ## 2.28.13
 
 - Bugs
-  - Fix the issue where audio video view cannot display foreground and background components
+    - Fix the issue where audio video view cannot display foreground and background components
 
 ## 2.28.12
 
@@ -121,12 +127,12 @@
 ## 2.28.11
 
 - Bugs
-  - clear current user room attributes after logout room
+    - clear current user room attributes after logout room
 
 ## 2.28.10
 
 - Bugs
-  - Flutter version 3.29.0 Adaptation
+    - Flutter version 3.29.0 Adaptation
 
 ## 2.28.9
 
@@ -135,22 +141,22 @@
 ## 2.28.8
 
 - Bugs
-  - Fix the problem that some models of android get system version return empty
+    - Fix the problem that some models of android get system version return empty
 
 ## 2.28.7
 
 - Features
-  - add system version of device
+    - add system version of device
 
 ## 2.28.6
 
 - Features
-  - Support for additional listening offline message handler
+    - Support for additional listening offline message handler
 
 ## 2.28.5
 
 - Bugs
-  - Fix the occasional fail of enableCustomVideoProcessing
+    - Fix the occasional fail of enableCustomVideoProcessing
 
 ## 2.28.4
 
@@ -163,7 +169,7 @@
 ## 2.28.2
 
 - Features
-  - Add animation effect on camera flip
+    - Add animation effect on camera flip
 
 ## 2.28.1
 
@@ -172,15 +178,15 @@
 ## 2.28.0
 
 - Features
-  - Add data analyze
-  - Add iOS PIP related basic functions
+    - Add data analyze
+    - Add iOS PIP related basic functions
 - Bugs
-  - Fix some issues with render iOS platform view
-  - Fix the issue of media player moving out of range
-  - ZegoUIKitMediaPlayer's API had changed
-  - Fix the issue not publish/play stream where the camera is not turned on on iOS when enable platform view(which used by PIP now)
-  - Fix the issue of audio video view UI exception in audio mode
-  - Fix crash on android virtual machine
+    - Fix some issues with render iOS platform view
+    - Fix the issue of media player moving out of range
+    - ZegoUIKitMediaPlayer's API had changed
+    - Fix the issue not publish/play stream where the camera is not turned on on iOS when enable platform view(which used by PIP now)
+    - Fix the issue of audio video view UI exception in audio mode
+    - Fix crash on android virtual machine
 - Update dependency
 
 ## 2.27.20
@@ -230,22 +236,22 @@
 ## 2.27.9
 
 - Bugs
-  - Fix the issue that the screen video window on this side occasionally appears not closed after remote screen-sharing is closed
+    - Fix the issue that the screen video window on this side occasionally appears not closed after remote screen-sharing is closed
 
 ## 2.27.8
 
 - Bugs
-  - Fix the issue of missing type of user state event in normal call scenario
+    - Fix the issue of missing type of user state event in normal call scenario
 
 ## 2.27.7
 
 - Bugs
-  - Fix the issue where the stop button cannot be clicked in the screen sharing window
+    - Fix the issue where the stop button cannot be clicked in the screen sharing window
 
 ## 2.27.6
 
 - Bugs
-  - Fix offline call from web failure issue
+    - Fix offline call from web failure issue
 
 ## 2.27.5
 
@@ -254,13 +260,13 @@
 ## 2.27.4
 
 - Bugs
-  - Fix offline call from web failure issue
+    - Fix offline call from web failure issue
 
 ## 2.27.2
 
 - Optimize audio-video view play outside the room
-  - Add resolution configuration, default is 180p
-  - Optimize the automatic play stream strategy, only play stream is available in the visible area.
+    - Add resolution configuration, default is 180p
+    - Optimize the automatic play stream strategy, only play stream is available in the visible area.
 
 ## 2.27.1
 
@@ -293,7 +299,7 @@
 ## 2.25.0
 
 - Features
-  - Support login by token
+    - Support login by token
 
 ## 2.24.4
 
@@ -335,7 +341,7 @@
 ## 2.22.6
 
 - Bugs
-  - Fix namespace error after grade v8.0
+    - Fix namespace error after grade v8.0
 
 ## 2.22.5
 
