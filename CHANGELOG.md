@@ -5,7 +5,7 @@
 
 ## 2.28.34
 
-- Features
+- Bugs
     - Fixed the black render issue when beauty open on iOS
 
 ## 2.28.33
