@@ -1499,7 +1499,7 @@ class ZegoUIKitCore
       'buffer type:$type, '
       'express engineState:${coreData.engineStateNotifier.value}, ',
       tag: 'uikit-stream',
-      subTag: 'custom video processing',
+      subTag: 'enableCustomVideoProcessing',
     );
 
     if (ZegoUIKitExpressEngineState.stop ==
@@ -1518,29 +1518,39 @@ class ZegoUIKitCore
           ?.cancel();
       coreData.engineStateUpdatedSubscriptionByEnableCustomVideoProcessing =
           coreData.engineStateStreamCtrl.stream.listen(
-            onWaitingEngineStopEnableCustomVideoProcessing,
-          );
+        onWaitingEngineStopEnableCustomVideoProcessing,
+      );
     }
   }
 
   void onWaitingEngineStopEnableCustomVideoProcessing(
     ZegoUIKitExpressEngineState engineState,
   ) {
-    final targetEnabled =
-        coreData.waitingEngineStopEnableValueOfCustomVideoProcessing;
+    if (ZegoUIKitExpressEngineState.stop ==
+        ZegoUIKitCore.shared.coreData.engineStateNotifier.value) {
+      final targetEnabled =
+          coreData.waitingEngineStopEnableValueOfCustomVideoProcessing;
 
-    ZegoLoggerService.logInfo(
-      'onWaitingEngineStopEnableCustomVideoProcessing, '
-      'target enabled:$targetEnabled, '
-      'engineState:$engineState, ',
-      tag: 'uikit-stream',
-      subTag: 'custom video processing',
-    );
+      ZegoLoggerService.logInfo(
+        'onWaitingEngineStopEnableCustomVideoProcessing, '
+        'target enabled:$targetEnabled, '
+        'engineState:$engineState, ',
+        tag: 'uikit-stream',
+        subTag: 'enableCustomVideoProcessing',
+      );
 
-    coreData.waitingEngineStopEnableValueOfCustomVideoProcessing = false;
-    coreData.engineStateUpdatedSubscriptionByEnableCustomVideoProcessing
-        ?.cancel();
-    enableCustomVideoProcessing(targetEnabled);
+      coreData.waitingEngineStopEnableValueOfCustomVideoProcessing = false;
+      coreData.engineStateUpdatedSubscriptionByEnableCustomVideoProcessing
+          ?.cancel();
+      enableCustomVideoProcessing(targetEnabled);
+    } else {
+      ZegoLoggerService.logInfo(
+        'onWaitingEngineStopEnableCustomVideoProcessing, '
+        'engineState:$engineState, keep waiting',
+        tag: 'uikit-stream',
+        subTag: 'enableCustomVideoProcessing',
+      );
+    }
   }
 }
 

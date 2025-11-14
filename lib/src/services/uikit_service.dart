@@ -140,6 +140,10 @@ class ZegoUIKit
         const Stream.empty();
   }
 
+  ValueNotifier<ZegoUIKitExpressEngineState> getEngineStateNotifier() {
+    return ZegoUIKitCore.shared.coreData.engineStateNotifier;
+  }
+
   Stream<ZegoUIKitExpressEngineState> getEngineStateStream() {
     return ZegoUIKitCore.shared.coreData.engineStateStreamCtrl.stream;
   }
