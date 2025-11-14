@@ -2,7 +2,9 @@ part of 'uikit_service.dart';
 
 mixin ZegoRoomService {
   /// 当前是否有房间登录
-  bool get hasRoomLogin {
+  bool hasRoomLogin({
+    bool includeHallRoom = false,
+  }) {
     bool value = false;
 
     ZegoUIKitCore.shared.coreData.room.rooms.forEachSync((roomID, room) {
@@ -152,6 +154,18 @@ mixin ZegoRoomService {
     );
 
     return leaveRoomResult;
+  }
+
+  Future<void> switchRoom({
+    required String fromRoomID,
+    required String toRoomID,
+    String token = '',
+  }) async {
+    await ZegoUIKitCore.shared.coreData.room.switchTo(
+      fromRoomID: fromRoomID,
+      toRoomID: toRoomID,
+      token: token,
+    );
   }
 
   Future<void> renewRoomToken(

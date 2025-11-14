@@ -174,7 +174,7 @@ class ZegoUIKitCoreDataRoom {
       return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
     }
 
-    if (loginRoomIDs.contains(targetRoomID)) {
+    if (mode == ZegoRoomMode.MultiRoom && loginRoomIDs.contains(targetRoomID)) {
       ZegoLoggerService.logInfo(
         'already in room, ignore, '
         'room id:$targetRoomID, '
@@ -186,7 +186,7 @@ class ZegoUIKitCoreDataRoom {
       return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.success, {});
     }
 
-    if (currentID.isNotEmpty && mode == ZegoRoomMode.SingleRoom) {
+    if (mode == ZegoRoomMode.SingleRoom && currentID.isNotEmpty) {
       /// clear old room data
       /// todo 转移host给直播大厅
       _coreData.clear(
@@ -266,6 +266,67 @@ class ZegoUIKitCoreDataRoom {
     }
 
     return result;
+  }
+
+  Future<ZegoUIKitRoomLoginResult> switchTo({
+    required String fromRoomID,
+    required String toRoomID,
+    String token = '',
+  }) async {
+    ZegoLoggerService.logInfo(
+      'mode:$mode, '
+      'from room id:"$fromRoomID", '
+      'to room id:"$toRoomID", '
+      'network state:${ZegoUIKit().getNetworkState()}, ',
+      tag: 'uikit-rooms',
+      subTag: 'switch room',
+    );
+
+    if (fromRoomID.isEmpty || toRoomID.isEmpty) {
+      ZegoLoggerService.logError(
+        'room id is empty',
+        tag: 'uikit-rooms',
+        subTag: 'switch room',
+      );
+
+      return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
+    }
+
+    if (!loginRoomIDs.contains(fromRoomID)) {
+      ZegoLoggerService.logError(
+        'from room id is not login now, '
+        'from room state:${rooms.getRoom(fromRoomID).state}, ',
+        tag: 'uikit-rooms',
+        subTag: 'switch room',
+      );
+
+      return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.roomNotLogin, {});
+    }
+
+    if (mode == ZegoRoomMode.MultiRoom && loginRoomIDs.contains(toRoomID)) {
+      ZegoLoggerService.logInfo(
+        'already in room, ignore, '
+        'to room id:$toRoomID, '
+        'to room state:${rooms.getRoom(fromRoomID).state}, ',
+        tag: 'uikit-rooms',
+        subTag: 'switch room',
+      );
+
+      return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.success, {});
+    }
+
+    await ZegoExpressEngine.instance.switchRoom(
+      fromRoomID,
+      toRoomID,
+      config: ZegoRoomConfig(0, true, token),
+    );
+    ZegoLoggerService.logInfo(
+      'done, ',
+      tag: 'uikit-rooms',
+      subTag: 'switch room',
+    );
+
+    return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.success, {});
   }
 
   Future<ZegoUIKitRoomLogoutResult> leave({

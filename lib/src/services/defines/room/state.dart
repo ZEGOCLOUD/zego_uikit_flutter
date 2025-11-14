@@ -21,6 +21,10 @@ class ZegoUIKitRoomState {
 
   ZegoUIKitRoomState(this.reason, this.errorCode, this.extendedData);
 
+  bool get isLogin =>
+      reason == ZegoUIKitRoomStateChangedReason.Logining ||
+      reason == ZegoUIKitRoomStateChangedReason.Logined;
+
   @override
   String toString() {
     return 'ZegoUIKitRoomState:{'
