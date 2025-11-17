@@ -40,7 +40,6 @@ class ZegoUIKitCoreDataEngine {
     String token = '',
     bool withoutCreateEngine = false,
     bool? enablePlatformView,
-    ZegoUIKitRoomMode roomMode = ZegoUIKitRoomMode.SingleRoom,
     ZegoUIKitScenario scenario = ZegoUIKitScenario.Default,
   }) async {
     ZegoExpressEngine.setEngineConfig(
@@ -58,8 +57,6 @@ class ZegoUIKitCoreDataEngine {
       createdNotifier.value = true;
     } else {
       try {
-        /// todo offline callkit create too需要处理
-        await ZegoExpressEngine.setRoomMode(roomMode);
         await ZegoExpressEngine.createEngineWithProfile(
           ZegoEngineProfile(
             appID,

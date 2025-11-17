@@ -51,17 +51,21 @@ class ZegoInRoomMessage {
     }
   }
 
-  ZegoInRoomMessage.fromBroadcastMessage(ZegoBroadcastMessageInfo message)
-      : this(
-          user: ZegoUIKitUser.fromZego(message.fromUser),
+  ZegoInRoomMessage.fromBroadcastMessage(
+    String roomID,
+    ZegoBroadcastMessageInfo message,
+  ) : this(
+          user: ZegoUIKitUser.fromZego(message.fromUser, roomID, false),
           message: message.message,
           timestamp: message.sendTime,
           messageID: message.messageID.toString(),
         );
 
-  ZegoInRoomMessage.fromBarrageMessage(ZegoBarrageMessageInfo message)
-      : this(
-          user: ZegoUIKitUser.fromZego(message.fromUser),
+  ZegoInRoomMessage.fromBarrageMessage(
+    String roomID,
+    ZegoBarrageMessageInfo message,
+  ) : this(
+          user: ZegoUIKitUser.fromZego(message.fromUser, roomID, false),
           message: message.message,
           timestamp: message.sendTime,
           messageID: message.messageID,

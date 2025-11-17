@@ -124,14 +124,14 @@ mixin ZegoAudioVideoService {
   }
 
   /// turn on/off camera
-  Future<void> turnCameraOn(
+  Future<bool> turnCameraOn(
     bool isOn, {
     String? userID,
     required String targetRoomID,
   }) async {
     assert(targetRoomID.isNotEmpty);
 
-    await ZegoUIKitCore.shared.turnCameraOn(
+    return await ZegoUIKitCore.shared.turnCameraOn(
       userID?.isEmpty ?? true
           ? ZegoUIKitCore.shared.coreData.user.localUser.id
           : userID!,
@@ -156,7 +156,7 @@ mixin ZegoAudioVideoService {
   /// When the [muteMode] is set to true, it means that the device is not actually turned off, but muted.
   /// The default value is false, which means the device is turned off.
   /// When either the camera or the microphone is muted, the audio and video views will still be visible.
-  Future<void> turnMicrophoneOn(
+  Future<bool> turnMicrophoneOn(
     bool isOn, {
     required String targetRoomID,
     String? userID,
@@ -164,7 +164,7 @@ mixin ZegoAudioVideoService {
   }) async {
     assert(targetRoomID.isNotEmpty);
 
-    await ZegoUIKitCore.shared.turnMicrophoneOn(
+    return await ZegoUIKitCore.shared.turnMicrophoneOn(
       userID?.isEmpty ?? true
           ? ZegoUIKitCore.shared.coreData.user.localUser.id
           : userID!,
@@ -242,6 +242,11 @@ mixin ZegoAudioVideoService {
       seiData,
       streamType: streamType,
     );
+  }
+
+  /// After setting to true, switching room will not stop pulling streams (both RTC and CDN streams will not stop)
+  Future<void> enableSwitchRoomNotStopPlay(bool enabled) async {
+    return ZegoUIKitCore.shared.enableSwitchRoomNotStopPlay(enabled);
   }
 
   /// get audio video view notifier
@@ -460,16 +465,36 @@ mixin ZegoAudioVideoService {
         const Stream.empty();
   }
 
-  void copyToAnotherRoom({
+  void moveToAnotherRoom({
     required String fromRoomID,
-    required String fromStreamID,
+    required List<String> fromStreamIDs,
     required String toRoomID,
+    required bool isFromAnotherRoom,
   }) {
     ZegoUIKitCore.shared.coreData.stream.roomStreams
-        .getRoom(
-          fromRoomID,
-        )
-        .copyToAnotherRoom(fromStreamID: fromStreamID, toRoomID: toRoomID);
+        .getRoom(fromRoomID)
+        .transferToAnotherRoom(
+          fromStreamIDs: fromStreamIDs,
+          toRoomID: toRoomID,
+          isFromAnotherRoom: isFromAnotherRoom,
+          isMove: true,
+        );
+  }
+
+  void copyToAnotherRoom({
+    required String fromRoomID,
+    required List<String> fromStreamIDs,
+    required String toRoomID,
+    required bool isFromAnotherRoom,
+  }) {
+    ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(fromRoomID)
+        .transferToAnotherRoom(
+          fromStreamIDs: fromStreamIDs,
+          toRoomID: toRoomID,
+          isFromAnotherRoom: isFromAnotherRoom,
+          isMove: false,
+        );
   }
 
   Stream<List<ZegoUIKitUser>> getAudioVideoListStream({
@@ -488,12 +513,13 @@ mixin ZegoAudioVideoService {
   /// get audio video list
   List<ZegoUIKitUser> getAudioVideoList({
     required String targetRoomID,
+    bool onlyTargetRoom = true,
   }) {
     return ZegoUIKitCore.shared.coreData.stream.roomStreams
         .getRoom(
           targetRoomID,
         )
-        .getAudioVideoList()
+        .getAudioVideoList(onlyCurrentRoom: onlyTargetRoom)
         .map((e) => e.toZegoUikitUser())
         .toList();
   }
@@ -575,6 +601,19 @@ mixin ZegoAudioVideoService {
         )
         .mainChannel
         .viewSizeNotifier;
+  }
+
+  ValueNotifier<ZegoUIKitPlayerState> getStreamPlayerStateNotifier(
+    String userID, {
+    required String targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData.user
+        .getUser(
+          userID,
+          targetRoomID: targetRoomID,
+        )
+        .mainChannel
+        .playerStateNotifier;
   }
 
   /// update texture render orientation

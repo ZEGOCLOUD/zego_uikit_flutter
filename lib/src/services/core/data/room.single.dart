@@ -10,10 +10,9 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'package:zego_uikit/src/services/services.dart';
 import '../core.dart';
-
 import 'user.dart';
 
-/// 单房间的房间信息
+/// Room information for single room
 /// @nodoc
 class ZegoUIKitCoreDataSingleRoom {
   ZegoUIKitCoreDataSingleRoom(this.id) {
@@ -26,8 +25,10 @@ class ZegoUIKitCoreDataSingleRoom {
 
   @override
   String toString() {
-    return 'id:$id, '
-        'state:${state.value.reason}, ';
+    return 'ZegoUIKitCoreDataSingleRoom{\n'
+        'id:$id, '
+        'state:${state.value.reason}, '
+        '}\n';
   }
 
   bool get isLogin =>
@@ -112,17 +113,18 @@ class ZegoUIKitCoreDataSingleRoom {
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'joining, '
       'room id:"$id", '
+      'joining, '
       'markAsLargeRoom:$markAsLargeRoom, '
       'isSimulated:$isSimulated, ',
       tag: 'uikit-rooms-room',
-      subTag: 'join',
+      subTag: 'join room',
     );
 
     if (isSimulated) {
       state.value.reason = ZegoUIKitRoomStateChangedReason.Logined;
-      return ZegoUIKitRoomLoginResult(0, {});
+      return ZegoUIKitRoomLoginResult(
+          ZegoUIKitExpressErrorCode.CommonSuccess, {});
     }
 
     state.value.reason = ZegoUIKitRoomStateChangedReason.Logining;
@@ -133,10 +135,11 @@ class ZegoUIKitCoreDataSingleRoom {
     );
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:"$id", '
       'result:${result.errorCode},'
       'extendedData:${result.extendedData}',
       tag: 'uikit-rooms-room',
-      subTag: 'join',
+      subTag: 'join room',
     );
 
     return ZegoUIKitRoomLoginResult(result.errorCode, result.extendedData);
@@ -145,19 +148,32 @@ class ZegoUIKitCoreDataSingleRoom {
   Future<ZegoRoomLogoutResult> leave() async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'leaving, '
-      'room id:"$id", ',
+      'room id:"$id", '
+      'leaving, ',
       tag: 'uikit-rooms-room',
-      subTag: 'leave',
+      subTag: 'leave room',
     );
+
+    if (ZegoUIKitRoomStateChangedReason.Logout == state.value.reason) {
+      ZegoLoggerService.logInfo(
+        'hash:$hashCode, '
+        'room id:"$id", '
+        'room state is logout, ignore, ',
+        tag: 'uikit-rooms-room',
+        subTag: 'leave room',
+      );
+
+      return ZegoRoomLogoutResult(ZegoUIKitExpressErrorCode.CommonSuccess, {});
+    }
 
     final result = await ZegoExpressEngine.instance.logoutRoom(id);
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:"$id", '
       'result:${result.errorCode},'
       'extendedData:${result.extendedData}',
       tag: 'uikit-rooms-room',
-      subTag: 'leave',
+      subTag: 'leave room',
     );
 
     if (result.errorCode == ZegoUIKitExpressErrorCode.CommonSuccess) {

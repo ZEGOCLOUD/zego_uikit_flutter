@@ -892,6 +892,7 @@ mixin ZegoSignalingPluginCoreAdvanceInvitationData {
       currentInviter = ZegoUIKitUser(
         id: event.inviterID,
         name: '',
+        isAnotherRoomUser: false,
       );
 
       invitationInitiator.extendedData = requestData.customData;
@@ -1011,7 +1012,11 @@ mixin ZegoSignalingPluginCoreAdvanceInvitationData {
       'invitation_id': event.invitationID,
       'data': event.extendedData,
       'type': invitationData?.type ?? 0,
-      'inviter': ZegoUIKitUser(id: event.inviterID, name: ''),
+      'inviter': ZegoUIKitUser(
+        id: event.inviterID,
+        name: '',
+        isAnotherRoomUser: false,
+      ),
     });
   }
 
@@ -1041,7 +1046,11 @@ mixin ZegoSignalingPluginCoreAdvanceInvitationData {
     streamCtrlAdvanceInvitationEnded?.add({
       'type': invitationData?.type ?? 0,
       'invitation_id': event.invitationID,
-      'inviter': ZegoUIKitUser(id: event.callerID, name: ''),
+      'inviter': ZegoUIKitUser(
+        id: event.callerID,
+        name: '',
+        isAnotherRoomUser: false,
+      ),
       'end_time': event.endTime,
       'data': event.extendedData,
     });
@@ -1074,6 +1083,7 @@ mixin ZegoSignalingPluginCoreAdvanceInvitationData {
       'inviter': ZegoUIKitUser(
         id: invitationData?.initiator.userID ?? '',
         name: '',
+        isAnotherRoomUser: false,
       ),
     });
   }

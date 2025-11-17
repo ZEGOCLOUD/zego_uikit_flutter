@@ -123,6 +123,15 @@ class _ZegoLayoutPictureInPictureState
       smallViewUser = widget.userList.length > 1 ? widget.userList[1] : null;
     }
 
+    ZegoLoggerService.logInfo(
+      'hashCode:$hashCode, '
+      'room id:${widget.roomID}, '
+      'large view user:${largeViewUser.toString()}, '
+      'small view user:${smallViewUser.toString()}, ',
+      tag: 'uikit.component.pip-layout',
+      subTag: '1v1',
+    );
+
     return Stack(
       children: [
         if (largeViewUser == null)
@@ -184,6 +193,15 @@ class _ZegoLayoutPictureInPictureState
       largeViewUser = widget.userList[0];
       smallViewList = widget.userList.sublist(1);
     }
+
+    ZegoLoggerService.logInfo(
+      'hashCode:$hashCode, '
+      'room id:${widget.roomID}, '
+      'large view user:${largeViewUser.toString()}, '
+      'small view users:$smallViewList, ',
+      tag: 'uikit.component.pip-layout',
+      subTag: 'multi',
+    );
 
     return Stack(
       children: [

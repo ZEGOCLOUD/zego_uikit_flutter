@@ -80,9 +80,6 @@ mixin ZegoChannelService {
       return;
     }
 
-    ZegoUIKitCore.shared.coreData.stream.isEnableCustomVideoRender = isEnabled;
-    await ZegoUIKitPluginPlatform.instance.enableCustomVideoRender(isEnabled);
-
     if (ZegoUIKitExpressEngineState.Stop ==
         ZegoUIKitCore.shared.coreData.engine.stateNotifier.value) {
       /// this api does not allow setting after the express internal engine starts;
@@ -91,7 +88,15 @@ mixin ZegoChannelService {
       /// so turned off/turned on only effect when engine state is stop
       ZegoUIKitCore.shared.coreData.stream.isEnableCustomVideoRender =
           isEnabled;
-      await ZegoUIKitPluginPlatform.instance.enableCustomVideoRender(isEnabled);
+      await ZegoUIKitPluginPlatform.instance
+          .enableCustomVideoRender(isEnabled)
+          .then((_) {
+        ZegoLoggerService.logInfo(
+          'done',
+          tag: 'uikit-channel',
+          subTag: 'enableCustomVideoRender',
+        );
+      });
     } else {
       ZegoUIKitCore.shared.coreData.engine
           .waitingEngineStopEnableValueOfCustomVideoRender = isEnabled;
@@ -169,8 +174,8 @@ mixin ZegoChannelService {
     return true;
   }
 
-  /// 打开应用设置页面
-  /// 仅支持 Android 平台
+  /// Open app settings page
+  /// Only supported on Android platform
   Future<void> openAppSettings() async {
     await ZegoUIKitPluginPlatform.instance.openAppSettings();
   }

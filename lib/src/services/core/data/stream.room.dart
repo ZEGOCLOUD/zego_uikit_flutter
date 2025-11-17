@@ -2,6 +2,9 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+// Flutter imports:
+import 'package:flutter/foundation.dart';
+
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
 
@@ -9,21 +12,27 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/channel/platform_interface.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
-import 'package:zego_uikit/src/services/defines/express_extension.dart';
 import 'package:zego_uikit/src/services/services.dart';
-
 import 'data.dart';
+import 'room.dart';
 import 'screen_sharing.dart';
 import 'stream.dart';
 import 'stream.data.dart';
-import 'stream.helper.dart';
 import 'user.dart';
-import 'room.dart';
 
-/// 一个房间的流相关信息
+/// Stream related information for a room
 class ZegoUIKitCoreDataRoomStream {
   String roomID;
   ZegoUIKitCoreDataRoomStream(this.roomID);
+
+  @override
+  String toString() {
+    return 'ZegoUIKitCoreDataRoomStream{\n'
+        'id:$roomID, '
+        'streamDic keys:${streamDicNotifier.value.keys}, '
+        'mixerStreamDic keys:${mixerStreamDic.keys}, '
+        '}\n';
+  }
 
   ZegoUIKitCoreData get _commonData => ZegoUIKitCore.shared.coreData;
   ZegoUIKitCoreDataRoom get _roomCommonData =>
@@ -45,7 +54,8 @@ class ZegoUIKitCoreDataRoomStream {
   final Map<String, ZegoUIKitCoreMixerStream> mixerStreamDic = {};
 
   /// {stream id:stream data}
-  final Map<String, ZegoUIKitCoreDataStreamData> streamDic = {};
+  final streamDicNotifier =
+      ValueNotifier<Map<String, ZegoUIKitCoreDataStreamData>>({});
 
   final Map<String, String> extraInfo = {}; // stream_id:extra info
 
@@ -60,9 +70,12 @@ class ZegoUIKitCoreDataRoomStream {
 
   StreamController<ZegoUIKitReceiveSEIEvent>? receiveSEIStreamCtrl;
 
+  Timer? _debugTimer;
+
   void init() {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'init',
       tag: 'uikit-streams-room',
       subTag: 'init',
@@ -75,15 +88,33 @@ class ZegoUIKitCoreDataRoomStream {
         ZegoUIKitReceiveTurnOnLocalMicrophoneEvent>.broadcast();
     receiveSEIStreamCtrl ??=
         StreamController<ZegoUIKitReceiveSEIEvent>.broadcast();
+
+    // Start debug timer (only in debug mode)
+    if (kDebugMode) {
+      _debugTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+        ZegoLoggerService.logInfo(
+          'hash:$hashCode, '
+          'room id:$roomID, '
+          'streamDic:${streamDicNotifier.value}, '
+          'mixerStreamDic:$mixerStreamDic',
+          tag: 'uikit-streams-room',
+          subTag: 'debug-timer',
+        );
+      });
+    }
   }
 
   void uninit() {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'uninit',
       tag: 'uikit-streams-room',
       subTag: 'uninit',
     );
+
+    _debugTimer?.cancel();
+    _debugTimer = null;
 
     audioVideoListStreamCtrl?.close();
     audioVideoListStreamCtrl = null;
@@ -101,11 +132,10 @@ class ZegoUIKitCoreDataRoomStream {
     isPlaying = false;
   }
 
-  void clear({
-    required bool stopPlayingAnotherRoomStream,
-  }) {
+  void clear() {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'clear',
       tag: 'uikit-streams-room',
       subTag: 'clearStream',
@@ -117,7 +147,7 @@ class ZegoUIKitCoreDataRoomStream {
       );
     }
 
-    stopPlayingAllStream(stopPlayingAnotherRoom: stopPlayingAnotherRoomStream);
+    stopPlayingAllStream();
 
     if (_userCommonData.localUser.mainChannel.streamID.isNotEmpty) {
       stopPublishingStream(streamType: ZegoStreamType.main);
@@ -136,31 +166,188 @@ class ZegoUIKitCoreDataRoomStream {
     isPlaying = false;
   }
 
+  void clearDict() {
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'current keys:{${streamDicNotifier.value.keys}}, ',
+      tag: 'uikit-streams-room',
+      subTag: 'clearDict',
+    );
+
+    streamDicNotifier.value.clear();
+  }
+
+  ZegoUIKitCoreUser queryUser(String streamID) {
+    final streamData = queryStream(streamID);
+    if (streamData.isEmpty) {
+      return ZegoUIKitCoreUser.empty();
+    }
+
+    return _userCommonData.roomUsers.getRoom(roomID).query(streamData.userID);
+  }
+
+  ZegoUIKitCoreDataStreamData queryStream(String streamID) {
+    return streamDicNotifier.value[streamID] ??
+        ZegoUIKitCoreDataStreamData.empty();
+  }
+
+  void addDataInDict(String streamID, ZegoUIKitCoreDataStreamData data) {
+    final isExist = streamDicNotifier.value.keys.contains(streamID);
+
+    streamDicNotifier.value[streamID] = data;
+
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'streamID:$streamID, '
+      'data:{$data}, '
+      'is exist now:$isExist, '
+      'current keys:{${streamDicNotifier.value.keys}}, ',
+      tag: 'uikit-streams-room',
+      subTag: 'addDataInDict',
+    );
+  }
+
+  void removeDataInDict(String streamID) {
+    final previousKeys = streamDicNotifier.value.keys;
+
+    streamDicNotifier.value.remove(streamID);
+
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'streamID:$streamID, '
+      'previous keys:$previousKeys, '
+      'current keys:{${streamDicNotifier.value}}, ',
+      tag: 'uikit-streams-room',
+      subTag: 'removeDataInDict',
+    );
+  }
+
+  void removeDatasInDict(List<String> streamIDs) {
+    final previousKeys = streamDicNotifier.value.keys;
+
+    streamDicNotifier.value.removeWhere((key, data) => streamIDs.contains(key));
+
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'streamIDs:$streamIDs, '
+      'previous keys:$previousKeys, '
+      'current keys:{${streamDicNotifier.value.keys}}, ',
+      tag: 'uikit-streams-room',
+      subTag: 'removeDatasInDict',
+    );
+  }
+
+  void updatePlayerStateInDict(String streamID, ZegoPlayerState playerState) {
+    final streamUser = queryUser(streamID);
+    final streamChannel = ZegoUIKitStreamHelper.getUserStreamChannel(
+        streamUser, ZegoUIKitStreamHelper.getStreamTypeByID(streamID));
+    if (playerState == streamChannel.playerStateNotifier.value) {
+      return;
+    }
+
+    final previousState = streamChannel.playerStateNotifier.value;
+    streamChannel.playerStateNotifier.value = playerState;
+
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'streamID:$streamID, '
+      'playerState:$playerState, '
+      'previous state:$previousState, '
+      'current state:{${streamChannel.playerStateNotifier.value}, ',
+      tag: 'uikit-streams-room',
+      subTag: 'updatePlayerStateInDict',
+    );
+
+    /// notify outside to update audio video list
+    ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(roomID)
+        .notifyStreamListControl(
+          ZegoUIKitStreamHelper.getStreamTypeByID(streamID),
+        );
+  }
+
+  void updatePublisherStateInDict(
+    String streamID,
+    ZegoPublisherState publisherState,
+  ) {
+    final streamUser = queryUser(streamID);
+    final streamChannel = ZegoUIKitStreamHelper.getUserStreamChannel(
+        streamUser, ZegoUIKitStreamHelper.getStreamTypeByID(streamID));
+    if (publisherState == streamChannel.publisherStateNotifier.value) {
+      return;
+    }
+
+    final previousState = streamChannel.publisherStateNotifier.value;
+    streamChannel.publisherStateNotifier.value = publisherState;
+
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'streamID:$streamID, '
+      'publisherState:$publisherState, '
+      'previous state:$previousState, '
+      'current state:{${streamChannel.publisherStateNotifier.value}}, ',
+      tag: 'uikit-streams-room',
+      subTag: 'updatePublisherStateInDict',
+    );
+
+    /// notify outside to update audio video list
+    ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(roomID)
+        .notifyStreamListControl(
+          ZegoUIKitStreamHelper.getStreamTypeByID(streamID),
+        );
+  }
+
+  void updateIsAnotherRoomUserInDict(String streamID, bool isAnotherRoomUser) {
+    final previousValue = streamDicNotifier.value[streamID]?.fromAnotherRoom;
+
+    streamDicNotifier.value[streamID]?.fromAnotherRoom = isAnotherRoomUser;
+
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'streamID:$streamID, '
+      'isAnotherRoomUser:$isAnotherRoomUser, '
+      'previous value:$previousValue, '
+      'current stream:{${streamDicNotifier.value[streamID]?.fromAnotherRoom}}, ',
+      tag: 'uikit-streams-room',
+      subTag: 'updateIsAnotherRoomUserInDict',
+    );
+  }
+
   Future<void> startPublishingStream({
     required ZegoStreamType streamType,
   }) async {
-    final localUserStreamChannel =
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+    final localUserStreamChannel = ZegoUIKitStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
     );
 
-    if (localUserStreamChannel.streamID.isNotEmpty) {
+    if (isPublishing) {
       ///  stream id had generated, that mean is publishing
       ZegoLoggerService.logWarn(
         'hash:$hashCode, '
-        'local user stream id(${localUserStreamChannel.streamID}) of $streamType is not empty, '
-        'local user is publishing...',
+        'local user is publishing,'
+        'channel:$localUserStreamChannel, ',
         tag: 'uikit-streams-room',
         subTag: 'start publish stream',
       );
       return;
     }
 
+    isPublishing = true;
+
     final localUserStreamViewID =
         localUserStreamChannel.viewIDNotifier.value ?? -1;
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'updateConfigBeforeStartPublishingStream, '
       'view id:$localUserStreamViewID, ',
       tag: 'uikit-streams-room',
@@ -226,46 +413,32 @@ class ZegoUIKitCoreDataRoomStream {
       )
       ..streamTimestamp =
           ZegoUIKitCore.shared.coreData.timestamp.now.millisecondsSinceEpoch;
-    streamDic[localUserStreamChannel.streamID] = ZegoUIKitCoreDataStreamData(
-      roomID: roomID,
-      userID: _userCommonData.localUser.id,
-      userName: _userCommonData.localUser.name,
-      publisherState: ZegoPublisherState.NoPublish,
-    );
+    addDataInDict(
+        localUserStreamChannel.streamID,
+        ZegoUIKitCoreDataStreamData(
+          id: localUserStreamChannel.streamID,
+          roomID: roomID,
+          userID: _userCommonData.localUser.id,
+          userName: _userCommonData.localUser.name,
+        ));
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'stream dict add $streamType ${localUserStreamChannel.streamID} for ${_userCommonData.localUser.id}, '
-      'now stream dict:$streamDic',
-      tag: 'uikit-streams-room',
-      subTag: 'start publish stream',
-    );
-
-    ZegoLoggerService.logInfo(
-      'hash:$hashCode, '
-      'start publish, '
+      'now stream dict:${streamDicNotifier.value}, '
+      'try start publish, '
       '${localUserStreamChannel.streamID}, '
-      'network state:${ZegoUIKit().getNetworkState()}, ',
-      tag: 'uikit-streams-room',
-      subTag: 'start publish stream',
-    );
-
-    ZegoLoggerService.logInfo(
-      'hash:$hashCode, '
-      'call express startPublishingStream, for trace enableCustomVideoRender, '
+      'network state:${ZegoUIKit().getNetworkState()}, '
       'isEnableCustomVideoRender:${_streamCommonData.isEnableCustomVideoRender}',
       tag: 'uikit-streams-room',
       subTag: 'start publish stream',
     );
-    await ZegoExpressEngine.instance
-        .startPublishingStream(
+    await ZegoExpressEngine.instance.startPublishingStream(
       localUserStreamChannel.streamID,
       channel: streamType.channel,
       config: ZegoPublisherConfig(roomID: roomID),
-    )
-        .then((_) {
-      isPublishing = true;
-    });
+    );
 
     notifyStreamListControl(streamType);
   }
@@ -273,14 +446,14 @@ class ZegoUIKitCoreDataRoomStream {
   Future<void> onViewCreatedByStartPublishingStream(
     ZegoStreamType streamType,
   ) async {
-    final localTargetStreamViewID =
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-              _userCommonData.localUser,
-              streamType,
-            ).viewIDNotifier.value ??
-            -1;
+    final localTargetStreamViewID = ZegoUIKitStreamHelper.getUserStreamChannel(
+          _userCommonData.localUser,
+          streamType,
+        ).viewIDNotifier.value ??
+        -1;
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'onViewCreatedByStartPublishingStream, '
       'view id:$localTargetStreamViewID, ',
       tag: 'uikit-streams-room',
@@ -299,6 +472,7 @@ class ZegoUIKitCoreDataRoomStream {
         );
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'call express startPreview, for trace enableCustomVideoRender, '
           'isEnableCustomVideoRender:${_streamCommonData.isEnableCustomVideoRender}',
           tag: 'uikit-streams-room',
@@ -326,14 +500,14 @@ class ZegoUIKitCoreDataRoomStream {
   Future<void> stopPublishingStream({
     required ZegoStreamType streamType,
   }) async {
-    final localUserStreamChannel =
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+    final localUserStreamChannel = ZegoUIKitStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
     );
     final targetStreamID = localUserStreamChannel.streamID;
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'stop $streamType $targetStreamID}, '
       'network state:${ZegoUIKit().getNetworkState()}, ',
       tag: 'uikit-streams-room',
@@ -343,6 +517,7 @@ class ZegoUIKitCoreDataRoomStream {
     if (targetStreamID.isEmpty) {
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
+        'room id:$roomID, '
         'stream id is empty',
         tag: 'uikit-streams-room',
         subTag: 'stop publish stream',
@@ -355,6 +530,7 @@ class ZegoUIKitCoreDataRoomStream {
         targetStreamID) {
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
+        'room id:$roomID, '
         'stopped canvas view queue',
         tag: 'uikit-streams-room',
         subTag: 'stop publish stream',
@@ -363,10 +539,11 @@ class ZegoUIKitCoreDataRoomStream {
       _streamCommonData.canvasViewCreateQueue.completeCurrentTask();
     }
 
-    streamDic.remove(targetStreamID);
+    removeDataInDict(targetStreamID);
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'stream dict remove $targetStreamID, now stream dict:$streamDic',
+      'room id:$roomID, '
+      'stream dict remove $targetStreamID, now stream dict:${streamDicNotifier.value}',
       tag: 'uikit-streams-room',
       subTag: 'stop publish stream',
     );
@@ -426,8 +603,9 @@ class ZegoUIKitCoreDataRoomStream {
     if (!roomInfo.isLogin) {
       ZegoLoggerService.logWarn(
         'hash:$hashCode, '
-        'room id: $roomID, state:${roomInfo.state}, '
-        'room is not login',
+        'room is not login, '
+        'room id: $roomID, '
+        'state:${roomInfo.state}, ',
         tag: 'uikit-streams-room',
         subTag: 'publish stream',
       );
@@ -468,6 +646,7 @@ class ZegoUIKitCoreDataRoomStream {
         .then((streamList) {
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
+        'room id:$roomID, '
         'publishStreamList list, ${streamList.publishStreamList.map((e) => e.toStringX())},  '
         'playStreamList list, ${streamList.playStreamList.map((e) => e.toStringX())}',
         tag: 'uikit-streams-room',
@@ -476,6 +655,7 @@ class ZegoUIKitCoreDataRoomStream {
 
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
+        'room id:$roomID, '
         'put play stream list to onRoomStreamUpdate',
         tag: 'uikit-streams-room',
         subTag: 'syncRoomStream',
@@ -497,6 +677,7 @@ class ZegoUIKitCoreDataRoomStream {
   }) async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'user id:  $userID, mute: $mute, '
       'for audio:$forAudio, for video:$forVideo',
       tag: 'uikit-streams-room',
@@ -553,7 +734,8 @@ class ZegoUIKitCoreDataRoomStream {
   ) async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'muted: $isMuted, streamDic:$streamDic',
+      'room id:$roomID, '
+      'muted: $isMuted, streamDic:${streamDicNotifier.value}',
       tag: 'uikit-streams-room',
       subTag: 'mute all play stream audio video',
     );
@@ -564,11 +746,16 @@ class ZegoUIKitCoreDataRoomStream {
     await ZegoExpressEngine.instance
         .muteAllPlayStreamAudio(isAllPlayStreamAudioVideoMuted);
 
-    for (var entry in streamDic.entries) {
+    for (var entry in streamDicNotifier.value.entries) {
       final streamID = entry.key;
       final streamInfo = entry.value;
+      final streamUser = queryUser(streamID);
+      final streamChannel = ZegoUIKitStreamHelper.getUserStreamChannel(
+          streamUser, ZegoUIKitStreamHelper.getStreamTypeByID(streamID));
+
       if (isMuted) {
-        if (ZegoPlayerState.Playing == streamInfo.playerState) {
+        if (ZegoPlayerState.Playing ==
+            streamChannel.playerStateNotifier.value) {
           await stopPlayingStream(
             streamID,
             removeDic: false,
@@ -576,14 +763,15 @@ class ZegoUIKitCoreDataRoomStream {
         } else {
           ZegoLoggerService.logInfo(
             'hash:$hashCode, '
-            'stream id($streamID) not playing(${streamInfo.playerState}) now, waiting player state update',
+            'room id:$roomID, '
+            'stream id($streamID) not playing(${streamChannel.playerStateNotifier.value}) now, waiting player state update',
             tag: 'uikit-streams-room',
             subTag: 'mute all play stream audio video',
           );
         }
       } else {
         if (_userCommonData.localUser.id != streamInfo.userID &&
-            streamInfo.playerState == ZegoPlayerState.NoPlay) {
+            streamChannel.playerStateNotifier.value == ZegoPlayerState.NoPlay) {
           final previousStreamExtraInfo = extraInfo[streamID] ?? '';
           final targetUserIndex = _userCommonData.roomUsers
               .getRoom(roomID)
@@ -591,6 +779,7 @@ class ZegoUIKitCoreDataRoomStream {
               .indexWhere((user) => streamInfo.userID == user.id);
           ZegoLoggerService.logInfo(
             'hash:$hashCode, '
+            'room id:$roomID, '
             'test, attempt to restore previous stream additional information, '
             'previousStreamExtraInfo:$previousStreamExtraInfo, '
             'targetUserIndex:$targetUserIndex',
@@ -598,8 +787,9 @@ class ZegoUIKitCoreDataRoomStream {
             subTag: 'mute all play stream audio video',
           );
           if (previousStreamExtraInfo.isNotEmpty) {
-            /// 先加载之前的流附加信息
+            /// Load previous stream extra info first
             ZegoUIKitCore.shared.eventHandler.parseStreamExtraInfo(
+              roomID: roomID,
               streamID: streamID,
               extraInfo: previousStreamExtraInfo,
             );
@@ -617,7 +807,8 @@ class ZegoUIKitCoreDataRoomStream {
   Future<void> muteAllPlayStreamAudio(bool isMuted) async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'muted: $isMuted, streamDic:$streamDic',
+      'room id:$roomID, '
+      'muted: $isMuted, streamDic:${streamDicNotifier.value}',
       tag: 'uikit-streams-room',
       subTag: 'mute all play stream audio',
     );
@@ -639,6 +830,7 @@ class ZegoUIKitCoreDataRoomStream {
     if (-1 == targetUserIndex) {
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
+        'room id:$roomID, '
         'targetUserIndex is invalid, '
         'streamID: $streamID, '
         'user id: $streamUserID, ',
@@ -650,20 +842,25 @@ class ZegoUIKitCoreDataRoomStream {
     }
 
     final targetUser = targetRoomRemoteUserList[targetUserIndex];
-    final streamType =
-        ZegoUIKitCoreDataStreamHelper.getStreamTypeByID(streamID);
+    final streamType = ZegoUIKitStreamHelper.getStreamTypeByID(streamID);
 
-    final targetUserStreamChannel =
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+    final targetUserStreamChannel = ZegoUIKitStreamHelper.getUserStreamChannel(
       targetUser,
       streamType,
     );
 
-    if (targetUserStreamChannel.viewCreatingNotifier.value) {
+    if (targetUserStreamChannel.viewCreatingNotifier.value ||
+        targetUserStreamChannel.viewIDNotifier.value != -1 ||
+        targetUserStreamChannel.viewNotifier.value != null) {
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
-        'streamID: $streamID, userID: $streamUserID, '
-        'view is creating, ignore',
+        'room id:$roomID, '
+        'streamID: $streamID, '
+        'userID: $streamUserID, '
+        'view:${targetUserStreamChannel.viewNotifier.value}, '
+        'viewID:${targetUserStreamChannel.viewIDNotifier.value}, '
+        'viewCreating:${targetUserStreamChannel.viewCreatingNotifier.value}, '
+        'view is create, ignore',
         tag: 'uikit-streams-room',
         subTag: 'start play stream',
       );
@@ -681,6 +878,7 @@ class ZegoUIKitCoreDataRoomStream {
       } else {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'streamID: $streamID, userID: $streamUserID, '
           'add to queue',
           tag: 'uikit-streams-room',
@@ -709,9 +907,9 @@ class ZegoUIKitCoreDataRoomStream {
   Future<void> startPlayingStream(String streamID, String streamUserID) async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'streamID: $streamID, '
-      'user id: $streamUserID, '
-      'room id:$roomID,',
+      'user id: $streamUserID, ',
       tag: 'uikit-streams-room',
       subTag: 'start play stream',
     );
@@ -722,11 +920,9 @@ class ZegoUIKitCoreDataRoomStream {
         remoteUserList.indexWhere((user) => streamUserID == user.id);
     assert(-1 != targetUserIndex);
     final targetUser = remoteUserList[targetUserIndex];
-    final streamType =
-        ZegoUIKitCoreDataStreamHelper.getStreamTypeByID(streamID);
+    final streamType = ZegoUIKitStreamHelper.getStreamTypeByID(streamID);
 
-    final targetUserStreamChannel =
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+    final targetUserStreamChannel = ZegoUIKitStreamHelper.getUserStreamChannel(
       targetUser,
       streamType,
     );
@@ -737,6 +933,7 @@ class ZegoUIKitCoreDataRoomStream {
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'current stream channel, '
       'view id:${targetUserStreamChannel.viewIDNotifier.value},'
       'view:${targetUserStreamChannel.viewNotifier}',
@@ -744,7 +941,7 @@ class ZegoUIKitCoreDataRoomStream {
       subTag: 'start play stream',
     );
 
-    await playStreamOnViewWillCreated(streamID: streamID);
+    await playStreamOnViewWillCreated(streamChannel: targetUserStreamChannel);
 
     if (targetUserStreamChannel.viewIDNotifier.value != -1 &&
         targetUserStreamChannel.viewNotifier.value != null) {
@@ -752,6 +949,7 @@ class ZegoUIKitCoreDataRoomStream {
 
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
+        'room id:$roomID, '
         'canvas view had created before, directly call callback, '
         'viewID:$viewID, '
         'user id: $streamUserID, '
@@ -764,7 +962,7 @@ class ZegoUIKitCoreDataRoomStream {
         _streamCommonData.canvasViewCreateQueue.completeCurrentTask();
       }
 
-      await updatePlayStreamViewOnViewCreated(
+      await updatePlayingStreamViewCanvasOnViewCreated(
         streamID: streamID,
         viewID: viewID,
         streamType: streamType,
@@ -776,6 +974,7 @@ class ZegoUIKitCoreDataRoomStream {
         (viewID) async {
           ZegoLoggerService.logInfo(
             'hash:$hashCode, '
+            'room id:$roomID, '
             'canvas view id done '
             'viewID:$viewID, '
             'user id: $streamUserID, '
@@ -784,12 +983,11 @@ class ZegoUIKitCoreDataRoomStream {
             subTag: 'start play stream',
           );
 
-          ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-              targetUser, streamType)
+          ZegoUIKitStreamHelper.getUserStreamChannel(targetUser, streamType)
             ..viewCreatingNotifier.value = false
             ..viewIDNotifier.value = viewID;
 
-          await updatePlayStreamViewOnViewCreated(
+          await updatePlayingStreamViewCanvasOnViewCreated(
             streamID: streamID,
             viewID: viewID,
             streamType: streamType,
@@ -801,6 +999,7 @@ class ZegoUIKitCoreDataRoomStream {
       ).then((widget) {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'widget done, '
           'widget:$widget ${widget.hashCode}, '
           'user id: $streamUserID, '
@@ -809,7 +1008,7 @@ class ZegoUIKitCoreDataRoomStream {
           subTag: 'start play stream',
         );
 
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+        ZegoUIKitStreamHelper.getUserStreamChannel(
           targetUser,
           streamType,
         ).viewNotifier.value = widget;
@@ -820,7 +1019,7 @@ class ZegoUIKitCoreDataRoomStream {
   }
 
   Future<void> startPlayingStreamByExpress({
-    required String streamID,
+    required ZegoUIKitCoreStreamInfo streamChannel,
     ZegoPlayerConfig? config,
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
@@ -832,22 +1031,27 @@ class ZegoUIKitCoreDataRoomStream {
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'stream id:$streamID, '
+      'room id:$roomID, '
+      'channel:$streamChannel, '
       'startPlayingStreamInIOSPIP:$startPlayingStreamInIOSPIP, ',
       tag: 'uikit-streams-room',
       subTag: 'start play stream by express',
     );
 
     if (null != onPlayerStateUpdated) {
-      if (playerStateUpdateCallbackList.containsKey(streamID)) {
-        playerStateUpdateCallbackList[streamID]!.add(onPlayerStateUpdated);
+      if (playerStateUpdateCallbackList.containsKey(streamChannel.streamID)) {
+        playerStateUpdateCallbackList[streamChannel.streamID]!
+            .add(onPlayerStateUpdated);
       } else {
-        playerStateUpdateCallbackList[streamID] = [onPlayerStateUpdated];
+        playerStateUpdateCallbackList[streamChannel.streamID] = [
+          onPlayerStateUpdated
+        ];
       }
     }
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'call express startPlayingStream, for trace enableCustomVideoRender, '
       'isEnableCustomVideoRender:${_streamCommonData.isEnableCustomVideoRender}',
       tag: 'uikit-streams-room',
@@ -875,7 +1079,7 @@ class ZegoUIKitCoreDataRoomStream {
 
       ZegoUIKitPluginPlatform.instance
           .startPlayingStreamInPIP(
-        streamID,
+        streamChannel.streamID,
         resourceMode: config?.resourceMode.index,
         roomID: config?.roomID,
         cdnConfig: cdnConfigMap,
@@ -883,12 +1087,11 @@ class ZegoUIKitCoreDataRoomStream {
       )
           .then(
         (_) {
-          isPlaying = true;
-
           ZegoLoggerService.logInfo(
             'hash:$hashCode, '
+            'room id:$roomID, '
             'finish play stream in ios with pip, '
-            'streamID: $streamID, ',
+            'channel: $streamChannel, ',
             tag: 'uikit-streams-room',
             subTag: 'start play stream',
           );
@@ -897,7 +1100,7 @@ class ZegoUIKitCoreDataRoomStream {
     } else {
       await ZegoExpressEngine.instance
           .startPlayingStream(
-        streamID,
+        streamChannel.streamID,
         canvas: null,
         config: config,
       )
@@ -906,8 +1109,9 @@ class ZegoUIKitCoreDataRoomStream {
 
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'finish play, '
-          'streamID: $streamID, ',
+          'channel: $streamChannel, ',
           tag: 'uikit-streams-room',
           subTag: 'start play stream',
         );
@@ -924,6 +1128,7 @@ class ZegoUIKitCoreDataRoomStream {
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'stream id:$streamID, '
       'stopPlayingStreamInIOSPIP:$stopPlayingStreamInIOSPIP, ',
       tag: 'uikit-streams-room',
@@ -936,6 +1141,7 @@ class ZegoUIKitCoreDataRoomStream {
           .then((_) {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'stop play done in ios with pip, '
           'streamID: $streamID, ',
           tag: 'uikit-streams-room',
@@ -946,6 +1152,7 @@ class ZegoUIKitCoreDataRoomStream {
       await ZegoExpressEngine.instance.stopPlayingStream(streamID).then((_) {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'stop play done, '
           'streamID: $streamID, ',
           tag: 'uikit-streams-room',
@@ -955,7 +1162,7 @@ class ZegoUIKitCoreDataRoomStream {
     }
   }
 
-  Future<void> updatePlayStreamViewOnViewCreated({
+  Future<void> updatePlayingStreamViewCanvasOnViewCreated({
     required String streamID,
     required int viewID,
     ZegoStreamType? streamType,
@@ -968,10 +1175,11 @@ class ZegoUIKitCoreDataRoomStream {
 
         /// screen share/media default AspectFit
         : ZegoViewMode.AspectFit;
-    final canvas = ZegoCanvas(
-      viewID,
-      viewMode: viewMode,
-    );
+    final updateCanvas = canvas ??
+        ZegoCanvas(
+          viewID,
+          viewMode: viewMode,
+        );
 
     bool startPlayingStreamInIOSPIP = false;
     if (Platform.isIOS) {
@@ -980,6 +1188,7 @@ class ZegoUIKitCoreDataRoomStream {
 
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
+        'room id:$roomID, '
         'isPlayingStreamInIOSPIP:$startPlayingStreamInIOSPIP, ',
         tag: 'uikit-streams-room',
         subTag: 'start play stream',
@@ -988,6 +1197,7 @@ class ZegoUIKitCoreDataRoomStream {
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'ready start, '
       'streamID: $streamID, '
       'view mode:$viewMode(${viewMode.index}), ',
@@ -1001,6 +1211,7 @@ class ZegoUIKitCoreDataRoomStream {
           .then((_) {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'finish update stream view/canvas in ios with pip, '
           'stream id:$streamID, '
           'view id:$viewID, ',
@@ -1010,13 +1221,14 @@ class ZegoUIKitCoreDataRoomStream {
       });
     } else {
       await ZegoExpressEngine.instance
-          .updatePlayingCanvas(streamID, canvas)
+          .updatePlayingCanvas(streamID, updateCanvas)
           .then((value) {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'finish update stream view/canvas, '
           'streamID: $streamID, '
-          'canvas:$canvas, ',
+          'canvas:$updateCanvas, ',
           tag: 'uikit-streams-room',
           subTag: 'start play stream',
         );
@@ -1025,7 +1237,7 @@ class ZegoUIKitCoreDataRoomStream {
   }
 
   Future<void> playStreamOnViewWillCreated({
-    required String streamID,
+    required ZegoUIKitCoreStreamInfo streamChannel,
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     final playConfig = ZegoPlayerConfig(
@@ -1037,13 +1249,15 @@ class ZegoUIKitCoreDataRoomStream {
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'ready start, streamID: $streamID',
+      'room id:$roomID, '
+      'ready start, '
+      'channel: $streamChannel',
       tag: 'uikit-streams-room',
       subTag: 'start play stream',
     );
 
     await startPlayingStreamByExpress(
-      streamID: streamID,
+      streamChannel: streamChannel,
       config: playConfig,
       onPlayerStateUpdated: onPlayerStateUpdated,
     );
@@ -1074,7 +1288,7 @@ class ZegoUIKitCoreDataRoomStream {
   }) {
     getAudioVideoList(streamType: streamType).forEach((user) {
       if (_streamCommonData.canvasViewCreateQueue.currentTaskKey ==
-          ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(user, streamType)
+          ZegoUIKitStreamHelper.getUserStreamChannel(user, streamType)
               .streamID) {
         if (user.camera.value) {
           return;
@@ -1082,6 +1296,7 @@ class ZegoUIKitCoreDataRoomStream {
 
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'user($user) camera is close, try stopped canvas view queue',
           tag: 'uikit-streams-room',
           subTag: 'syncCanvasViewCreateQueue',
@@ -1099,6 +1314,7 @@ class ZegoUIKitCoreDataRoomStream {
   }) async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'ready stop streamID: $streamID',
       tag: 'uikit-streams-room',
       subTag: 'stop play stream',
@@ -1108,10 +1324,12 @@ class ZegoUIKitCoreDataRoomStream {
     // stop playing stream
     await stopPlayingStreamByExpress(streamID);
 
-    final targetUserID =
-        streamDic.containsKey(streamID) ? streamDic[streamID]!.userID : '';
+    final targetUserID = streamDicNotifier.value.containsKey(streamID)
+        ? streamDicNotifier.value[streamID]!.userID
+        : '';
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'stopped, stream id $streamID, user id  is: $targetUserID',
       tag: 'uikit-streams-room',
       subTag: 'stop play stream',
@@ -1123,16 +1341,16 @@ class ZegoUIKitCoreDataRoomStream {
         targetRoomRemoteUserList.indexWhere((user) => targetUserID == user.id);
     if (-1 != targetUserIndex) {
       final targetUser = targetRoomRemoteUserList[targetUserIndex];
-      final streamType =
-          ZegoUIKitCoreDataStreamHelper.getStreamTypeByID(streamID);
+      final streamType = ZegoUIKitStreamHelper.getStreamTypeByID(streamID);
 
       if (_streamCommonData.canvasViewCreateQueue.currentTaskKey ==
-          ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+          ZegoUIKitStreamHelper.getUserStreamChannel(
             targetUser,
             streamType,
           ).streamID) {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'stopped canvas view queue',
           tag: 'uikit-streams-room',
           subTag: 'stop play stream',
@@ -1141,7 +1359,7 @@ class ZegoUIKitCoreDataRoomStream {
         _streamCommonData.canvasViewCreateQueue.completeCurrentTask();
       }
 
-      ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(targetUser, streamType)
+      ZegoUIKitStreamHelper.getUserStreamChannel(targetUser, streamType)
         ..streamID = ''
         ..viewCreatingNotifier.value = false
         ..streamTimestamp = 0;
@@ -1159,10 +1377,11 @@ class ZegoUIKitCoreDataRoomStream {
 
     if (removeDic) {
       // clear streamID
-      streamDic.remove(streamID);
+      removeDataInDict(streamID);
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
-        'stream dict remove $streamID, $streamDic',
+        'room id:$roomID, '
+        'stream dict remove $streamID, ${streamDicNotifier.value}',
         tag: 'uikit-streams-room',
         subTag: 'stop play stream',
       );
@@ -1171,8 +1390,9 @@ class ZegoUIKitCoreDataRoomStream {
 
   List<ZegoUIKitCoreUser> getAudioVideoList({
     ZegoStreamType streamType = ZegoStreamType.main,
+    bool onlyCurrentRoom = true,
   }) {
-    return streamDic.entries
+    return streamDicNotifier.value.entries
         .where((value) => value.key.endsWith(streamType.text))
         .map((entry) {
       final targetUserID = entry.value.userID;
@@ -1184,14 +1404,13 @@ class ZegoUIKitCoreDataRoomStream {
           orElse: ZegoUIKitCoreUser.empty);
     }).where((user) {
       if (user.id.isEmpty) {
-        ZegoLoggerService.logInfo(
-          'hash:$hashCode, '
-          'test, user id empty',
-          tag: 'uikit-streams-room',
-          subTag: 'getAudioVideoList',
-        );
-
         return false;
+      }
+
+      if (onlyCurrentRoom) {
+        if (user.fromAnotherRoom) {
+          return false;
+        }
       }
 
       if (streamType == ZegoStreamType.main) {
@@ -1211,273 +1430,247 @@ class ZegoUIKitCoreDataRoomStream {
   }
 
   void addPlayingStreamDataInDict({
-    required String streamRoomID,
-    required ZegoStream stream,
+    required ZegoUIKitCoreDataStreamData streamData,
     required ZegoUIKitCoreUser streamUser,
     required bool isFromAnotherRoom,
   }) {
-    final targetRemoteUserList =
-        _userCommonData.roomUsers.getRoom(roomID).remoteUsers;
+    addDataInDict(streamData.id, streamData);
+    updateIsAnotherRoomUserInDict(streamData.id, isFromAnotherRoom);
 
-    streamDic[stream.streamID] = ZegoUIKitCoreDataStreamData(
-      roomID: streamRoomID,
-      userID: stream.user.userID,
-      userName: stream.user.userName,
-      playerState: ZegoPlayerState.NoPlay,
-      isAnotherRoomUser: isFromAnotherRoom,
-    );
-    ZegoLoggerService.logInfo(
-      'stream dict add ${stream.streamID} for ${stream.user.userID}, '
-      'dict: $streamDic',
-      tag: 'uikit-service-core',
-      subTag: 'event',
-    );
-
-    late ZegoUIKitCoreUser targetUser;
-    var targetUserIndex = targetRemoteUserList
-        .indexWhere((user) => stream.user.userID == user.id);
-    if (-1 == targetUserIndex) {
-      /// user is not exist before stream added, add user
-      ZegoLoggerService.logInfo(
-        "stream's user ${stream.user.userID}  ${stream.user.userName} is not exist, create",
-        tag: 'uikit-service-core',
-        subTag: 'event',
-      );
-
-      targetUser = streamUser;
-      targetRemoteUserList.add(targetUser);
-    } else {
-      targetUser = targetRemoteUserList[targetUserIndex];
-    }
-    targetUser.isAnotherRoomUser = isFromAnotherRoom;
-
-    final streamType =
-        ZegoUIKitCoreDataStreamHelper.getStreamTypeByID(stream.streamID);
-    final targetUserStreamChannel =
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
-      targetUser,
-      streamType,
-    );
-    targetUserStreamChannel
-      ..streamID = stream.streamID
-      ..streamTimestamp = _commonData.timestamp.now.millisecondsSinceEpoch;
-  }
-
-  Future<void> stopPlayingAllStream({
-    required bool stopPlayingAnotherRoom,
-  }) async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'stopPlayingAnotherRoom:$stopPlayingAnotherRoom, ',
+      'room id:$roomID, '
+      'stream dict add/update ${streamData.id} for ${streamData.userID}, '
+      'dict: ${streamDicNotifier.value}',
+      tag: 'uikit-streams-room',
+      subTag: 'addPlayingStreamDataInDict',
+    );
+
+    final targetRemoteUserList =
+        _userCommonData.roomUsers.getRoom(roomID).remoteUsers;
+    var targetUserIndex =
+        targetRemoteUserList.indexWhere((user) => streamData.userID == user.id);
+    if (-1 != targetUserIndex) {
+      /// Update
+      targetRemoteUserList.removeAt(targetUserIndex);
+    }
+    streamUser.fromAnotherRoom = isFromAnotherRoom;
+    targetRemoteUserList.add(streamUser);
+
+    final streamType = ZegoUIKitStreamHelper.getStreamTypeByID(streamData.id);
+    final targetUserStreamChannel = ZegoUIKitStreamHelper.getUserStreamChannel(
+      streamUser,
+      streamType,
+    );
+    targetUserStreamChannel.streamID = streamData.id;
+    if (targetUserStreamChannel.streamTimestamp <= 0) {
+      targetUserStreamChannel.streamTimestamp =
+          _commonData.timestamp.now.millisecondsSinceEpoch;
+    }
+  }
+
+  Future<void> stopPlayingAllStream() async {
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, ',
       tag: 'uikit-streams-room',
       subTag: 'stop play all stream',
     );
 
     final currentRoomUserInfo = _userCommonData.roomUsers.getRoom(roomID);
     for (final user in currentRoomUserInfo.remoteUsers) {
-      bool needStop = true;
-      if (user.isAnotherRoomUser && !stopPlayingAnotherRoom) {
-        needStop = false;
+      if (user.mainChannel.streamID.isNotEmpty) {
+        stopPlayingStream(user.mainChannel.streamID);
       }
+      user.destroyTextureRenderer(streamType: ZegoStreamType.main);
 
-      if (needStop) {
-        if (user.mainChannel.streamID.isNotEmpty) {
-          stopPlayingStream(user.mainChannel.streamID);
-        }
-        user.destroyTextureRenderer(streamType: ZegoStreamType.main);
-
-        if (user.auxChannel.streamID.isNotEmpty) {
-          stopPlayingStream(user.auxChannel.streamID);
-        }
-        user.destroyTextureRenderer(streamType: ZegoStreamType.screenSharing);
-      } else {
-        ZegoLoggerService.logInfo(
-          'hash:$hashCode, '
-          'user:(${user.id} ${user.name}) is another room, ignore',
-          tag: 'uikit-streams-room',
-          subTag: 'stop play all stream',
-        );
+      if (user.auxChannel.streamID.isNotEmpty) {
+        stopPlayingStream(user.auxChannel.streamID);
       }
+      user.destroyTextureRenderer(streamType: ZegoStreamType.screenSharing);
     }
-
-    streamDic.forEach((streamID, streamData) {
-      if (streamData.isAnotherRoomUser) {
-        /// 跨房拉流的，转移到对应房间
-        _streamCommonData.roomStreams
-            .getRoom(streamData.roomID)
-            .addPlayingStreamDataInDict(
-              streamRoomID: streamData.roomID,
-              stream: ZegoStream(
-                ZegoUser(streamData.userID, streamData.userName),
-                streamID,
-                '',
-              ),
-              streamUser: currentRoomUserInfo.query(streamData.userID),
-              isFromAnotherRoom: false,
-            );
-
-        streamDic.remove(streamID);
-
-        ZegoLoggerService.logInfo(
-          'hash:$hashCode, '
-          'stream move to room ${streamData.roomID} dict, '
-          'and room $roomID dict remove $streamID',
-          tag: 'uikit-streams-room',
-          subTag: 'stop play all stream',
-        );
-      }
-    });
 
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$roomID, '
-      'dict:$streamDic, ',
+      'dict:${streamDicNotifier.value}, ',
       tag: 'uikit-streams-room',
       subTag: 'stop play all stream',
     );
   }
 
-  void copyToAnotherRoom({
-    required String fromStreamID,
+  void transferToAnotherRoom({
+    required List<String> fromStreamIDs,
     required String toRoomID,
+    required bool isFromAnotherRoom,
+    required bool isMove,
   }) {
-    final fromStreamData = streamDic[fromStreamID];
-    if (null == fromStreamData) {
-      return;
-    }
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'fromStreamIDs:$fromStreamIDs, '
+      'toRoomID:$toRoomID, '
+      'isMove:$isMove, '
+      'dict:${streamDicNotifier.value}, ',
+      tag: 'uikit-streams-room',
+      subTag: 'transfer to another room',
+    );
 
     final currentRoomUserInfo = _userCommonData.roomUsers.getRoom(roomID);
-    _streamCommonData.roomStreams.getRoom(toRoomID).addPlayingStreamDataInDict(
-          streamRoomID: fromStreamData.roomID,
-          stream: ZegoStream(
-            ZegoUser(fromStreamData.userID, fromStreamData.userName),
-            fromStreamID,
-            '',
-          ),
-          streamUser: currentRoomUserInfo.query(fromStreamData.userID),
-          isFromAnotherRoom: true,
+    for (var fromStreamID in fromStreamIDs) {
+      final fromStreamData = streamDicNotifier.value[fromStreamID];
+      if (null == fromStreamData) {
+        ZegoLoggerService.logInfo(
+          'hash:$hashCode, '
+          'room id:$roomID, '
+          'fromStreamID is not exist, ',
+          tag: 'uikit-streams-room',
+          subTag: 'transfer to another room',
         );
+
+        continue;
+      }
+
+      final currentRoomUser = currentRoomUserInfo.query(fromStreamData.userID);
+      _streamCommonData.roomStreams
+          .getRoom(toRoomID)
+          .addPlayingStreamDataInDict(
+            /// copy object
+            streamData: fromStreamData,
+            streamUser: currentRoomUser,
+            isFromAnotherRoom: isFromAnotherRoom,
+          );
+      if (isMove) {
+        fromStreamData.roomID = toRoomID;
+        currentRoomUser.roomID = toRoomID;
+
+        currentRoomUserInfo.remove(fromStreamData.userID);
+        removeDataInDict(fromStreamID);
+      }
+    }
   }
 
   Future<void> startPlayingAnotherRoomStream(
-    String anotherRoomID,
-    String userID,
-    String userName, {
-    bool copyToAnotherRoom = false,
+    String streamRoomID,
+    String streamUserID,
+    String streamUserName, {
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
-    final currentRoomRemoteUserList =
-        _userCommonData.roomUsers.getRoom(roomID).remoteUsers;
-
-    final anotherRoomUser =
-        _userCommonData.roomUsers.getRoom(anotherRoomID).query(userID);
-
     final streamID = generateStreamID(
-      userID,
-      anotherRoomID,
+      streamUserID,
+      streamRoomID,
       ZegoStreamType.main,
     );
+
+    /// addPlayingStreamDataInDict will add user
     addPlayingStreamDataInDict(
-      streamRoomID: anotherRoomID,
-      stream: ZegoStream(ZegoUser(userID, userName), streamID, ''),
-      streamUser: anotherRoomUser,
-      isFromAnotherRoom: true,
+      streamUser: ZegoUIKitCoreUser(
+        streamUserID,
+        streamUserName,
+        streamRoomID,
+        roomID != streamRoomID,
+      ),
+      streamData: ZegoUIKitCoreDataStreamData(
+        id: streamID,
+        roomID: streamRoomID,
+        userID: streamUserID,
+        userName: streamUserName,
+        fromAnotherRoom: streamRoomID != roomID,
+      ),
+      isFromAnotherRoom: roomID != streamRoomID,
     );
 
-    if (copyToAnotherRoom) {
-      /// 跨房拉流的，转移到对应房间
-      _streamCommonData.roomStreams
-          .getRoom(anotherRoomID)
-          .addPlayingStreamDataInDict(
-            streamRoomID: anotherRoomID,
-            stream: ZegoStream(ZegoUser(userID, userName), streamID, ''),
-            streamUser: anotherRoomUser,
-            isFromAnotherRoom: false,
-          );
-    }
-
-    await playStreamOnViewWillCreated(
-      streamID: streamID,
-      onPlayerStateUpdated: onPlayerStateUpdated,
+    var streamUser =
+        _userCommonData.roomUsers.getRoom(roomID).query(streamUserID);
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'stream id:$streamID, '
+      'stream user:$streamUser,  '
+      'stream room id:$streamRoomID, '
+      'playerState:${streamUser.mainChannel.playerStateNotifier.value}'
+      'view:${streamUser.mainChannel.viewNotifier.value}, '
+      'viewID:${streamUser.mainChannel.viewIDNotifier.value}',
+      tag: 'uikit-streams-room',
+      subTag: 'start play another room stream',
     );
 
-    await ZegoExpressEngine.instance.createCanvasView((viewID) async {
-      var targetUserIndex =
-          currentRoomRemoteUserList.indexWhere((user) => userID == user.id);
+    if (null == streamUser.mainChannel.viewNotifier.value ||
+        -1 == streamUser.mainChannel.viewIDNotifier.value) {
+      /// Not pulling stream
+      ZegoLoggerService.logInfo(
+        'hash:$hashCode, '
+        'room id:$roomID, '
+        'stream id:$streamID, '
+        'stream user:$streamUser,  '
+        'stream room id:$streamRoomID, ',
+        tag: 'uikit-streams-room',
+        subTag: 'start play another room stream',
+      );
 
-      if (-1 == targetUserIndex) {
+      await playStreamOnViewWillCreated(
+        streamChannel: ZegoUIKitStreamHelper.getUserStreamChannel(
+          streamUser,
+          ZegoStreamType.main,
+        ),
+        onPlayerStateUpdated: onPlayerStateUpdated,
+      );
+
+      await ZegoExpressEngine.instance.createCanvasView((viewID) async {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
+          'stream id:$streamID, '
+          'stream user:$streamUser,  '
+          'stream room id:$streamRoomID, '
           'createCanvasView onViewCreated, '
-          'but user can not find now! '
-          'user id: $userID, targetUserIndex:$targetUserIndex, ',
+          'viewID:$viewID, ',
           tag: 'uikit-streams-room',
           subTag: 'start play another room stream',
         );
 
-        return;
-      }
+        streamUser.mainChannel.viewIDNotifier.value = viewID;
 
-      ZegoLoggerService.logInfo(
-        'hash:$hashCode, '
-        'createCanvasView onViewCreated, '
-        'viewID:$viewID, '
-        'remote user list:$currentRoomRemoteUserList, '
-        'user id: $userID, user name:$userName, targetUserIndex:$targetUserIndex, ',
-        tag: 'uikit-streams-room',
-        subTag: 'start play another room stream',
-      );
-
-      currentRoomRemoteUserList[targetUserIndex]
-          .mainChannel
-          .viewIDNotifier
-          .value = viewID;
-
-      final canvas = ZegoCanvas(viewID, viewMode: ZegoViewMode.AspectFill);
-      await updatePlayStreamViewOnViewCreated(
-        streamID: streamID,
-        viewID: viewID,
-        canvas: canvas,
-      );
-    }).then((widget) {
-      var targetUserIndex =
-          currentRoomRemoteUserList.indexWhere((user) => userID == user.id);
-
-      if (-1 == targetUserIndex) {
+        final canvas = ZegoCanvas(viewID, viewMode: ZegoViewMode.AspectFill);
+        await updatePlayingStreamViewCanvasOnViewCreated(
+          streamID: streamID,
+          viewID: viewID,
+          canvas: canvas,
+        );
+      }).then((widget) {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
+          'stream id:$streamID, '
+          'stream user:$streamUser,  '
+          'stream room id:$streamRoomID, '
           'createCanvasView done, '
-          'but user can not find now! '
-          'user id: $userID, targetUserIndex:$targetUserIndex, ',
+          'widget:$widget, ',
           tag: 'uikit-streams-room',
           subTag: 'start play another room stream',
         );
 
-        return;
-      }
+        assert(widget != null);
+        streamUser.mainChannel.viewNotifier.value = widget;
 
+        notifyStreamListControl(ZegoStreamType.main);
+        _userCommonData.notifyUserListStreamControl(
+          targetRoomID: roomID,
+        );
+      });
+    } else {
+      /// Already pulling stream
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
-        'createCanvasView done, '
-        'widget:$widget, '
-        'another room id:$anotherRoomID, '
-        'user id: $userID, user name:$userName, targetUserIndex:$targetUserIndex, '
-        'stream id:$streamID, ',
+        'room id:$roomID, '
+        'stream id:$streamID, '
+        'stream user:$streamUser,  '
+        'stream room id:$streamRoomID, '
+        'stream is playing',
         tag: 'uikit-streams-room',
         subTag: 'start play another room stream',
       );
-
-      assert(widget != null);
-      currentRoomRemoteUserList[targetUserIndex]
-          .mainChannel
-          .viewNotifier
-          .value = widget;
-
-      notifyStreamListControl(ZegoStreamType.main);
-      _userCommonData.notifyUserListStreamControl(
-        targetRoomID: roomID,
-      );
-    });
+    }
   }
 
   Future<void> stopPlayingAnotherRoomStream(
@@ -1485,6 +1678,7 @@ class ZegoUIKitCoreDataRoomStream {
   ) async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'user id: $userID',
       tag: 'uikit-streams-room',
       subTag: 'stop play another room stream',
@@ -1526,10 +1720,11 @@ class ZegoUIKitCoreDataRoomStream {
       ..microphoneMuteMode.value = false
       ..mainChannel.soundLevelStream?.add(0);
 
-    streamDic.remove(streamID);
+    removeDataInDict(streamID);
     currentRoomRemoteUserList.removeWhere((user) => userID == user.id);
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'stopped, userID: $userID, stream id:$streamID',
       tag: 'uikit-streams-room',
       subTag: 'stop play another room stream',
@@ -1549,13 +1744,14 @@ class ZegoUIKitCoreDataRoomStream {
   }) async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'mixerID:$mixerID, users:$users, userSoundIDs:$userSoundIDs',
       tag: 'uikit-mixstream',
       subTag: 'start play mix audio video',
     );
 
     if (mixerStreamDic.containsKey(mixerID)) {
-      for (var user in users) {
+      for (ZegoUIKitCoreUser user in users) {
         if (-1 ==
             mixerStreamDic[mixerID]!
                 .usersNotifier
@@ -1573,13 +1769,14 @@ class ZegoUIKitCoreDataRoomStream {
       );
 
       await playStreamOnViewWillCreated(
-        streamID: mixerID,
+        streamChannel: ZegoUIKitCoreStreamInfo.empty()..streamID = mixerID,
         onPlayerStateUpdated: onPlayerStateUpdated,
       );
 
       ZegoExpressEngine.instance.createCanvasView((viewID) async {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
+          'room id:$roomID, '
           'createCanvasView onViewCreated, '
           'viewID:$viewID, ',
           tag: 'uikit-mixstream',
@@ -1589,7 +1786,7 @@ class ZegoUIKitCoreDataRoomStream {
         mixerStreamDic[mixerID]!.viewID = viewID;
 
         final canvas = ZegoCanvas(viewID, viewMode: ZegoViewMode.AspectFill);
-        await updatePlayStreamViewOnViewCreated(
+        await updatePlayingStreamViewCanvasOnViewCreated(
           streamID: mixerID,
           viewID: viewID,
           canvas: canvas,
@@ -1610,10 +1807,22 @@ class ZegoUIKitCoreDataRoomStream {
   Future<void> stopPlayMixAudioVideo(String mixerID) async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
+      'room id:$roomID, '
       'mixerID:$mixerID',
       tag: 'uikit-mixstream',
       subTag: 'stop play mix audio video',
     );
+
+    if (!mixerStreamDic.containsKey(mixerID)) {
+      ZegoLoggerService.logInfo(
+        'hash:$hashCode, '
+        'not contain, ignore, ',
+        tag: 'uikit-mixstream',
+        subTag: 'stop play mix audio video',
+      );
+
+      return;
+    }
 
     stopPlayingStreamByExpress(mixerID);
 

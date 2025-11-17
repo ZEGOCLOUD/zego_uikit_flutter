@@ -14,24 +14,25 @@ import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/defines/express_extension.dart';
 import 'package:zego_uikit/src/services/services.dart';
-
-import 'stream.data.dart';
-import 'stream.helper.dart';
-import 'stream.room.dart';
-import 'user.dart';
+import '../../defines/audio_video/stream.helper.dart';
 import 'canvas_view_create_queue.dart';
 import 'room.dart';
 import 'room_map.dart';
+import 'stream.data.dart';
+import 'stream.room.dart';
+import 'user.dart';
 
-/// 多房间的流相关信息
+/// Stream related information for multiple rooms
 class ZegoUIKitCoreDataStream {
   final canvasViewCreateQueue = ZegoStreamCanvasViewCreateQueue();
   bool isPreviewing = false;
   bool isEnablePlatformView = false;
+  bool isEnableCustomVideoProcessing = false;
   bool isEnableCustomVideoRender = false;
   bool isUsingFrontCameraRequesting = false;
   bool useVideoViewAspectFill = false;
   bool playingStreamInPIPUnderIOS = false;
+  bool isEnableSwitchRoomNotStopPlay = false;
   ZegoUIKitVideoInternalConfig pushVideoConfig = ZegoUIKitVideoInternalConfig();
 
   ZegoUIKitStreamResourceMode playerResourceMode =
@@ -54,7 +55,7 @@ class ZegoUIKitCoreDataStream {
       return roomStream;
     },
     onUpgradeEmptyRoom: (ZegoUIKitCoreDataRoomStream emptyRoomStream, roomID) {
-      // 当预备房间被升级时，更新其 roomID
+      // When prepared room is upgraded, update its roomID
       emptyRoomStream.roomID = roomID;
       ZegoLoggerService.logInfo(
         'empty room(${emptyRoomStream.hashCode}) has update id to $roomID, ',
@@ -92,6 +93,7 @@ class ZegoUIKitCoreDataStream {
     );
 
     isEnableCustomVideoRender = false;
+    isEnableCustomVideoProcessing = false;
 
     isEnablePlatformView = false;
     canvasViewCreateQueue.clear();
@@ -104,7 +106,6 @@ class ZegoUIKitCoreDataStream {
 
   void clear({
     required String targetRoomID,
-    required bool stopPlayingAnotherRoomStream,
   }) {
     ZegoLoggerService.logInfo(
       'clear, '
@@ -117,12 +118,10 @@ class ZegoUIKitCoreDataStream {
 
     if (roomStreams.containsRoom(targetRoomID)) {
       final streamInfo = roomStreams.getRoom(targetRoomID);
-      streamInfo.clear(
-        stopPlayingAnotherRoomStream: stopPlayingAnotherRoomStream,
-      );
+      streamInfo.clear();
       streamInfo.isAllPlayStreamAudioVideoMuted = false;
       streamInfo.isAllPlayStreamAudioMuted = false;
-      streamInfo.streamDic.clear();
+      streamInfo.clearDict();
       streamInfo.extraInfo.clear();
     }
   }
@@ -130,7 +129,7 @@ class ZegoUIKitCoreDataStream {
   String? queryRoomIDByStreamID(String streamID) {
     String? queryRoomID;
     roomStreams.forEachSync((roomID, roomStream) {
-      if (roomStream.streamDic.containsKey(streamID) ||
+      if (roomStream.streamDicNotifier.value.containsKey(streamID) ||
           roomStream.mixerStreamDic.containsKey(streamID)) {
         queryRoomID = roomID;
       }
@@ -186,11 +185,13 @@ class ZegoUIKitCoreDataStream {
       tag: 'uikit-streams',
       subTag: 'onViewCreatedByStartPreview',
     );
-    ZegoExpressEngine.instance
-      ..enableCamera(_userCommonData.localUser.camera.value)
-      ..startPreview(canvas: previewCanvas).then((_) {
-        isPreviewing = true;
-      });
+    await ZegoExpressEngine.instance
+        .enableCamera(_userCommonData.localUser.camera.value);
+    await ZegoExpressEngine.instance
+        .startPreview(canvas: previewCanvas)
+        .then((_) {
+      isPreviewing = true;
+    });
   }
 
   Future<void> stopPreview() async {
@@ -217,7 +218,7 @@ class ZegoUIKitCoreDataStream {
 
       canvasViewCreateQueue.completeCurrentTask();
 
-      ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+      ZegoUIKitStreamHelper.getUserStreamChannel(
         _userCommonData.localUser,
         ZegoStreamType.main,
       ).viewCreatingNotifier.value = false;
@@ -283,8 +284,7 @@ class ZegoUIKitCoreDataStream {
     required ZegoStreamType streamType,
     required void Function(ZegoStreamType) onViewCreated,
   }) async {
-    final localStreamChannel =
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+    final localStreamChannel = ZegoUIKitStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
     );
@@ -342,8 +342,7 @@ class ZegoUIKitCoreDataStream {
     required ZegoStreamType streamType,
     required void Function(ZegoStreamType) onViewCreated,
   }) async {
-    final localStreamChannel =
-        ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+    final localStreamChannel = ZegoUIKitStreamHelper.getUserStreamChannel(
       _userCommonData.localUser,
       streamType,
     );

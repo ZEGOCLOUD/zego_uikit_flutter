@@ -73,7 +73,11 @@ mixin ZegoPluginInvitationService {
 
     final zimExtendedData = const JsonEncoder().convert(
       ZegoUIKitInvitationSendProtocol(
-        inviter: ZegoUIKitUser(id: inviterID, name: inviterName),
+        inviter: ZegoUIKitUser(
+          id: inviterID,
+          name: inviterName,
+          isAnotherRoomUser: false,
+        ),
         type: type,
         customData: data,
       ).toJson(),

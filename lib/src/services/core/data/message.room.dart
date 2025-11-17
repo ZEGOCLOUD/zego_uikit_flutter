@@ -3,13 +3,20 @@ import 'dart:async';
 
 // Project imports:
 import 'package:zego_uikit/src/services/services.dart';
-
 import 'room_map.dart';
 
-/// 单个房间的消息
+/// Message for a single room
 class ZegoUIKitCoreDataRoomMessage {
   String roomID;
   ZegoUIKitCoreDataRoomMessage(this.roomID);
+
+  @override
+  String toString() {
+    return 'ZegoUIKitCoreDataRoomMessage{\n'
+        'id:$roomID, '
+        'messageList length:${messageList.length}, '
+        '}\n';
+  }
 
   int localMessageId = 0;
   List<ZegoInRoomMessage> messageList = []; // uid:user

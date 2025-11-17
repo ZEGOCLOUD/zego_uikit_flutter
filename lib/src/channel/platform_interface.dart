@@ -144,7 +144,7 @@ abstract class ZegoUIKitPluginPlatform extends PlatformInterface {
     throw UnimplementedError('reporterEvent has not been implemented.');
   }
 
-  /// 打开应用设置页面
+  /// Open app settings page
   Future<void> openAppSettings() {
     throw UnimplementedError('openAppSettings has not been implemented.');
   }

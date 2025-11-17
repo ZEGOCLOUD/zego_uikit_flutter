@@ -14,11 +14,11 @@ class ZegoScreenUtil {
   static const Size defaultSize = Size(360, 690);
   static final ZegoScreenUtil _instance = ZegoScreenUtil._();
 
-  /// UI设计中手机尺寸 , dp
+  /// Phone size in UI design, dp
   /// Size of the phone in UI Design , dp
   late Size _uiSize;
 
-  ///屏幕方向
+  /// Screen orientation
   late Orientation _orientation;
 
   late bool _minTextAdapt;
@@ -168,35 +168,35 @@ class ZegoScreenUtil {
     });
   }
 
-  ///获取屏幕方向
+  /// Get screen orientation
   ///Get screen orientation
   Orientation get orientation => _orientation;
 
-  /// 每个逻辑像素的字体像素数，字体的缩放比例
+  /// Number of font pixels per logical pixel, font scaling ratio
   /// The number of font pixels for each logical pixel.
   double get textScaleFactor => _data.textScaler.scale(1.0);
 
-  /// 设备的像素密度
+  /// Device pixel density
   /// The size of the media in logical pixels (e.g, the size of the screen).
   double? get pixelRatio => _data.devicePixelRatio;
 
-  /// 当前设备宽度 dp
+  /// Current device width dp
   /// The horizontal extent of this size.
   double get screenWidth => _data.size.width;
 
-  ///当前设备高度 dp
+  /// Current device height dp
   ///The vertical extent of this size. dp
   double get screenHeight => _data.size.height;
 
-  /// 状态栏高度 dp 刘海屏会更高
+  /// Status bar height dp, notch screen will be higher
   /// The offset from the top, in dp
   double get statusBarHeight => _data.padding.top;
 
-  /// 底部安全区距离 dp
+  /// Bottom safe area distance dp
   /// The offset from the bottom, in dp
   double get bottomBarHeight => _data.padding.bottom;
 
-  /// 实际尺寸与UI设计的比例
+  /// Ratio of actual size to UI design
   /// The ratio of actual width to UI design
   double get scaleWidth => screenWidth / _uiSize.width;
 
@@ -208,24 +208,24 @@ class ZegoScreenUtil {
   double get scaleText =>
       _minTextAdapt ? min(scaleWidth, scaleHeight) : scaleWidth;
 
-  /// 根据UI设计的设备宽度适配
-  /// 高度也可以根据这个来做适配可以保证不变形,比如你想要一个正方形的时候.
+  /// Adapt according to device width of UI design
+  /// Height can also be adapted according to this to ensure no deformation, for example when you want a square
   /// Adapted to the device width of the UI Design.
   /// Height can also be adapted according to this to ensure no deformation ,
   /// if you want a square
   double setWidth(num width) => width * scaleWidth;
 
-  /// 根据UI设计的设备高度适配
-  /// 当发现UI设计中的一屏显示的与当前样式效果不符合时,
-  /// 或者形状有差异时,建议使用此方法实现高度适配.
-  /// 高度适配主要针对想根据UI设计的一屏展示一样的效果
+  /// Adapt according to device height of UI design
+  /// When it is found that one screen display in UI design does not match current style effect,
+  /// or when there is shape difference, it is recommended to use this method for height adaptation
+  /// Height adaptation is mainly for achieving the same one-screen display effect as UI design
   /// Highly adaptable to the device according to UI Design
   /// It is recommended to use this method to achieve a high degree of adaptation
   /// when it is found that one screen in the UI design
   /// does not match the current style effect, or if there is a difference in shape.
   double setHeight(num height) => height * scaleHeight;
 
-  ///根据宽度或高度中的较小值进行适配
+  /// Adapt according to the smaller of width or height
   ///Adapt according to the smaller of width or height
   double radius(num r) => r * min(scaleWidth, scaleHeight);
 
@@ -235,8 +235,8 @@ class ZegoScreenUtil {
   /// Adapt according to the maximum value of scale width and scale height
   double diameter(num d) => d * max(scaleWidth, scaleHeight);
 
-  ///字体大小适配方法
-  ///- [fontSize] UI设计上字体的大小,单位dp.
+  /// Font size adaptation method
+  ///- [fontSize] Font size on UI design, unit dp
   ///Font size adaptation method
   ///- [fontSize] The size of the font on the UI design, in dp.
   double setSp(num fontSize) =>

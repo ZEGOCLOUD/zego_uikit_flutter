@@ -13,7 +13,7 @@ dependencies:
 
   zego_plugin_adapter: ^2.14.1
 
-  zego_express_engine: ^3.22.0
+  zego_express_engine: ^3.22.1
 
   device_info_plus: ^11.5.0
   encrypt: ^5.0.3
@@ -31,6 +31,7 @@ dependencies:
   path: ^1.9.1
   path_provider: ^2.1.5
   synchronized: ^3.4.0
+  loop_page_view: ^1.2.5
 
 dev_dependencies:
   flutter_test:

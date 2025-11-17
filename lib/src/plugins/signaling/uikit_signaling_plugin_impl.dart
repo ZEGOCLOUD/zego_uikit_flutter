@@ -94,8 +94,20 @@ class ZegoUIKitSignalingPluginImpl
     return ZegoSignalingPluginCore.shared.joinRoom(roomID, roomName);
   }
 
+  /// switch room
+  Future<ZegoSignalingPluginJoinRoomResult> switchRoom(
+    String roomID, {
+    String roomName = '',
+  }) async {
+    return ZegoSignalingPluginCore.shared.switchRoom(roomID, roomName);
+  }
+
   String getRoomID() {
     return ZegoSignalingPluginCore.shared.getRoomID();
+  }
+
+  ZegoSignalingPluginRoomState getRoomState() {
+    return ZegoSignalingPluginCore.shared.getRoomState();
   }
 
   /// leave room
@@ -112,10 +124,6 @@ class ZegoUIKitSignalingPluginImpl
     return ZegoPluginAdapter()
         .signalingPlugin!
         .getConnectionStateChangedEventStream();
-  }
-
-  ZegoSignalingPluginRoomState getRoomState() {
-    return ZegoPluginAdapter().signalingPlugin!.getRoomState();
   }
 
   Stream<ZegoSignalingPluginRoomStateChangedEvent> getRoomStateStream() {

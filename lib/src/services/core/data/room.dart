@@ -5,45 +5,44 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
+import 'package:path/path.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_uikit/src/services/services.dart';
-import 'package:zego_uikit/src/modules/hall_room/internal.dart';
+import 'package:zego_uikit/src/modules/hall_room/helper.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/room.dart';
-
-import 'room.single.dart';
+import 'package:zego_uikit/src/services/services.dart';
 import 'data.dart';
 import 'device.dart';
+import 'room.single.dart';
 import 'room_map.dart';
 import 'stream.dart';
 import 'user.dart';
 
-/// 多房间的房间信息
+/// Multi-room room information
 /// @nodoc
 class ZegoUIKitCoreDataRoom {
-  /// 具体房间对象在multiRooms.getRoom(roomID) 获取
-  ZegoUIKitRoomMode mode = ZegoUIKitRoomMode.SingleRoom;
+  /// Specific room object can be obtained via multiRooms.getRoom(roomID)
   bool isNeedDisableWakelock = false;
 
-  CurrentRoomIDQueryFuncInMultiRoomMode? currentIDQueryOfMultiRoom;
   String get currentID {
-    final tempLoginRoomIDs = loginRoomIDs;
-    if (mode == ZegoUIKitRoomMode.SingleRoom) {
-      return tempLoginRoomIDs.isNotEmpty ? tempLoginRoomIDs.first : '';
-    }
-
-    assert(null != currentIDQueryOfMultiRoom);
-
-    /// 多房间的当前ID不可知，需要外部指定
-    return currentIDQueryOfMultiRoom?.call(tempLoginRoomIDs) ?? '';
+    String loginRoomID = '';
+    rooms.forEachSync((roomID, roomInfo) {
+      if (loginRoomID.isNotEmpty) {
+        return;
+      }
+      if (roomInfo.isLogin) {
+        loginRoomID = roomID;
+      }
+    });
+    return loginRoomID;
   }
 
-  final roomsStateNotifier = ValueNotifier<ZegoUIKitRoomsState>(
-    ZegoUIKitRoomsState(),
-  );
+  bool get hasLogin => currentID.isNotEmpty;
+
+  final roomsStateNotifier = ValueNotifier<Map<String, ZegoUIKitRoomState>>({});
   var rooms = ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataSingleRoom>(
     name: 'core data room',
     createDefault: (String roomID) {
@@ -52,7 +51,7 @@ class ZegoUIKitCoreDataRoom {
       return room;
     },
     onUpgradeEmptyRoom: (ZegoUIKitCoreDataSingleRoom emptyRoom, roomID) {
-      // 当预备房间被升级时，更新其 roomID
+      // When prepared room is upgraded, update its roomID
       emptyRoom.id = roomID;
       ZegoLoggerService.logInfo(
         'empty room(${emptyRoom.hashCode}) has update id to $roomID, ',
@@ -62,56 +61,18 @@ class ZegoUIKitCoreDataRoom {
     },
   );
 
-  /// 缓存已登录的房间ID列表，避免频繁遍历
-  List<String> _cachedLoginRoomIDs = [];
-
-  /// 标记缓存是否有效
-  bool _loginRoomIDsCacheDirty = true;
-
-  bool get hasLogin => loginCount > 0;
-
-  int get loginCount => loginRoomIDs.length;
-
-  /// 获取已登录的房间ID列表（带缓存优化）
-  List<String> get loginRoomIDs {
-    if (!_loginRoomIDsCacheDirty) {
-      return List.from(_cachedLoginRoomIDs); // 返回副本，避免外部修改
-    }
-
-    List<String> roomIDs = [];
-
-    rooms.forEachSync((roomID, room) {
-      if (room.isLogin) {
-        roomIDs.add(roomID);
-      }
-    });
-
-    _cachedLoginRoomIDs = roomIDs;
-    _loginRoomIDsCacheDirty = false;
-
-    return List.from(roomIDs); // 返回副本，避免外部修改
-  }
-
-  /// 标记登录房间列表缓存为脏，下次访问时重新计算
-  void _markLoginRoomIDsCacheDirty() {
-    _loginRoomIDsCacheDirty = true;
-  }
-
   ZegoUIKitCoreData get _coreData => ZegoUIKitCore.shared.coreData;
   ZegoUIKitCoreDataStream get _streamCommonData => _coreData.stream;
   ZegoUIKitCoreDataUser get _userCommonData => _coreData.user;
   ZegoUIKitCoreDataDevice get _deviceCommonData => _coreData.device;
 
-  void init({
-    ZegoUIKitRoomMode roomMode = ZegoUIKitRoomMode.SingleRoom,
-  }) {
+  void init() {
     ZegoLoggerService.logInfo(
       'init, ',
       tag: 'uikit-rooms',
       subTag: 'uninit',
     );
 
-    mode = roomMode;
     rooms.forEachSync((roomID, roomInfo) {
       roomInfo.init();
     });
@@ -124,14 +85,10 @@ class ZegoUIKitCoreDataRoom {
       subTag: 'uninit',
     );
 
-    mode = ZegoUIKitRoomMode.SingleRoom;
     await rooms.forEachAsync((roomID, roomInfo) async {
       await roomInfo.leave();
       roomInfo.uninit();
     });
-
-    // 所有房间都已退出，标记缓存失效
-    _markLoginRoomIDsCacheDirty();
   }
 
   void clear({
@@ -140,9 +97,6 @@ class ZegoUIKitCoreDataRoom {
     if (rooms.containsRoom(targetRoomID)) {
       rooms.getRoom(targetRoomID).clear();
     }
-
-    // 房间状态可能改变，标记缓存失效
-    _markLoginRoomIDsCacheDirty();
   }
 
   Future<ZegoUIKitRoomLoginResult> join({
@@ -155,63 +109,40 @@ class ZegoUIKitCoreDataRoom {
   }) async {
     ZegoLoggerService.logInfo(
       'try join room, '
-      'mode:$mode, '
       'target room id:"$targetRoomID", '
       'has token:${token.isNotEmpty}, '
       'markAsLargeRoom:$markAsLargeRoom, '
       'network state:${ZegoUIKit().getNetworkState()}, ',
       tag: 'uikit-rooms',
-      subTag: 'join',
+      subTag: 'join room',
     );
 
     if (targetRoomID.isEmpty) {
       ZegoLoggerService.logError(
         'target room id is empty',
         tag: 'uikit-rooms',
-        subTag: 'join',
+        subTag: 'join room',
       );
 
       return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
     }
 
-    if (mode == ZegoRoomMode.MultiRoom && loginRoomIDs.contains(targetRoomID)) {
-      ZegoLoggerService.logInfo(
-        'already in room, ignore, '
-        'room id:$targetRoomID, '
-        'room:$rooms, ',
-        tag: 'uikit-rooms',
-        subTag: 'join',
-      );
-
-      return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.success, {});
-    }
-
-    if (mode == ZegoRoomMode.SingleRoom && currentID.isNotEmpty) {
+    if (currentID.isNotEmpty) {
       /// clear old room data
-      /// todo 转移host给直播大厅
       _coreData.clear(
         targetRoomID: currentID,
-        stopPlayingAnotherRoomStream: true,
       );
 
       if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(currentID)) {
         ZegoLoggerService.logInfo(
           'has join outside room, leaving first...',
           tag: 'uikit-rooms',
-          subTag: 'join',
+          subTag: 'join room',
         );
 
-        await leave(
-          targetRoomID: currentID,
-          stopPlayingAnotherRoomStream: false,
-        );
+        await leave(targetRoomID: currentID);
       }
     }
-
-    final hasRoomLoginBefore = hasLogin;
-
-    // 房间登录状态可能改变，标记缓存失效
-    _markLoginRoomIDsCacheDirty();
 
     final result = await rooms.getRoom(targetRoomID).join(
           targetRoomID: targetRoomID,
@@ -236,9 +167,7 @@ class ZegoUIKitCoreDataRoom {
             .syncRoomStream();
       }
 
-      if (!hasRoomLoginBefore) {
-        await ZegoExpressEngine.instance.startSoundLevelMonitor();
-      }
+      await ZegoExpressEngine.instance.startSoundLevelMonitor();
     } else {
       if (result.errorCode == ZegoErrorCode.RoomCountExceed) {
         ZegoLoggerService.logInfo(
@@ -247,21 +176,15 @@ class ZegoUIKitCoreDataRoom {
           subTag: 'join room',
         );
 
-        if (ZegoUIKitRoomMode.SingleRoom == mode) {
-          /// 单房间，退房重进
-          await leave(
-            targetRoomID: targetRoomID,
-            stopPlayingAnotherRoomStream: true,
-          );
-          return join(
-            targetRoomID: targetRoomID,
-            token: token,
-            markAsLargeRoom: markAsLargeRoom,
-            keepWakeScreen: keepWakeScreen,
-            isSimulated: isSimulated,
-            tryReLoginIfCountExceed: false,
-          );
-        }
+        await leave(targetRoomID: targetRoomID);
+        return join(
+          targetRoomID: targetRoomID,
+          token: token,
+          markAsLargeRoom: markAsLargeRoom,
+          keepWakeScreen: keepWakeScreen,
+          isSimulated: isSimulated,
+          tryReLoginIfCountExceed: false,
+        );
       }
     }
 
@@ -269,33 +192,21 @@ class ZegoUIKitCoreDataRoom {
   }
 
   Future<ZegoUIKitRoomLoginResult> switchTo({
-    required String fromRoomID,
     required String toRoomID,
     String token = '',
   }) async {
+    final fromRoomID = currentID;
     ZegoLoggerService.logInfo(
-      'mode:$mode, '
-      'from room id:"$fromRoomID", '
+      'from room id:$fromRoomID, '
       'to room id:"$toRoomID", '
       'network state:${ZegoUIKit().getNetworkState()}, ',
       tag: 'uikit-rooms',
       subTag: 'switch room',
     );
 
-    if (fromRoomID.isEmpty || toRoomID.isEmpty) {
+    if (!rooms.getRoom(fromRoomID).isLogin) {
       ZegoLoggerService.logError(
-        'room id is empty',
-        tag: 'uikit-rooms',
-        subTag: 'switch room',
-      );
-
-      return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
-    }
-
-    if (!loginRoomIDs.contains(fromRoomID)) {
-      ZegoLoggerService.logError(
-        'from room id is not login now, '
-        'from room state:${rooms.getRoom(fromRoomID).state}, ',
+        'current room is not login,',
         tag: 'uikit-rooms',
         subTag: 'switch room',
       );
@@ -303,18 +214,20 @@ class ZegoUIKitCoreDataRoom {
       return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.roomNotLogin, {});
     }
 
-    if (mode == ZegoRoomMode.MultiRoom && loginRoomIDs.contains(toRoomID)) {
-      ZegoLoggerService.logInfo(
-        'already in room, ignore, '
-        'to room id:$toRoomID, '
-        'to room state:${rooms.getRoom(fromRoomID).state}, ',
+    if (toRoomID.isEmpty || fromRoomID == toRoomID) {
+      ZegoLoggerService.logError(
+        'room id is not valid',
         tag: 'uikit-rooms',
         subTag: 'switch room',
       );
 
-      return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.success, {});
+      return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
     }
 
+    rooms.getRoom(fromRoomID).state.value.reason =
+        ZegoUIKitRoomStateChangedReason.Logout;
+    rooms.getRoom(toRoomID).state.value.reason =
+        ZegoUIKitRoomStateChangedReason.Logining;
     await ZegoExpressEngine.instance.switchRoom(
       fromRoomID,
       toRoomID,
@@ -331,22 +244,20 @@ class ZegoUIKitCoreDataRoom {
 
   Future<ZegoUIKitRoomLogoutResult> leave({
     required String targetRoomID,
-    required bool stopPlayingAnotherRoomStream,
   }) async {
     ZegoLoggerService.logInfo(
       'try leave room, '
-      'mode:$mode, '
       'target room id:"$targetRoomID", '
       'network state:${ZegoUIKit().getNetworkState()}, ',
       tag: 'uikit-rooms',
-      subTag: 'leave',
+      subTag: 'leave room',
     );
 
     clearAfterLeave() async {
       if (hasLogin) {
-        /// 还有房间处于登录中
+        /// Still have rooms in login state
       } else {
-        /// 没有任何房间登录中
+        /// No rooms in login state
         disableWakeLock();
 
         _userCommonData.localUser.clearRoomAttribute();
@@ -360,24 +271,17 @@ class ZegoUIKitCoreDataRoom {
       ZegoLoggerService.logInfo(
         'room id is not exist, not need to leave',
         tag: 'uikit-rooms',
-        subTag: 'leave',
+        subTag: 'leave room',
       );
 
       await clearAfterLeave();
       return ZegoUIKitRoomLogoutResult(ZegoUIKitErrorCode.success, {});
     }
 
-    /// todo 转移host给直播大厅
-    _coreData.clear(
-      targetRoomID: targetRoomID,
-      stopPlayingAnotherRoomStream: stopPlayingAnotherRoomStream,
-    );
+    _coreData.clear(targetRoomID: targetRoomID);
 
     final result = await rooms.getRoom(targetRoomID).leave();
     rooms.removeRoom(targetRoomID);
-
-    // 房间登录状态改变，标记缓存失效
-    _markLoginRoomIDsCacheDirty();
 
     await clearAfterLeave();
 
@@ -422,7 +326,7 @@ class ZegoUIKitCoreDataRoom {
       roomsState[roomID] = room.state.value;
     });
 
-    roomsStateNotifier.value.states = roomsState;
+    roomsStateNotifier.value = roomsState;
   }
 
   Future<void> enableWakeLock() async {

@@ -3,22 +3,11 @@ import 'package:flutter/cupertino.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/modules/hall_room/controller.p.dart';
-import 'package:zego_uikit/src/modules/hall_room/defines.dart';
-import 'package:zego_uikit/src/modules/hall_room/internal.dart';
 import 'package:zego_uikit/zego_uikit.dart';
+import '../../services/core/core.dart';
 
 class ZegoUIKitHallRoomListController {
-  ZegoUIKitHallRoomListController({
-    /// stream information to pull
-    List<ZegoUIKitHallRoomListStreamUser> streams = const [],
-  }) {
-    private.streamsNotifier.value = streams
-        .map((stream) => ZegoUIKitHallRoomListStream(
-              user: stream.user,
-              roomID: stream.roomID,
-            ))
-        .toList();
-  }
+  ZegoUIKitHallRoomListController() {}
 
   /// DO NOT CALL!!!
   /// Please do not call this. It is the internal logic.
@@ -29,123 +18,61 @@ class ZegoUIKitHallRoomListController {
   String get roomID => private.roomID;
   ZegoUIKitUser get localUser => private.localUser;
 
-  /// start play all stream
-  Future<bool> startPlayAll() async {
+  /// Switches from the hall room to a specific live room. Before switching,
+  /// it copies all hosts from the hall room to their respective live rooms.
+  Future<bool> moveStreamToTheirRoom() async {
     ZegoLoggerService.logInfo(
-      '',
-      tag: 'hall controller',
-      subTag: 'startPlayAll',
+      'streams:${private.streamsNotifier.value}',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'copyStreamToTheirRoom',
     );
 
-    return private.playAll(isPlay: true);
-  }
+    /// Copy hosts from hall room to their respective live rooms
+    for (var stream in private.streamsNotifier.value) {
+      ZegoUIKit().moveToAnotherRoom(
+        fromRoomID: roomID,
+        fromStreamIDs: [stream.streamID],
+        toRoomID: stream.roomID,
 
-  /// stop play all stream
-  Future<bool> stopPlayAll() async {
-    ZegoLoggerService.logInfo(
-      '',
-      tag: 'hall controller',
-      subTag: 'stopPlayAll',
-    );
-
-    return private.playAll(isPlay: false);
-  }
-
-  /// start play target stream
-  /// if not in streams, it would not play, use [addStream].
-  Future<bool> startPlayOne(
-    ZegoUIKitHallRoomListStreamUser stream,
-  ) async {
-    ZegoLoggerService.logInfo(
-      'stream:$stream',
-      tag: 'hall controller',
-      subTag: 'startPlayOne',
-    );
-
-    return private.playOne(
-      user: stream.user,
-      roomID: stream.roomID,
-      toPlay: true,
-    );
-  }
-
-  /// stop play target stream
-  Future<bool> stopPlayOne(
-    ZegoUIKitHallRoomListStreamUser stream,
-  ) async {
-    ZegoLoggerService.logInfo(
-      'stream:$stream',
-      tag: 'hall controller',
-      subTag: 'stopPlayOne',
-    );
-
-    return private.playOne(
-      user: stream.user,
-      roomID: stream.roomID,
-      toPlay: false,
-    );
-  }
-
-  /// update streams
-  void updateStreams(
-    List<ZegoUIKitHallRoomListStreamUser> streams, {
-    bool startPlay = true,
-  }) {
-    ZegoLoggerService.logInfo(
-      'streams:$streams, startPlay:$startPlay',
-      tag: 'hall controller',
-      subTag: 'updateStreams',
-    );
-
-    private.streamsNotifier.value = streams
-        .map((stream) => ZegoUIKitHallRoomListStream(
-              user: stream.user,
-              roomID: stream.roomID,
-            ))
-        .toList();
-
-    if (startPlay) {
-      startPlayAll();
+        /// Copy back to own room, not belonging to another
+        isFromAnotherRoom: false,
+      );
     }
+    return true;
   }
 
-  /// add a stream
-  void addStream(
-    ZegoUIKitHallRoomListStreamUser stream, {
-    bool startPlay = true,
-  }) {
+  /// Restore from live room to hall
+  ///
+  /// Returns from a live room back to the hall room, restoring the hall room state.
+  Future<void> moveStreamToHall({
+    bool Function(String)? ignoreFilter,
+  }) async {
     ZegoLoggerService.logInfo(
-      'stream:$stream, startPlay:$startPlay',
-      tag: 'hall controller',
-      subTag: 'addStream',
+      'streams:${private.streamsNotifier.value}',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'restoreFromLive',
     );
 
-    private.streamsNotifier.value = [
-      ...private.streamsNotifier.value,
-      ZegoUIKitHallRoomListStream(
-        user: stream.user,
-        roomID: stream.roomID,
-      ),
-    ];
+    /// Copy all currently existing live room hosts back to the hall room
+    ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .forEachSync((anotherRoomID, anotherRoomStream) {
+      if (anotherRoomID == roomID) {
+        return;
+      }
 
-    if (startPlay) {
-      startPlayOne(stream);
-    }
-  }
+      final streamIDs = [
+        ...anotherRoomStream.streamDicNotifier.value.keys,
+        ...anotherRoomStream.mixerStreamDic.keys,
+      ]..removeWhere((e) => ignoreFilter?.call(e) ?? false);
 
-  /// remove a stream
-  void removeStream(ZegoUIKitHallRoomListStreamUser stream) {
-    ZegoLoggerService.logInfo(
-      'stream:$stream',
-      tag: 'hall controller',
-      subTag: 'removeStream',
-    );
+      ZegoUIKit().moveToAnotherRoom(
+        fromRoomID: anotherRoomID,
+        fromStreamIDs: streamIDs,
+        toRoomID: roomID,
 
-    stopPlayOne(stream);
-
-    private.streamsNotifier.value.removeWhere(
-      (e) => e.roomID == stream.roomID && e.user.id == stream.user.id,
-    );
-    private.streamsNotifier.value = List.from(private.streamsNotifier.value);
+        /// Nominally becomes hall's own
+        isFromAnotherRoom: false,
+      );
+    });
   }
 }

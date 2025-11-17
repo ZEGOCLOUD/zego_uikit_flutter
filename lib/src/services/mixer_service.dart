@@ -6,6 +6,7 @@ mixin ZegoMixerService {
     String userID, {
     String userName = '',
     required String targetRoomID,
+    required bool playOnAnotherRoom,
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     return ZegoUIKitCore.shared.startPlayingAnotherRoomStream(
@@ -13,6 +14,7 @@ mixin ZegoMixerService {
       userID,
       userName,
       targetRoomID: targetRoomID,
+      playOnAnotherRoom: playOnAnotherRoom,
     );
   }
 
@@ -44,7 +46,9 @@ mixin ZegoMixerService {
   }) async {
     return ZegoUIKitCore.shared.startPlayMixAudioVideo(
       mixerID,
-      users.map((e) => ZegoUIKitCoreUser(e.id, e.name)).toList(),
+      users
+          .map((e) => ZegoUIKitCoreUser(e.id, e.name, targetRoomID, false))
+          .toList(),
       userSoundIDs,
       targetRoomID: targetRoomID,
     );

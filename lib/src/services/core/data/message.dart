@@ -1,10 +1,9 @@
 // Project imports:
 import 'package:zego_uikit/src/services/services.dart';
-
-import 'room_map.dart';
 import 'message.room.dart';
+import 'room_map.dart';
 
-/// 多房间的消息
+/// Messages for multiple rooms
 /// @nodoc
 class ZegoUIKitCoreDataMessage {
   var roomBroadcastMessages =
@@ -17,7 +16,7 @@ class ZegoUIKitCoreDataMessage {
     },
     onUpgradeEmptyRoom:
         (ZegoUIKitCoreDataRoomMessage emptyRoomMessage, roomID) {
-      // 当预备房间被升级时，更新其 roomID
+      // When prepared room is upgraded, update its roomID
       emptyRoomMessage.roomID = roomID;
       ZegoLoggerService.logInfo(
         'empty room(${emptyRoomMessage.hashCode}) has update id to $roomID, ',
@@ -35,7 +34,7 @@ class ZegoUIKitCoreDataMessage {
     },
     onUpgradeEmptyRoom:
         (ZegoUIKitCoreDataRoomMessage emptyRoomMessage, roomID) {
-      // 当预备房间被升级时，更新其 roomID
+      // When prepared room is upgraded, update its roomID
       emptyRoomMessage.roomID = roomID;
       ZegoLoggerService.logInfo(
         'empty room(${emptyRoomMessage.hashCode}) has update id to $roomID, ',

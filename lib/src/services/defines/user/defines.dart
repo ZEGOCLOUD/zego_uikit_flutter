@@ -21,13 +21,22 @@ extension ZegoUIKitUserList on List<ZegoUIKitUser> {
 class ZegoUIKitUser {
   String id = '';
   String name = '';
+  String roomID = '';
+  bool isAnotherRoomUser = false;
 
-  Map<String, dynamic> toJson() => {'id': id, 'name': name};
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'room_id': roomID,
+        'another_room': isAnotherRoomUser
+      };
 
   factory ZegoUIKitUser.fromJson(Map<String, dynamic> json) {
     return ZegoUIKitUser(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
+      roomID: json['room_id'] ?? '',
+      isAnotherRoomUser: json['another_room'] ?? false,
     );
   }
 
@@ -54,6 +63,12 @@ class ZegoUIKitUser {
   Stream<double> get auxSoundLevel =>
       _tryGetUser.auxChannel.soundLevelStream?.stream ?? const Stream.empty();
 
+  ValueNotifier<ZegoUIKitPlayerState> get playerState =>
+      _tryGetUser.mainChannel.playerStateNotifier;
+
+  ValueNotifier<ZegoUIKitPlayerState> get auxPlayerState =>
+      _tryGetUser.auxChannel.playerStateNotifier;
+
   ValueNotifier<ZegoUIKitUserAttributes> get inRoomAttributes =>
       _tryGetUser.inRoomAttributes;
 
@@ -69,29 +84,42 @@ class ZegoUIKitUser {
     return id.isEmpty;
   }
 
+  bool get isNotEmpty => !isEmpty();
+
   ZegoUIKitUser({
     required this.id,
     required this.name,
-  });
+    String roomID = '',
+    bool isAnotherRoomUser = false,
+  }) {
+    this.roomID = roomID;
+    this.isAnotherRoomUser = isAnotherRoomUser;
+  }
 
   // internal helper function
   ZegoUser toZegoUser() => ZegoUser(id, name);
 
-  ZegoUIKitUser.fromZego(ZegoUser zegoUser)
+  ZegoUIKitUser.fromZego(ZegoUser zegoUser, String roomID, bool fromAnotherRoom)
       : this(
           id: zegoUser.userID,
           name: zegoUser.userName,
+          roomID: roomID,
+          isAnotherRoomUser: fromAnotherRoom,
         );
 
   ZegoUIKitCoreUser get _tryGetUser {
     final user = ZegoUIKitCore.shared.coreData.user.getUser(
       id,
-      targetRoomID: ZegoUIKitCore.shared.coreData.room.currentID,
+      targetRoomID: roomID.isEmpty
+          ? ZegoUIKitCore.shared.coreData.room.currentID
+          : roomID,
     );
     if (user.isEmpty) {
       final mixerUser = ZegoUIKitCore.shared.coreData.user.getUserInMixerStream(
         id,
-        targetRoomID: ZegoUIKitCore.shared.coreData.room.currentID,
+        targetRoomID: roomID.isEmpty
+            ? ZegoUIKitCore.shared.coreData.room.currentID
+            : roomID,
       );
       return mixerUser.isEmpty ? user : mixerUser;
     }
@@ -104,7 +132,7 @@ class ZegoUIKitUser {
     return '{'
         'id:$id, '
         'name:$name, '
-        'in-room attributes:${inRoomAttributes.value}, '
+        'isAnotherRoom:$isAnotherRoomUser, '
         'camera:${camera.value}, '
         'microphone:${microphone.value}, '
         '}';
@@ -114,6 +142,7 @@ class ZegoUIKitUser {
     return '{'
         'id:$id, '
         'name:$name, '
+        'isAnotherRoomUser:$isAnotherRoomUser, '
         'in-room attributes:${inRoomAttributes.value}, '
         'camera:${camera.value}, '
         'camera mute mode:${cameraMuteMode.value}, '

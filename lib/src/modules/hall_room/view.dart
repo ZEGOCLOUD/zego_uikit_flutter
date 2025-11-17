@@ -5,17 +5,18 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:loop_page_view/loop_page_view.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/components/components.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
 import 'package:zego_uikit/src/modules/hall_room/config.dart';
 import 'package:zego_uikit/src/modules/hall_room/controller.dart';
-import 'package:zego_uikit/src/modules/hall_room/internal.dart';
 import 'package:zego_uikit/src/modules/hall_room/style.dart';
 import 'package:zego_uikit/src/services/services.dart';
+import 'defines.dart';
+import 'model.dart';
 
 /// display user audio and video information without join room(live/conference),
 /// and z order of widget(from bottom to top) is:
@@ -24,17 +25,18 @@ import 'package:zego_uikit/src/services/services.dart';
 /// 3. foreground view
 class ZegoUIKitHallRoomList extends StatefulWidget {
   const ZegoUIKitHallRoomList({
-    Key? key,
+    super.key,
     required this.appID,
     required this.controller,
+    this.model,
+    this.modelDelegate,
     this.appSign = '',
     this.token = '',
     this.scenario = ZegoUIKitScenario.Default,
     ZegoUIKitHallRoomListStyle? style,
     ZegoUIKitHallRoomListConfig? config,
   })  : style = style ?? const ZegoUIKitHallRoomListStyle(),
-        config = config ?? const ZegoUIKitHallRoomListConfig(),
-        super(key: key);
+        config = config ?? const ZegoUIKitHallRoomListConfig();
 
   /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final int appID;
@@ -65,6 +67,15 @@ class ZegoUIKitHallRoomList extends StatefulWidget {
   /// config
   final ZegoUIKitHallRoomListConfig config;
 
+  /// model
+  /// list of [host id && live id]
+  /// When swiping up or down, the corresponding LIVE information will be returned via this [model]
+  final ZegoUIKitHallRoomListModel? model;
+
+  /// If you want to manage data yourself, please refer to [ZegoUIKitHallRoomListModel],
+  /// then cancel the setting of [model], and then set [modelDelegate]
+  final ZegoUIKitHallRoomListModelDelegate? modelDelegate;
+
   /// controller
   final ZegoUIKitHallRoomListController controller;
 
@@ -73,9 +84,32 @@ class ZegoUIKitHallRoomList extends StatefulWidget {
 }
 
 class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
+  Future<bool>? _initFuture;
+
+  int currentPageIndex = 0;
+  late final LoopPageController pageController;
+
+  int get startIndex => 0;
+  int get endIndex => 2;
+  int get pageCount => (endIndex - startIndex) + 1;
+
+  ZegoUIKitHallRoomListStreamUser? get previousStreamUser =>
+      widget.model?.activeContext?.previous ??
+      widget.modelDelegate?.activeContext.previous;
+
+  ZegoUIKitHallRoomListStreamUser? get currentStreamUser =>
+      widget.model?.activeRoom ?? widget.modelDelegate?.activeRoom;
+
+  ZegoUIKitHallRoomListStreamUser? get nextStreamUser =>
+      widget.model?.activeContext?.next ??
+      widget.modelDelegate?.activeContext.next;
+
   @override
   void initState() {
     super.initState();
+
+    currentPageIndex = startIndex;
+    pageController = LoopPageController(initialPage: startIndex);
 
     widget.controller.private.setData(
       appID: widget.appID,
@@ -84,22 +118,17 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
       scenario: widget.scenario,
       config: widget.config,
     );
-    widget.controller.private.init().then((_) {
-      if (ZegoUIKitHallRoomListPlayMode.autoPlay == widget.config.playMode) {
-        widget.controller.private.forceUpdate();
-      } else {
-        ZegoLoggerService.logInfo(
-          'play mode is not auto',
-          tag: 'hall list',
-          subTag: 'hall list',
-        );
-      }
-    });
+
+    widget.controller.private.updateNotifier.addListener(onUpdateRequest);
   }
 
   @override
   void dispose() {
     super.dispose();
+
+    pageController.dispose();
+
+    widget.controller.private.updateNotifier.removeListener(onUpdateRequest);
 
     widget.controller.private.uninit().then((_) {
       widget.controller.private.clearData();
@@ -108,139 +137,173 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
 
   @override
   Widget build(BuildContext context) {
+    _initFuture ??= widget.controller.private.init().then((success) {
+      ZegoLoggerService.logInfo(
+        'controller init, success:$success, ',
+        tag: 'uikit.hall-room-view',
+        subTag: 'build',
+      );
+
+      if (success) {
+        playStreams();
+      }
+      return success;
+    });
+
     return ZegoScreenUtilInit(
       designSize: const Size(750, 1334),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return sdkInitWrapper(
-          child: roomLoginWrapper(
-            child: ValueListenableBuilder(
-              valueListenable: widget.controller.private.updateNotifier,
-              builder: (context, _, __) {
-                return listview();
-              },
-            ),
-          ),
+        return FutureBuilder<bool>(
+          future: _initFuture,
+          builder: (context, snapshot) {
+            ZegoLoggerService.logInfo(
+              'wait future, snapshot data:${snapshot.data}, ',
+              tag: 'uikit.hall-room-view',
+              subTag: 'build',
+            );
+
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                !snapshot.hasData ||
+                !snapshot.data!) {
+              return Center(
+                child: widget.style.loadingBuilder?.call(context) ??
+                    const CircularProgressIndicator(),
+              );
+            }
+
+            return sdkInitWrapper(
+              child: roomLoginWrapper(
+                child: pageView(),
+              ),
+            );
+          },
         );
       },
     );
   }
 
-  Widget listview() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final itemWidth = Axis.horizontal == widget.style.scrollDirection
-            ? (1 / widget.style.item.sizeAspectRatio * constraints.maxHeight)
-                .ceil()
-                .toDouble()
-            : constraints.maxWidth;
-        final itemHeight = Axis.horizontal == widget.style.scrollDirection
-            ? constraints.maxHeight
-            : (widget.style.item.sizeAspectRatio * constraints.maxWidth)
-                .ceil()
-                .toDouble();
+  Widget pageView() {
+    return LoopPageView.builder(
+      controller: pageController,
+      scrollDirection: Axis.vertical,
+      // allowImplicitScrolling: true,
+      onPageChanged: onPageChanged,
+      itemCount: pageCount,
+      itemBuilder: (context, pageIndex) {
+        ZegoUIKitHallRoomListStreamUser? itemStreamUser;
+
+        if (pageIndex == currentPageIndex) {
+          itemStreamUser =
+              widget.model?.activeRoom ?? widget.modelDelegate?.activeRoom;
+        } else {
+          bool toNext = false;
+          if (currentPageIndex == startIndex && pageIndex == endIndex) {
+            toNext = false;
+          } else if (currentPageIndex == endIndex && pageIndex == startIndex) {
+            toNext = true;
+          } else {
+            toNext = pageIndex > currentPageIndex;
+          }
+
+          itemStreamUser = toNext ? nextStreamUser : previousStreamUser;
+        }
+
+        itemStreamUser ??= ZegoUIKitHallRoomListStreamUser.empty();
 
         ZegoLoggerService.logInfo(
-          'layout ${constraints.maxWidth} x ${constraints.maxHeight}, '
-          'item:$itemWidth x $itemHeight',
-          tag: 'hall list',
-          subTag: 'hall list',
+          'user:$itemStreamUser, ',
+          tag: 'uikit.hall-room-view',
+          subTag: 'itemBuilder',
         );
 
-        return SingleChildScrollView(
-          scrollDirection: widget.style.scrollDirection,
-          child: Container(
-            width: constraints.maxWidth,
-            height: constraints.maxHeight,
-            decoration: BoxDecoration(
-              color: widget.style.backgroundColor.withValues(
-                alpha: widget.style.backgroundColorOpacity,
-              ),
-              border: Border.all(
-                color: widget.style.borderColor.withValues(
-                  alpha: widget.style.borderColorOpacity,
-                ),
-              ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(widget.style.borderRadius),
-              ),
-            ),
-            child: MediaQuery.removePadding(
-              context: context,
-              removeTop: true,
-              removeBottom: true,
-              child: ValueListenableBuilder<List<ZegoUIKitHallRoomListStream>>(
-                valueListenable: widget.controller.private.streamsNotifier,
-                builder: (context, streams, _) {
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: widget.style.scrollAxisCount,
-                      childAspectRatio: widget.style.itemAspectRatio,
-                    ),
-                    scrollDirection: widget.style.scrollDirection,
-                    itemCount: streams.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final stream = streams[index];
-                      return VisibilityDetector(
-                        key: Key(stream.targetStreamID),
-                        onVisibilityChanged: (visibilityInfo) async {
-                          stream.isVisibleNotifier.value =
-                              visibilityInfo.visibleFraction > 0.1;
-                        },
-                        child: listItem(stream, itemWidth, itemHeight),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-          ),
+        return Stack(
+          children: [
+            background(itemStreamUser),
+            videoView(itemStreamUser),
+            foreground(itemStreamUser),
+          ],
         );
       },
     );
   }
 
-  Widget listItem(
-    ZegoUIKitHallRoomListStream stream,
-    double width,
-    double height,
-  ) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: widget.style.item.borderColor.withValues(
-            alpha: widget.style.item.borderColorOpacity,
-          ),
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(widget.style.item.borderRadius),
-        ),
-      ),
-      margin: widget.style.item.margin,
-      child: StreamBuilder<List<ZegoUIKitUser>>(
-        stream: ZegoUIKit().getAudioVideoListStream(
-          targetRoomID: widget.controller.roomID,
-        ),
-        builder: (context, snapshot) {
-          return Stack(
-            children: [
-              background(stream),
-              videoView(stream),
-              foreground(stream),
-            ],
-          );
-        },
-      ),
+  void onPageChanged(int pageIndex) {
+    ZegoLoggerService.logInfo(
+      'current page index:$currentPageIndex, '
+      'page index:$pageIndex, ',
+      tag: 'uikit.hall-room-view',
+      subTag: 'onPageChanged',
     );
+
+    if (currentPageIndex == pageIndex) {
+      return;
+    }
+
+    bool toNext = false;
+    if (currentPageIndex == startIndex && pageIndex == endIndex) {
+      /// Boundary point swipe up
+      toNext = false;
+    } else if (currentPageIndex == endIndex && pageIndex == startIndex) {
+      /// Boundary point swipe down
+      toNext = true;
+    } else {
+      toNext = pageIndex > currentPageIndex;
+    }
+
+    final oldCurrentPageIndex = currentPageIndex;
+    currentPageIndex = pageIndex;
+
+    if (toNext) {
+      widget.model?.next();
+    } else {
+      widget.model?.previous();
+    }
+    widget.modelDelegate?.delegate?.call(toNext);
+
+    ZegoLoggerService.logInfo(
+      'page index:{now:$pageIndex, previous:$oldCurrentPageIndex},'
+      'previous stream:$previousStreamUser, '
+      'current stream:$currentStreamUser, '
+      'next stream:$nextStreamUser, ',
+      tag: 'hall view',
+      subTag: 'onPageChanged',
+    );
+
+    playStreams();
+  }
+
+  void playStreams() {
+    widget.controller.private.playOnly(
+      streamUsers: [
+        ...currentStreamUser == null ? [] : [currentStreamUser!],
+        ...previousStreamUser == null ? [] : [previousStreamUser!],
+        ...nextStreamUser == null ? [] : [nextStreamUser!],
+      ],
+      muteStreamUsers: [
+        ...previousStreamUser == null ? [] : [previousStreamUser!],
+        ...nextStreamUser == null ? [] : [nextStreamUser!],
+      ],
+    );
+  }
+
+  void onUpdateRequest() {
+    setState(() {
+      playStreams();
+    });
   }
 
   Widget sdkInitWrapper({required Widget child}) {
     return ValueListenableBuilder<bool>(
       valueListenable: widget.controller.sdkInitNotifier,
       builder: (context, isInit, _) {
+        ZegoLoggerService.logInfo(
+          'wait sdk init, isInit:$isInit, ',
+          tag: 'uikit.hall-room-view',
+          subTag: 'build',
+        );
+
         return isInit
             ? child
             : Center(
@@ -255,6 +318,12 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
     return ValueListenableBuilder<bool>(
       valueListenable: widget.controller.roomLoginNotifier,
       builder: (context, isLogin, _) {
+        ZegoLoggerService.logInfo(
+          'wait room login, isLogin:$isLogin, ',
+          tag: 'uikit.hall-room-view',
+          subTag: 'build',
+        );
+
         return isLogin
             ? child
             : Center(
@@ -265,7 +334,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
     );
   }
 
-  Widget videoView(ZegoUIKitHallRoomListStream stream) {
+  Widget videoView(ZegoUIKitHallRoomListStreamUser stream) {
     return StreamBuilder<List<ZegoUIKitUser>>(
       stream: ZegoUIKit().getUserListStream(
         targetRoomID: widget.controller.roomID,
@@ -274,115 +343,113 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
         final queryIndex = ZegoUIKit()
             .getAudioVideoList(
               targetRoomID: widget.controller.roomID,
+              onlyTargetRoom: false,
             )
             .indexWhere((e) => e.id == stream.user.id);
         if (-1 == queryIndex) {
-          return Center(
-            child: widget.style.item.loadingBuilder?.call(
-                  context,
-                  stream.user,
-                  stream.roomID,
-                ) ??
-                const CircularProgressIndicator(),
-          );
+          return loading(stream);
         }
 
-        return ZegoUIKit()
-                .getUser(
-                  targetRoomID: widget.controller.roomID,
-                  stream.user.id,
-                )
-                .isEmpty()
-            ? Center(
-                child: widget.style.item.loadingBuilder?.call(
-                      context,
-                      stream.user,
-                      stream.roomID,
-                    ) ??
-                    const CircularProgressIndicator(),
-              )
-            : ValueListenableBuilder<bool>(
-                valueListenable: ZegoUIKit().getCameraStateNotifier(
-                  targetRoomID: widget.controller.roomID,
-                  stream.user.id,
-                ),
-                builder: (context, isCameraOn, _) {
-                  if (!isCameraOn) {
-                    ZegoLoggerService.logInfo(
-                      '${stream.user.id}\'s camera is not open',
-                      tag: 'uikit-component',
-                      subTag: 'hall list',
-                    );
-
-                    return Container();
-                  }
-
-                  return SizedBox.expand(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return ValueListenableBuilder<Widget?>(
-                          valueListenable:
-                              ZegoUIKit().getAudioVideoViewNotifier(
-                            targetRoomID: widget.controller.roomID,
-                            stream.user.id,
-                          ),
-                          builder: (context, userView, _) {
-                            if (userView == null) {
-                              ZegoLoggerService.logError(
-                                '${stream.user.id}\'s view is null',
-                                tag: 'uikit-component',
-                                subTag: 'hall list',
-                              );
-
-                              return Center(
-                                child: widget.style.item.loadingBuilder?.call(
-                                      context,
-                                      stream.user,
-                                      stream.roomID,
-                                    ) ??
-                                    const CircularProgressIndicator(),
-                              );
-                            }
-
-                            ZegoLoggerService.logInfo(
-                              'render ${stream.user.id}\'s view',
-                              tag: 'uikit-component',
-                              subTag: 'hall list',
-                            );
-
-                            return StreamBuilder(
-                              stream: NativeDeviceOrientationCommunicator()
-                                  .onOrientationChanged(),
-                              builder: (context,
-                                  AsyncSnapshot<NativeDeviceOrientation>
-                                      asyncResult) {
-                                if (asyncResult.hasData) {
-                                  /// Do not update ui when ui is building !!!
-                                  /// use postFrameCallback to update videoSize
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((_) {
-                                    ///  notify sdk to update video render orientation
-                                    ZegoUIKit().updateAppOrientation(
-                                      deviceOrientationMap(asyncResult.data!),
-                                    );
-                                  });
-                                }
-
-                                return userView;
-                              },
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  );
-                },
-              );
+        final streamUser = ZegoUIKit().getUser(
+          targetRoomID: widget.controller.roomID,
+          stream.user.id,
+        );
+        return streamUser.isEmpty()
+            ? loading(stream)
+            : cameraUserStreamWidget(stream);
       },
     );
   }
 
-  Widget background(ZegoUIKitHallRoomListStream stream) {
+  Widget loading(ZegoUIKitHallRoomListStreamUser stream) {
+    return Center(
+      child: widget.style.item.loadingBuilder?.call(
+            context,
+            stream.user,
+            stream.roomID,
+          ) ??
+          const CircularProgressIndicator(),
+    );
+  }
+
+  Widget cameraUserStreamWidget(ZegoUIKitHallRoomListStreamUser stream) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: ZegoUIKit().getCameraStateNotifier(
+        targetRoomID: widget.controller.roomID,
+        stream.user.id,
+      ),
+      builder: (context, isCameraOn, _) {
+        if (!isCameraOn) {
+          ZegoLoggerService.logInfo(
+            '${stream.user.id}\'s camera is not open',
+            tag: 'uikit-component',
+            subTag: 'hall view',
+          );
+
+          return Container();
+        }
+
+        return SizedBox.expand(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return ValueListenableBuilder<Widget?>(
+                valueListenable: ZegoUIKit().getAudioVideoViewNotifier(
+                  targetRoomID: widget.controller.roomID,
+                  stream.user.id,
+                ),
+                builder: (context, userView, _) {
+                  if (userView == null) {
+                    ZegoLoggerService.logError(
+                      '${stream.user.id}\'s view is null',
+                      tag: 'uikit-component',
+                      subTag: 'hall view',
+                    );
+
+                    return Center(
+                      child: widget.style.item.loadingBuilder?.call(
+                            context,
+                            stream.user,
+                            stream.roomID,
+                          ) ??
+                          const CircularProgressIndicator(),
+                    );
+                  }
+
+                  ZegoLoggerService.logInfo(
+                    'render ${stream.user.id}\'s view',
+                    tag: 'uikit-component',
+                    subTag: 'hall view',
+                  );
+
+                  return StreamBuilder(
+                    stream: NativeDeviceOrientationCommunicator()
+                        .onOrientationChanged(),
+                    builder: (context,
+                        AsyncSnapshot<NativeDeviceOrientation> asyncResult) {
+                      if (asyncResult.hasData) {
+                        /// Do not update ui when ui is building !!!
+                        /// use postFrameCallback to update videoSize
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          ///  notify sdk to update video render orientation
+                          ZegoUIKit().updateAppOrientation(
+                            deviceOrientationMap(asyncResult.data!),
+                          );
+                        });
+                      }
+
+                      return userView;
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget background(ZegoUIKitHallRoomListStreamUser stream) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Stack(
@@ -409,7 +476,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
     );
   }
 
-  Widget foreground(ZegoUIKitHallRoomListStream stream) {
+  Widget foreground(ZegoUIKitHallRoomListStreamUser stream) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return widget.style.item.foregroundBuilder?.call(
@@ -424,7 +491,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
   }
 
   Widget avatar(
-    ZegoUIKitHallRoomListStream stream,
+    ZegoUIKitHallRoomListStreamUser stream,
     double maxWidth,
     double maxHeight,
   ) {

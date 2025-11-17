@@ -32,7 +32,7 @@ mixin ZegoUserService {
           .getRoom(targetRoomID)
           .remoteUsers
     ]
-        .where((user) => !user.isAnotherRoomUser)
+        .where((user) => !user.fromAnotherRoom)
         .map((user) => user.toZegoUikitUser())
         .toList();
   }
@@ -46,7 +46,7 @@ mixin ZegoUserService {
     return ZegoUIKitCore.shared.coreData.user.roomUsers
         .getRoom(targetRoomID)
         .remoteUsers
-        .where((user) => !user.isAnotherRoomUser)
+        .where((user) => !user.fromAnotherRoom)
         .map((user) => user.toZegoUikitUser())
         .toList();
   }
@@ -89,7 +89,7 @@ mixin ZegoUserService {
             .listStreamCtrl
             ?.stream
             .map((users) => users
-                .where((user) => !user.isAnotherRoomUser)
+                .where((user) => !user.fromAnotherRoom)
                 .map((e) => e.toZegoUikitUser())
                 .toList()) ??
         const Stream.empty();

@@ -523,7 +523,8 @@ class ZegoUIKitCoreDataMedia extends ZegoUIKitMediaEventInterface {
     final targetRoomStream =
         ZegoUIKitCore.shared.coreData.stream.roomStreams.getRoom(targetRoomID);
 
-    _ownerID ??= targetRoomStream.streamDic[streamID]?.userID ?? '';
+    _ownerID ??=
+        targetRoomStream.streamDicNotifier.value[streamID]?.userID ?? '';
     final isLocalMedia = _ownerID == _userCommonData.localUser.id;
 
     if (sei.keys.contains(ZegoUIKitSEIDefines.keyMediaStatus)) {

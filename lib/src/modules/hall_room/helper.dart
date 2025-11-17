@@ -10,31 +10,6 @@ import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import '../../services/core/defines/defines.dart';
 
-class ZegoUIKitHallRoomListStream extends ZegoUIKitHallRoomListStreamUser {
-  /// stream is playing or not
-  bool isPlaying = false;
-
-  /// view can visible or not
-  final isVisibleNotifier = ValueNotifier<bool>(false);
-
-  ZegoUIKitHallRoomListStream({
-    required ZegoUIKitUser user,
-    required String roomID,
-  }) : super(user: user, roomID: roomID);
-
-  String get targetStreamID {
-    return generateStreamID(user.id, roomID, ZegoStreamType.main);
-  }
-
-  @override
-  String toString() {
-    return 'room id:$roomID, '
-        'user id:${user.id}, '
-        'isPlaying:$isPlaying, '
-        'isVisible:${isVisibleNotifier.value}, ';
-  }
-}
-
 /// room hall
 class ZegoUIKitHallRoomIDHelper {
   static bool isRandomUserID(String userID) {

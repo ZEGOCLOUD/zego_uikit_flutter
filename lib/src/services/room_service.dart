@@ -1,20 +1,21 @@
 part of 'uikit_service.dart';
 
 mixin ZegoRoomService {
-  /// 当前是否有房间登录
+  /// Whether there is currently a room logged in
   bool hasRoomLogin({
-    bool includeHallRoom = false,
+    bool skipHallRoom = false,
   }) {
     bool value = false;
 
     ZegoUIKitCore.shared.coreData.room.rooms.forEachSync((roomID, room) {
       if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(roomID)) {
-        /// 跳过大厅房间
+        /// Skip hall room
+        value = skipHallRoom ? false : true;
         return;
       }
 
       if (value) {
-        /// 已经有房间登录了，不需要再更新值
+        /// Already have a room logged in, no need to update value again
         return;
       }
 
@@ -26,14 +27,19 @@ mixin ZegoRoomService {
     return value;
   }
 
-  /// 当前已登录的房间数量
-  /// 跳过大厅房间
-  int get loginRoomCount {
+  /// Current number of logged in rooms
+  /// Skip hall room
+  int loginRoomCount({
+    bool skipHallRoom = false,
+  }) {
     int count = 0;
 
     ZegoUIKitCore.shared.coreData.room.rooms.forEachSync((roomID, room) {
       if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(roomID)) {
-        /// 跳过大厅房间
+        /// Skip hall room
+        if (!skipHallRoom) {
+          count++;
+        }
         return;
       }
 
@@ -48,17 +54,21 @@ mixin ZegoRoomService {
   }
 
   /// get room object
-  /// 只针对单房间模式，如果是多房间模式，请通过[getRoom]
-  ZegoUIKitRoom getCurrentRoom() {
+  /// Only for single room mode, if multi-room mode, please use [getRoom]
+  ZegoUIKitRoom getCurrentRoom({
+    bool skipHallRoom = false,
+  }) {
     ZegoUIKitRoom currentRoom = ZegoUIKitRoom.empty();
     ZegoUIKitCore.shared.coreData.room.rooms.forEachSync((roomID, room) {
       if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(roomID)) {
-        /// 跳过大厅房间
-        return;
+        if (skipHallRoom) {
+          /// Skip hall room
+          return;
+        }
       }
 
       if (!room.isLogin) {
-        /// 跳过没登录的房间
+        /// Skip rooms that are not logged in
         return;
       }
 
@@ -127,11 +137,9 @@ mixin ZegoRoomService {
   /// leave room
   Future<ZegoUIKitRoomLogoutResult> leaveRoom({
     required String targetRoomID,
-    required bool stopPlayingAnotherRoomStream,
   }) async {
     final leaveRoomResult = await ZegoUIKitCore.shared.leaveRoom(
       targetRoomID: targetRoomID,
-      stopPlayingAnotherRoomStream: stopPlayingAnotherRoomStream,
     );
 
     if (ZegoErrorCode.CommonSuccess != leaveRoomResult.errorCode) {
@@ -157,12 +165,10 @@ mixin ZegoRoomService {
   }
 
   Future<void> switchRoom({
-    required String fromRoomID,
     required String toRoomID,
     String token = '',
   }) async {
     await ZegoUIKitCore.shared.coreData.room.switchTo(
-      fromRoomID: fromRoomID,
       toRoomID: toRoomID,
       token: token,
     );
@@ -188,7 +194,7 @@ mixin ZegoRoomService {
   }
 
   /// get room state notifier
-  ValueNotifier<ZegoUIKitRoomsState> getRoomsStateStream() {
+  ValueNotifier<Map<String, ZegoUIKitRoomState>> getRoomsStateStream() {
     return ZegoUIKitCore.shared.coreData.room.roomsStateNotifier;
   }
 
@@ -227,10 +233,10 @@ mixin ZegoRoomService {
   Map<String, RoomProperty> getRoomProperties({
     required String targetRoomID,
   }) {
-    return Map<String, RoomProperty>.from(ZegoUIKitCore
-        .shared.coreData.room.rooms
+    final x = ZegoUIKitCore.shared.coreData.room.rooms
         .getRoom(targetRoomID)
-        .properties);
+        .properties;
+    return Map<String, RoomProperty>.from(x);
   }
 
   /// only notify the property which changed

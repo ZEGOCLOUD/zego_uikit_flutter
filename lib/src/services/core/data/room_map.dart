@@ -14,36 +14,36 @@ import 'package:zego_uikit/src/services/uikit_service.dart';
 class ZegoUIKitCoreRoomMap<T extends Object> {
   String name;
 
-  /// 内部用一个 Map 存储数据，key 是 String（roomID），value 是 T
+  /// Internally uses a Map to store data, key is String (roomID), value is T
   final Map<String, T> _innerRoomMap = {};
 
-  /// 用于创建 T 实例的工厂函数
+  /// Factory function for creating T instances
   final T Function(String roomID) createDefault;
 
-  /// 用于"升级"预备房间的回调函数（可选）
-  /// 当预备房间被分配真实 roomID 时调用
+  /// Callback function for "upgrading" prepared room (optional)
+  /// Called when prepared room is assigned a real roomID
   final void Function(T room, String roomID)? _onUpgradeEmptyRoom;
 
-  /// 用于保护异步遍历的锁
+  /// Lock for protecting async iteration
   final Lock _lock = Lock();
 
-  /// 缓存的预备房间实例，避免重复创建
-  /// 当 roomID 为空时返回此实例，当第一次使用非空 roomID 时会被"升级"
+  /// Cached prepared room instance, to avoid duplicate creation
+  /// Returns this instance when roomID is empty, will be "upgraded" when first using non-empty roomID
   T? _emptyRoomCache;
 
-  /// 定时器，用于定期输出 _innerRoomMap
+  /// Timer for periodically outputting _innerRoomMap
   Timer? _debugTimer;
 
-  /// 构造函数：必须传入创建 T 实例的方法
-  /// [onUpgradeEmptyRoom] 可选的升级回调，用于更新预备房间的 roomID 等属性
+  /// Constructor: must pass in method for creating T instance
+  /// [onUpgradeEmptyRoom] Optional upgrade callback for updating prepared room's roomID and other properties
   ZegoUIKitCoreRoomMap({
     required this.name,
     required this.createDefault,
     void Function(T room, String roomID)? onUpgradeEmptyRoom,
   }) : _onUpgradeEmptyRoom = onUpgradeEmptyRoom {
-    // 启动定时器，每秒输出一次 _innerRoomMap
+    // Start timer, output _innerRoomMap every second
     if (kDebugMode) {
-      _debugTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      _debugTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '
           'name:$name, '
@@ -55,7 +55,7 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
     }
   }
 
-  /// 添加或更新房间数据
+  /// Add or update room data
   void putRoom(String roomID, T value) {
     if (roomID.isEmpty) {
       assert(roomID.isNotEmpty, 'roomID cannot be empty');
@@ -66,24 +66,24 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
     });
   }
 
-  /// 根据 roomID 获取数据
+  /// Get data based on roomID
   ///
-  /// 预备房间机制：
-  /// 1. 当 roomID 为空时，返回预备房间（_emptyRoomCache）
-  /// 2. 当第一次使用非空 roomID 且 map 中不存在时，会"升级"预备房间
-  /// 3. 这样可以保持外部已设置的监听器不丢失
+  /// Prepared room mechanism:
+  /// 1. When roomID is empty, return prepared room (_emptyRoomCache)
+  /// 2. When first using non-empty roomID and it doesn't exist in map, will "upgrade" prepared room
+  /// 3. This keeps externally set listeners from being lost
   ///
-  /// 注意：虽然此方法是同步的，但内部使用锁保护关键操作
-  /// 锁操作是异步的，但我们通过立即返回已存在的对象来避免等待
+  /// Note: Although this method is synchronous, internal critical operations are protected by lock
+  /// Lock operations are async, but we avoid waiting by immediately returning existing objects
   T getRoom(String roomID) {
     if (roomID.isEmpty) {
-      // 预备房间的创建也需要锁保护
+      // Prepared room creation also needs lock protection
       if (_emptyRoomCache != null) {
         return _emptyRoomCache!;
       }
 
       _lock.synchronized(() {
-        // 双重检查
+        // Double check
         _emptyRoomCache ??= createDefault(roomID);
       });
 
@@ -98,21 +98,21 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
       return _emptyRoomCache!;
     }
 
-    // 如果房间已存在，直接返回（无需等待锁）
+    // If room already exists, return directly (no need to wait for lock)
     if (_innerRoomMap.containsKey(roomID)) {
       return _innerRoomMap[roomID]!;
     }
 
-    // 房间不存在，需要创建（使用锁保护）
+    // Room doesn't exist, need to create (protected by lock)
     _lock.synchronized(() {
-      // 双重检查：可能在等待锁期间已被其他操作创建
+      // Double check: may have been created by other operation while waiting for lock
       if (_innerRoomMap.containsKey(roomID)) {
         return;
       }
 
-      // 如果有预备房间，则"升级"它（复用已有的监听器等状态）
+      // If there's a prepared room, "upgrade" it (reuse existing listeners and other state)
       if (_emptyRoomCache != null) {
-        // 调用升级回调，让外部更新 roomID 等属性
+        // Call upgrade callback to let external update roomID and other properties
 
         _onUpgradeEmptyRoom?.call(_emptyRoomCache!, roomID);
 
@@ -127,37 +127,37 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
           subTag: 'room-map',
         );
 
-        _emptyRoomCache = null; // 预备房间已被使用，清空缓存
+        _emptyRoomCache = null; // Prepared room has been used, clear cache
       } else {
-        // 没有预备房间，创建新实例
+        // No prepared room, create new instance
         _innerRoomMap[roomID] = createDefault(roomID);
       }
     });
 
-    // 返回刚创建的房间（此时可能锁还未释放，但对象已创建）
+    // Return newly created room (lock may not be released yet, but object is created)
     return _innerRoomMap[roomID]!;
   }
 
-  /// 删除指定房间数据
+  /// Delete specified room data
   void removeRoom(String roomID) {
     if (roomID.isEmpty) {
-      return; // 忽略空 roomID
+      return; // Ignore empty roomID
     }
     _lock.synchronized(() {
       _innerRoomMap.remove(roomID);
     });
   }
 
-  /// 清空所有房间数据
+  /// Clear all room data
   void clearRooms() {
     _lock.synchronized(() {
       _innerRoomMap.clear();
     });
   }
 
-  /// 异步遍历所有房间数据（key 是 roomID，value 是对应数据）
-  /// 使用锁保护，避免并发修改异常
-  /// 适用于需要在回调中执行异步操作的场景
+  /// Async iterate all room data (key is roomID, value is corresponding data)
+  /// Protected by lock to avoid concurrent modification exceptions
+  /// Suitable for scenarios where async operations need to be executed in callback
   Future<void> forEachAsync(
     Future<void> Function(String roomID, T value) action,
   ) async {
@@ -174,8 +174,8 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
     }
   }
 
-  /// 同步遍历所有房间数据（key 是 roomID，value 是对应数据）
-  /// 适用于回调中只有同步操作的场景
+  /// Sync iterate all room data (key is roomID, value is corresponding data)
+  /// Suitable for scenarios where only sync operations are in callback
   void forEachSync(
     void Function(String roomID, T value) action,
   ) {
@@ -186,14 +186,14 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
     }
   }
 
-  /// 判断房间是否存在
+  /// Check if room exists
   bool containsRoom(String roomID) {
     return _innerRoomMap.containsKey(roomID);
   }
 
-  /// 获取所有房间 ID
+  /// Get all room IDs
   List<String> get allRoomIDs => _innerRoomMap.keys.toList();
 
-  /// 获取房间数量
+  /// Get room count
   int get roomCount => _innerRoomMap.length;
 }

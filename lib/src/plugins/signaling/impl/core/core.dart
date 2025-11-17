@@ -78,8 +78,20 @@ class ZegoSignalingPluginCore with ZegoSignalingPluginCoreEvent {
     return coreData.joinRoom(roomID, roomName);
   }
 
+  /// switch room
+  Future<ZegoSignalingPluginJoinRoomResult> switchRoom(
+    String roomID,
+    String roomName,
+  ) async {
+    return coreData.switchRoom(roomID, roomName);
+  }
+
   String getRoomID() {
     return coreData.currentRoomID ?? '';
+  }
+
+  ZegoSignalingPluginRoomState getRoomState() {
+    return coreData.currentRoomState;
   }
 
   /// leave room

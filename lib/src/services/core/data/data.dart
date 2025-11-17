@@ -17,10 +17,10 @@ import 'package:zego_uikit/src/services/core/data/message.dart';
 import 'package:zego_uikit/src/services/core/data/room.dart';
 import 'package:zego_uikit/src/services/core/data/screen_sharing.dart';
 import 'package:zego_uikit/src/services/core/data/stream.dart';
-import 'package:zego_uikit/src/services/core/data/stream.helper.dart';
 import 'package:zego_uikit/src/services/core/data/timestamp.dart';
 import 'package:zego_uikit/src/services/core/data/user.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
+import 'package:zego_uikit/src/services/defines/audio_video/stream.helper.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 /// @nodoc
@@ -52,7 +52,6 @@ class ZegoUIKitCoreData {
   Future<void> init({
     bool? enablePlatformView,
     bool playingStreamInPIPUnderIOS = false,
-    ZegoUIKitRoomMode roomMode = ZegoUIKitRoomMode.SingleRoom,
   }) async {
     if (isInit) {
       return;
@@ -72,9 +71,7 @@ class ZegoUIKitCoreData {
         StreamController<ZegoUIKitNetworkState>.broadcast();
 
     await device.init();
-    room.init(
-      roomMode: roomMode,
-    );
+    room.init();
     user.init();
     stream.init(
       enablePlatformView: enablePlatformView,
@@ -117,7 +114,6 @@ class ZegoUIKitCoreData {
 
   void clear({
     required String targetRoomID,
-    required bool stopPlayingAnotherRoomStream,
   }) {
     ZegoLoggerService.logInfo(
       'clear',
@@ -137,7 +133,6 @@ class ZegoUIKitCoreData {
 
     media.clear();
     stream.clear(
-      stopPlayingAnotherRoomStream: stopPlayingAnotherRoomStream,
       targetRoomID: targetRoomID,
     );
     user.clear(targetRoomID: targetRoomID);
@@ -150,7 +145,7 @@ class ZegoUIKitCoreData {
     Map<String, dynamic> seiData, {
     ZegoStreamType streamType = ZegoStreamType.main,
   }) async {
-    if (ZegoUIKitCoreDataStreamHelper.getUserStreamChannel(
+    if (ZegoUIKitStreamHelper.getUserStreamChannel(
       user.localUser,
       streamType,
     ).streamID.isEmpty) {

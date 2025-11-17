@@ -78,7 +78,7 @@ class _ZegoUIKitMediaWaveformState extends State<ZegoUIKitMediaWaveform> {
 }
 
 class WaveformPainter extends CustomPainter {
-  final List<double> soundLevels; // 存储声音级别的数组
+  final List<double> soundLevels; // Array storing sound levels
   final ValueNotifier<bool> isPlaying;
   double timestampSecond = 0.0;
 

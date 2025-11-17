@@ -521,6 +521,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
       'inviter': ZegoUIKitUser(
         id: event.inviterID,
         name: extendedMap['inviter_name'] as String,
+        isAnotherRoomUser: false,
       ),
       'create_timestamp_second': event.createTime ~/ 1000,
       'timeout_second': event.timeoutSecond,
@@ -543,7 +544,11 @@ mixin ZegoSignalingPluginCoreInvitationData {
       'invitation_id': event.invitationID,
       'data': event.extendedData,
       'type': invitationData?.type ?? 0,
-      'inviter': ZegoUIKitUser(id: event.inviterID, name: ''),
+      'inviter': ZegoUIKitUser(
+        id: event.inviterID,
+        name: '',
+        isAnotherRoomUser: false,
+      ),
     });
   }
 
@@ -567,7 +572,11 @@ mixin ZegoSignalingPluginCoreInvitationData {
       'invitation_id': event.invitationID,
       'data': event.extendedData,
       'type': invitationData?.type ?? 0,
-      'invitee': ZegoUIKitUser(id: event.inviteeID, name: ''),
+      'invitee': ZegoUIKitUser(
+        id: event.inviteeID,
+        name: '',
+        isAnotherRoomUser: false,
+      ),
     });
   }
 
@@ -591,7 +600,11 @@ mixin ZegoSignalingPluginCoreInvitationData {
       'invitation_id': event.invitationID,
       'data': event.extendedData,
       'type': invitationData?.type ?? 0,
-      'invitee': ZegoUIKitUser(id: event.inviteeID, name: ''),
+      'invitee': ZegoUIKitUser(
+        id: event.inviteeID,
+        name: '',
+        isAnotherRoomUser: false,
+      ),
     });
   }
 
@@ -611,7 +624,11 @@ mixin ZegoSignalingPluginCoreInvitationData {
       'invitation_id': event.invitationID,
       'data': invitationData?.data ?? '',
       'type': invitationData?.type ?? 0,
-      'inviter': ZegoUIKitUser(id: invitationData?.inviterID ?? '', name: ''),
+      'inviter': ZegoUIKitUser(
+        id: invitationData?.inviterID ?? '',
+        name: '',
+        isAnotherRoomUser: false,
+      ),
     });
   }
 
@@ -639,7 +656,11 @@ mixin ZegoSignalingPluginCoreInvitationData {
       'type': invitationData?.type ?? 0,
       'data': invitationData?.data ?? '',
       'invitees': event.invitees
-          .map((inviteeID) => ZegoUIKitUser(id: inviteeID, name: ''))
+          .map((inviteeID) => ZegoUIKitUser(
+                id: inviteeID,
+                name: '',
+                isAnotherRoomUser: false,
+              ))
           .toList(),
     });
   }

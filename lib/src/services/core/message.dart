@@ -162,7 +162,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
   ) {
     List<ZegoInRoomMessage> _messageList = [];
     for (final _message in messageList) {
-      final message = ZegoInRoomMessage.fromBroadcastMessage(_message);
+      final message = ZegoInRoomMessage.fromBroadcastMessage(roomID, _message);
       _messageList.add(message);
     }
 
@@ -181,7 +181,7 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
   ) {
     List<ZegoInRoomMessage> _messageList = [];
     for (final _message in messageList) {
-      final message = ZegoInRoomMessage.fromBarrageMessage(_message);
+      final message = ZegoInRoomMessage.fromBarrageMessage(roomID, _message);
       _messageList.add(message);
     }
 

@@ -16,9 +16,18 @@ import 'stream_info.dart';
 /// @nodoc
 // user
 class ZegoUIKitCoreUser {
-  ZegoUIKitCoreUser(this.id, this.name);
+  ZegoUIKitCoreUser(
+    this.id,
+    this.name,
+    this.roomID,
+    this.fromAnotherRoom,
+  );
 
-  ZegoUIKitCoreUser.fromZego(ZegoUser user) : this(user.userID, user.userName);
+  ZegoUIKitCoreUser.fromZego(
+    ZegoUser user, {
+    required String roomID,
+    required bool isAnotherRoomUser,
+  }) : this(user.userID, user.userName, roomID, isAnotherRoomUser);
 
   ZegoUIKitCoreUser.empty();
 
@@ -29,6 +38,8 @@ class ZegoUIKitCoreUser {
 
   String id = '';
   String name = '';
+  String roomID = '';
+  bool fromAnotherRoom = false;
 
   ValueNotifier<bool> camera = ValueNotifier<bool>(false);
   ValueNotifier<bool> cameraMuteMode = ValueNotifier<bool>(false);
@@ -47,8 +58,6 @@ class ZegoUIKitCoreUser {
   ZegoUIKitCoreStreamInfo auxChannel = ZegoUIKitCoreStreamInfo.empty();
   ZegoUIKitCoreStreamInfo thirdChannel = ZegoUIKitCoreStreamInfo.empty();
 
-  bool isAnotherRoomUser = false;
-
   ValueNotifier<ZegoStreamQualityLevel> network =
       ValueNotifier<ZegoStreamQualityLevel>(ZegoStreamQualityLevel.Excellent);
 
@@ -63,6 +72,7 @@ class ZegoUIKitCoreUser {
   void clear() {
     id = '';
     name = '';
+    fromAnotherRoom = false;
 
     network.value = ZegoStreamQualityLevel.Excellent;
 
@@ -90,10 +100,24 @@ class ZegoUIKitCoreUser {
     auxChannel = ZegoUIKitCoreStreamInfo.empty();
     thirdChannel = ZegoUIKitCoreStreamInfo.empty();
 
-    isAnotherRoomUser = false;
+    fromAnotherRoom = false;
   }
 
   bool get isEmpty => id.isEmpty;
+
+  ZegoUIKitCoreUser copyWith({
+    String? id,
+    String? name,
+    String? roomID,
+    bool? fromAnotherRoom,
+  }) {
+    return ZegoUIKitCoreUser(
+      id ?? this.id,
+      name ?? this.name,
+      roomID ?? this.roomID,
+      fromAnotherRoom ?? this.fromAnotherRoom,
+    );
+  }
 
   void initAudioRoute(ZegoAudioRoute value) {
     ZegoLoggerService.logInfo(
@@ -130,12 +154,20 @@ class ZegoUIKitCoreUser {
     }
   }
 
-  ZegoUIKitUser toZegoUikitUser() => ZegoUIKitUser(id: id, name: name);
+  ZegoUIKitUser toZegoUikitUser() => ZegoUIKitUser(
+        id: id,
+        name: name,
+        roomID: roomID,
+        isAnotherRoomUser: fromAnotherRoom,
+      );
 
   ZegoUser toZegoUser() => ZegoUser(id, name);
 
   @override
   String toString() {
-    return 'id:$id, name:$name';
+    return 'id:$id, '
+        'name:$name, '
+        'room id:$roomID, '
+        'isAnotherRoomUser:$fromAnotherRoom, ';
   }
 }

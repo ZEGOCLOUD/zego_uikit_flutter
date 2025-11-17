@@ -5,6 +5,21 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/defines/audio_video/audio_video.dart';
 import 'package:zego_uikit/src/services/defines/express.dart';
 
+extension ZegoUIKitVideoConfigExtension on ZegoUIKitVideoConfig {
+  String toStringX() {
+    return 'ZegoUIKitVideoConfig{'
+        'captureWidth:$captureWidth, '
+        'captureHeight:$captureHeight, '
+        'encodeWidth:$encodeWidth, '
+        'encodeHeight:$encodeHeight, '
+        'fps:$fps, '
+        'bitrate:$bitrate, '
+        'codecID:$codecID, '
+        'keyFrameInterval:$keyFrameInterval, '
+        '}';
+  }
+}
+
 extension ZegoMixerOutputVideoConfignExtension on ZegoMixerOutputVideoConfig {
   String toStringX() {
     return 'ZegoMixerTask{'

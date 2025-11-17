@@ -33,7 +33,7 @@ class ZegoScreenSharingCountdownTimer extends StatefulWidget {
 class _CountdownTimerState extends State<ZegoScreenSharingCountdownTimer>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  int currentCount = 10; // 倒计时的起始值
+  int currentCount = 10; // Starting value for countdown
   Timer? _timer;
 
   double get secondFontSize => widget.secondFontSize ?? 30;

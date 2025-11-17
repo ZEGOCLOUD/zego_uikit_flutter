@@ -1,35 +1,50 @@
-// Package imports:
-import 'package:zego_express_engine/zego_express_engine.dart';
-
-// Project imports:
-import 'package:zego_uikit/src/services/core/core.dart';
-import 'package:zego_uikit/src/services/core/defines/defines.dart';
-import 'package:zego_uikit/src/services/services.dart';
-
 class ZegoUIKitCoreDataStreamData {
+  String id;
   String roomID;
   String userID;
   String userName;
-  ZegoPlayerState playerState;
-  ZegoPublisherState publisherState;
-  bool isAnotherRoomUser;
+  bool fromAnotherRoom;
 
   ZegoUIKitCoreDataStreamData({
+    required this.id,
     required this.roomID,
     required this.userID,
     required this.userName,
-    this.isAnotherRoomUser = false,
-    this.playerState = ZegoPlayerState.NoPlay,
-    this.publisherState = ZegoPublisherState.NoPublish,
+    this.fromAnotherRoom = false,
   });
+
+  static ZegoUIKitCoreDataStreamData empty() {
+    return ZegoUIKitCoreDataStreamData(
+        id: '', roomID: '', userName: '', userID: '');
+  }
+
+  bool get isEmpty => id.isEmpty || userID.isEmpty;
+
+  ZegoUIKitCoreDataStreamData copyWith({
+    String? id,
+    String? roomID,
+    String? userID,
+    String? userName,
+    bool? fromAnotherRoom,
+  }) {
+    return ZegoUIKitCoreDataStreamData(
+      id: id ?? this.id,
+      roomID: roomID ?? this.roomID,
+      userID: userID ?? this.userID,
+      userName: userName ?? this.userName,
+      fromAnotherRoom: fromAnotherRoom ?? this.fromAnotherRoom,
+    );
+  }
 
   @override
   String toString() {
-    return 'room id:$roomID, '
+    return 'ZegoUIKitCoreDataStreamData{\n'
+        'hashCode:$hashCode, '
+        'id:$id, '
+        'room id:$roomID, '
         'user id:$userID, '
         'user name:$userName, '
-        'isAnotherRoomUser:$isAnotherRoomUser, '
-        'player state:$playerState, '
-        'publisher state:$publisherState';
+        'fromAnotherRoom:$fromAnotherRoom, '
+        '}\n';
   }
 }

@@ -5,6 +5,7 @@ import 'package:zego_uikit/src/services/defines/express.dart';
 
 /// multi room state
 class ZegoUIKitRoomsState {
+  /// <roomID, state>
   Map<String, ZegoUIKitRoomState> states = {};
 }
 
@@ -21,9 +22,14 @@ class ZegoUIKitRoomState {
 
   ZegoUIKitRoomState(this.reason, this.errorCode, this.extendedData);
 
-  bool get isLogin =>
+  bool get isInternalLogin =>
       reason == ZegoUIKitRoomStateChangedReason.Logining ||
-      reason == ZegoUIKitRoomStateChangedReason.Logined;
+      reason == ZegoUIKitRoomStateChangedReason.Logined ||
+      reason == ZegoUIKitRoomStateChangedReason.Reconnected;
+
+  bool get isLogin2 =>
+      reason == ZegoUIKitRoomStateChangedReason.Logined ||
+      reason == ZegoUIKitRoomStateChangedReason.Reconnected;
 
   @override
   String toString() {

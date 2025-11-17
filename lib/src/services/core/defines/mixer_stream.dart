@@ -59,4 +59,16 @@ class ZegoUIKitCoreMixerStream {
     userListStreamCtrl?.close();
     userListStreamCtrl = null;
   }
+
+  @override
+  String toString() {
+    return 'ZegoUIKitCoreMixerStream{\n'
+        'hashCode:$hashCode, '
+        'id:$streamID, '
+        'view id:$viewID, '
+        'view:$view, '
+        'loaded:$loaded, '
+        'users:${usersNotifier.value.map((e) => e.toZegoUser())}, '
+        '}\n';
+  }
 }

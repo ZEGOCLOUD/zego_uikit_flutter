@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import '../defines/defines.dart';
-
 import 'room_map.dart';
 import 'user.dart';
 
@@ -92,6 +91,28 @@ class ZegoUIKitCoreDataRoomUser {
       (user) => user.id == userID,
       orElse: ZegoUIKitCoreUser.empty,
     );
+  }
+
+  void remove(String userID) {
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'remove $userID, '
+      'remoteUsers:$remoteUsers, ',
+      tag: 'uikit-users-room',
+      subTag: 'clear',
+    );
+
+    if (userID.isEmpty) {
+      return;
+    }
+
+    if (userID == _userCommonData.localUser.id) {
+      assert(false);
+      return;
+    }
+
+    remoteUsers.removeWhere((e) => e.id == userID);
   }
 
   StreamController<List<ZegoUIKitCoreUser>>? _joinStreamCtrl;

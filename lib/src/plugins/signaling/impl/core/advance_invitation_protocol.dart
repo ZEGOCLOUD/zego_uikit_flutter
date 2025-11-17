@@ -91,6 +91,7 @@ class ZegoUIKitAdvanceInvitationSendProtocol {
       inviter = ZegoUIKitUser(
         id: json['inviter_id'] as String? ?? '',
         name: json['inviter_name'] as String? ?? '',
+        isAnotherRoomUser: false,
       );
     }
 

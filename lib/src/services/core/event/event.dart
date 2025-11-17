@@ -19,12 +19,6 @@ part 'media.dart';
 class ZegoUIKitEvent with ZegoUIKitExpressEvent, ZegoUIKitMediaEvent {
   bool _isInit = false;
 
-  bool uninitOnRoomLeaved = true;
-
-  void enableUninitOnRoomLeaved(bool enabled) {
-    uninitOnRoomLeaved = enabled;
-  }
-
   void init() {
     if (_isInit) {
       ZegoLoggerService.logInfo(
@@ -65,10 +59,8 @@ class ZegoUIKitEvent with ZegoUIKitExpressEvent, ZegoUIKitMediaEvent {
       subTag: 'uninit',
     );
 
-    if (uninitOnRoomLeaved) {
-      express.uninit();
-      media.uninit();
-    }
+    express.uninit();
+    media.uninit();
 
     _isInit = false;
   }

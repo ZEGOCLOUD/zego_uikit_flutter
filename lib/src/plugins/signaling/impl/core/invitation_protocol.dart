@@ -42,6 +42,7 @@ class ZegoUIKitInvitationSendProtocol {
       inviter: ZegoUIKitUser(
         id: json['inviter_id'] as String? ?? '',
         name: json['inviter_name'] as String? ?? '',
+        isAnotherRoomUser: false,
       ),
       type: json['type'] as int? ?? -1,
       customData: json['data'] as String? ?? '',

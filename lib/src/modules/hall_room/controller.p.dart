@@ -11,12 +11,21 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'package:zego_uikit/src/modules/hall_room/config.dart';
 import 'package:zego_uikit/src/modules/hall_room/controller.event.dart';
-import 'package:zego_uikit/src/modules/hall_room/internal.dart';
+import 'package:zego_uikit/src/modules/hall_room/helper.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
+import '../../../zego_uikit.dart';
 
 /// @nodoc
 class ZegoUIKitHallRoomListControllerPrivate {
+  ZegoUIKitHallRoomListControllerPrivate() {}
+
+  int appID = 0;
+  String appSign = '';
+  String token = '';
+  ZegoUIKitScenario scenario = ZegoUIKitScenario.Default;
+  ZegoUIKitHallRoomListConfig config = const ZegoUIKitHallRoomListConfig();
+
   String get roomID {
     _tempRoomID ??= ZegoUIKitHallRoomIDHelper.randomRoomID();
     return _tempRoomID!;
@@ -27,6 +36,8 @@ class ZegoUIKitHallRoomListControllerPrivate {
     _tempUser ??= ZegoUIKitUser(
       id: tempUserID,
       name: tempUserID,
+      roomID: roomID,
+      isAnotherRoomUser: false,
     );
 
     return _tempUser!;
@@ -35,49 +46,40 @@ class ZegoUIKitHallRoomListControllerPrivate {
   final updateNotifier = ValueNotifier<int>(0);
   final sdkInitNotifier = ValueNotifier<bool>(false);
   final roomLoginNotifier = ValueNotifier<bool>(false);
-
-  List<ZegoUIKitHallRoomListStream> previousStreams = [];
-  final streamsNotifier = ValueNotifier<List<ZegoUIKitHallRoomListStream>>([]);
+  final streamsNotifier =
+      ValueNotifier<List<ZegoUIKitHallRoomListStreamUser>>([]);
   final event = ZegoUIKitHallRoomExpressEvent();
 
   String? _tempRoomID;
   ZegoUIKitUser? _tempUser;
 
-  int _appID = 0;
-  String _appSign = '';
-  String _token = '';
-  ZegoUIKitScenario _scenario = ZegoUIKitScenario.Default;
-  ZegoUIKitHallRoomListConfig _config = const ZegoUIKitHallRoomListConfig();
-
   Future<bool> init() async {
+    ZegoLoggerService.logInfo(
+      '',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'init',
+    );
+
     return initSDK().then((_) async {
-      /// audio should not be played
-      ZegoUIKit().muteAllRemoteAudio(targetRoomID: roomID);
+      /// After setting this, switching room (switchRoom) will not stop pulling streams (both RTC and CDN streams will not stop)
+      await ZegoUIKit().enableSwitchRoomNotStopPlay(true);
 
-      return await joinRoom().then((result) {
-        onStreamsUpdated();
-        streamsNotifier.addListener(onStreamsUpdated);
-
-        /// todo remove timer
-        // renderTimer ??= startRenderTimer();
-
-        return result;
-      });
+      return await joinRoom();
     });
   }
 
   Future<bool> uninit() async {
-    for (var stream in previousStreams) {
-      stream.isVisibleNotifier.removeListener(onStreamVisibleStateUpdate);
-    }
-    previousStreams.clear();
-    streamsNotifier.removeListener(onStreamsUpdated);
+    ZegoLoggerService.logInfo(
+      '',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'uninit',
+    );
 
-    return playAll(isPlay: false).then((_) async {
+    /// Exited live hall
+    await ZegoUIKit().enableSwitchRoomNotStopPlay(false);
+
+    return stopPlayAll().then((_) async {
       return leaveRoom().then((_) async {
-        /// restore audio state to not muted
-        ZegoUIKit().unmuteAllRemoteAudio(targetRoomID: roomID);
-
         return await uninitSDK();
       });
     });
@@ -90,27 +92,34 @@ class ZegoUIKitHallRoomListControllerPrivate {
     required ZegoUIKitScenario scenario,
     required ZegoUIKitHallRoomListConfig config,
   }) {
-    _appID = appID;
-    _appSign = appSign;
-    _token = token;
-    _scenario = scenario;
-    _config = config;
+    this.appID = appID;
+    this.appSign = appSign;
+    this.token = token;
+    this.scenario = scenario;
+    this.config = config;
 
+    /// Update stream status through stream events
     event.init(streamsNotifier: streamsNotifier);
     ZegoUIKit().registerExpressEvent(event);
   }
 
   void clearData() {
+    ZegoLoggerService.logInfo(
+      '',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'clearData',
+    );
+
     event.uninit();
 
     streamsNotifier.value = [];
 
     _tempRoomID = null;
     _tempUser = null;
-    _appID = 0;
-    _appSign = '';
-    _token = '';
-    _scenario = ZegoUIKitScenario.Default;
+    appID = 0;
+    appSign = '';
+    token = '';
+    scenario = ZegoUIKitScenario.Default;
 
     sdkInitNotifier.value = false;
     roomLoginNotifier.value = false;
@@ -120,7 +129,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
     if (ZegoUIKitCore.shared.isInit) {
       ZegoLoggerService.logInfo(
         'has already init',
-        tag: 'hall controller',
+        tag: 'uikit.hall-room-controller',
         subTag: 'initSDK',
       );
 
@@ -133,29 +142,26 @@ class ZegoUIKitHallRoomListControllerPrivate {
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'hall controller',
+      tag: 'uikit.hall-room-controller',
       subTag: 'initSDK',
     );
 
     return ZegoUIKit()
         .init(
-      appID: _appID,
-      appSign: _appSign,
-      token: _token,
-      scenario: _scenario,
-
-      /// todo: multi mode
-      // roomMode: ZegoRoomMode.MultiRoom,
+      appID: appID,
+      appSign: appSign,
+      token: token,
+      scenario: scenario,
     )
         .then((value) async {
       ZegoLoggerService.logInfo(
         'init done',
-        tag: 'hall controller',
+        tag: 'uikit.hall-room-controller',
         subTag: 'initSDK',
       );
 
       await ZegoUIKit().setVideoConfig(
-        _config.video ?? ZegoVideoConfigExtension.preset180P(),
+        config.video ?? ZegoVideoConfigExtension.preset180P(),
       );
 
       sdkInitNotifier.value = true;
@@ -170,12 +176,16 @@ class ZegoUIKitHallRoomListControllerPrivate {
     return true;
   }
 
+  /// Join the live streaming hall room
+  ///
+  /// Joins the hall room with a temporary user to enable viewing and managing
+  /// the list of live rooms in the hall.
   Future<bool> joinRoom() async {
     if (!ZegoUIKitCore.shared.isInit) {
       ZegoLoggerService.logInfo(
         'has already init sdk',
-        tag: 'hall controller',
-        subTag: 'joinRoom',
+        tag: 'uikit.hall-room-controller',
+        subTag: 'join room',
       );
 
       return false;
@@ -184,8 +194,8 @@ class ZegoUIKitHallRoomListControllerPrivate {
     if (ZegoUIKit().getRoom(targetRoomID: roomID).isLogin) {
       ZegoLoggerService.logInfo(
         'has already login',
-        tag: 'hall controller',
-        subTag: 'joinRoom',
+        tag: 'uikit.hall-room-controller',
+        subTag: 'join room',
       );
 
       return false;
@@ -193,14 +203,14 @@ class ZegoUIKitHallRoomListControllerPrivate {
 
     ZegoLoggerService.logInfo(
       'try join room($roomID) with a temp user $localUser',
-      tag: 'hall controller',
-      subTag: 'joinRoom',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'join room',
     );
-    return ZegoUIKit().joinRoom(roomID, token: _token).then((result) {
+    return ZegoUIKit().joinRoom(roomID, token: token).then((result) {
       ZegoLoggerService.logInfo(
         'join room result:${result.errorCode} ${result.extendedData}',
-        tag: 'hall controller',
-        subTag: 'loginRoom',
+        tag: 'uikit.hall-room-controller',
+        subTag: 'join room',
       );
 
       roomLoginNotifier.value = result.errorCode == 0;
@@ -212,15 +222,15 @@ class ZegoUIKitHallRoomListControllerPrivate {
   Future<bool> leaveRoom() async {
     ZegoLoggerService.logInfo(
       'try leave room $roomID',
-      tag: 'hall controller',
-      subTag: 'leaveRoom',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'leave room',
     );
 
     if (!ZegoUIKit().getRoom(targetRoomID: roomID).isLogin) {
       ZegoLoggerService.logInfo(
         'room is not login room',
-        tag: 'hall controller',
-        subTag: 'leaveRoom',
+        tag: 'uikit.hall-room-controller',
+        subTag: 'leave room',
       );
 
       roomLoginNotifier.value = false;
@@ -228,15 +238,12 @@ class ZegoUIKitHallRoomListControllerPrivate {
     }
 
     return ZegoUIKit()
-        .leaveRoom(
-      targetRoomID: roomID,
-      stopPlayingAnotherRoomStream: false,
-    )
+        .leaveRoom(targetRoomID: roomID)
         .then((ZegoRoomLogoutResult result) {
       ZegoLoggerService.logInfo(
         'leave room result:$result',
-        tag: 'hall controller',
-        subTag: 'leaveRoom',
+        tag: 'uikit.hall-room-controller',
+        subTag: 'leave room',
       );
 
       roomLoginNotifier.value = result.errorCode == 0;
@@ -244,12 +251,19 @@ class ZegoUIKitHallRoomListControllerPrivate {
     });
   }
 
-  Future<bool> playAll({required bool isPlay}) async {
+  void forceUpdate() {
+    updateNotifier.value = DateTime.now().millisecondsSinceEpoch;
+  }
+
+  Future<bool> playOnly({
+    required List<ZegoUIKitHallRoomListStreamUser> streamUsers,
+    required List<ZegoUIKitHallRoomListStreamUser> muteStreamUsers,
+  }) async {
     if (!ZegoUIKitCore.shared.isInit) {
       ZegoLoggerService.logInfo(
         'has not init sdk',
-        tag: 'hall controller',
-        subTag: isPlay ? 'startPlayAll' : 'stopPlayAll',
+        tag: 'uikit.hall-room-controller',
+        subTag: 'playOnly',
       );
 
       return false;
@@ -258,173 +272,145 @@ class ZegoUIKitHallRoomListControllerPrivate {
     if (!ZegoUIKit().getRoom(targetRoomID: roomID).isLogin) {
       ZegoLoggerService.logInfo(
         'has not login room',
-        tag: 'hall controller',
-        subTag: isPlay ? 'startPlayAll' : 'stopPlayAll',
+        tag: 'uikit.hall-room-controller',
+        subTag: 'playOnly',
       );
 
       return false;
     }
 
-    for (var streamInfo in streamsNotifier.value) {
-      if (isPlay && streamInfo.isPlaying) {
-        ZegoLoggerService.logInfo(
-          '${streamInfo.targetStreamID} is playing',
-          tag: 'hall controller',
-          subTag: isPlay ? 'startPlayAll' : 'stopPlayAll',
-        );
-
-        continue;
-      } else if (!isPlay && !streamInfo.isPlaying) {
-        ZegoLoggerService.logInfo(
-          '${streamInfo.targetStreamID} is not playing',
-          tag: 'hall controller',
-          subTag: isPlay ? 'startPlayAll' : 'stopPlayAll',
-        );
-
-        continue;
+    /// Categorize
+    final streamUserIDs = streamUsers.map((e) => e.user.id).toList();
+    List<ZegoUIKitHallRoomListStreamUser> stopPlayingStreamUsers = [];
+    List<ZegoUIKitHallRoomListStreamUser> startPlayingStreamUsers = streamUsers;
+    for (var streamUser in streamsNotifier.value) {
+      if (!streamUserIDs.contains(streamUser.user.id) && streamUser.isPlaying) {
+        stopPlayingStreamUsers.add(streamUser);
       }
 
-      ZegoLoggerService.logInfo(
-        'stream id:${streamInfo.targetStreamID}',
-        tag: 'hall controller',
-        subTag: isPlay ? 'startPlayAll' : 'stopPlayAll',
-      );
+      if (streamUserIDs.contains(streamUser.user.id) && streamUser.isPlaying) {
+        startPlayingStreamUsers.removeWhere((e) =>
+            e.user.id == streamUser.user.id && e.roomID == streamUser.roomID);
+      }
+    }
 
-      streamInfo.isPlaying = isPlay;
-      isPlay
-          ? await ZegoUIKit().startPlayAnotherRoomAudioVideo(
-              targetRoomID: roomID,
-              streamInfo.roomID,
-              streamInfo.user.id,
-              userName: streamInfo.user.name,
-            )
-          : await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
-              targetRoomID: roomID,
-              streamInfo.user.id,
-            );
+    /// Stop pulling streams
+    for (var streamUser in stopPlayingStreamUsers) {
+      await playOne(streamUser: streamUser, toPlay: false, isMuted: false);
+    }
+
+    /// Pull streams
+    final muteStreamUserIDs = muteStreamUsers.map((e) => e.user.id).toList();
+    for (var streamUser in startPlayingStreamUsers) {
+      await playOne(
+        streamUser: streamUser,
+        toPlay: true,
+        isMuted: muteStreamUserIDs.contains(streamUser.user.id),
+      );
     }
 
     return true;
   }
 
   Future<bool> playOne({
-    required ZegoUIKitUser user,
-    required String roomID,
+    required ZegoUIKitHallRoomListStreamUser streamUser,
     required bool toPlay,
-    bool withLog = true,
+    required bool isMuted,
   }) async {
+    if (toPlay && streamUser.isPlaying) {
+      ZegoLoggerService.logInfo(
+        '${streamUser.streamID} is playing',
+        tag: 'uikit.hall-room-controller',
+        subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
+      );
+
+      await ZegoUIKit().muteUserAudio(
+        streamUser.user.id,
+        isMuted,
+        targetRoomID: roomID,
+      );
+
+      return true;
+    } else if (!toPlay && !streamUser.isPlaying) {
+      ZegoLoggerService.logInfo(
+        '${streamUser.streamID} is not playing',
+        tag: 'uikit.hall-room-controller',
+        subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
+      );
+
+      return true;
+    }
+
+    ZegoLoggerService.logInfo(
+      'stream:$streamUser',
+      tag: 'uikit.hall-room-controller',
+      subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
+    );
+
+    /// Assign value first, then update based on status callback;
+    /// prevents state anomalies caused by rapid API calls
+    /// Will be updated later in ZegoUIKitHallRoomExpressEvent
+    streamUser.isPlaying = toPlay;
+    if (toPlay) {
+      await ZegoUIKit().startPlayAnotherRoomAudioVideo(
+        targetRoomID: roomID,
+        streamUser.roomID,
+        streamUser.user.id,
+        userName: streamUser.user.name,
+
+        /// Will copy to respective rooms later after entering
+        playOnAnotherRoom: false,
+      );
+      streamsNotifier.value = [
+        ...streamsNotifier.value,
+        streamUser,
+      ];
+    } else {
+      await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
+        targetRoomID: roomID,
+        streamUser.user.id,
+      );
+      streamsNotifier.value.removeWhere((e) => e.isEqual(streamUser));
+      streamsNotifier.value = [...streamsNotifier.value];
+    }
+
+    if (toPlay) {
+      await ZegoUIKit().muteUserAudio(
+        streamUser.user.id,
+        isMuted,
+        targetRoomID: roomID,
+      );
+    }
+
+    return true;
+  }
+
+  Future<bool> stopPlayAll() async {
     if (!ZegoUIKitCore.shared.isInit) {
-      if (withLog) {
-        ZegoLoggerService.logInfo(
-          'has not init sdk',
-          tag: 'hall controller',
-          subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
-        );
-      }
+      ZegoLoggerService.logInfo(
+        'has not init sdk',
+        tag: 'uikit.hall-room-controller',
+        subTag: 'playOnly',
+      );
 
       return false;
     }
 
     if (!ZegoUIKit().getRoom(targetRoomID: roomID).isLogin) {
-      if (withLog) {
-        ZegoLoggerService.logInfo(
-          'has not login room',
-          tag: 'hall controller',
-          subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
-        );
-      }
+      ZegoLoggerService.logInfo(
+        'has not login room',
+        tag: 'uikit.hall-room-controller',
+        subTag: 'playOnly',
+      );
 
       return false;
     }
 
-    final queryIndex = streamsNotifier.value.indexWhere((streamInfo) =>
-        streamInfo.user.id == user.id && streamInfo.roomID == roomID);
-    if (-1 == queryIndex) {
-      if (withLog) {
-        ZegoLoggerService.logInfo(
-          'user not exist',
-          tag: 'hall controller',
-          subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
-        );
-      }
-
-      return false;
+    for (var streamUser in List.from(streamsNotifier.value)) {
+      await playOne(streamUser: streamUser, toPlay: false, isMuted: false);
     }
-
-    final streamInfo = streamsNotifier.value[queryIndex];
-
-    if (toPlay && streamInfo.isPlaying) {
-      if (withLog) {
-        ZegoLoggerService.logInfo(
-          '${streamInfo.targetStreamID} is playing',
-          tag: 'hall controller',
-          subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
-        );
-      }
-
-      return false;
-    } else if (!toPlay && !streamInfo.isPlaying) {
-      if (withLog) {
-        ZegoLoggerService.logInfo(
-          '${streamInfo.targetStreamID} is not playing',
-          tag: 'hall controller',
-          subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
-        );
-      }
-
-      return false;
-    }
-
-    ZegoLoggerService.logInfo(
-      'stream id:${streamInfo.targetStreamID}',
-      tag: 'hall controller',
-      subTag: toPlay ? 'startPlayOne' : 'stopPlayOne',
-    );
-
-    streamInfo.isPlaying = toPlay;
-    toPlay
-        ? await ZegoUIKit().startPlayAnotherRoomAudioVideo(
-            targetRoomID: roomID,
-            streamInfo.roomID,
-            streamInfo.user.id,
-            userName: streamInfo.user.name,
-          )
-        : await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
-            targetRoomID: roomID,
-            streamInfo.user.id,
-          );
+    streamsNotifier.value = [];
 
     return true;
-  }
-
-  void forceUpdate() {
-    updateNotifier.value = DateTime.now().millisecondsSinceEpoch;
-  }
-
-  void onStreamsUpdated() {
-    for (var stream in previousStreams) {
-      stream.isVisibleNotifier.removeListener(onStreamVisibleStateUpdate);
-    }
-    previousStreams.clear();
-
-    for (var stream in streamsNotifier.value) {
-      stream.isVisibleNotifier.addListener(onStreamVisibleStateUpdate);
-    }
-    onStreamVisibleStateUpdate();
-    previousStreams =
-        List<ZegoUIKitHallRoomListStream>.from(streamsNotifier.value);
-  }
-
-  Future<void> onStreamVisibleStateUpdate() async {
-    if (ZegoUIKitHallRoomListPlayMode.autoPlay == _config.playMode) {
-      for (final stream in streamsNotifier.value) {
-        await playOne(
-          user: stream.user,
-          roomID: stream.roomID,
-          toPlay: stream.isVisibleNotifier.value,
-          withLog: false,
-        );
-      }
-    }
   }
 }

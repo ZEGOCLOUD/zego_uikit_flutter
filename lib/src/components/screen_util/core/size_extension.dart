@@ -37,11 +37,11 @@ extension ZegoSizeExtension on num {
 
   double get zSPMax => max(toDouble(), zSP);
 
-  ///屏幕宽度的倍数
+  /// Multiple of screen width
   ///Multiple of screen width
   double get zSW => ZegoScreenUtil().screenWidth * this;
 
-  ///屏幕高度的倍数
+  /// Multiple of screen height
   ///Multiple of screen height
   double get zSH => ZegoScreenUtil().screenHeight * this;
 

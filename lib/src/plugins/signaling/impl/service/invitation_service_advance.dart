@@ -73,7 +73,11 @@ mixin ZegoPluginInvitationServiceAdvance {
     }
 
     final zimExtendedData = jsonEncode(ZegoUIKitAdvanceInvitationSendProtocol(
-      inviter: ZegoUIKitUser(id: inviterID, name: inviterName),
+      inviter: ZegoUIKitUser(
+        id: inviterID,
+        name: inviterName,
+        isAnotherRoomUser: false,
+      ),
       invitees: invitees,
       type: type,
       customData: data,
@@ -160,7 +164,11 @@ mixin ZegoPluginInvitationServiceAdvance {
     }
 
     final zimExtendedData = jsonEncode(ZegoUIKitAdvanceInvitationSendProtocol(
-      inviter: ZegoUIKitUser(id: inviterID, name: inviterName),
+      inviter: ZegoUIKitUser(
+        id: inviterID,
+        name: inviterName,
+        isAnotherRoomUser: false,
+      ),
       invitees: invitees,
       type: type,
       customData: data,
@@ -512,7 +520,11 @@ mixin ZegoPluginInvitationServiceAdvance {
     return ZegoSignalingPluginCore.shared.coreData.advanceAccept(
       targetInvitationID,
       jsonEncode(ZegoUIKitAdvanceInvitationAcceptProtocol(
-        inviter: ZegoUIKitUser(id: inviterID, name: inviterName ?? ''),
+        inviter: ZegoUIKitUser(
+          id: inviterID,
+          name: inviterName ?? '',
+          isAnotherRoomUser: false,
+        ),
         customData: data,
       )),
     );

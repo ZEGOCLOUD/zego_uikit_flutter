@@ -1,14 +1,15 @@
 // Dart imports:
 import 'dart:async';
 
-// Project imports:
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
+
+// Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import '../defines/defines.dart';
-
-import 'user.room.dart';
 import 'room_map.dart';
+import 'user.room.dart';
 
 class ZegoUIKitCoreDataUser {
   ZegoUIKitCoreUser localUser = ZegoUIKitCoreUser.localDefault();
@@ -23,7 +24,7 @@ class ZegoUIKitCoreDataUser {
       return roomUser;
     },
     onUpgradeEmptyRoom: (ZegoUIKitCoreDataRoomUser emptyRoomUser, roomID) {
-      // 当预备房间被升级时，更新其 roomID
+      // When prepared room is upgraded, update its roomID
       emptyRoomUser.roomID = roomID;
       ZegoLoggerService.logInfo(
         'empty room(${emptyRoomUser.hashCode}) has update id to $roomID, ',

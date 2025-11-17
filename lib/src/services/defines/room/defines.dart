@@ -36,5 +36,5 @@ class ZegoUIKitRoom {
   }
 }
 
-/// 由于多房间的当前ID不可知，需要外部指定
+/// Since current ID in multi-room mode is unknown, needs to be specified externally
 typedef CurrentRoomIDQueryFuncInMultiRoomMode = String Function(List<String>);

@@ -20,6 +20,11 @@ class ZegoUIKitCoreStreamInfo {
       ValueNotifier<Size>(const Size(360, 640));
   StreamController<double>? soundLevelStream;
 
+  final playerStateNotifier =
+      ValueNotifier<ZegoUIKitPlayerState>(ZegoUIKitPlayerState.NoPlay);
+  final publisherStateNotifier =
+      ValueNotifier<ZegoUIKitPublisherState>(ZegoUIKitPublisherState.NoPublish);
+
   ValueNotifier<ZegoUIKitPublishStreamQuality> qualityNotifier =
       ValueNotifier<ZegoUIKitPublishStreamQuality>(
     ZegoPublishStreamQualityExtension.empty(),
@@ -61,6 +66,9 @@ class ZegoUIKitCoreStreamInfo {
     isRenderedVideoFirstFrameNotifier.value = false;
     isSendAudioFirstFrameNotifier.value = false;
     isSendVideoFirstFrameNotifier.value = false;
+
+    playerStateNotifier.value = ZegoUIKitPlayerState.NoPlay;
+    publisherStateNotifier.value = ZegoUIKitPublisherState.NoPublish;
   }
 
   void _onViewUpdate() {
@@ -79,5 +87,25 @@ class ZegoUIKitCoreStreamInfo {
       tag: 'uikit-stream',
       subTag: 'onViewIDUpdate',
     );
+  }
+
+  @override
+  String toString() {
+    return 'streamID:$streamID, '
+        'streamTimestamp:$streamTimestamp, '
+        'viewID:${viewIDNotifier.value}, '
+        'view:${viewNotifier.value}, '
+        'viewCreating:${viewCreatingNotifier.value}, '
+        'viewSize:${viewSizeNotifier.value}, '
+        'quality:${qualityNotifier.value}, '
+        'playerState:${playerStateNotifier.value}, '
+        'publisherState:${publisherStateNotifier.value}, '
+        'isCapturedAudioFirstFrame:${isCapturedAudioFirstFrameNotifier.value}, '
+        'isCapturedVideoFirstFrame:${isCapturedVideoFirstFrameNotifier.value}, '
+        'isRenderedVideoFirstFrame:${isRenderedVideoFirstFrameNotifier.value}, '
+        'isSendAudioFirstFrame:${isSendAudioFirstFrameNotifier.value}, '
+        'isSendVideoFirstFrame:${isSendVideoFirstFrameNotifier.value}, '
+        'globalMainStreamChannelKey:${globalMainStreamChannelKeyNotifier.value}, '
+        'globalAuxStreamChannelKey:${globalAuxStreamChannelKeyNotifier.value}, ';
   }
 }
