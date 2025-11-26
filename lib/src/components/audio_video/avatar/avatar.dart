@@ -9,7 +9,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/avatar/ripple_avatar.dart';
-import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -26,7 +25,7 @@ class ZegoAvatar extends StatelessWidget {
   final String? mixerStreamID;
 
   const ZegoAvatar({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.avatarSize,
     this.user,
@@ -36,7 +35,7 @@ class ZegoAvatar extends StatelessWidget {
     this.soundLevelColor,
     this.avatarBuilder,
     this.mixerStreamID,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -12,13 +12,13 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/modules/hall_room/config.dart';
 import 'package:zego_uikit/src/modules/hall_room/controller.event.dart';
 import 'package:zego_uikit/src/modules/hall_room/helper.dart';
+import 'package:zego_uikit/src/modules/hall_room/defines.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
-import '../../../zego_uikit.dart';
 
 /// @nodoc
 class ZegoUIKitHallRoomListControllerPrivate {
-  ZegoUIKitHallRoomListControllerPrivate() {}
+  ZegoUIKitHallRoomListControllerPrivate();
 
   int appID = 0;
   String appSign = '';

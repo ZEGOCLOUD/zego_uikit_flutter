@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class ZegoScreenSharingCountdownTimer extends StatefulWidget {
   const ZegoScreenSharingCountdownTimer({
-    Key? key,
+    super.key,
     required this.seconds,
     this.textColor,
     this.progressColor,
@@ -14,7 +14,7 @@ class ZegoScreenSharingCountdownTimer extends StatefulWidget {
     this.tipsFontSize,
     this.tips,
     this.onCountDownFinished,
-  }) : super(key: key);
+  });
 
   final int seconds;
   final Color? textColor;

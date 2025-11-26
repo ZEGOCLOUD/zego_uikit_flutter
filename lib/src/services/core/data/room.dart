@@ -5,14 +5,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
-import 'package:path/path.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/modules/hall_room/helper.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
-import 'package:zego_uikit/src/services/core/defines/room.dart';
 import 'package:zego_uikit/src/services/services.dart';
 import 'data.dart';
 import 'device.dart';

@@ -16,7 +16,7 @@ import 'package:zego_uikit/src/services/services.dart';
 /// 3. foreground view
 class ZegoUIKitMediaView extends StatefulWidget {
   const ZegoUIKitMediaView({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.user,
     this.backgroundBuilder,
@@ -24,7 +24,7 @@ class ZegoUIKitMediaView extends StatefulWidget {
     this.borderRadius,
     this.borderColor,
     this.extraInfo,
-  }) : super(key: key);
+  });
 
   final String roomID;
   final ZegoUIKitUser? user;

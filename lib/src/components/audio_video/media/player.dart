@@ -17,7 +17,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 /// For audio, we support "aac", "midi", "mp3", "ogg", "wav".
 class ZegoUIKitMediaPlayer extends StatefulWidget {
   const ZegoUIKitMediaPlayer({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.size,
     required this.config,
@@ -26,8 +26,7 @@ class ZegoUIKitMediaPlayer extends StatefulWidget {
     ZegoUIKitMediaPlayerStyle? style,
     ZegoUIKitMediaPlayerEvent? event,
   })  : style = style ?? const ZegoUIKitMediaPlayerStyle(),
-        event = event ?? const ZegoUIKitMediaPlayerEvent(),
-        super(key: key);
+        event = event ?? const ZegoUIKitMediaPlayerEvent();
 
   final String roomID;
 

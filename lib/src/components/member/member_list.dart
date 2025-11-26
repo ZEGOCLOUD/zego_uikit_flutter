@@ -39,7 +39,7 @@ class ZegoMemberList extends StatefulWidget {
   final List<ZegoUIKitUser> pseudoUsers;
 
   const ZegoMemberList({
-    Key? key,
+    super.key,
     required this.roomID,
     this.showMicrophoneState = true,
     this.showCameraState = true,
@@ -49,7 +49,7 @@ class ZegoMemberList extends StatefulWidget {
     this.stream,
     this.pseudoUsers = const [],
     this.hiddenUserIDs = const <String>[],
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoMemberList> createState() => _ZegoCallMemberListState();

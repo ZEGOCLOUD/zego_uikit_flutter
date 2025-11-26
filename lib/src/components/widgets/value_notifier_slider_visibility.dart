@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 
 class ValueNotifierSliderVisibility extends StatefulWidget {
   const ValueNotifierSliderVisibility({
-    Key? key,
+    super.key,
     required this.child,
     required this.visibilityNotifier,
     this.animationDuration = const Duration(milliseconds: 300),
     this.beginOffset = Offset.zero,
     this.endOffset = const Offset(0.0, 2.0),
-  }) : super(key: key);
+  });
 
   final ValueNotifier<bool> visibilityNotifier;
   final Widget child;

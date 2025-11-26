@@ -14,10 +14,10 @@ class ZegoUIKitMediaWaveform extends StatefulWidget {
   final ValueNotifier<ZegoUIKitMediaPlayState> playStateNotifier;
 
   const ZegoUIKitMediaWaveform({
-    Key? key,
+    super.key,
     required this.soundLevelStream,
     required this.playStateNotifier,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoUIKitMediaWaveform> createState() => _ZegoUIKitMediaWaveformState();

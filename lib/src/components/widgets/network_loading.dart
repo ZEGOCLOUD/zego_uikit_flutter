@@ -21,10 +21,10 @@ class ZegoNetworkLoadingConfig {
 
 class ZegoNetworkLoading extends StatefulWidget {
   const ZegoNetworkLoading({
-    Key? key,
+    super.key,
     required this.child,
     this.config,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final ZegoNetworkLoadingConfig? config;

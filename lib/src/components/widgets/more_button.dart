@@ -9,7 +9,7 @@ import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
 /// more button of menu bar
 class ZegoMoreButton extends StatefulWidget {
   const ZegoMoreButton({
-    Key? key,
+    super.key,
     required this.menuButtonListFunc,
     this.icon,
     this.menuItemSize = const Size(60.0, 60.0),
@@ -20,7 +20,7 @@ class ZegoMoreButton extends StatefulWidget {
     this.buttonSize,
     this.onSheetPopUp,
     this.onSheetPop,
-  }) : super(key: key);
+  });
 
   final ButtonIcon? icon;
 

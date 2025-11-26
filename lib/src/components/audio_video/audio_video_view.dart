@@ -28,7 +28,7 @@ import '../../services/core/defines/defines.dart';
 /// 3. foreground view
 class ZegoAudioVideoView extends StatefulWidget {
   const ZegoAudioVideoView({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.user,
     this.backgroundBuilder,
@@ -37,7 +37,7 @@ class ZegoAudioVideoView extends StatefulWidget {
     this.borderColor,
     this.extraInfo,
     this.avatarConfig,
-  }) : super(key: key);
+  });
 
   final String roomID;
 

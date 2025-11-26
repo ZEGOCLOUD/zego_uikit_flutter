@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class ZegoInputBoardWrapper extends StatefulWidget {
   const ZegoInputBoardWrapper({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 

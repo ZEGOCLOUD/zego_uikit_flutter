@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 class ZegoServiceValueIcon extends StatefulWidget {
   const ZegoServiceValueIcon({
-    Key? key,
+    super.key,
     required this.notifier,
     required this.normalIcon,
     required this.checkedIcon,
-  }) : super(key: key);
+  });
 
   final Image normalIcon;
   final Image checkedIcon;

@@ -3,7 +3,6 @@ import 'dart:async';
 
 // Project imports:
 import 'package:zego_uikit/src/services/services.dart';
-import 'room_map.dart';
 
 /// Message for a single room
 class ZegoUIKitCoreDataRoomMessage {

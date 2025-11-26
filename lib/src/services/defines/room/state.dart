@@ -5,7 +5,7 @@ import 'package:zego_uikit/src/services/defines/express.dart';
 
 /// multi room state
 class ZegoUIKitRoomsState {
-  /// <roomID, state>
+  /// < roomID, state >
   Map<String, ZegoUIKitRoomState> states = {};
 }
 

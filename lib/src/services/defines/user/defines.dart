@@ -11,7 +11,6 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/user.dart';
 import 'package:zego_uikit/src/services/core/defines/user_attributes.dart';
-import 'package:zego_uikit/src/services/defines/device/device.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 extension ZegoUIKitUserList on List<ZegoUIKitUser> {
@@ -89,12 +88,9 @@ class ZegoUIKitUser {
   ZegoUIKitUser({
     required this.id,
     required this.name,
-    String roomID = '',
-    bool isAnotherRoomUser = false,
-  }) {
-    this.roomID = roomID;
-    this.isAnotherRoomUser = isAnotherRoomUser;
-  }
+    this.roomID = '',
+    this.isAnotherRoomUser = false,
+  });
 
   // internal helper function
   ZegoUser toZegoUser() => ZegoUser(id, name);

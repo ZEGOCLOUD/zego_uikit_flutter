@@ -13,7 +13,7 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoLayoutPIPSmallItemList extends StatefulWidget {
   const ZegoLayoutPIPSmallItemList({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.targetUsers,
     required this.defaultPosition,
@@ -28,7 +28,7 @@ class ZegoLayoutPIPSmallItemList extends StatefulWidget {
     this.size,
     this.margin,
     this.avatarConfig,
-  }) : super(key: key);
+  });
 
   final String roomID;
   final bool showOnlyVideo;

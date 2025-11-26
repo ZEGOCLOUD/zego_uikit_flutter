@@ -34,7 +34,7 @@ class ZegoDraggableBottomSheet extends StatefulWidget {
   final Axis scrollDirection;
 
   const ZegoDraggableBottomSheet({
-    Key? key,
+    super.key,
     this.alignment = Alignment.bottomLeft,
     this.backgroundWidget,
     this.blurBackground = true,
@@ -44,7 +44,7 @@ class ZegoDraggableBottomSheet extends StatefulWidget {
     this.minExtent = 10,
     this.previewChild,
     this.scrollDirection = Axis.vertical,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoDraggableBottomSheet> createState() =>

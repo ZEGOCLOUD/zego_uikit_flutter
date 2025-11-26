@@ -1,15 +1,6 @@
 // Dart imports:
 import 'dart:math';
 
-// Flutter imports:
-import 'package:flutter/cupertino.dart';
-
-// Project imports:
-import 'package:zego_uikit/src/modules/hall_room/defines.dart';
-import 'package:zego_uikit/src/services/core/core.dart';
-import 'package:zego_uikit/src/services/services.dart';
-import '../../services/core/defines/defines.dart';
-
 /// room hall
 class ZegoUIKitHallRoomIDHelper {
   static bool isRandomUserID(String userID) {

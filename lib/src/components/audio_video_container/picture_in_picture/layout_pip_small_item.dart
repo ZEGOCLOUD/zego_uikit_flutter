@@ -11,7 +11,7 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoLayoutPIPSmallItem extends StatefulWidget {
   const ZegoLayoutPIPSmallItem({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.targetUser,
     required this.localUser,
@@ -25,7 +25,7 @@ class ZegoLayoutPIPSmallItem extends StatefulWidget {
     this.size,
     this.margin,
     this.avatarConfig,
-  }) : super(key: key);
+  });
 
   final String roomID;
   final bool draggable;

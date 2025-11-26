@@ -16,12 +16,12 @@ class ZegoInRoomChatView extends StatefulWidget {
   final ScrollController? scrollController;
 
   const ZegoInRoomChatView({
-    Key? key,
+    super.key,
     required this.roomID,
     this.avatarBuilder,
     this.itemBuilder,
     this.scrollController,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoInRoomChatView> createState() => _ZegoInRoomChatViewState();

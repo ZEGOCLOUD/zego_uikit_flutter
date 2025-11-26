@@ -12,11 +12,11 @@ import 'package:zego_uikit/src/services/services.dart';
 /// container of media,
 class ZegoUIKitMediaContainer extends StatefulWidget {
   const ZegoUIKitMediaContainer({
-    Key? key,
+    super.key,
     required this.roomID,
     this.foregroundBuilder,
     this.backgroundBuilder,
-  }) : super(key: key);
+  });
 
   final String roomID;
 

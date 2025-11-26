@@ -32,7 +32,7 @@ class ZegoSlider extends StatefulWidget {
   final double? thumbRadius;
 
   const ZegoSlider({
-    Key? key,
+    super.key,
     required this.defaultValue,
     this.onChanged,
     this.thumpHeight,
@@ -44,7 +44,7 @@ class ZegoSlider extends StatefulWidget {
     this.inactiveTrackColor,
     this.thumbColor,
     this.thumbRadius,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoSlider> createState() => _ZegoSliderState();

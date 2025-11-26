@@ -10,11 +10,11 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoInRoomChatViewItem extends StatefulWidget {
   const ZegoInRoomChatViewItem({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.message,
     required this.avatarBuilder,
-  }) : super(key: key);
+  });
 
   final String roomID;
   final ZegoInRoomMessage message;

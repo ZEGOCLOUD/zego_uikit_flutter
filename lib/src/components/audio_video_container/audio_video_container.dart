@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +33,7 @@ enum ZegoAudioVideoContainerSource {
 /// container of audio video view,
 /// it will layout views by layout mode and config
 class ZegoAudioVideoContainer extends StatefulWidget {
-  ZegoAudioVideoContainer({
+  const ZegoAudioVideoContainer({
     super.key,
     required this.roomID,
     required this.layout,

@@ -12,14 +12,14 @@ import 'package:zego_uikit/src/services/services.dart';
 /// switch cameras
 class ZegoSwitchCameraButton extends StatefulWidget {
   const ZegoSwitchCameraButton({
-    Key? key,
+    super.key,
     required this.roomID,
     this.onPressed,
     this.icon,
     this.defaultUseFrontFacingCamera = true,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   final String roomID;
 

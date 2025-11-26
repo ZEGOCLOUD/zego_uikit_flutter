@@ -33,7 +33,7 @@ class ZegoLeaveButton extends StatefulWidget {
   final ValueNotifier<bool>? clickableNotifier;
 
   const ZegoLeaveButton({
-    Key? key,
+    super.key,
     required this.roomID,
     this.quitDelegate,
     this.onLeaveConfirmation,
@@ -42,7 +42,7 @@ class ZegoLeaveButton extends StatefulWidget {
     this.iconSize,
     this.buttonSize,
     this.clickableNotifier,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLeaveButton> createState() => _ZegoLeaveButtonState();

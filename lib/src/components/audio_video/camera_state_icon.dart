@@ -16,13 +16,12 @@ class ZegoCameraStateIcon extends ZegoServiceValueIcon {
   final Image? iconCameraOff;
 
   ZegoCameraStateIcon({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.targetUser,
     this.iconCameraOn,
     this.iconCameraOff,
   }) : super(
-          key: key,
           notifier: ZegoUIKit().getCameraStateNotifier(
             targetRoomID: roomID,
             targetUser?.id ?? '',

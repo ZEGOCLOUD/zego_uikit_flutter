@@ -15,7 +15,7 @@ import 'package:zego_uikit/src/services/services.dart';
 /// button used to open/close camera
 class ZegoToggleCameraButton extends StatefulWidget {
   const ZegoToggleCameraButton({
-    Key? key,
+    super.key,
     required this.roomID,
     this.normalIcon,
     this.offIcon,
@@ -23,7 +23,7 @@ class ZegoToggleCameraButton extends StatefulWidget {
     this.defaultOn = true,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   final String roomID;
   final ButtonIcon? normalIcon;

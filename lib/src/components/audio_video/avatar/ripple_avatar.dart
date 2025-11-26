@@ -11,7 +11,7 @@ import 'package:zego_uikit/src/services/services.dart';
 /// display sound level value through circular ripples
 class ZegoRippleAvatar extends StatefulWidget {
   const ZegoRippleAvatar({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.user,
     required this.child,
@@ -19,7 +19,7 @@ class ZegoRippleAvatar extends StatefulWidget {
     this.minRadius = 60,
     this.radiusIncrement = 0.2,
     this.mixerStreamID,
-  }) : super(key: key);
+  });
   final String roomID;
   final Widget child;
 

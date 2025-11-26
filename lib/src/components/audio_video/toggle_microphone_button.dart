@@ -15,7 +15,7 @@ import 'package:zego_uikit/src/services/services.dart';
 /// button used to open/close microphone
 class ZegoToggleMicrophoneButton extends StatefulWidget {
   const ZegoToggleMicrophoneButton({
-    Key? key,
+    super.key,
     required this.roomID,
     this.normalIcon,
     this.offIcon,
@@ -24,7 +24,7 @@ class ZegoToggleMicrophoneButton extends StatefulWidget {
     this.iconSize,
     this.buttonSize,
     this.muteMode = false,
-  }) : super(key: key);
+  });
 
   final String roomID;
   final ButtonIcon? normalIcon;

@@ -8,41 +8,40 @@ import 'package:zego_uikit/src/components/screen_util/core/size_extension.dart';
 /// @nodoc
 class ZegoRSizedBox extends SizedBox {
   const ZegoRSizedBox({
-    Key? key,
-    double? height,
-    double? width,
-    Widget? child,
-  })  : _square = false,
-        super(key: key, child: child, width: width, height: height);
+    super.key,
+    super.height,
+    super.width,
+    super.child,
+  }) : _square = false;
 
   const ZegoRSizedBox.zVertical(
     double? height, {
-    Key? key,
-    Widget? child,
+    super.key,
+    super.child,
   })  : _square = false,
-        super(key: key, child: child, height: height);
+        super(height: height);
 
   const ZegoRSizedBox.zHorizontal(
     double? width, {
-    Key? key,
-    Widget? child,
+    super.key,
+    super.child,
   })  : _square = false,
-        super(key: key, child: child, width: width);
+        super(width: width);
 
   const ZegoRSizedBox.zSquare({
-    Key? key,
+    super.key,
     double? height,
-    double? dimension,
-    Widget? child,
+    super.dimension,
+    super.child,
   })  : _square = true,
-        super.square(key: key, child: child, dimension: dimension);
+        super.square();
 
   ZegoRSizedBox.fromSize({
-    Key? key,
-    Size? size,
-    Widget? child,
+    super.key,
+    super.size,
+    super.child,
   })  : _square = false,
-        super.fromSize(key: key, child: child, size: size);
+        super.fromSize();
 
   @override
   RenderConstrainedBox createRenderObject(BuildContext context) {

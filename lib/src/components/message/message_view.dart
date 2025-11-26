@@ -20,13 +20,13 @@ class ZegoInRoomMessageView extends StatefulWidget {
   final ScrollController? scrollController;
 
   const ZegoInRoomMessageView({
-    Key? key,
+    super.key,
     required this.stream,
     required this.itemBuilder,
     this.scrollable = true,
     this.scrollController,
     this.historyMessages = const [],
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoInRoomMessageView> createState() => _ZegoInRoomMessageViewState();

@@ -7,7 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import '../../services/core/core.dart';
 
 class ZegoUIKitHallRoomListController {
-  ZegoUIKitHallRoomListController() {}
+  ZegoUIKitHallRoomListController();
 
   /// DO NOT CALL!!!
   /// Please do not call this. It is the internal logic.
@@ -38,6 +38,7 @@ class ZegoUIKitHallRoomListController {
         isFromAnotherRoom: false,
       );
     }
+
     return true;
   }
 

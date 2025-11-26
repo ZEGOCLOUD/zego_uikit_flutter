@@ -29,7 +29,7 @@ class ZegoStartInvitationButtonResult {
 /// @nodoc
 class ZegoStartInvitationButton extends StatefulWidget {
   const ZegoStartInvitationButton({
-    Key? key,
+    super.key,
     required this.invitationType,
     required this.invitees,
     required this.data,
@@ -53,7 +53,7 @@ class ZegoStartInvitationButton extends StatefulWidget {
     this.unclickableTextColor = Colors.black,
     this.clickableBackgroundColor = Colors.transparent,
     this.unclickableBackgroundColor = Colors.transparent,
-  }) : super(key: key);
+  });
   final bool isAdvancedMode;
 
   final int invitationType;

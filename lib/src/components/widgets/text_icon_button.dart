@@ -35,7 +35,7 @@ class ZegoTextIconButton extends StatefulWidget {
   final ZegoNetworkLoadingConfig? networkLoadingConfig;
 
   const ZegoTextIconButton({
-    Key? key,
+    super.key,
     this.text,
     this.textStyle,
     this.softWrap,
@@ -54,7 +54,7 @@ class ZegoTextIconButton extends StatefulWidget {
     this.clickableBackgroundColor = Colors.transparent,
     this.unclickableBackgroundColor = Colors.transparent,
     this.verticalLayout = true,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoTextIconButton> createState() => _ZegoTextIconButtonState();

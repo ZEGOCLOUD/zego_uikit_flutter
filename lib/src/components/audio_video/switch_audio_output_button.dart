@@ -12,7 +12,7 @@ import 'package:zego_uikit/src/services/services.dart';
 /// button used to switch audio output button route between speaker or system device
 class ZegoSwitchAudioOutputButton extends StatefulWidget {
   const ZegoSwitchAudioOutputButton({
-    Key? key,
+    super.key,
     required this.roomID,
     this.speakerIcon,
     this.headphoneIcon,
@@ -21,7 +21,7 @@ class ZegoSwitchAudioOutputButton extends StatefulWidget {
     this.defaultUseSpeaker = false,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   final String roomID;
   final ButtonIcon? speakerIcon;

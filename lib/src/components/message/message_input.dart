@@ -11,7 +11,7 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoInRoomMessageInput extends StatefulWidget {
   const ZegoInRoomMessageInput({
-    Key? key,
+    super.key,
     required this.roomID,
     this.placeHolder = 'Say something...',
     this.payloadAttributes,
@@ -27,7 +27,7 @@ class ZegoInRoomMessageInput extends StatefulWidget {
     this.onSubmit,
     this.valueNotifier,
     this.focusNotifier,
-  }) : super(key: key);
+  });
 
   final String roomID;
   final String placeHolder;

@@ -9,13 +9,12 @@ class RippleAnimation extends StatefulWidget {
   final ValueNotifier<int> countReceiver;
 
   const RippleAnimation(
-      {Key? key,
+      {super.key,
       required this.child,
       required this.countReceiver,
       this.color = Colors.black,
       this.minRadius = 60,
-      this.radiusIncrement = 0.15})
-      : super(key: key);
+      this.radiusIncrement = 0.15});
 
   @override
   State<RippleAnimation> createState() => _RippleAnimationState();

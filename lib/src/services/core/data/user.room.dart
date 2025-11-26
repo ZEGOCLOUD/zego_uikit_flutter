@@ -4,8 +4,7 @@ import 'dart:async';
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
-import '../defines/defines.dart';
-import 'room_map.dart';
+import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'user.dart';
 
 class ZegoUIKitCoreDataRoomUser {

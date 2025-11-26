@@ -8,12 +8,12 @@ class ZegoUIKitFlipTransition extends StatefulWidget {
   final Duration duration;
 
   const ZegoUIKitFlipTransition({
-    Key? key,
+    super.key,
     required this.child,
     required this.isFlippedNotifier,
     required this.isFrontTriggerByTurnOnCamera,
     this.duration = const Duration(milliseconds: 300),
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoUIKitFlipTransition> createState() =>

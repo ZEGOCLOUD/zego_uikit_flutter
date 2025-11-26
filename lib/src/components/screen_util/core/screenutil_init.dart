@@ -71,7 +71,7 @@ abstract class ZegoFontSizeResolvers {
 class ZegoScreenUtilInit extends StatefulWidget {
   /// A helper widget that initializes [ZegoScreenUtil]
   const ZegoScreenUtilInit({
-    Key? key,
+    super.key,
     this.builder,
     this.child,
     this.rebuildFactor = ZegoRebuildFactors.size,
@@ -82,7 +82,7 @@ class ZegoScreenUtilInit extends StatefulWidget {
     this.ensureScreenSize,
     this.responsiveWidgets,
     this.fontSizeResolver = ZegoFontSizeResolvers.width,
-  }) : super(key: key);
+  });
 
   final ZegoScreenUtilInitBuilder? builder;
   final Widget? child;

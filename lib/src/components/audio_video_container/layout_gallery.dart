@@ -45,7 +45,7 @@ class ZegoLayoutGalleryConfig extends ZegoLayout {
 /// picture in picture layout
 class ZegoLayoutGallery extends StatefulWidget {
   const ZegoLayoutGallery({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.maxItemCount,
     required this.userList,
@@ -55,7 +55,7 @@ class ZegoLayoutGallery extends StatefulWidget {
     this.backgroundBuilder,
     this.avatarConfig,
     this.screenSharingViewController,
-  }) : super(key: key);
+  });
   final String roomID;
   final int maxItemCount;
   final List<ZegoUIKitUser> userList;

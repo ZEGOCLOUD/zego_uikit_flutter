@@ -60,9 +60,13 @@ class ZegoUIKitHallRoomListStreamUser {
   bool operator ==(Object other) {
     /// Should not reach here, should use isEqual
     assert(false);
-    return identical(this, other) || // First check if same reference (performance optimization)
-        other is ZegoUIKitHallRoomListStreamUser && // Then check if type is consistent
-            runtimeType == other.runtimeType && // Ensure runtime type is same (subclass scenario)
+    return identical(this,
+            other) || // First check if same reference (performance optimization)
+        other
+                is ZegoUIKitHallRoomListStreamUser && // Then check if type is consistent
+            runtimeType ==
+                other
+                    .runtimeType && // Ensure runtime type is same (subclass scenario)
             roomID == other.roomID &&
             user.id == other.user.id;
   }

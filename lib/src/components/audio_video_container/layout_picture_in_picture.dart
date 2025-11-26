@@ -67,14 +67,14 @@ class ZegoLayoutPictureInPictureConfig extends ZegoLayout {
 /// picture in picture layout
 class ZegoLayoutPictureInPicture extends StatefulWidget {
   const ZegoLayoutPictureInPicture({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.userList,
     required this.layoutConfig,
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.avatarConfig,
-  }) : super(key: key);
+  });
   final String roomID;
   final List<ZegoUIKitUser> userList;
   final ZegoLayoutPictureInPictureConfig layoutConfig;

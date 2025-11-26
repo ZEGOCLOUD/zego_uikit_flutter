@@ -19,13 +19,13 @@ class ZegoMicrophoneStateIcon extends StatefulWidget {
   final Image? iconMicrophoneSpeaking;
 
   const ZegoMicrophoneStateIcon({
-    Key? key,
+    super.key,
     required this.roomID,
     required this.targetUser,
     this.iconMicrophoneOn,
     this.iconMicrophoneOff,
     this.iconMicrophoneSpeaking,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoMicrophoneStateIcon> createState() =>

@@ -240,14 +240,13 @@ class GridLayoutSizedItem extends LayoutId {
   final double height;
 
   GridLayoutSizedItem({
-    Key? key,
-    required Object id,
-    required Widget child,
+    super.key,
+    required super.id,
+    required super.child,
     required this.width,
     required this.height,
   })  : assert(width > 0),
-        assert(height > 0),
-        super(key: key, child: child, id: id);
+        assert(height > 0);
 }
 
 enum GridLayoutAlignment {
