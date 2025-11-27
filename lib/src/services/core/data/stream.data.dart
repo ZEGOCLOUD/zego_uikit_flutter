@@ -38,13 +38,13 @@ class ZegoUIKitCoreDataStreamData {
 
   @override
   String toString() {
-    return 'ZegoUIKitCoreDataStreamData{\n'
+    return 'ZegoUIKitCoreDataStreamData{'
         'hashCode:$hashCode, '
         'id:$id, '
         'room id:$roomID, '
         'user id:$userID, '
         'user name:$userName, '
         'fromAnotherRoom:$fromAnotherRoom, '
-        '}\n';
+        '}';
   }
 }

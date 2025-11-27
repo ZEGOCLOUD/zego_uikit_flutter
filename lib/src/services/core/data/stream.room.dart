@@ -4,15 +4,14 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/channel/platform_interface.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'data.dart';
 import 'room.dart';
 import 'screen_sharing.dart';
@@ -23,24 +22,29 @@ import 'user.dart';
 /// Stream related information for a room
 class ZegoUIKitCoreDataRoomStream {
   String roomID;
+
   ZegoUIKitCoreDataRoomStream(this.roomID);
 
   @override
   String toString() {
-    return 'ZegoUIKitCoreDataRoomStream{\n'
+    return 'ZegoUIKitCoreDataRoomStream{'
         'id:$roomID, '
         'streamDic keys:${streamDicNotifier.value.keys}, '
         'mixerStreamDic keys:${mixerStreamDic.keys}, '
-        '}\n';
+        '}';
   }
 
   ZegoUIKitCoreData get _commonData => ZegoUIKitCore.shared.coreData;
+
   ZegoUIKitCoreDataRoom get _roomCommonData =>
       ZegoUIKitCore.shared.coreData.room;
+
   ZegoUIKitCoreDataUser get _userCommonData =>
       ZegoUIKitCore.shared.coreData.user;
+
   ZegoUIKitCoreDataStream get _streamCommonData =>
       ZegoUIKitCore.shared.coreData.stream;
+
   ZegoUIKitCoreDataScreenSharing get _screenSharingCommonData =>
       ZegoUIKitCore.shared.coreData.screenSharing;
 
@@ -1511,7 +1515,7 @@ class ZegoUIKitCoreDataRoomStream {
       'fromStreamIDs:$fromStreamIDs, '
       'toRoomID:$toRoomID, '
       'isMove:$isMove, '
-      'dict:${streamDicNotifier.value}, ',
+      'before dict:${streamDicNotifier.value}, ',
       tag: 'uikit-streams-room',
       subTag: 'transfer to another room',
     );
@@ -1548,6 +1552,13 @@ class ZegoUIKitCoreDataRoomStream {
         removeDataInDict(fromStreamID);
       }
     }
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'after dict:${streamDicNotifier.value}, ',
+      tag: 'uikit-streams-room',
+      subTag: 'transfer to another room',
+    );
   }
 
   Future<void> startPlayingAnotherRoomStream(

@@ -515,13 +515,12 @@ mixin ZegoAudioVideoService {
     required String targetRoomID,
     bool onlyTargetRoom = true,
   }) {
-    return ZegoUIKitCore.shared.coreData.stream.roomStreams
+    final list = ZegoUIKitCore.shared.coreData.stream.roomStreams
         .getRoom(
           targetRoomID,
         )
-        .getAudioVideoList(onlyCurrentRoom: onlyTargetRoom)
-        .map((e) => e.toZegoUikitUser())
-        .toList();
+        .getAudioVideoList(onlyCurrentRoom: onlyTargetRoom);
+    return list.map((e) => e.toZegoUikitUser()).toList();
   }
 
   Stream<List<ZegoUIKitUser>> getScreenSharingListStream({

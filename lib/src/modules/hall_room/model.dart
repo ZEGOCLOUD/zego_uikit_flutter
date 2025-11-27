@@ -1,8 +1,8 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/uikit_service.dart';
+
 import 'defines.dart';
 
 /// Context for adjacent room data in room sliding scenarios
@@ -110,7 +110,7 @@ class ZegoUIKitHallRoomListModel {
     ZegoLoggerService.logInfo(
       'active room:$activeRoom, '
       'active context:$activeContext, '
-      'active stream users:${_activeStreamUsersNotifier.value.map((e) => '$e\n')}',
+      'active stream users:${_activeStreamUsersNotifier.value.map((e) => '$e')}',
       tag: 'hall model',
       subTag: 'update stream users',
     );
@@ -172,10 +172,10 @@ class ZegoUIKitHallRoomListModel {
     ZegoLoggerService.logInfo(
       'old current index:$oldCurrentPageIndex, '
       'to next:$toNext, '
-      'now:{\n'
-      'previous:{index:$previousIndex, user:${activeContext?.previous}, \n'
-      'current:{index:$_currentPageIndex, user:$activeRoom}, \n'
-      'next:{index:$nextIndex, user:${activeContext?.next}}, \n'
+      'now:{'
+      'previous:{index:$previousIndex, user:${activeContext?.previous}, '
+      'current:{index:$_currentPageIndex, user:$activeRoom}, '
+      'next:{index:$nextIndex, user:${activeContext?.next}}, '
       '}',
       tag: 'hall model',
       subTag: 'get stream users',

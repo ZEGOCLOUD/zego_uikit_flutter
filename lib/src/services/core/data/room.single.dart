@@ -3,12 +3,11 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/services.dart';
+
 import '../core.dart';
 import 'user.dart';
 
@@ -25,10 +24,10 @@ class ZegoUIKitCoreDataSingleRoom {
 
   @override
   String toString() {
-    return 'ZegoUIKitCoreDataSingleRoom{\n'
+    return 'ZegoUIKitCoreDataSingleRoom{'
         'id:$id, '
         'state:${state.value.reason}, '
-        '}\n';
+        '}';
   }
 
   bool get isLogin =>

@@ -7,14 +7,15 @@ import 'package:zego_uikit/src/services/services.dart';
 /// Message for a single room
 class ZegoUIKitCoreDataRoomMessage {
   String roomID;
+
   ZegoUIKitCoreDataRoomMessage(this.roomID);
 
   @override
   String toString() {
-    return 'ZegoUIKitCoreDataRoomMessage{\n'
+    return 'ZegoUIKitCoreDataRoomMessage{'
         'id:$roomID, '
         'messageList length:${messageList.length}, '
-        '}\n';
+        '}';
   }
 
   int localMessageId = 0;

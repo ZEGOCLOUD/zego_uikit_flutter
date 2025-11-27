@@ -3,11 +3,9 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:loop_page_view/loop_page_view.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/components.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
@@ -15,6 +13,7 @@ import 'package:zego_uikit/src/modules/hall_room/config.dart';
 import 'package:zego_uikit/src/modules/hall_room/controller.dart';
 import 'package:zego_uikit/src/modules/hall_room/style.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'defines.dart';
 import 'model.dart';
 
@@ -27,11 +26,13 @@ class ZegoUIKitHallRoomList extends StatefulWidget {
   const ZegoUIKitHallRoomList({
     super.key,
     required this.appID,
+    required this.userID,
+    required this.userName,
     required this.controller,
-    this.model,
-    this.modelDelegate,
     this.appSign = '',
     this.token = '',
+    this.model,
+    this.modelDelegate,
     this.scenario = ZegoUIKitScenario.Default,
     ZegoUIKitHallRoomListStyle? style,
     ZegoUIKitHallRoomListConfig? config,
@@ -57,6 +58,16 @@ class ZegoUIKitHallRoomList extends StatefulWidget {
   ///
   /// if appSign is not passed in or if appSign is empty, this parameter must be set for authentication when logging in to a room.
   final String token;
+
+  /// The ID of the currently logged-in user.
+  /// It can be any valid string.
+  /// Typically, you would use the ID from your own user system, such as Firebase.
+  final String userID;
+
+  /// The name of the currently logged-in user.
+  /// It can be any valid string.
+  /// Typically, you would use the name from your own user system, such as Firebase.
+  final String userName;
 
   ///
   final ZegoUIKitScenario scenario;
@@ -90,7 +101,9 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
   late final LoopPageController pageController;
 
   int get startIndex => 0;
+
   int get endIndex => 2;
+
   int get pageCount => (endIndex - startIndex) + 1;
 
   ZegoUIKitHallRoomListStreamUser? get previousStreamUser =>
@@ -130,14 +143,28 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
 
     widget.controller.private.updateNotifier.removeListener(onUpdateRequest);
 
-    widget.controller.private.uninit().then((_) {
-      widget.controller.private.clearData();
-    });
+    if (widget.controller.private.uninitOnDispose) {
+      widget.controller.private.uninit().then((_) {
+        widget.controller.private.clearData();
+      });
+    } else {
+      /// 在ZegoLiveStreamingSwipingLifeCycle中会处理
+      /// clearData 和 switch room
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _initFuture ??= widget.controller.private.init().then((success) {
+    _initFuture ??= widget.controller.private
+        .init(
+      localUser: ZegoUIKitUser(
+        id: widget.userID,
+        name: widget.userName,
+        roomID: widget.controller.roomID,
+        isAnotherRoomUser: false,
+      ),
+    )
+        .then((success) async {
       ZegoLoggerService.logInfo(
         'controller init, success:$success, ',
         tag: 'uikit.hall-room-view',
@@ -511,7 +538,10 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
     }
 
     final queryIndex = ZegoUIKit()
-        .getAudioVideoList(targetRoomID: widget.controller.roomID)
+        .getAudioVideoList(
+          targetRoomID: widget.controller.roomID,
+          onlyTargetRoom: false,
+        )
         .indexWhere((e) => e.id == stream.user.id);
     if (-1 == queryIndex) {
       return Container();
