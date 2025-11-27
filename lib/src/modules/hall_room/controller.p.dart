@@ -460,10 +460,20 @@ class ZegoUIKitHallRoomListControllerPrivate {
       return;
     }
 
+    ZegoLoggerService.logInfo(
+      'streams before:${streamsNotifier.value}, ',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'addToStreams',
+    );
     streamsNotifier.value = [
       ...streamsNotifier.value,
       streamUser,
     ];
+    ZegoLoggerService.logInfo(
+      'streams after:${streamsNotifier.value}, ',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'addToStreams',
+    );
   }
 
   void removeFromStreams(ZegoUIKitHallRoomListStreamUser streamUser) {
@@ -473,8 +483,18 @@ class ZegoUIKitHallRoomListControllerPrivate {
       return;
     }
 
+    ZegoLoggerService.logInfo(
+      'streams before:${streamsNotifier.value}, ',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'removeFromStreams',
+    );
     streamsNotifier.value.removeAt(index);
     streamsNotifier.value = [...streamsNotifier.value];
+    ZegoLoggerService.logInfo(
+      'streams after:${streamsNotifier.value}, ',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'removeFromStreams',
+    );
   }
 
   Future<bool> stopPlayAll() async {
@@ -482,7 +502,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
       ZegoLoggerService.logInfo(
         'has not init sdk',
         tag: 'uikit.hall-room-controller',
-        subTag: 'playOnly',
+        subTag: 'stopPlayAll',
       );
 
       return false;
@@ -492,12 +512,17 @@ class ZegoUIKitHallRoomListControllerPrivate {
       ZegoLoggerService.logInfo(
         'has not login room',
         tag: 'uikit.hall-room-controller',
-        subTag: 'playOnly',
+        subTag: 'stopPlayAll',
       );
 
       return false;
     }
 
+    ZegoLoggerService.logInfo(
+      'streams:${streamsNotifier.value}, ',
+      tag: 'uikit.hall-room-controller',
+      subTag: 'stopPlayAll',
+    );
     for (var streamUser in List.from(streamsNotifier.value)) {
       await playOne(streamUser: streamUser, toPlay: false, isMuted: false);
     }
