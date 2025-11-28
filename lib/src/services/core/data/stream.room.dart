@@ -4,14 +4,15 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
+
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
+
 // Project imports:
 import 'package:zego_uikit/src/channel/platform_interface.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
-
 import 'data.dart';
 import 'room.dart';
 import 'screen_sharing.dart';
@@ -27,7 +28,7 @@ class ZegoUIKitCoreDataRoomStream {
 
   @override
   String toString() {
-    return 'ZegoUIKitCoreDataRoomStream{'
+    return '{'
         'id:$roomID, '
         'streamDic keys:${streamDicNotifier.value.keys}, '
         'mixerStreamDic keys:${mixerStreamDic.keys}, '

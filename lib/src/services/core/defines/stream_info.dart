@@ -91,7 +91,8 @@ class ZegoUIKitCoreStreamInfo {
 
   @override
   String toString() {
-    return 'streamID:$streamID, '
+    return '{'
+        'streamID:$streamID, '
         'streamTimestamp:$streamTimestamp, '
         'viewID:${viewIDNotifier.value}, '
         'view:${viewNotifier.value}, '
@@ -106,6 +107,7 @@ class ZegoUIKitCoreStreamInfo {
         'isSendAudioFirstFrame:${isSendAudioFirstFrameNotifier.value}, '
         'isSendVideoFirstFrame:${isSendVideoFirstFrameNotifier.value}, '
         'globalMainStreamChannelKey:${globalMainStreamChannelKeyNotifier.value}, '
-        'globalAuxStreamChannelKey:${globalAuxStreamChannelKeyNotifier.value}, ';
+        'globalAuxStreamChannelKey:${globalAuxStreamChannelKeyNotifier.value}, '
+        '}';
   }
 }

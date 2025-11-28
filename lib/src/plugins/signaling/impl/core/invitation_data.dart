@@ -45,9 +45,14 @@ class InvitationData {
 
   @override
   String toString() {
-    return 'id:$id, type:$type, inviter id:$inviterID, '
+    return '{'
+        'id:$id, '
+        'type:$type, '
+        'inviter id:$inviterID, '
         'invitees:${invitees.map((e) => e.toString())}, '
-        'data:$data, resourceID:$resourceID';
+        'data:$data, '
+        'resourceID:$resourceID, '
+        '}';
   }
 }
 

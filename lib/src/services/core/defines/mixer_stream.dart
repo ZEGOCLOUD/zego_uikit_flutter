@@ -62,7 +62,7 @@ class ZegoUIKitCoreMixerStream {
 
   @override
   String toString() {
-    return 'ZegoUIKitCoreMixerStream{'
+    return '{'
         'hashCode:$hashCode, '
         'id:$streamID, '
         'view id:$viewID, '

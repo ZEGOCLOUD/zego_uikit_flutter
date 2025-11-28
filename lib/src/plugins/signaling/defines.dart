@@ -34,9 +34,13 @@ class ZegoNotificationConfig {
 
   @override
   String toString() {
-    return 'title:$title, message:$message, resource id:$resourceID, '
+    return '{'
+        'title:$title, '
+        'message:$message, '
+        'resource id:$resourceID, '
         'voIPConfig:$voIPConfig, '
-        'notify:$notifyWhenAppIsInTheBackgroundOrQuit';
+        'notify:$notifyWhenAppIsInTheBackgroundOrQuit, '
+        '}';
   }
 }
 

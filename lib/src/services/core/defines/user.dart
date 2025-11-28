@@ -165,9 +165,11 @@ class ZegoUIKitCoreUser {
 
   @override
   String toString() {
-    return 'id:$id, '
+    return '{'
+        'id:$id, '
         'name:$name, '
         'room id:$roomID, '
-        'isAnotherRoomUser:$fromAnotherRoom, ';
+        'isAnotherRoomUser:$fromAnotherRoom, '
+        '}';
   }
 }

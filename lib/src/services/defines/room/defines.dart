@@ -29,7 +29,7 @@ class ZegoUIKitRoom {
 
   @override
   String toString() {
-    return 'ZegoUIKitRoom:{'
+    return '{'
         'id:$id, '
         'isLogin:$isLogin, '
         '}';

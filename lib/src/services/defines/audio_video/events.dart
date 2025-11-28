@@ -6,6 +6,9 @@ class ZegoUIKitReceiveTurnOnLocalMicrophoneEvent {
 
   @override
   String toString() {
-    return 'from user id:$fromUserID, mute mode:$muteMode';
+    return '{'
+        'from user id:$fromUserID, '
+        'mute mode:$muteMode, '
+        '}';
   }
 }

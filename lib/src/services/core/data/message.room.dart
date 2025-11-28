@@ -12,7 +12,7 @@ class ZegoUIKitCoreDataRoomMessage {
 
   @override
   String toString() {
-    return 'ZegoUIKitCoreDataRoomMessage{'
+    return '{'
         'id:$roomID, '
         'messageList length:${messageList.length}, '
         '}';

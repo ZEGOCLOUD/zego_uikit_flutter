@@ -33,7 +33,7 @@ class ZegoUIKitRoomState {
 
   @override
   String toString() {
-    return 'ZegoUIKitRoomState:{'
+    return '{'
         'reason:$reason, '
         'error code:$errorCode, '
         'extended data:$extendedData, '

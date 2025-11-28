@@ -47,6 +47,7 @@ class ZegoUIKitHallRoomListStreamUser {
   }
 
   bool get isEmpty => user.isEmpty() || roomID.isEmpty;
+
   bool get isNotEmpty => !isEmpty;
 
   static ZegoUIKitHallRoomListStreamUser empty() {
@@ -76,8 +77,10 @@ class ZegoUIKitHallRoomListStreamUser {
 
   @override
   String toString() {
-    return 'room id:$roomID, '
+    return '{'
+        'room id:$roomID, '
         'user id:${user.id}, '
-        'isPlaying:$isPlaying, ';
+        'isPlaying:$isPlaying, '
+        '}';
   }
 }

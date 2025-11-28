@@ -1,8 +1,8 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+
 // Project imports:
 import 'package:zego_uikit/src/services/uikit_service.dart';
-
 import 'defines.dart';
 
 /// Context for adjacent room data in room sliding scenarios
@@ -28,8 +28,10 @@ class ZegoUIKitHallRoomListSlideContext {
 
   @override
   String toString() {
-    return 'previous:$previous, '
-        'next:$next';
+    return '{'
+        'previous:$previous, '
+        'next:$next, '
+        '}';
   }
 }
 
@@ -64,7 +66,7 @@ class ZegoUIKitHallRoomListModel {
   /// serving as the anchor point for sliding interactions.
   ZegoUIKitHallRoomListStreamUser? activeRoom;
 
-  /// Adjacent room data context relative to the active room
+  /// Adjacent room data context relative to [activeRoom]
   ///
   /// Contains information about the previous and next rooms adjacent to [activeRoom],
   /// supporting sliding switching functionality in the hall list.
@@ -73,10 +75,22 @@ class ZegoUIKitHallRoomListModel {
   /// Creates a new hall room list model
   ///
   /// [activeStreamUsers] is the complete list of all available stream users in the hall.
-  ZegoUIKitHallRoomListModel({
+  /// Here, [activeRoom] and [activeContext] will be automatically initialized
+  ZegoUIKitHallRoomListModel.fromActiveStreamUsers({
     required List<ZegoUIKitHallRoomListStreamUser> activeStreamUsers,
   }) {
     updateStreamUsers(activeStreamUsers);
+  }
+
+  /// Creates a new hall room list model with a specific active room and context
+  ///
+  /// [activeRoom] is the currently active/selected room in the hall
+  /// [activeContext] is the adjacent room data context relative to [activeRoom]
+  ZegoUIKitHallRoomListModel.fromActiveRoomAndContext({
+    this.activeRoom,
+    this.activeContext,
+  }) {
+    _currentPageIndex = 0;
   }
 
   /// Updates the list of stream users in the hall
@@ -208,7 +222,7 @@ class ZegoUIKitHallRoomListModelDelegate {
   /// The active host information of the initial state, which is '0' in [0,1,2,...]
   final ZegoUIKitHallRoomListStreamUser activeRoom;
 
-  /// Adjacent room data context relative to the active room
+  /// Adjacent room data context relative to [activeRoom]
   ///
   /// Contains information about the previous and next rooms adjacent to [activeRoom],
   /// supporting sliding switching functionality in the hall list.

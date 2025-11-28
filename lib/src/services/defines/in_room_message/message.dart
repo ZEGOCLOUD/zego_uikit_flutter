@@ -95,9 +95,11 @@ class ZegoInRoomMessage {
 
   @override
   String toString() {
-    return 'ZegoInRoomMessage{id:$messageID, '
+    return '{'
+        'id:$messageID, '
         'user:${user.id}, '
         'message:$message, '
-        'timestamp:$timestamp}';
+        'timestamp:$timestamp, '
+        '}';
   }
 }

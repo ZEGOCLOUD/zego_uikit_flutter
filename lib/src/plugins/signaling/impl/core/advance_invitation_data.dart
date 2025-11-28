@@ -74,7 +74,7 @@ class AdvanceInvitationData {
 
   @override
   String toString() {
-    return 'AdvanceInvitationData:{'
+    return '{'
         'id:$id, '
         'type:$type, '
         'data:$data, '

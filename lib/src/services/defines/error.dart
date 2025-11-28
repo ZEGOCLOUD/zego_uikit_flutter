@@ -14,7 +14,11 @@ class ZegoUIKitError {
 
   @override
   String toString() {
-    return '{uikit error, code:$code, message:$message, method:$method}';
+    return '{'
+        'code:$code, '
+        'message:$message, '
+        'method:$method, '
+        '}';
   }
 }
 

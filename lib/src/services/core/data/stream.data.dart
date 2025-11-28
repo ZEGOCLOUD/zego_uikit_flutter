@@ -38,7 +38,7 @@ class ZegoUIKitCoreDataStreamData {
 
   @override
   String toString() {
-    return 'ZegoUIKitCoreDataStreamData{'
+    return '{'
         'hashCode:$hashCode, '
         'id:$id, '
         'room id:$roomID, '

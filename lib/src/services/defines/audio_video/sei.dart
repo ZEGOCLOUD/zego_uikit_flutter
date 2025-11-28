@@ -27,7 +27,7 @@ class ZegoUIKitReceiveSEIEvent {
 
   @override
   String toString() {
-    return 'ZegoUIKitReceiveSEIEvent{'
+    return '{'
         'streamID:$streamID, '
         'streamType:$streamType, '
         'senderID:$senderID, '

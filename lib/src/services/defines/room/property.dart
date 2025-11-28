@@ -33,7 +33,14 @@ class RoomProperty {
 
   @override
   String toString() {
-    return 'key:$key, value:$value, old value:$oldValue, update time:$updateTime, update user id:$updateUserID, update from remote:$updateFromRemote';
+    return '{'
+        'key:$key, '
+        'value:$value, '
+        'old value:$oldValue, '
+        'update time:$updateTime, '
+        'update user id:$updateUserID, '
+        'update from remote:$updateFromRemote, '
+        '}';
   }
 }
 

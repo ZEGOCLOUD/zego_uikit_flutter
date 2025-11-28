@@ -20,7 +20,10 @@ class InvitationUser {
 
   @override
   String toString() {
-    return 'userid :$userID, state:$state';
+    return '{'
+        'userid :$userID, '
+        'state:$state, '
+        '}';
   }
 }
 
@@ -48,7 +51,7 @@ class AdvanceInvitationUser {
 
   @override
   String toString() {
-    return 'AdvanceInvitationUser:{'
+    return '{'
         'userid :$userID, '
         'state:$state, '
         'extendedData:$extendedData, '
