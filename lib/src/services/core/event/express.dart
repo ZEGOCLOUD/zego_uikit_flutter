@@ -1105,9 +1105,6 @@ class ZegoUIKitExpressEventImpl {
     ZegoScreenCaptureSource source,
     ZegoScreenCaptureSourceExceptionType exceptionType,
   ) {
-    debugPrint('111 onScreenCaptureExceptionOccurred, '
-        'source:$source, '
-        'exceptionType:$exceptionType, ');
     for (var event in events) {
       event.onScreenCaptureExceptionOccurred(source, exceptionType);
     }
@@ -1118,12 +1115,6 @@ class ZegoUIKitExpressEventImpl {
     ZegoScreenCaptureWindowState windowState,
     Rect windowRect,
   ) {
-    debugPrint('111 onScreenCaptureWindowStateChanged, '
-        'source:$source, '
-        'windowState:$windowState, '
-        'windowRect:$windowRect, '
-        '');
-
     for (var event in events) {
       event.onScreenCaptureWindowStateChanged(source, windowState, windowRect);
     }
@@ -1133,9 +1124,6 @@ class ZegoUIKitExpressEventImpl {
     ZegoScreenCaptureSource source,
     Rect captureRect,
   ) {
-    debugPrint('111 onScreenCaptureSourceRectChanged, '
-        'source:$source, '
-        'captureRect:$captureRect, ');
     for (var event in events) {
       event.onScreenCaptureSourceRectChanged(source, captureRect);
     }
@@ -1144,7 +1132,6 @@ class ZegoUIKitExpressEventImpl {
   void onMobileScreenCaptureExceptionOccurred(
     ZegoScreenCaptureExceptionType exceptionType,
   ) {
-    debugPrint('111 onMobileScreenCaptureExceptionOccurred $exceptionType');
     for (var event in events) {
       event.onMobileScreenCaptureExceptionOccurred(exceptionType);
     }
