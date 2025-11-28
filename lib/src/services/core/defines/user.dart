@@ -68,6 +68,26 @@ class ZegoUIKitCoreUser {
       ValueNotifier<ZegoUIKitAudioRoute>(ZegoUIKitAudioRoute.Receiver);
   ZegoUIKitAudioRoute lastAudioRoute = ZegoUIKitAudioRoute.Receiver;
 
+  void copyAttributesFromOther(ZegoUIKitCoreUser other) {
+    camera.value = other.camera.value;
+    cameraMuteMode.value = other.cameraMuteMode.value;
+    cameraException.value = other.cameraException.value;
+    microphone.value = other.microphone.value;
+    microphoneMuteMode.value = other.microphoneMuteMode.value;
+    microphoneException.value = other.microphoneException.value;
+    inRoomAttributes.value = other.inRoomAttributes.value;
+    mainChannel = other.mainChannel;
+    auxChannel = other.auxChannel;
+    thirdChannel = other.thirdChannel;
+    network.value = other.network.value;
+    isFrontFacing.value = other.isFrontFacing.value;
+    isFrontTriggerByTurnOnCamera.value =
+        other.isFrontTriggerByTurnOnCamera.value;
+    isVideoMirror.value = other.isVideoMirror.value;
+    audioRoute.value = other.audioRoute.value;
+    lastAudioRoute = other.lastAudioRoute;
+  }
+
   void clear() {
     id = '';
     name = '';

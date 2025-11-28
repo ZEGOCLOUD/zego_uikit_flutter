@@ -1474,6 +1474,7 @@ class ZegoUIKitCoreDataRoomStream {
         targetRemoteUserList.indexWhere((user) => streamData.userID == user.id);
     if (-1 != targetUserIndex) {
       /// Update
+      streamUser.copyAttributesFromOther(targetRemoteUserList[targetUserIndex]);
       targetRemoteUserList.removeAt(targetUserIndex);
     }
     streamUser.fromAnotherRoom = isFromAnotherRoom;

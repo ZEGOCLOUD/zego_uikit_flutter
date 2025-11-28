@@ -560,9 +560,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
         fromRoomID: anotherRoomID,
         fromStreamIDs: streamIDs,
         toRoomID: roomID,
-
-        /// Nominally becomes hall's own
-        isFromAnotherRoom: false,
+        isFromAnotherRoom: true,
       );
     });
   }
