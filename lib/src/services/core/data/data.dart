@@ -111,6 +111,8 @@ class ZegoUIKitCoreData {
 
   void clear({
     required String targetRoomID,
+    required bool stopPublishAllStream,
+    required bool stopPlayAllStream,
   }) {
     ZegoLoggerService.logInfo(
       'clear',
@@ -131,6 +133,8 @@ class ZegoUIKitCoreData {
     media.clear();
     stream.clear(
       targetRoomID: targetRoomID,
+      stopPublishAllStream: stopPublishAllStream,
+      stopPlayAllStream: stopPlayAllStream,
     );
     user.clear(targetRoomID: targetRoomID);
     room.clear(targetRoomID: targetRoomID);

@@ -4,14 +4,13 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'canvas_view_create_queue.dart';
 import 'room.dart';
 import 'room_map.dart';
@@ -38,6 +37,7 @@ class ZegoUIKitCoreDataStream {
 
   ZegoUIKitCoreDataRoom get _roomCommonData =>
       ZegoUIKitCore.shared.coreData.room;
+
   ZegoUIKitCoreDataUser get _userCommonData =>
       ZegoUIKitCore.shared.coreData.user;
 
@@ -102,6 +102,8 @@ class ZegoUIKitCoreDataStream {
 
   void clear({
     required String targetRoomID,
+    required bool stopPublishAllStream,
+    required bool stopPlayAllStream,
   }) {
     ZegoLoggerService.logInfo(
       'clear, '
@@ -114,7 +116,10 @@ class ZegoUIKitCoreDataStream {
 
     if (roomStreams.containsRoom(targetRoomID)) {
       final streamInfo = roomStreams.getRoom(targetRoomID);
-      streamInfo.clear();
+      streamInfo.clear(
+        stopPublishAllStream: stopPublishAllStream,
+        stopPlayAllStream: stopPlayAllStream,
+      );
       streamInfo.isAllPlayStreamAudioVideoMuted = false;
       streamInfo.isAllPlayStreamAudioMuted = false;
       streamInfo.clearDict();

@@ -712,7 +712,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           'old:{mic:$oldMicrophoneValue, mute:$oldMicrophoneMuteValue}, '
           'now:{mic:${targetUser.microphone.value}, mute:${targetUser.microphoneMuteMode.value}, ',
           tag: 'uikit.service.event-handler',
-          subTag: 'onRemoteCameraStateUpdate',
+          subTag: 'onRemoteMicStateUpdate',
         );
 
         /// notify outside to update audio video list
@@ -724,7 +724,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           'not need changed, '
           'old:{mic:$oldMicrophoneValue, mute:$oldMicrophoneMuteValue}, ',
           tag: 'uikit.service.event-handler',
-          subTag: 'onRemoteCameraStateUpdate',
+          subTag: 'onRemoteMicStateUpdate',
         );
       }
 

@@ -131,6 +131,8 @@ class ZegoUIKitCoreDataRoom {
       /// clear old room data
       _coreData.clear(
         targetRoomID: currentID,
+        stopPublishAllStream: true,
+        stopPlayAllStream: true,
       );
 
       if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(currentID)) {
@@ -193,6 +195,8 @@ class ZegoUIKitCoreDataRoom {
 
   Future<ZegoUIKitRoomLoginResult> switchTo({
     required String toRoomID,
+    required bool stopPublishAllStream,
+    required bool stopPlayAllStream,
     String token = '',
   }) async {
     final fromRoomID = currentID;
@@ -223,6 +227,25 @@ class ZegoUIKitCoreDataRoom {
 
       return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
     }
+
+    /// 主动停止推拉流
+    if (stopPublishAllStream) {
+      await _streamCommonData.roomStreams
+          .getRoom(fromRoomID)
+          .stopPublishingAllStream();
+    }
+    if (stopPlayAllStream) {
+      await _streamCommonData.roomStreams
+          .getRoom(fromRoomID)
+          .stopPlayingAllStream();
+    }
+
+    /// 先停止推拉流，再清理数据
+    _coreData.clear(
+      targetRoomID: fromRoomID,
+      stopPublishAllStream: stopPublishAllStream,
+      stopPlayAllStream: stopPlayAllStream,
+    );
 
     rooms.getRoom(fromRoomID).state.value.reason =
         ZegoUIKitRoomStateChangedReason.Logout;
@@ -281,7 +304,11 @@ class ZegoUIKitCoreDataRoom {
       return ZegoUIKitRoomLogoutResult(ZegoUIKitErrorCode.success, {});
     }
 
-    _coreData.clear(targetRoomID: targetRoomID);
+    _coreData.clear(
+      targetRoomID: targetRoomID,
+      stopPublishAllStream: true,
+      stopPlayAllStream: true,
+    );
 
     final result = await rooms.getRoom(targetRoomID).leave();
 

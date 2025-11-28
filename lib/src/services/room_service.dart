@@ -166,11 +166,15 @@ mixin ZegoRoomService {
 
   Future<void> switchRoom({
     required String toRoomID,
+    required bool stopPublishAllStream,
+    required bool stopPlayAllStream,
     String token = '',
   }) async {
     await ZegoUIKitCore.shared.coreData.room.switchTo(
       toRoomID: toRoomID,
       token: token,
+      stopPublishAllStream: stopPublishAllStream,
+      stopPlayAllStream: stopPlayAllStream,
     );
   }
 

@@ -160,6 +160,8 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     /// clear old room data
     coreData.clear(
       targetRoomID: coreData.room.currentID,
+      stopPublishAllStream: true,
+      stopPlayAllStream: true,
     );
 
     for (final subscription in subscriptions) {

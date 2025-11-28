@@ -136,7 +136,10 @@ class ZegoUIKitCoreDataRoomStream {
     isPlaying = false;
   }
 
-  void clear() {
+  void clear({
+    required bool stopPublishAllStream,
+    required bool stopPlayAllStream,
+  }) {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$roomID, '
@@ -151,19 +154,23 @@ class ZegoUIKitCoreDataRoomStream {
       );
     }
 
-    stopPlayingAllStream();
-
-    if (_userCommonData.localUser.mainChannel.streamID.isNotEmpty) {
-      stopPublishingStream(streamType: ZegoStreamType.main);
-      _userCommonData.localUser.destroyTextureRenderer(
-        streamType: ZegoStreamType.main,
-      );
+    if (stopPlayAllStream) {
+      stopPlayingAllStream();
     }
-    if (_userCommonData.localUser.auxChannel.streamID.isNotEmpty) {
-      stopPublishingStream(streamType: ZegoStreamType.screenSharing);
-      _userCommonData.localUser.destroyTextureRenderer(
-        streamType: ZegoStreamType.screenSharing,
-      );
+
+    if (stopPublishAllStream) {
+      if (_userCommonData.localUser.mainChannel.streamID.isNotEmpty) {
+        stopPublishingStream(streamType: ZegoStreamType.main);
+        _userCommonData.localUser.destroyTextureRenderer(
+          streamType: ZegoStreamType.main,
+        );
+      }
+      if (_userCommonData.localUser.auxChannel.streamID.isNotEmpty) {
+        stopPublishingStream(streamType: ZegoStreamType.screenSharing);
+        _userCommonData.localUser.destroyTextureRenderer(
+          streamType: ZegoStreamType.screenSharing,
+        );
+      }
     }
 
     isPublishing = false;
@@ -1484,25 +1491,32 @@ class ZegoUIKitCoreDataRoomStream {
     }
   }
 
-  Future<void> stopPlayingAllStream() async {
+  Future<void> stopPlayingAllStream({
+    List<String> ignoreStreamIDs = const [],
+  }) async {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
-      'room id:$roomID, ',
+      'room id:$roomID, '
+      'ignoreStreamIDs:$ignoreStreamIDs, ',
       tag: 'uikit.streams.room',
       subTag: 'stop play all stream',
     );
 
     final currentRoomUserInfo = _userCommonData.roomUsers.getRoom(roomID);
     for (final user in currentRoomUserInfo.remoteUsers) {
-      if (user.mainChannel.streamID.isNotEmpty) {
-        stopPlayingStream(user.mainChannel.streamID);
+      if (!ignoreStreamIDs.contains(user.mainChannel.streamID)) {
+        if (user.mainChannel.streamID.isNotEmpty) {
+          stopPlayingStream(user.mainChannel.streamID);
+        }
+        user.destroyTextureRenderer(streamType: ZegoStreamType.main);
       }
-      user.destroyTextureRenderer(streamType: ZegoStreamType.main);
 
-      if (user.auxChannel.streamID.isNotEmpty) {
-        stopPlayingStream(user.auxChannel.streamID);
+      if (!ignoreStreamIDs.contains(user.auxChannel.streamID)) {
+        if (user.auxChannel.streamID.isNotEmpty) {
+          stopPlayingStream(user.auxChannel.streamID);
+        }
+        user.destroyTextureRenderer(streamType: ZegoStreamType.screenSharing);
       }
-      user.destroyTextureRenderer(streamType: ZegoStreamType.screenSharing);
     }
 
     ZegoLoggerService.logInfo(
@@ -1827,14 +1841,6 @@ class ZegoUIKitCoreDataRoomStream {
   }
 
   Future<void> stopPlayMixAudioVideo(String mixerID) async {
-    ZegoLoggerService.logInfo(
-      'hash:$hashCode, '
-      'room id:$roomID, '
-      'mixerID:$mixerID',
-      tag: 'uikit.mixstream',
-      subTag: 'stop play mix audio video',
-    );
-
     if (!mixerStreamDic.containsKey(mixerID)) {
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
@@ -1845,6 +1851,14 @@ class ZegoUIKitCoreDataRoomStream {
 
       return;
     }
+
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'mixerID:$mixerID',
+      tag: 'uikit.mixstream',
+      subTag: 'stop play mix audio video',
+    );
 
     stopPlayingStreamByExpress(mixerID);
 
