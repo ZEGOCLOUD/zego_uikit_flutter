@@ -93,6 +93,27 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
 
   bool get useDebugMode => true && kDebugMode;
 
+  List<ZegoUIKitUser> _deduplicateUserList(
+    List<ZegoUIKitUser> userList,
+    String logContext,
+  ) {
+    final seenUserIds = <String>{};
+    final deduplicatedList = <ZegoUIKitUser>[];
+    for (final user in userList) {
+      if (!seenUserIds.contains(user.id)) {
+        seenUserIds.add(user.id);
+        deduplicatedList.add(user);
+      } else {
+        ZegoLoggerService.logInfo(
+          'Duplicate user found in $logContext, skipping: ${user.id}, name:${user.name}',
+          tag: 'uikit.component.audio-video-container',
+          subTag: logContext,
+        );
+      }
+    }
+    return deduplicatedList;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -136,7 +157,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
         targetRoomID: widget.roomID,
       ));
     }
-    userListNotifier.value = streamUsers;
+    userListNotifier.value = _deduplicateUserList(streamUsers, 'init state');
 
     ZegoLoggerService.logInfo(
       'hashCode:$hashCode, '
@@ -346,7 +367,10 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
     updateUserList =
         widget.filterAudioVideo?.call(updateUserList) ?? updateUserList;
 
-    userListNotifier.value = updateUserList;
-    widget.onUserListUpdated?.call(updateUserList);
+    final deduplicatedList =
+        _deduplicateUserList(updateUserList, 'updateUserList');
+
+    userListNotifier.value = deduplicatedList;
+    widget.onUserListUpdated?.call(deduplicatedList);
   }
 }

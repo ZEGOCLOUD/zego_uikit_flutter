@@ -5,16 +5,26 @@ import 'dart:async';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'user.dart';
 
 class ZegoUIKitCoreDataRoomUser {
   String roomID;
+
   ZegoUIKitCoreDataRoomUser(this.roomID);
 
   final List<ZegoUIKitCoreUser> remoteUsers = [];
 
   ZegoUIKitCoreDataUser get _userCommonData =>
       ZegoUIKitCore.shared.coreData.user;
+
+  @override
+  String toString() {
+    return '{'
+        'id:$roomID, '
+        'remoteUsers:${remoteUsers.map((e) => e.id).toList()}, '
+        '}';
+  }
 
   StreamController<List<ZegoUIKitCoreUser>>? get joinStreamCtrl {
     _joinStreamCtrl ??= StreamController<List<ZegoUIKitCoreUser>>.broadcast();
