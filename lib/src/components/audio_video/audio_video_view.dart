@@ -86,7 +86,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
-  bool get useDebugMode => true && kDebugMode;
+  bool get useDebugMode => false && kDebugMode;
 
   bool get isRenderOnCameraOff {
     if (Platform.isAndroid) {

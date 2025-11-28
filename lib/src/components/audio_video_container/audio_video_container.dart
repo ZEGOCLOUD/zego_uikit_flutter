@@ -91,7 +91,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
   ZegoScreenSharingViewController get screenSharingController =>
       widget.screenSharingViewController ?? defaultScreenSharingViewController;
 
-  bool get useDebugMode => true && kDebugMode;
+  bool get useDebugMode => false && kDebugMode;
 
   List<ZegoUIKitUser> _deduplicateUserList(
     List<ZegoUIKitUser> userList,
