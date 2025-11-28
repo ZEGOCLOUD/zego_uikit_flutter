@@ -228,24 +228,18 @@ class ZegoUIKitCoreDataRoom {
       return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
     }
 
-    /// 主动停止推拉流
+    /// todo: 不能直接coreData.clear，否则直播滑动的时候，需要重新拉流构建texture
     if (stopPublishAllStream) {
-      await _streamCommonData.roomStreams
-          .getRoom(fromRoomID)
-          .stopPublishingAllStream();
+      ZegoUIKit().stopPublishingAllStream(targetRoomID: fromRoomID);
     }
     if (stopPlayAllStream) {
-      await _streamCommonData.roomStreams
-          .getRoom(fromRoomID)
-          .stopPlayingAllStream();
+      ZegoUIKit().stopPlayingAllStream(targetRoomID: fromRoomID);
     }
-
-    /// 先停止推拉流，再清理数据
-    _coreData.clear(
-      targetRoomID: fromRoomID,
-      stopPublishAllStream: stopPublishAllStream,
-      stopPlayAllStream: stopPlayAllStream,
-    );
+    // _coreData.clear(
+    //   targetRoomID: fromRoomID,
+    //   stopPublishAllStream: stopPublishAllStream,
+    //   stopPlayAllStream: stopPlayAllStream,
+    // );
 
     rooms.getRoom(fromRoomID).state.value.reason =
         ZegoUIKitRoomStateChangedReason.Logout;
