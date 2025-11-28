@@ -364,7 +364,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
 
   Widget videoView(ZegoUIKitHallRoomListStreamUser stream) {
     return StreamBuilder<List<ZegoUIKitUser>>(
-      stream: ZegoUIKit().getUserListStream(
+      stream: ZegoUIKit().getAudioVideoListStream(
         targetRoomID: widget.controller.roomID,
       ),
       builder: (context, snapshot) {
