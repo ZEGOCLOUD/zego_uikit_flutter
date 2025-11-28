@@ -64,7 +64,7 @@ class ZegoUIKitReporter {
   }) async {
     ZegoLoggerService.logInfo(
       'appID:$appID, params:$params',
-      tag: 'uikit-reporter',
+      tag: 'uikit.reporter',
       subTag: 'create',
     );
 
@@ -73,7 +73,7 @@ class ZegoUIKitReporter {
     if (hadCreated) {
       ZegoLoggerService.logInfo(
         'had created before',
-        tag: 'uikit-reporter',
+        tag: 'uikit.reporter',
         subTag: 'create',
       );
 
@@ -81,14 +81,14 @@ class ZegoUIKitReporter {
         ZegoLoggerService.logInfo(
           'app id is not equal, old:${this.appID}, now:$appID, '
           're-create...',
-          tag: 'uikit-reporter',
+          tag: 'uikit.reporter',
           subTag: 'create',
         );
 
         return destroy().then((_) {
           ZegoLoggerService.logInfo(
             're-create, destroyed, create now..',
-            tag: 'uikit-reporter',
+            tag: 'uikit.reporter',
             subTag: 'create',
           );
 
@@ -104,7 +104,7 @@ class ZegoUIKitReporter {
       if (params.isNotEmpty) {
         ZegoLoggerService.logInfo(
           'update common params',
-          tag: 'uikit-reporter',
+          tag: 'uikit.reporter',
           subTag: 'create',
         );
 
@@ -121,7 +121,7 @@ class ZegoUIKitReporter {
 
     ZegoLoggerService.logInfo(
       'create',
-      tag: 'uikit-reporter',
+      tag: 'uikit.reporter',
       subTag: 'create',
     );
     hadCreated = true;
@@ -151,7 +151,7 @@ class ZegoUIKitReporter {
     if (!hadCreated) {
       ZegoLoggerService.logInfo(
         'not created',
-        tag: 'uikit-reporter',
+        tag: 'uikit.reporter',
         subTag: 'destroy',
       );
 
@@ -160,7 +160,7 @@ class ZegoUIKitReporter {
 
     ZegoLoggerService.logInfo(
       '',
-      tag: 'uikit-reporter',
+      tag: 'uikit.reporter',
       subTag: 'destroy',
     );
     hadCreated = false;
@@ -173,7 +173,7 @@ class ZegoUIKitReporter {
     if (!hadCreated) {
       ZegoLoggerService.logInfo(
         'not init',
-        tag: 'uikit-reporter',
+        tag: 'uikit.reporter',
         subTag: 'updateCommonParams',
       );
 
@@ -182,7 +182,7 @@ class ZegoUIKitReporter {
 
     ZegoLoggerService.logInfo(
       '$params',
-      tag: 'uikit-reporter',
+      tag: 'uikit.reporter',
       subTag: 'updateCommonParams',
     );
 
@@ -193,7 +193,7 @@ class ZegoUIKitReporter {
     if (!hadCreated) {
       ZegoLoggerService.logInfo(
         'not init',
-        tag: 'uikit-reporter',
+        tag: 'uikit.reporter',
         subTag: 'updateUserID',
       );
 
@@ -202,7 +202,7 @@ class ZegoUIKitReporter {
 
     ZegoLoggerService.logInfo(
       'userID:$userID',
-      tag: 'uikit-reporter',
+      tag: 'uikit.reporter',
       subTag: 'updateUserID',
     );
 
@@ -215,7 +215,7 @@ class ZegoUIKitReporter {
     if (!hadCreated) {
       ZegoLoggerService.logInfo(
         'not init',
-        tag: 'uikit-reporter',
+        tag: 'uikit.reporter',
         subTag: 'renewToken',
       );
 
@@ -224,7 +224,7 @@ class ZegoUIKitReporter {
 
     ZegoLoggerService.logInfo(
       'renew token, token size:${token.length}',
-      tag: 'uikit-reporter',
+      tag: 'uikit.reporter',
       subTag: 'renewToken',
     );
 
@@ -238,7 +238,7 @@ class ZegoUIKitReporter {
     if (!hadCreated) {
       ZegoLoggerService.logInfo(
         'not init',
-        tag: 'uikit-reporter',
+        tag: 'uikit.reporter',
         subTag: 'report',
       );
 

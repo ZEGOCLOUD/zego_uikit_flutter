@@ -23,7 +23,7 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
     if (ZegoUIKitErrorCode.success == playResult.errorCode) {
       ZegoLoggerService.logInfo(
         'finished, try start publish stream',
-        tag: 'uikit-media',
+        tag: 'uikit.media',
         subTag: 'playMedia',
       );
       final roomStream = coreData.stream.roomStreams.getRoom(targetRoomID);

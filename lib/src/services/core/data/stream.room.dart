@@ -82,7 +82,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'init',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'init',
     );
 
@@ -102,7 +102,7 @@ class ZegoUIKitCoreDataRoomStream {
           'room id:$roomID, '
           'streamDic:${streamDicNotifier.value}, '
           'mixerStreamDic:$mixerStreamDic',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'debug-timer',
         );
       });
@@ -114,7 +114,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'uninit',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'uninit',
     );
 
@@ -142,7 +142,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'clear',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'clearStream',
     );
 
@@ -176,7 +176,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'current keys:{${streamDicNotifier.value.keys}}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'clearDict',
     );
 
@@ -209,7 +209,7 @@ class ZegoUIKitCoreDataRoomStream {
       'data:{$data}, '
       'is exist now:$isExist, '
       'current keys:{${streamDicNotifier.value.keys}}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'addDataInDict',
     );
   }
@@ -225,7 +225,7 @@ class ZegoUIKitCoreDataRoomStream {
       'streamID:$streamID, '
       'previous keys:$previousKeys, '
       'current keys:{${streamDicNotifier.value}}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'removeDataInDict',
     );
   }
@@ -241,7 +241,7 @@ class ZegoUIKitCoreDataRoomStream {
       'streamIDs:$streamIDs, '
       'previous keys:$previousKeys, '
       'current keys:{${streamDicNotifier.value.keys}}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'removeDatasInDict',
     );
   }
@@ -264,7 +264,7 @@ class ZegoUIKitCoreDataRoomStream {
       'playerState:$playerState, '
       'previous state:$previousState, '
       'current state:{${streamChannel.playerStateNotifier.value}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'updatePlayerStateInDict',
     );
 
@@ -297,7 +297,7 @@ class ZegoUIKitCoreDataRoomStream {
       'publisherState:$publisherState, '
       'previous state:$previousState, '
       'current state:{${streamChannel.publisherStateNotifier.value}}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'updatePublisherStateInDict',
     );
 
@@ -321,7 +321,7 @@ class ZegoUIKitCoreDataRoomStream {
       'isAnotherRoomUser:$isAnotherRoomUser, '
       'previous value:$previousValue, '
       'current stream:{${streamDicNotifier.value[streamID]?.fromAnotherRoom}}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'updateIsAnotherRoomUserInDict',
     );
   }
@@ -340,7 +340,7 @@ class ZegoUIKitCoreDataRoomStream {
         'hash:$hashCode, '
         'local user is publishing,'
         'channel:$localUserStreamChannel, ',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'start publish stream',
       );
       return;
@@ -355,7 +355,7 @@ class ZegoUIKitCoreDataRoomStream {
       'room id:$roomID, '
       'updateConfigBeforeStartPublishingStream, '
       'view id:$localUserStreamViewID, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'start publish stream',
     );
 
@@ -436,7 +436,7 @@ class ZegoUIKitCoreDataRoomStream {
       '${localUserStreamChannel.streamID}, '
       'network state:${ZegoUIKit().getNetworkState()}, '
       'isEnableCustomVideoRender:${_streamCommonData.isEnableCustomVideoRender}',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'start publish stream',
     );
     await ZegoExpressEngine.instance.startPublishingStream(
@@ -461,7 +461,7 @@ class ZegoUIKitCoreDataRoomStream {
       'room id:$roomID, '
       'onViewCreatedByStartPublishingStream, '
       'view id:$localTargetStreamViewID, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'start publish stream',
     );
 
@@ -480,7 +480,7 @@ class ZegoUIKitCoreDataRoomStream {
           'room id:$roomID, '
           'call express startPreview, for trace enableCustomVideoRender, '
           'isEnableCustomVideoRender:${_streamCommonData.isEnableCustomVideoRender}',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'start publish stream',
         );
         await ZegoExpressEngine.instance.startPreview(canvas: canvas).then((_) {
@@ -515,7 +515,7 @@ class ZegoUIKitCoreDataRoomStream {
       'room id:$roomID, '
       'stop $streamType $targetStreamID}, '
       'network state:${ZegoUIKit().getNetworkState()}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'stop publish stream',
     );
 
@@ -524,7 +524,7 @@ class ZegoUIKitCoreDataRoomStream {
         'hash:$hashCode, '
         'room id:$roomID, '
         'stream id is empty',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'stop publish stream',
       );
 
@@ -537,7 +537,7 @@ class ZegoUIKitCoreDataRoomStream {
         'hash:$hashCode, '
         'room id:$roomID, '
         'stopped canvas view queue',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'stop publish stream',
       );
 
@@ -549,7 +549,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'stream dict remove $targetStreamID, now stream dict:${streamDicNotifier.value}',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'stop publish stream',
     );
 
@@ -611,7 +611,7 @@ class ZegoUIKitCoreDataRoomStream {
         'room is not login, '
         'room id: $roomID, '
         'state:${roomInfo.state}, ',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'publish stream',
       );
       return;
@@ -654,7 +654,7 @@ class ZegoUIKitCoreDataRoomStream {
         'room id:$roomID, '
         'publishStreamList list, ${streamList.publishStreamList.map((e) => e.toStringX())},  '
         'playStreamList list, ${streamList.playStreamList.map((e) => e.toStringX())}',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'syncRoomStream',
       );
 
@@ -662,7 +662,7 @@ class ZegoUIKitCoreDataRoomStream {
         'hash:$hashCode, '
         'room id:$roomID, '
         'put play stream list to onRoomStreamUpdate',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'syncRoomStream',
       );
       ZegoUIKitCore.shared.eventHandler.onRoomStreamUpdate(
@@ -685,7 +685,7 @@ class ZegoUIKitCoreDataRoomStream {
       'room id:$roomID, '
       'user id:  $userID, mute: $mute, '
       'for audio:$forAudio, for video:$forVideo',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'mute play stream audio video',
     );
 
@@ -698,7 +698,7 @@ class ZegoUIKitCoreDataRoomStream {
       ZegoLoggerService.logError(
         'hash:$hashCode, '
         "can't find $userID",
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'mute play stream audio video',
       );
       return false;
@@ -709,7 +709,7 @@ class ZegoUIKitCoreDataRoomStream {
       ZegoLoggerService.logError(
         'hash:$hashCode, '
         "can't find $userID's stream",
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'mute play stream audio video',
       );
       return false;
@@ -741,7 +741,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'muted: $isMuted, streamDic:${streamDicNotifier.value}',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'mute all play stream audio video',
     );
 
@@ -770,7 +770,7 @@ class ZegoUIKitCoreDataRoomStream {
             'hash:$hashCode, '
             'room id:$roomID, '
             'stream id($streamID) not playing(${streamChannel.playerStateNotifier.value}) now, waiting player state update',
-            tag: 'uikit-streams-room',
+            tag: 'uikit.streams.room',
             subTag: 'mute all play stream audio video',
           );
         }
@@ -788,7 +788,7 @@ class ZegoUIKitCoreDataRoomStream {
             'test, attempt to restore previous stream additional information, '
             'previousStreamExtraInfo:$previousStreamExtraInfo, '
             'targetUserIndex:$targetUserIndex',
-            tag: 'uikit-streams-room',
+            tag: 'uikit.streams.room',
             subTag: 'mute all play stream audio video',
           );
           if (previousStreamExtraInfo.isNotEmpty) {
@@ -814,7 +814,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'muted: $isMuted, streamDic:${streamDicNotifier.value}',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'mute all play stream audio',
     );
 
@@ -839,7 +839,7 @@ class ZegoUIKitCoreDataRoomStream {
         'targetUserIndex is invalid, '
         'streamID: $streamID, '
         'user id: $streamUserID, ',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'start play stream',
       );
 
@@ -866,7 +866,7 @@ class ZegoUIKitCoreDataRoomStream {
         'viewID:${targetUserStreamChannel.viewIDNotifier.value}, '
         'viewCreating:${targetUserStreamChannel.viewCreatingNotifier.value}, '
         'view is create, ignore',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'start play stream',
       );
 
@@ -886,7 +886,7 @@ class ZegoUIKitCoreDataRoomStream {
           'room id:$roomID, '
           'streamID: $streamID, userID: $streamUserID, '
           'add to queue',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'start play stream',
         );
 
@@ -915,7 +915,7 @@ class ZegoUIKitCoreDataRoomStream {
       'room id:$roomID, '
       'streamID: $streamID, '
       'user id: $streamUserID, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'start play stream',
     );
 
@@ -942,7 +942,7 @@ class ZegoUIKitCoreDataRoomStream {
       'current stream channel, '
       'view id:${targetUserStreamChannel.viewIDNotifier.value},'
       'view:${targetUserStreamChannel.viewNotifier}',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'start play stream',
     );
 
@@ -959,7 +959,7 @@ class ZegoUIKitCoreDataRoomStream {
         'viewID:$viewID, '
         'user id: $streamUserID, '
         'stream id:$streamID, ',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'start play stream',
       );
 
@@ -984,7 +984,7 @@ class ZegoUIKitCoreDataRoomStream {
             'viewID:$viewID, '
             'user id: $streamUserID, '
             'stream id:$streamID, ',
-            tag: 'uikit-streams-room',
+            tag: 'uikit.streams.room',
             subTag: 'start play stream',
           );
 
@@ -1009,7 +1009,7 @@ class ZegoUIKitCoreDataRoomStream {
           'widget:$widget ${widget.hashCode}, '
           'user id: $streamUserID, '
           'stream id:$streamID, ',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'start play stream',
         );
 
@@ -1039,7 +1039,7 @@ class ZegoUIKitCoreDataRoomStream {
       'room id:$roomID, '
       'channel:$streamChannel, '
       'startPlayingStreamInIOSPIP:$startPlayingStreamInIOSPIP, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'start play stream by express',
     );
 
@@ -1059,7 +1059,7 @@ class ZegoUIKitCoreDataRoomStream {
       'room id:$roomID, '
       'call express startPlayingStream, for trace enableCustomVideoRender, '
       'isEnableCustomVideoRender:${_streamCommonData.isEnableCustomVideoRender}',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'start play stream',
     );
     if (startPlayingStreamInIOSPIP) {
@@ -1097,7 +1097,7 @@ class ZegoUIKitCoreDataRoomStream {
             'room id:$roomID, '
             'finish play stream in ios with pip, '
             'channel: $streamChannel, ',
-            tag: 'uikit-streams-room',
+            tag: 'uikit.streams.room',
             subTag: 'start play stream',
           );
         },
@@ -1117,7 +1117,7 @@ class ZegoUIKitCoreDataRoomStream {
           'room id:$roomID, '
           'finish play, '
           'channel: $streamChannel, ',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'start play stream',
         );
       });
@@ -1136,7 +1136,7 @@ class ZegoUIKitCoreDataRoomStream {
       'room id:$roomID, '
       'stream id:$streamID, '
       'stopPlayingStreamInIOSPIP:$stopPlayingStreamInIOSPIP, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'stop play stream by express',
     );
 
@@ -1149,7 +1149,7 @@ class ZegoUIKitCoreDataRoomStream {
           'room id:$roomID, '
           'stop play done in ios with pip, '
           'streamID: $streamID, ',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'stop play stream',
         );
       });
@@ -1160,7 +1160,7 @@ class ZegoUIKitCoreDataRoomStream {
           'room id:$roomID, '
           'stop play done, '
           'streamID: $streamID, ',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'stop play stream',
         );
       });
@@ -1195,7 +1195,7 @@ class ZegoUIKitCoreDataRoomStream {
         'hash:$hashCode, '
         'room id:$roomID, '
         'isPlayingStreamInIOSPIP:$startPlayingStreamInIOSPIP, ',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'start play stream',
       );
     }
@@ -1206,7 +1206,7 @@ class ZegoUIKitCoreDataRoomStream {
       'ready start, '
       'streamID: $streamID, '
       'view mode:$viewMode(${viewMode.index}), ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'start play stream',
     );
 
@@ -1220,7 +1220,7 @@ class ZegoUIKitCoreDataRoomStream {
           'finish update stream view/canvas in ios with pip, '
           'stream id:$streamID, '
           'view id:$viewID, ',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'start play stream',
         );
       });
@@ -1234,7 +1234,7 @@ class ZegoUIKitCoreDataRoomStream {
           'finish update stream view/canvas, '
           'streamID: $streamID, '
           'canvas:$updateCanvas, ',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'start play stream',
         );
       });
@@ -1257,7 +1257,7 @@ class ZegoUIKitCoreDataRoomStream {
       'room id:$roomID, '
       'ready start, '
       'channel: $streamChannel',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'start play stream',
     );
 
@@ -1303,7 +1303,7 @@ class ZegoUIKitCoreDataRoomStream {
           'hash:$hashCode, '
           'room id:$roomID, '
           'user($user) camera is close, try stopped canvas view queue',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'syncCanvasViewCreateQueue',
         );
 
@@ -1321,7 +1321,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'ready stop streamID: $streamID',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'stop play stream',
     );
     assert(streamID.isNotEmpty);
@@ -1336,7 +1336,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'stopped, stream id $streamID, user id  is: $targetUserID',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'stop play stream',
     );
 
@@ -1357,7 +1357,7 @@ class ZegoUIKitCoreDataRoomStream {
           'hash:$hashCode, '
           'room id:$roomID, '
           'stopped canvas view queue',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'stop play stream',
         );
 
@@ -1387,7 +1387,7 @@ class ZegoUIKitCoreDataRoomStream {
         'hash:$hashCode, '
         'room id:$roomID, '
         'stream dict remove $streamID, ${streamDicNotifier.value}',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'stop play stream',
       );
     }
@@ -1447,7 +1447,7 @@ class ZegoUIKitCoreDataRoomStream {
       'room id:$roomID, '
       'stream dict add/update ${streamData.id} for ${streamData.userID}, '
       'dict: ${streamDicNotifier.value}',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'addPlayingStreamDataInDict',
     );
 
@@ -1478,7 +1478,7 @@ class ZegoUIKitCoreDataRoomStream {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$roomID, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'stop play all stream',
     );
 
@@ -1499,7 +1499,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'dict:${streamDicNotifier.value}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'stop play all stream',
     );
   }
@@ -1517,7 +1517,7 @@ class ZegoUIKitCoreDataRoomStream {
       'toRoomID:$toRoomID, '
       'isMove:$isMove, '
       'before dict:${streamDicNotifier.value}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'transfer to another room',
     );
 
@@ -1529,7 +1529,7 @@ class ZegoUIKitCoreDataRoomStream {
           'hash:$hashCode, '
           'room id:$roomID, '
           'fromStreamID is not exist, ',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'transfer to another room',
         );
 
@@ -1557,7 +1557,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'after dict:${streamDicNotifier.value}, ',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'transfer to another room',
     );
   }
@@ -1603,7 +1603,7 @@ class ZegoUIKitCoreDataRoomStream {
       'playerState:${streamUser.mainChannel.playerStateNotifier.value}'
       'view:${streamUser.mainChannel.viewNotifier.value}, '
       'viewID:${streamUser.mainChannel.viewIDNotifier.value}',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'start play another room stream',
     );
 
@@ -1616,7 +1616,7 @@ class ZegoUIKitCoreDataRoomStream {
         'stream id:$streamID, '
         'stream user:$streamUser,  '
         'stream room id:$streamRoomID, ',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'start play another room stream',
       );
 
@@ -1637,7 +1637,7 @@ class ZegoUIKitCoreDataRoomStream {
           'stream room id:$streamRoomID, '
           'createCanvasView onViewCreated, '
           'viewID:$viewID, ',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'start play another room stream',
         );
 
@@ -1658,7 +1658,7 @@ class ZegoUIKitCoreDataRoomStream {
           'stream room id:$streamRoomID, '
           'createCanvasView done, '
           'widget:$widget, ',
-          tag: 'uikit-streams-room',
+          tag: 'uikit.streams.room',
           subTag: 'start play another room stream',
         );
 
@@ -1679,7 +1679,7 @@ class ZegoUIKitCoreDataRoomStream {
         'stream user:$streamUser,  '
         'stream room id:$streamRoomID, '
         'stream is playing',
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'start play another room stream',
       );
     }
@@ -1692,7 +1692,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'user id: $userID',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'stop play another room stream',
     );
 
@@ -1706,7 +1706,7 @@ class ZegoUIKitCoreDataRoomStream {
       ZegoLoggerService.logWarn(
         'hash:$hashCode, '
         "can't find this user, userID: $userID",
-        tag: 'uikit-streams-room',
+        tag: 'uikit.streams.room',
         subTag: 'stop play another room stream',
       );
 
@@ -1738,7 +1738,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'stopped, userID: $userID, stream id:$streamID',
-      tag: 'uikit-streams-room',
+      tag: 'uikit.streams.room',
       subTag: 'stop play another room stream',
     );
 
@@ -1758,7 +1758,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'mixerID:$mixerID, users:$users, userSoundIDs:$userSoundIDs',
-      tag: 'uikit-mixstream',
+      tag: 'uikit.mixstream',
       subTag: 'start play mix audio video',
     );
 
@@ -1791,7 +1791,7 @@ class ZegoUIKitCoreDataRoomStream {
           'room id:$roomID, '
           'createCanvasView onViewCreated, '
           'viewID:$viewID, ',
-          tag: 'uikit-mixstream',
+          tag: 'uikit.mixstream',
           subTag: 'start play mix audio video',
         );
 
@@ -1821,7 +1821,7 @@ class ZegoUIKitCoreDataRoomStream {
       'hash:$hashCode, '
       'room id:$roomID, '
       'mixerID:$mixerID',
-      tag: 'uikit-mixstream',
+      tag: 'uikit.mixstream',
       subTag: 'stop play mix audio video',
     );
 
@@ -1829,7 +1829,7 @@ class ZegoUIKitCoreDataRoomStream {
       ZegoLoggerService.logInfo(
         'hash:$hashCode, '
         'not contain, ignore, ',
-        tag: 'uikit-mixstream',
+        tag: 'uikit.mixstream',
         subTag: 'stop play mix audio video',
       );
 

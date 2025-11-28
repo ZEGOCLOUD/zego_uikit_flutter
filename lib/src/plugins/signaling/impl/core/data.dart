@@ -43,7 +43,7 @@ class ZegoSignalingPluginCoreData
     if (isInit) {
       ZegoLoggerService.logInfo(
         'has created.',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
 
@@ -60,7 +60,7 @@ class ZegoSignalingPluginCoreData
 
     ZegoLoggerService.logInfo(
       'create, appID:$appID',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
   }
@@ -70,7 +70,7 @@ class ZegoSignalingPluginCoreData
     if (ZegoPluginAdapter().signalingPlugin == null) {
       ZegoLoggerService.logInfo(
         'signaling plugin is null.',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
       return;
@@ -79,7 +79,7 @@ class ZegoSignalingPluginCoreData
     if (!isInit) {
       ZegoLoggerService.logInfo(
         'is not created.',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
       return;
@@ -88,7 +88,7 @@ class ZegoSignalingPluginCoreData
     if (forceDestroy) {
       ZegoLoggerService.logInfo(
         'force destroy signaling plugin',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
 
@@ -98,7 +98,7 @@ class ZegoSignalingPluginCoreData
     isInit = false;
     ZegoLoggerService.logInfo(
       'destroy.',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
@@ -115,7 +115,7 @@ class ZegoSignalingPluginCoreData
 
     ZegoLoggerService.logInfo(
       'init data.',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
@@ -133,7 +133,7 @@ class ZegoSignalingPluginCoreData
 
     ZegoLoggerService.logInfo(
       'uninit data.',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
@@ -146,7 +146,7 @@ class ZegoSignalingPluginCoreData
       ZegoSignalingPluginCXCallEndedReason endedReason, String uuid) async {
     ZegoLoggerService.logInfo(
       'reportCallEnded, endedReason:$endedReason, uuid:$uuid',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
     ZegoPluginAdapter().signalingPlugin!.reportCallEnded(endedReason, uuid);
@@ -165,7 +165,7 @@ class ZegoSignalingPluginCoreData
     if (!isInit) {
       ZegoLoggerService.logInfo(
         'is not created.',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
       return false;
@@ -175,14 +175,14 @@ class ZegoSignalingPluginCoreData
       if (currentUserID != id || currentUserName != name) {
         ZegoLoggerService.logError(
           'login exist before, and not same, auto logout...',
-          tag: 'uikit-plugin-signaling-coredata',
+          tag: 'uikit.plugin.signaling-coredata',
           subTag: 'core data',
         );
         await logout();
       } else {
         ZegoLoggerService.logError(
           'login exist before, and same, not need login...',
-          tag: 'uikit-plugin-signaling-coredata',
+          tag: 'uikit.plugin.signaling-coredata',
           subTag: 'core data',
         );
         return true;
@@ -193,7 +193,7 @@ class ZegoSignalingPluginCoreData
       'login request, '
       'user id:$id, user name:$name,'
       'has token:${token.isNotEmpty}',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
     currentUserID = id;
@@ -201,7 +201,7 @@ class ZegoSignalingPluginCoreData
 
     ZegoLoggerService.logInfo(
       'ready to login.',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
@@ -214,13 +214,13 @@ class ZegoSignalingPluginCoreData
     if (pluginResult.error == null) {
       ZegoLoggerService.logInfo(
         'login success',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
     } else {
       ZegoLoggerService.logInfo(
         'login error, ${pluginResult.error}',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
     }
@@ -233,7 +233,7 @@ class ZegoSignalingPluginCoreData
     if (ZegoPluginAdapter().signalingPlugin == null) return;
     ZegoLoggerService.logInfo(
       'user logout',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
@@ -246,13 +246,13 @@ class ZegoSignalingPluginCoreData
     if (pluginResult.timeout) {
       ZegoLoggerService.logInfo(
         'logout waitForDisconnect timeout',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
     } else {
       ZegoLoggerService.logInfo(
         'logout success',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
     }
@@ -260,7 +260,7 @@ class ZegoSignalingPluginCoreData
     clear();
     ZegoLoggerService.logInfo(
       'logout.',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
   }
@@ -272,7 +272,7 @@ class ZegoSignalingPluginCoreData
 
     ZegoLoggerService.logInfo(
       'renew token',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
@@ -282,13 +282,13 @@ class ZegoSignalingPluginCoreData
     if (pluginResult.error == null) {
       ZegoLoggerService.logInfo(
         'renew token success',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
     } else {
       ZegoLoggerService.logInfo(
         'renew token error, ${pluginResult.error}',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
     }
@@ -304,7 +304,7 @@ class ZegoSignalingPluginCoreData
     if (!isInit) {
       ZegoLoggerService.logInfo(
         'is not created',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'join room',
       );
       return ZegoSignalingPluginJoinRoomResult(
@@ -321,7 +321,7 @@ class ZegoSignalingPluginCoreData
       if (currentRoomID == roomID) {
         ZegoLoggerService.logInfo(
           'same room has login.',
-          tag: 'uikit-plugin-signaling-coredata',
+          tag: 'uikit.plugin.signaling-coredata',
           subTag: 'join room',
         );
         return const ZegoSignalingPluginJoinRoomResult();
@@ -329,7 +329,7 @@ class ZegoSignalingPluginCoreData
 
       ZegoLoggerService.logInfo(
         'has login different room.',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'join room',
       );
       return ZegoSignalingPluginJoinRoomResult(
@@ -342,7 +342,7 @@ class ZegoSignalingPluginCoreData
 
     ZegoLoggerService.logInfo(
       'room id:"$roomID", room name:$roomName',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'join room',
     );
 
@@ -353,13 +353,13 @@ class ZegoSignalingPluginCoreData
     if (pluginResult.error == null) {
       ZegoLoggerService.logInfo(
         'success',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'join room',
       );
     } else {
       ZegoLoggerService.logError(
         'error:${pluginResult.error}',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'join room',
       );
       currentRoomID = null;
@@ -376,7 +376,7 @@ class ZegoSignalingPluginCoreData
     if (!isInit) {
       ZegoLoggerService.logInfo(
         'is not created, ',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'switch room',
       );
       return ZegoSignalingPluginJoinRoomResult(
@@ -392,7 +392,7 @@ class ZegoSignalingPluginCoreData
     if (currentRoomID == null) {
       ZegoLoggerService.logInfo(
         'has not login room, try login',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'switch room',
       );
       return joinRoom(roomID, roomName);
@@ -405,7 +405,7 @@ class ZegoSignalingPluginCoreData
     ZegoLoggerService.logInfo(
       'from room id:$fromRoomID, '
       'to room:{"$roomID",$roomName}, ',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'switch room',
     );
 
@@ -418,13 +418,13 @@ class ZegoSignalingPluginCoreData
     if (pluginResult.error == null) {
       ZegoLoggerService.logInfo(
         'success',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'switch room',
       );
     } else {
       ZegoLoggerService.logError(
         'exception:${pluginResult.error}',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'switch room',
       );
       currentRoomID = null;
@@ -442,7 +442,7 @@ class ZegoSignalingPluginCoreData
     if (!isInit) {
       ZegoLoggerService.logInfo(
         'is not created.',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'leave room',
       );
       return;
@@ -451,7 +451,7 @@ class ZegoSignalingPluginCoreData
     if (currentRoomID == null) {
       ZegoLoggerService.logInfo(
         'room has not login.',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'leave room',
       );
       return;
@@ -459,7 +459,7 @@ class ZegoSignalingPluginCoreData
 
     ZegoLoggerService.logInfo(
       'room id:${currentRoomID!}',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'leave room',
     );
     final pluginResult = await ZegoPluginAdapter()
@@ -469,14 +469,14 @@ class ZegoSignalingPluginCoreData
     if (pluginResult.error == null) {
       ZegoLoggerService.logInfo(
         'success',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'leave room',
       );
       currentRoomID = null;
     } else {
       ZegoLoggerService.logError(
         'error:${pluginResult.error}',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'leave room',
       );
     }
@@ -494,7 +494,7 @@ class ZegoSignalingPluginCoreData
   void clear() {
     ZegoLoggerService.logInfo(
       'clear',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
     clearInvitationData();
@@ -509,7 +509,7 @@ class ZegoSignalingPluginCoreData
   void onError(ZegoSignalingPluginErrorEvent event) {
     ZegoLoggerService.logInfo(
       'zim error, $event',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
   }
@@ -519,14 +519,14 @@ class ZegoSignalingPluginCoreData
       ZegoSignalingPluginConnectionStateChangedEvent event) {
     ZegoLoggerService.logInfo(
       'connection state changed, $event',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
     if (event.state == ZegoSignalingPluginConnectionState.disconnected) {
       ZegoLoggerService.logInfo(
         'disconnected, auto logout',
-        tag: 'uikit-plugin-signaling-coredata',
+        tag: 'uikit.plugin.signaling-coredata',
         subTag: 'core data',
       );
       // TODO How to handle this logic, probably problematic when used together with zimkit
@@ -538,7 +538,7 @@ class ZegoSignalingPluginCoreData
       ZegoSignalingPluginNotificationArrivedEvent event) {
     ZegoLoggerService.logInfo(
       'notification arrived, $event',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
@@ -549,7 +549,7 @@ class ZegoSignalingPluginCoreData
       ZegoSignalingPluginNotificationClickedEvent event) {
     ZegoLoggerService.logInfo(
       'notification clicked, $event',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
@@ -560,7 +560,7 @@ class ZegoSignalingPluginCoreData
       ZegoSignalingPluginNotificationRegisteredEvent event) {
     ZegoLoggerService.logInfo(
       'notification registered, $event',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
@@ -571,7 +571,7 @@ class ZegoSignalingPluginCoreData
   void onRoomStateChanged(ZegoSignalingPluginRoomStateChangedEvent event) {
     ZegoLoggerService.logInfo(
       'room state changed, $event',
-      tag: 'uikit-plugin-signaling-coredata',
+      tag: 'uikit.plugin.signaling-coredata',
       subTag: 'core data',
     );
 
@@ -581,7 +581,7 @@ class ZegoSignalingPluginCoreData
       if (currentRoomState == ZegoSignalingPluginRoomState.disconnected) {
         ZegoLoggerService.logInfo(
           'room has been disconnect.',
-          tag: 'uikit-plugin-signaling-coredata',
+          tag: 'uikit.plugin.signaling-coredata',
           subTag: 'core data',
         );
         currentRoomID = null;

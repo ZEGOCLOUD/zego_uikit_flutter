@@ -41,7 +41,7 @@ class ZegoUIKitCoreDataRoomUser {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$roomID',
-      tag: 'uikit-users-room',
+      tag: 'uikit.users-room',
       subTag: 'init',
     );
 
@@ -55,7 +55,7 @@ class ZegoUIKitCoreDataRoomUser {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$roomID',
-      tag: 'uikit-users-room',
+      tag: 'uikit.users-room',
       subTag: 'uninit',
     );
 
@@ -76,7 +76,7 @@ class ZegoUIKitCoreDataRoomUser {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$roomID',
-      tag: 'uikit-users-room',
+      tag: 'uikit.users-room',
       subTag: 'clear',
     );
   }
@@ -98,7 +98,7 @@ class ZegoUIKitCoreDataRoomUser {
       'room id:$roomID, '
       'remove $userID, '
       'remoteUsers:$remoteUsers, ',
-      tag: 'uikit-users-room',
+      tag: 'uikit.users-room',
       subTag: 'clear',
     );
 

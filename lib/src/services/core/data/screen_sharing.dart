@@ -24,8 +24,8 @@ class ZegoUIKitCoreDataScreenSharing {
 
   void init() {
     ZegoLoggerService.logInfo(
-      'init screen sharing',
-      tag: 'uikit-screen-sharing',
+      '',
+      tag: 'uikit.screen-sharing.data',
       subTag: 'init',
     );
 
@@ -35,8 +35,8 @@ class ZegoUIKitCoreDataScreenSharing {
 
   void uninit() {
     ZegoLoggerService.logInfo(
-      'uninit screen sharing',
-      tag: 'uikit-screen-sharing',
+      '',
+      tag: 'uikit.screen-sharing.data',
       subTag: 'uninit',
     );
 
@@ -50,7 +50,7 @@ class ZegoUIKitCoreDataScreenSharing {
   }) async {
     ZegoLoggerService.logInfo(
       'try start',
-      tag: 'uikit-screen-sharing',
+      tag: 'uikit.screen-sharing.data',
       subTag: 'startSharingScreen',
     );
 
@@ -85,7 +85,7 @@ class ZegoUIKitCoreDataScreenSharing {
 
     ZegoLoggerService.logInfo(
       'start done',
-      tag: 'uikit-screen-sharing',
+      tag: 'uikit.screen-sharing.data',
       subTag: 'startSharingScreen',
     );
   }
@@ -96,7 +96,7 @@ class ZegoUIKitCoreDataScreenSharing {
   }) async {
     ZegoLoggerService.logInfo(
       'try stop',
-      tag: 'uikit-screen-sharing',
+      tag: 'uikit.screen-sharing.data',
       subTag: 'stopSharingScreen',
     );
 
@@ -114,7 +114,7 @@ class ZegoUIKitCoreDataScreenSharing {
 
     ZegoLoggerService.logInfo(
       'stop done',
-      tag: 'uikit-screen-sharing',
+      tag: 'uikit.screen-sharing.data',
       subTag: 'stopSharingScreen',
     );
   }

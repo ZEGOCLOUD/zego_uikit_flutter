@@ -596,7 +596,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
     if (files.isEmpty) {
       ZegoLoggerService.logInfo(
         'files is empty',
-        tag: 'uikit-component',
+        tag: 'uikit.component',
         subTag: 'media player',
       );
     } else {
@@ -621,7 +621,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
     if (0 != shareResult.errorCode) {
       ZegoLoggerService.logInfo(
         'share media failed:${shareResult.errorCode}',
-        tag: 'uikit-component',
+        tag: 'uikit.component',
         subTag: 'media player',
       );
     }
@@ -666,7 +666,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
 
         ZegoLoggerService.logInfo(
           'express engine is not created, wait..',
-          tag: 'uikit-component',
+          tag: 'uikit.component',
           subTag: 'media player',
         );
       }
@@ -678,7 +678,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
         ZegoUIKitCore.shared.coreData.engine.createdNotifier.value;
     ZegoLoggerService.logInfo(
       'express engine created:$isCreated',
-      tag: 'uikit-component',
+      tag: 'uikit.component',
       subTag: 'media player',
     );
 
@@ -694,7 +694,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
   void autoShareMedia() {
     ZegoLoggerService.logInfo(
       'auto share media:${widget.filePathOrURL}',
-      tag: 'uikit-component',
+      tag: 'uikit.component',
       subTag: 'media player',
     );
 
@@ -702,7 +702,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
     if (ZegoUIKitMediaPlayState.noPlay != currentPlayState) {
       ZegoLoggerService.logInfo(
         'play state is not no play, $currentPlayState',
-        tag: 'uikit-component',
+        tag: 'uikit.component',
         subTag: 'media player',
       );
 
@@ -718,7 +718,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
         .then((shareResult) {
       ZegoLoggerService.logInfo(
         'auto share media result:${widget.filePathOrURL}',
-        tag: 'uikit-component',
+        tag: 'uikit.component',
         subTag: 'media player',
       );
     });

@@ -20,7 +20,7 @@ class ZegoUIKitCoreDataMessage {
       emptyRoomMessage.roomID = roomID;
       ZegoLoggerService.logInfo(
         'empty room(${emptyRoomMessage.hashCode}) has update id to $roomID, ',
-        tag: 'uikit-room',
+        tag: 'uikit.room',
         subTag: 'room-map',
       );
     },
@@ -38,7 +38,7 @@ class ZegoUIKitCoreDataMessage {
       emptyRoomMessage.roomID = roomID;
       ZegoLoggerService.logInfo(
         'empty room(${emptyRoomMessage.hashCode}) has update id to $roomID, ',
-        tag: 'uikit-room',
+        tag: 'uikit.room',
         subTag: 'room-map',
       );
     },
@@ -47,7 +47,7 @@ class ZegoUIKitCoreDataMessage {
   void init() {
     ZegoLoggerService.logInfo(
       'init message',
-      tag: 'uikit-messages',
+      tag: 'uikit.messages',
       subTag: 'init',
     );
 
@@ -72,7 +72,7 @@ class ZegoUIKitCoreDataMessage {
     ZegoLoggerService.logInfo(
       'clear broadcast message, '
       'room id:$targetRoomID',
-      tag: 'uikit-messages',
+      tag: 'uikit.messages',
       subTag: 'uninit',
     );
 
@@ -88,7 +88,7 @@ class ZegoUIKitCoreDataMessage {
     ZegoLoggerService.logInfo(
       'clear barrage message, '
       'room id:$targetRoomID',
-      tag: 'uikit-messages',
+      tag: 'uikit.messages',
       subTag: 'uninit',
     );
 
@@ -102,7 +102,7 @@ class ZegoUIKitCoreDataMessage {
     ZegoLoggerService.logInfo(
       'uninit message, '
       'room ids:${roomBroadcastMessages.allRoomIDs}',
-      tag: 'uikit-messages',
+      tag: 'uikit.messages',
       subTag: 'uninit',
     );
 

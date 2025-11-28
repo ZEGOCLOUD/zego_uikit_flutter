@@ -149,7 +149,7 @@ class _ZegoLayoutPIPSmallItemListState
 
         ZegoLoggerService.logInfo(
           'visible item count(${widget.visibleItemCount}) too large, will cause the display to exceed the screen, change to $visibleItemCount',
-          tag: 'uikit-component',
+          tag: 'uikit.component',
           subTag: 'pip small item list',
         );
       }

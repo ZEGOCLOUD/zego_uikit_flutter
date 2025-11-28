@@ -127,8 +127,8 @@ class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton>
     })) {
       ZegoLoggerService.logInfo(
         "Click rate is limited, ignoring the current click",
-        tag: 'uikit-camera',
-        subTag: 'toggle camera',
+        tag: 'uikit.component.camera',
+        subTag: 'toggle',
       );
     }
   }

@@ -134,9 +134,9 @@ class _ZegoToggleMicrophoneButtonState extends State<ZegoToggleMicrophoneButton>
       }
     })) {
       ZegoLoggerService.logInfo(
-        "here",
-        tag: 'uikit-microphone',
-        subTag: 'switch microphone',
+        "Click rate is limited, ignoring the current click",
+        tag: 'uikit.component.microphone',
+        subTag: 'switch',
       );
     }
   }

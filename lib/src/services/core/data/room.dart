@@ -53,7 +53,7 @@ class ZegoUIKitCoreDataRoom {
       emptyRoom.id = roomID;
       ZegoLoggerService.logInfo(
         'empty room(${emptyRoom.hashCode}) has update id to $roomID, ',
-        tag: 'uikit-rooms',
+        tag: 'uikit.rooms',
         subTag: 'room-map',
       );
     },
@@ -70,7 +70,7 @@ class ZegoUIKitCoreDataRoom {
   void init() {
     ZegoLoggerService.logInfo(
       'init, ',
-      tag: 'uikit-rooms',
+      tag: 'uikit.rooms',
       subTag: 'uninit',
     );
 
@@ -82,7 +82,7 @@ class ZegoUIKitCoreDataRoom {
   Future<void> uninit() async {
     ZegoLoggerService.logInfo(
       'uninit, ',
-      tag: 'uikit-rooms',
+      tag: 'uikit.rooms',
       subTag: 'uninit',
     );
 
@@ -114,14 +114,14 @@ class ZegoUIKitCoreDataRoom {
       'has token:${token.isNotEmpty}, '
       'markAsLargeRoom:$markAsLargeRoom, '
       'network state:${ZegoUIKit().getNetworkState()}, ',
-      tag: 'uikit-rooms',
+      tag: 'uikit.rooms',
       subTag: 'join room',
     );
 
     if (targetRoomID.isEmpty) {
       ZegoLoggerService.logError(
         'target room id is empty',
-        tag: 'uikit-rooms',
+        tag: 'uikit.rooms',
         subTag: 'join room',
       );
 
@@ -137,7 +137,7 @@ class ZegoUIKitCoreDataRoom {
       if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(currentID)) {
         ZegoLoggerService.logInfo(
           'has join outside room, leaving first...',
-          tag: 'uikit-rooms',
+          tag: 'uikit.rooms',
           subTag: 'join room',
         );
 
@@ -173,7 +173,7 @@ class ZegoUIKitCoreDataRoom {
       if (result.errorCode == ZegoErrorCode.RoomCountExceed) {
         ZegoLoggerService.logInfo(
           'room count exceed',
-          tag: 'uikit-rooms',
+          tag: 'uikit.rooms',
           subTag: 'join room',
         );
 
@@ -201,14 +201,14 @@ class ZegoUIKitCoreDataRoom {
       'from room id:$fromRoomID, '
       'to room id:"$toRoomID", '
       'network state:${ZegoUIKit().getNetworkState()}, ',
-      tag: 'uikit-rooms',
+      tag: 'uikit.rooms',
       subTag: 'switch room',
     );
 
     if (!rooms.getRoom(fromRoomID).isLogin) {
       ZegoLoggerService.logError(
         'current room is not login,',
-        tag: 'uikit-rooms',
+        tag: 'uikit.rooms',
         subTag: 'switch room',
       );
 
@@ -218,7 +218,7 @@ class ZegoUIKitCoreDataRoom {
     if (toRoomID.isEmpty || fromRoomID == toRoomID) {
       ZegoLoggerService.logError(
         'room id is not valid',
-        tag: 'uikit-rooms',
+        tag: 'uikit.rooms',
         subTag: 'switch room',
       );
 
@@ -237,7 +237,7 @@ class ZegoUIKitCoreDataRoom {
     rooms.removeRoom(fromRoomID);
     ZegoLoggerService.logInfo(
       'done, ',
-      tag: 'uikit-rooms',
+      tag: 'uikit.rooms',
       subTag: 'switch room',
     );
 
@@ -251,7 +251,7 @@ class ZegoUIKitCoreDataRoom {
       'try leave room, '
       'target room id:"$targetRoomID", '
       'network state:${ZegoUIKit().getNetworkState()}, ',
-      tag: 'uikit-rooms',
+      tag: 'uikit.rooms',
       subTag: 'leave room',
     );
 
@@ -272,7 +272,7 @@ class ZegoUIKitCoreDataRoom {
     if (!rooms.allRoomIDs.contains(targetRoomID)) {
       ZegoLoggerService.logInfo(
         'room id is not exist, not need to leave',
-        tag: 'uikit-rooms',
+        tag: 'uikit.rooms',
         subTag: 'leave room',
       );
 
@@ -297,7 +297,7 @@ class ZegoUIKitCoreDataRoom {
     if (currentID.isEmpty) {
       ZegoLoggerService.logInfo(
         'not in room now',
-        tag: 'uikit-rooms',
+        tag: 'uikit.rooms',
         subTag: 'renewToken',
       );
     }
@@ -305,14 +305,14 @@ class ZegoUIKitCoreDataRoom {
     if (token.isEmpty) {
       ZegoLoggerService.logInfo(
         'token is empty',
-        tag: 'uikit-rooms',
+        tag: 'uikit.rooms',
         subTag: 'renewToken',
       );
     }
 
     ZegoLoggerService.logInfo(
       'renew now',
-      tag: 'uikit-rooms',
+      tag: 'uikit.rooms',
       subTag: 'renewToken',
     );
 

@@ -13,7 +13,7 @@ class ZegoUIKitMediaEventImpl {
     if (events.contains(event)) {
       ZegoLoggerService.logInfo(
         '${event.hashCode} has registered',
-        tag: 'uikit-media',
+        tag: 'uikit.media.event',
         subTag: 'event',
       );
 
@@ -22,7 +22,7 @@ class ZegoUIKitMediaEventImpl {
 
     ZegoLoggerService.logInfo(
       'register, ${event.hashCode}',
-      tag: 'uikit-media',
+      tag: 'uikit.media.event',
       subTag: 'event',
     );
 
@@ -32,7 +32,7 @@ class ZegoUIKitMediaEventImpl {
   void unregister(ZegoUIKitMediaEventInterface event) {
     ZegoLoggerService.logInfo(
       'unregister, ${event.hashCode}',
-      tag: 'uikit-media',
+      tag: 'uikit.media.event',
       subTag: 'event',
     );
 
@@ -42,7 +42,7 @@ class ZegoUIKitMediaEventImpl {
   void init() {
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'uikit-media',
+      tag: 'uikit.media.event',
       subTag: 'event',
     );
 
@@ -72,7 +72,7 @@ class ZegoUIKitMediaEventImpl {
   void uninit() {
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'uikit-media',
+      tag: 'uikit.media.event',
       subTag: 'event',
     );
 

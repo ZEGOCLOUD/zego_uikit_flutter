@@ -122,7 +122,7 @@ class _ZegoStartInvitationButtonState extends State<ZegoStartInvitationButton> {
     if (!canSendInvitation) {
       ZegoLoggerService.logInfo(
         'onWillPressed stop click process',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'start invitation button',
       );
 

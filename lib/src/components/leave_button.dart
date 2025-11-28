@@ -58,7 +58,7 @@ class _ZegoLeaveButtonState extends State<ZegoLeaveButton> {
     ZegoLoggerService.logInfo(
       'initState, '
       'room id:${widget.roomID},',
-      tag: 'uikit-component',
+      tag: 'uikit.component',
       subTag: 'leave button',
     );
 
@@ -79,12 +79,15 @@ class _ZegoLeaveButtonState extends State<ZegoLeaveButton> {
             builder: (context, isRoomLogin, _) {
               return GestureDetector(
                 onTap: () async {
+                  final isLogin =
+                      ZegoUIKit().getRoom(targetRoomID: widget.roomID).isLogin;
+
                   if (!clickable || !isRoomLogin) {
                     ZegoLoggerService.logInfo(
                       'clickable:$clickable, '
                       'isRoomLogin:$isRoomLogin, '
                       'ignore',
-                      tag: 'uikit-component',
+                      tag: 'uikit.component',
                       subTag: 'leave button',
                     );
 
@@ -123,7 +126,7 @@ class _ZegoLeaveButtonState extends State<ZegoLeaveButton> {
     if (null != widget.quitDelegate) {
       ZegoLoggerService.logInfo(
         'has quit delegate, call',
-        tag: 'uikit-component',
+        tag: 'uikit.component',
         subTag: 'leave button',
       );
 
@@ -132,7 +135,7 @@ class _ZegoLeaveButtonState extends State<ZegoLeaveButton> {
       ZegoUIKit().leaveRoom(targetRoomID: widget.roomID).then((result) {
         ZegoLoggerService.logInfo(
           'leave room result, ${result.errorCode} ${result.extendedData}',
-          tag: 'uikit-component',
+          tag: 'uikit.component',
           subTag: 'leave button',
         );
       });
@@ -149,7 +152,7 @@ class _ZegoLeaveButtonState extends State<ZegoLeaveButton> {
       'rooms state update, '
       'room id:${widget.roomID}, '
       'roomsState:$roomsState, ',
-      tag: 'uikit-component',
+      tag: 'uikit.component',
       subTag: 'leave button',
     );
 

@@ -47,8 +47,8 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
           'hash:$hashCode, '
           'name:$name, '
           '_innerRoomMap: $_innerRoomMap',
-          tag: 'uikit-room',
-          subTag: 'room-map-debug',
+          tag: 'uikit.room-map',
+          subTag: 'debug-output',
         );
       });
     }
@@ -91,8 +91,8 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
         'name:$name, '
         'room id:$roomID, '
         'create empty room(${_emptyRoomCache.hashCode}), ',
-        tag: 'uikit-room',
-        subTag: 'room-map',
+        tag: 'uikit.room-map',
+        subTag: 'getRoom',
       );
       return _emptyRoomCache!;
     }
@@ -122,8 +122,8 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
           'name:$name, '
           'room id:$roomID, '
           'use empty room(${_emptyRoomCache.hashCode}), ',
-          tag: 'uikit-room',
-          subTag: 'room-map',
+          tag: 'uikit.room-map',
+          subTag: 'getRoom',
         );
 
         _emptyRoomCache = null; // Prepared room has been used, clear cache

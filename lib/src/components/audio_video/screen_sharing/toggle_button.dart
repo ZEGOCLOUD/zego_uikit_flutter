@@ -80,7 +80,7 @@ class _ZegoScreenSharingToggleButtonState
       ZegoLoggerService.logInfo(
         "some user is sharing in room, "
         "${ZegoUIKit().getScreenSharingList(targetRoomID: widget.roomID).map((e) => "${e.toString()},")}",
-        tag: 'uikit-component',
+        tag: 'uikit.component',
         subTag: 'ZegoScreenSharingToggleButton',
       );
 

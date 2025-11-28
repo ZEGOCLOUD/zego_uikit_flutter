@@ -14,7 +14,7 @@ class ZegoUIKitCoreDataUser {
       ValueNotifier<ZegoUIKitUser>(ZegoUIKitUser.empty());
 
   var roomUsers = ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomUser>(
-    name: 'core data user',
+    name: 'user',
     createDefault: (String roomID) {
       final roomUser = ZegoUIKitCoreDataRoomUser(roomID);
       roomUser.init();
@@ -25,7 +25,7 @@ class ZegoUIKitCoreDataUser {
       emptyRoomUser.roomID = roomID;
       ZegoLoggerService.logInfo(
         'empty room(${emptyRoomUser.hashCode}) has update id to $roomID, ',
-        tag: 'uikit-users',
+        tag: 'uikit.users',
         subTag: 'room-map',
       );
     },
@@ -34,7 +34,7 @@ class ZegoUIKitCoreDataUser {
   void init() {
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'uikit-users',
+      tag: 'uikit.users',
       subTag: 'init',
     );
 
@@ -46,7 +46,7 @@ class ZegoUIKitCoreDataUser {
   void uninit() {
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'uikit-users',
+      tag: 'uikit.users',
       subTag: 'uninit',
     );
 
@@ -61,7 +61,7 @@ class ZegoUIKitCoreDataUser {
     ZegoLoggerService.logInfo(
       'clear, '
       'room id:$targetRoomID, ',
-      tag: 'uikit-users',
+      tag: 'uikit.users',
       subTag: 'uninit',
     );
 
@@ -87,14 +87,14 @@ class ZegoUIKitCoreDataUser {
   ZegoUIKitCoreUser login(String id, String name) {
     ZegoLoggerService.logInfo(
       'id:"$id", name:$name',
-      tag: 'uikit-users',
+      tag: 'uikit.users',
       subTag: 'login',
     );
 
     if (id.isEmpty || name.isEmpty) {
       ZegoLoggerService.logError(
         'params is not valid',
-        tag: 'uikit-users',
+        tag: 'uikit.users',
         subTag: 'login',
       );
     }
@@ -102,7 +102,7 @@ class ZegoUIKitCoreDataUser {
     if (localUser.id == id && localUser.name == name) {
       ZegoLoggerService.logWarn(
         'user is same',
-        tag: 'uikit-users',
+        tag: 'uikit.users',
         subTag: 'login',
       );
 
@@ -113,7 +113,7 @@ class ZegoUIKitCoreDataUser {
         (localUser.name.isNotEmpty && localUser.name != name)) {
       ZegoLoggerService.logError(
         'already login, and not same user, auto logout...',
-        tag: 'uikit-users',
+        tag: 'uikit.users',
         subTag: 'login',
       );
       logout();
@@ -121,7 +121,7 @@ class ZegoUIKitCoreDataUser {
 
     ZegoLoggerService.logInfo(
       'login done',
-      tag: 'uikit-users',
+      tag: 'uikit.users',
       subTag: 'login',
     );
 
@@ -141,7 +141,7 @@ class ZegoUIKitCoreDataUser {
   void logout() {
     ZegoLoggerService.logInfo(
       'logout',
-      tag: 'uikit-users',
+      tag: 'uikit.users',
       subTag: 'logout',
     );
 

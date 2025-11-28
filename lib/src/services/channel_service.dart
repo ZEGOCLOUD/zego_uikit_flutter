@@ -65,7 +65,7 @@ mixin ZegoChannelService {
     ZegoLoggerService.logInfo(
       'isEnabled:$isEnabled, '
       'express engineState:${ZegoUIKitCore.shared.coreData.engine.stateNotifier}, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'enableCustomVideoRender',
     );
 
@@ -73,7 +73,7 @@ mixin ZegoChannelService {
         ZegoUIKitCore.shared.coreData.stream.isEnableCustomVideoRender) {
       ZegoLoggerService.logInfo(
         'state is same, ignore',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableCustomVideoRender',
       );
 
@@ -93,7 +93,7 @@ mixin ZegoChannelService {
           .then((_) {
         ZegoLoggerService.logInfo(
           'done',
-          tag: 'uikit-channel',
+          tag: 'uikit.channel',
           subTag: 'enableCustomVideoRender',
         );
       });
@@ -123,7 +123,7 @@ mixin ZegoChannelService {
         'onWaitingEngineStopEnableCustomVideoRender, '
         'target enabled:$targetEnabled, '
         'engineState:$engineState, ',
-        tag: 'uikit-stream',
+        tag: 'uikit.channel.stream',
         subTag: 'enableCustomVideoRender',
       );
 
@@ -138,7 +138,7 @@ mixin ZegoChannelService {
       ZegoLoggerService.logInfo(
         'onWaitingEngineStopEnableCustomVideoRender, '
         'engineState:$engineState, keep waiting...',
-        tag: 'uikit-stream',
+        tag: 'uikit.channel.stream',
         subTag: 'enableCustomVideoRender',
       );
     }

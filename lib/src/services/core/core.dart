@@ -66,7 +66,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (isInit) {
       ZegoLoggerService.logWarn(
         'had init',
-        tag: 'uikit-service-core',
+        tag: 'uikit.service-core',
         subTag: 'init',
       );
 
@@ -78,7 +78,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
           'had init now, just update next params: '
           'playingStreamInPIPUnderIOS:$playingStreamInPIPUnderIOS, '
           'enablePlatformView:$enablePlatformView, ',
-          tag: 'uikit-service-core',
+          tag: 'uikit.service-core',
           subTag: 'init',
         );
       }
@@ -94,7 +94,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       'playingStreamInPIPUnderIOS:$playingStreamInPIPUnderIOS, '
       'enablePlatformView:$enablePlatformView, '
       'scenario:$scenario, ',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'init',
     );
 
@@ -137,7 +137,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (!isInit) {
       ZegoLoggerService.logWarn(
         'is not init',
-        tag: 'uikit-service-core',
+        tag: 'uikit.service-core',
         subTag: 'uninit',
       );
       return;
@@ -147,7 +147,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'uninit',
     );
 
@@ -173,7 +173,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   Future<void> setAdvanceConfigs(Map<String, String> configs) async {
     ZegoLoggerService.logInfo(
       'configs:$configs',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'set advance configs',
     );
 
@@ -185,7 +185,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   void initEventHandle() {
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'init event handle',
     );
 
@@ -199,7 +199,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   void uninitEventHandle() {
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'uninit event handle',
     );
 
@@ -243,7 +243,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       'all room ids:${coreData.room.rooms.allRoomIDs}, '
       'target room id:$targetRoomID, '
       'network state:${ZegoUIKit().getNetworkState()}, ',
-      tag: 'uikit-room',
+      tag: 'uikit.room',
       subTag: 'leave',
     );
 
@@ -264,7 +264,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   }) async {
     ZegoLoggerService.logInfo(
       'users:$userIDs',
-      tag: 'uikit-room',
+      tag: 'uikit.room',
       subTag: 'remove users',
     );
 
@@ -272,7 +272,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (targetRoomInfo.isLargeRoom || targetRoomInfo.markAsLargeRoom) {
       ZegoLoggerService.logInfo(
         'remove all users, because is a large room',
-        tag: 'uikit-room',
+        tag: 'uikit.room',
         subTag: 'remove users',
       );
       return sendInRoomCommand(
@@ -295,7 +295,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   }) {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'uikit-room',
+      tag: 'uikit.room',
       subTag: 'remove local message',
     );
 
@@ -314,7 +314,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   }) async {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'uikit-room',
+      tag: 'uikit.room',
       subTag: 'remove remote message',
     );
 
@@ -344,14 +344,14 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   }) async {
     ZegoLoggerService.logInfo(
       'properties: $properties',
-      tag: 'uikit-room-property',
+      tag: 'uikit.room-property',
       subTag: 'update room properties',
     );
 
     if (!isInit) {
       ZegoLoggerService.logError(
         'core had not init',
-        tag: 'uikit-room-property',
+        tag: 'uikit.room-property',
         subTag: 'update room properties',
       );
 
@@ -369,7 +369,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (coreData.room.currentID.isEmpty) {
       ZegoLoggerService.logError(
         'room is not login',
-        tag: 'uikit-room-property',
+        tag: 'uikit.room-property',
         subTag: 'update room properties',
       );
 
@@ -391,7 +391,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       });
       ZegoLoggerService.logInfo(
         'room property is updating, pending: ${targetRoomInfo.pendingProperties}',
-        tag: 'uikit-room-property',
+        tag: 'uikit.room-property',
         subTag: 'update room properties',
       );
       return false;
@@ -405,7 +405,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
           targetRoomInfo.properties[key]!.value == value) {
         ZegoLoggerService.logInfo(
           'key exist and value is same, ${targetRoomInfo.properties}',
-          tag: 'uikit-room-property',
+          tag: 'uikit.room-property',
           subTag: 'update room properties',
         );
         isAllPropertiesSame = false;
@@ -414,7 +414,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (isAllPropertiesSame) {
       ZegoLoggerService.logInfo(
         'all key exist and value is same',
-        tag: 'uikit-room-property',
+        tag: 'uikit.room-property',
         subTag: 'update room properties',
       );
       // return true;
@@ -462,7 +462,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     // }
     ZegoLoggerService.logInfo(
       'set room extra info, $extraInfo',
-      tag: 'uikit-room-property',
+      tag: 'uikit.room-property',
       subTag: 'update room properties',
     );
     targetRoomInfo.propertiesAPIRequesting = true;
@@ -471,7 +471,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         .then((ZegoRoomSetRoomExtraInfoResult result) {
       ZegoLoggerService.logInfo(
         'set room extra info, result:${result.errorCode}',
-        tag: 'uikit-room-property',
+        tag: 'uikit.room-property',
         subTag: 'update room properties',
       );
       if (ZegoErrorCode.CommonSuccess == result.errorCode) {
@@ -495,7 +495,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         });
         ZegoLoggerService.logError(
           'failed, properties:$properties, error code:${result.errorCode}',
-          tag: 'uikit-room-property',
+          tag: 'uikit.room-property',
           subTag: 'update room properties',
         );
       }
@@ -507,7 +507,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         targetRoomInfo.pendingProperties.clear();
         ZegoLoggerService.logInfo(
           'update pending properties:$pendingProperties',
-          tag: 'uikit-room-property',
+          tag: 'uikit.room-property',
           subTag: 'update room properties',
         );
         updateRoomProperties(
@@ -530,7 +530,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       'room id:$targetRoomID, '
       'command:$command, '
       'user ids:$toUserIDs',
-      tag: 'uikit-room-command',
+      tag: 'uikit.room-command',
       subTag: 'custom command',
     );
 
@@ -558,7 +558,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         .then((ZegoIMSendCustomCommandResult result) {
       ZegoLoggerService.logInfo(
         'send in-room command, result:${result.errorCode}',
-        tag: 'uikit-room-command',
+        tag: 'uikit.room-command',
         subTag: 'custom command',
       );
 
@@ -573,7 +573,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (!ignoreCameraStatus && !coreData.user.localUser.camera.value) {
       ZegoLoggerService.logInfo(
         'camera not open now',
-        tag: 'uikit-camera',
+        tag: 'uikit.camera',
         subTag: 'use front facing camera',
       );
 
@@ -583,7 +583,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (isFrontFacing == coreData.user.localUser.isFrontFacing.value) {
       ZegoLoggerService.logInfo(
         'Already ${isFrontFacing ? 'front' : 'back'}',
-        tag: 'uikit-camera',
+        tag: 'uikit.camera',
         subTag: 'use front facing camera',
       );
 
@@ -593,7 +593,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (coreData.stream.isUsingFrontCameraRequesting) {
       ZegoLoggerService.logInfo(
         'still requesting, ignore',
-        tag: 'uikit-camera',
+        tag: 'uikit.camera',
         subTag: 'use front facing camera',
       );
 
@@ -602,7 +602,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
     ZegoLoggerService.logInfo(
       'use ${isFrontFacing ? 'front' : 'back'} camera',
-      tag: 'uikit-camera',
+      tag: 'uikit.camera',
       subTag: 'use front facing camera',
     );
 
@@ -627,7 +627,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         : ZegoVideoMirrorMode.NoMirror;
     ZegoLoggerService.logInfo(
       'update video mirror mode:$videoMirrorMode',
-      tag: 'uikit-camera',
+      tag: 'uikit.camera',
       subTag: 'use front facing camera',
     );
     await ZegoExpressEngine.instance.setVideoMirrorMode(videoMirrorMode);
@@ -643,7 +643,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
     ZegoLoggerService.logInfo(
       'onCapturedVideoFirstFrameAfterSwitchCamera',
-      tag: 'uikit-camera',
+      tag: 'uikit.camera',
       subTag: 'use front facing camera',
     );
   }
@@ -663,7 +663,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (enabled == coreData.stream.isEnableSwitchRoomNotStopPlay) {
       ZegoLoggerService.logInfo(
         '${enabled ? 'enable' : 'disable'} is same, ignore',
-        tag: 'uikit-service-core',
+        tag: 'uikit.service-core',
         subTag: 'enableSwitchRoomNotStopPlay',
       );
 
@@ -672,7 +672,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
     ZegoLoggerService.logInfo(
       'enabled:$enabled, ',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'enableSwitchRoomNotStopPlay',
     );
 
@@ -690,7 +690,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
     ZegoLoggerService.logInfo(
       'mode: $mode',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'set audio video resource mode',
     );
   }
@@ -703,7 +703,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
     ZegoLoggerService.logInfo(
       'config: ${cdnConfig?.toStringX()}',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'set audio video resource mode',
     );
   }
@@ -712,7 +712,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (!isInit) {
       ZegoLoggerService.logError(
         'core had not init',
-        tag: 'uikit-service-core',
+        tag: 'uikit.service-core',
         subTag: 'set audio route to speaker:$useSpeaker',
       );
 
@@ -732,7 +732,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
           coreData.user.localUser.audioRoute.value) {
         ZegoLoggerService.logInfo(
           'already ${useSpeaker ? 'use' : 'not use'}',
-          tag: 'uikit-service-core',
+          tag: 'uikit.service-core',
           subTag: 'set audio route to speaker:$useSpeaker',
         );
 
@@ -743,7 +743,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
           coreData.user.localUser.audioRoute.value) {
         ZegoLoggerService.logWarn(
           'Currently using headphone, cannot be set as speaker.',
-          tag: 'uikit-service-core',
+          tag: 'uikit.service-core',
           subTag: 'set audio route to speaker:$useSpeaker',
         );
 
@@ -754,7 +754,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     ZegoLoggerService.logInfo(
       'target is speaker:$useSpeaker, '
       'current audio route is:${coreData.user.localUser.audioRoute.value}, ',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'set audio route to speaker:$useSpeaker',
     );
     ZegoExpressEngine.instance.setAudioRouteToSpeaker(useSpeaker);
@@ -773,7 +773,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     }
     ZegoLoggerService.logInfo(
       'now audio route is:${coreData.user.localUser.audioRoute.value}',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'set audio route to speaker:$useSpeaker',
     );
 
@@ -801,7 +801,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       ZegoLoggerService.logInfo(
         "turn ${isOn ? "on" : "off"} $userID camera, "
         "is large room:$isLargeRoom",
-        tag: 'uikit-camera',
+        tag: 'uikit.camera',
         subTag: 'switch camera',
       );
 
@@ -833,7 +833,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (!isInit) {
       ZegoLoggerService.logError(
         'core had not init',
-        tag: 'uikit-camera',
+        tag: 'uikit.camera',
         subTag: 'switch camera',
       );
 
@@ -851,7 +851,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (isOn == coreData.user.localUser.camera.value) {
       ZegoLoggerService.logInfo(
         'turn ${isOn ? "on" : "off"} local camera, already ${isOn ? "on" : "off"}',
-        tag: 'uikit-camera',
+        tag: 'uikit.camera',
         subTag: 'switch camera',
       );
 
@@ -866,7 +866,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} local camera",
-      tag: 'uikit-camera',
+      tag: 'uikit.camera',
       subTag: 'switch camera',
     );
 
@@ -915,7 +915,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         "turn ${isOn ? "on" : "off"} $userID microphone, "
         "muteMode:$muteMode, "
         "is large room:$isLargeRoom, ",
-        tag: 'uikit-microphone',
+        tag: 'uikit.microphone',
         subTag: 'switch microphone',
       );
 
@@ -956,7 +956,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (!isInit) {
       ZegoLoggerService.logError(
         'turn ${isOn ? "on" : "off"} local microphone, core had not init',
-        tag: 'uikit-microphone',
+        tag: 'uikit.microphone',
         subTag: 'switch microphone',
       );
 
@@ -976,7 +976,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       ZegoLoggerService.logInfo(
         'turn ${isOn ? "on" : "off"} local microphone, muteMode:$muteMode, '
         'already ${isOn ? "on" : "off"}.',
-        tag: 'uikit-microphone',
+        tag: 'uikit.microphone',
         subTag: 'switch microphone',
       );
 
@@ -991,7 +991,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} local microphone, muteMode:$muteMode",
-      tag: 'uikit-microphone',
+      tag: 'uikit.microphone',
       subTag: 'switch microphone',
     );
 
@@ -1048,7 +1048,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   ) async {
     ZegoLoggerService.logInfo(
       'config:$config',
-      tag: 'uikit-stream',
+      tag: 'uikit.stream',
       subTag: 'set video config',
     );
 
@@ -1082,7 +1082,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       'minimizeVideoConfig:$minimizeVideoConfig, '
       'isFocusOnRemote:$isFocusOnRemote, '
       'bitmask:$propertyBitMask',
-      tag: 'uikit-stream',
+      tag: 'uikit.stream',
       subTag: 'traffic control',
     );
 
@@ -1139,7 +1139,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     } else {
       ZegoLoggerService.logInfo(
         'orientation:$orientation',
-        tag: 'uikit-service-core',
+        tag: 'uikit.service-core',
         subTag: 'update app orientation',
       );
 
@@ -1153,14 +1153,14 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (coreData.stream.pushVideoConfig.resolution == resolution) {
       ZegoLoggerService.logInfo(
         'preset($resolution) is equal',
-        tag: 'uikit-stream',
+        tag: 'uikit.stream',
         subTag: 'set video config',
       );
       return;
     } else {
       ZegoLoggerService.logInfo(
         'preset:$resolution',
-        tag: 'uikit-stream',
+        tag: 'uikit.stream',
         subTag: 'set video config by preset',
       );
 
@@ -1174,14 +1174,14 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (coreData.stream.useVideoViewAspectFill == useVideoViewAspectFill) {
       ZegoLoggerService.logInfo(
         'mode is equal',
-        tag: 'uikit-stream',
+        tag: 'uikit.stream',
         subTag: 'update video view mode',
       );
       return;
     } else {
       ZegoLoggerService.logInfo(
         'mode:$useVideoViewAspectFill',
-        tag: 'uikit-stream',
+        tag: 'uikit.stream',
         subTag: 'update video view mode',
       );
       coreData.stream.useVideoViewAspectFill = useVideoViewAspectFill;
@@ -1194,7 +1194,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   ) {
     ZegoLoggerService.logInfo(
       'on map custom command received, from user:${commandData.fromUser}, command:${commandData.command}',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'custom command',
     );
 
@@ -1204,7 +1204,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     } catch (e) {
       ZegoLoggerService.logInfo(
         'custom command is not a json, $e',
-        tag: 'uikit-service-core',
+        tag: 'uikit.service-core',
         subTag: 'custom command',
       );
     }
@@ -1212,7 +1212,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     if (commandJson is! Map<String, dynamic>) {
       ZegoLoggerService.logInfo(
         'custom command is not a map',
-        tag: 'uikit-service-core',
+        tag: 'uikit.service-core',
         subTag: 'custom command',
       );
       return;
@@ -1234,7 +1234,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       if (selfKickedOut) {
         ZegoLoggerService.logInfo(
           'local user had been remove by ${commandData.fromUser.id}, auto leave room',
-          tag: 'uikit-service-core',
+          tag: 'uikit.service-core',
           subTag: 'custom command',
         );
         leaveRoom(targetRoomID: commandData.roomID);
@@ -1249,7 +1249,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
             coreData.user.localUser.id) {
       ZegoLoggerService.logInfo(
         'local camera request turn on by ${commandData.fromUser}',
-        tag: 'uikit-service-core',
+        tag: 'uikit.service-core',
         subTag: 'custom command',
       );
       coreData.stream.roomStreams
@@ -1261,7 +1261,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
             coreData.user.localUser.id) {
       ZegoLoggerService.logInfo(
         'local camera request turn off by ${commandData.fromUser}',
-        tag: 'uikit-service-core',
+        tag: 'uikit.service-core',
         subTag: 'custom command',
       );
       turnCameraOn(
@@ -1279,7 +1279,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       if (userID == coreData.user.localUser.id) {
         ZegoLoggerService.logInfo(
           'local microphone request turn on by ${commandData.fromUser}',
-          tag: 'uikit-service-core',
+          tag: 'uikit.service-core',
           subTag: 'custom command',
         );
 
@@ -1310,7 +1310,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       if (userID == coreData.user.localUser.id) {
         ZegoLoggerService.logInfo(
           'local microphone request turn off by ${commandData.fromUser}',
-          tag: 'uikit-service-core',
+          tag: 'uikit.service-core',
           subTag: 'custom command',
         );
         turnMicrophoneOn(
@@ -1329,7 +1329,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
 
         ZegoLoggerService.logInfo(
           'clear local message(type:$messageType) by ${commandData.fromUser}',
-          tag: 'uikit-service-core',
+          tag: 'uikit.service-core',
           subTag: 'custom command',
         );
 
@@ -1352,7 +1352,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       '${enable ? "enable" : "disable"} custom video processing, '
       'buffer type:$type, '
       'express engineState:${coreData.engine.stateNotifier.value}, ',
-      tag: 'uikit-stream',
+      tag: 'uikit.stream',
       subTag: 'enableCustomVideoProcessing',
     );
 
@@ -1360,7 +1360,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         ZegoUIKitCore.shared.coreData.stream.isEnableCustomVideoProcessing) {
       ZegoLoggerService.logInfo(
         'state is same, ignore',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableCustomVideoProcessing',
       );
 
@@ -1382,7 +1382,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
           .then((_) {
         ZegoLoggerService.logInfo(
           'done',
-          tag: 'uikit-channel',
+          tag: 'uikit.channel',
           subTag: 'enableCustomVideoProcessing',
         );
       });
@@ -1411,7 +1411,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         'onWaitingEngineStopEnableCustomVideoProcessing, '
         'target enabled:$targetEnabled, '
         'engineState:$engineState, ',
-        tag: 'uikit-stream',
+        tag: 'uikit.stream',
         subTag: 'enableCustomVideoProcessing',
       );
 
@@ -1424,7 +1424,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       ZegoLoggerService.logInfo(
         'onWaitingEngineStopEnableCustomVideoProcessing, '
         'engineState:$engineState, keep waiting...',
-        tag: 'uikit-stream',
+        tag: 'uikit.stream',
         subTag: 'enableCustomVideoProcessing',
       );
     }
@@ -1436,7 +1436,7 @@ extension ZegoUIKitCoreBaseBeauty on ZegoUIKitCore {
   Future<void> enableBeauty(bool isOn) async {
     ZegoLoggerService.logInfo(
       '${isOn ? "enable" : "disable"} beauty',
-      tag: 'uikit-beauty',
+      tag: 'uikit.beauty',
       subTag: 'effects',
     );
 
@@ -1446,7 +1446,7 @@ extension ZegoUIKitCoreBaseBeauty on ZegoUIKitCore {
   Future<void> startEffectsEnv() async {
     ZegoLoggerService.logInfo(
       'start effects env',
-      tag: 'uikit-beauty',
+      tag: 'uikit.beauty',
       subTag: 'effects',
     );
 
@@ -1456,7 +1456,7 @@ extension ZegoUIKitCoreBaseBeauty on ZegoUIKitCore {
   Future<void> stopEffectsEnv() async {
     ZegoLoggerService.logInfo(
       'stop effects env',
-      tag: 'uikit-beauty',
+      tag: 'uikit.beauty',
       subTag: 'effects',
     );
 
@@ -1473,7 +1473,7 @@ extension ZegoUIKitCoreMixer on ZegoUIKitCore {
     ZegoLoggerService.logInfo(
       'code:${startMixerResult.errorCode}, '
       'extendedData:${startMixerResult.extendedData}',
-      tag: 'uikit-mixstream',
+      tag: 'uikit.mixstream',
       subTag: 'start mixer task',
     );
 
@@ -1498,7 +1498,7 @@ extension ZegoUIKitCoreMixer on ZegoUIKitCore {
     );
     ZegoLoggerService.logInfo(
       'code:${stopMixerResult.errorCode}',
-      tag: 'uikit-mixstream',
+      tag: 'uikit.mixstream',
       subTag: 'stop mixer task',
     );
 
@@ -1577,7 +1577,7 @@ extension ZegoUIKitCoreDevice on ZegoUIKitCore {
   Future<void> setAudioDeviceMode(ZegoUIKitAudioDeviceMode deviceMode) async {
     ZegoLoggerService.logWarn(
       'set audio device mode:$deviceMode',
-      tag: 'uikit-core',
+      tag: 'uikit.core',
       subTag: 'device',
     );
 

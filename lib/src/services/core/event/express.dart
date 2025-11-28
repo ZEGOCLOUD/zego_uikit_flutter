@@ -13,7 +13,7 @@ class ZegoUIKitExpressEventImpl {
     if (events.contains(event)) {
       ZegoLoggerService.logInfo(
         '${event.hashCode} has registered',
-        tag: 'uikit-event',
+        tag: 'uikit.event',
         subTag: 'express',
       );
 
@@ -22,7 +22,7 @@ class ZegoUIKitExpressEventImpl {
 
     ZegoLoggerService.logInfo(
       'register, ${event.hashCode}',
-      tag: 'uikit-event',
+      tag: 'uikit.event',
       subTag: 'express',
     );
 
@@ -32,7 +32,7 @@ class ZegoUIKitExpressEventImpl {
   void unregister(ZegoUIKitExpressEventInterface event) {
     ZegoLoggerService.logInfo(
       'unregister, ${event.hashCode}',
-      tag: 'uikit-event',
+      tag: 'uikit.event',
       subTag: 'express',
     );
 

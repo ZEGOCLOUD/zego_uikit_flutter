@@ -366,7 +366,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     } catch (e) {
       ZegoLoggerService.logInfo(
         'set isRenderedVideoFirstFrame error:$e',
-        tag: 'uikit-component',
+        tag: 'uikit.component',
         subTag: 'onPublisherCapturedVideoFirstFrame',
       );
     }

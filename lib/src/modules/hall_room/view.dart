@@ -410,7 +410,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
         if (!isCameraOn) {
           ZegoLoggerService.logInfo(
             '${stream.user.id}\'s camera is not open',
-            tag: 'uikit-component',
+            tag: 'uikit.component',
             subTag: 'hall view',
           );
 
@@ -429,7 +429,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
                   if (userView == null) {
                     ZegoLoggerService.logError(
                       '${stream.user.id}\'s view is null',
-                      tag: 'uikit-component',
+                      tag: 'uikit.component',
                       subTag: 'hall view',
                     );
 
@@ -445,7 +445,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
 
                   ZegoLoggerService.logInfo(
                     'render ${stream.user.id}\'s view',
-                    tag: 'uikit-component',
+                    tag: 'uikit.component',
                     subTag: 'hall view',
                   );
 

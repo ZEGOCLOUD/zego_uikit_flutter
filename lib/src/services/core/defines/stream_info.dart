@@ -75,7 +75,7 @@ class ZegoUIKitCoreStreamInfo {
     ZegoLoggerService.logInfo(
       'view:${viewNotifier.value}, '
       'stream id:$streamID, ',
-      tag: 'uikit-stream',
+      tag: 'uikit.stream',
       subTag: 'onViewUpdate',
     );
   }
@@ -84,7 +84,7 @@ class ZegoUIKitCoreStreamInfo {
     ZegoLoggerService.logInfo(
       'view id:${viewIDNotifier.value}, '
       'stream id:$streamID, ',
-      tag: 'uikit-stream',
+      tag: 'uikit.stream',
       subTag: 'onViewIDUpdate',
     );
   }

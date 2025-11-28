@@ -122,7 +122,7 @@ class ZegoUIKitCoreUser {
   void initAudioRoute(ZegoAudioRoute value) {
     ZegoLoggerService.logInfo(
       'init default audio route:$value',
-      tag: 'uikit-service-core',
+      tag: 'uikit.service-core',
       subTag: 'local user',
     );
     audioRoute.value = value;

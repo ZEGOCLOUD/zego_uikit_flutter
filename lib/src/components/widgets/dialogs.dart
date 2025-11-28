@@ -24,7 +24,7 @@ Future<bool> showAlertDialog(
       'title:$title, '
       'content:$content, '
       'actions:$actions, ',
-      tag: 'uikit-component',
+      tag: 'uikit.component',
       subTag: 'dialogs',
     );
 
@@ -72,7 +72,7 @@ Future<bool> showAlertDialog(
     ZegoLoggerService.logError(
       'show dialog error, $e, '
       'context;$context, ',
-      tag: 'uikit-component',
+      tag: 'uikit.component',
       subTag: 'dialogs',
     );
   }
@@ -89,7 +89,7 @@ Future<bool> showTopModalSheet<T>(
     ZegoLoggerService.logInfo(
       'show dialog error, context is not mounted, '
       'context:$context, ',
-      tag: 'uikit-component',
+      tag: 'uikit.component',
       subTag: 'dialogs',
     );
 
@@ -134,7 +134,7 @@ Future<bool> showTopModalSheet<T>(
     ZegoLoggerService.logError(
       'showTopModalSheet, $e, '
       'context:$context, ',
-      tag: 'uikit-component',
+      tag: 'uikit.component',
       subTag: 'dialogs',
     );
   }

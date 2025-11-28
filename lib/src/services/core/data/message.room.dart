@@ -28,7 +28,7 @@ class ZegoUIKitCoreDataRoomMessage {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$roomID',
-      tag: 'uikit-messages-room',
+      tag: 'uikit.messages.room',
       subTag: 'init',
     );
 
@@ -44,7 +44,7 @@ class ZegoUIKitCoreDataRoomMessage {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$roomID',
-      tag: 'uikit-messages-room',
+      tag: 'uikit.messages.room',
       subTag: 'uninit',
     );
 
@@ -62,7 +62,7 @@ class ZegoUIKitCoreDataRoomMessage {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$roomID',
-      tag: 'uikit-messages-room',
+      tag: 'uikit.messages.room',
       subTag: 'clear',
     );
 

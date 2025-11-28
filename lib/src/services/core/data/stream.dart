@@ -42,7 +42,7 @@ class ZegoUIKitCoreDataStream {
       ZegoUIKitCore.shared.coreData.user;
 
   var roomStreams = ZegoUIKitCoreRoomMap<ZegoUIKitCoreDataRoomStream>(
-    name: 'core data stream',
+    name: 'stream',
     createDefault: (
       String roomID,
     ) {
@@ -55,7 +55,7 @@ class ZegoUIKitCoreDataStream {
       emptyRoomStream.roomID = roomID;
       ZegoLoggerService.logInfo(
         'empty room(${emptyRoomStream.hashCode}) has update id to $roomID, ',
-        tag: 'uikit-streams',
+        tag: 'uikit.streams',
         subTag: 'room-map',
       );
     },
@@ -69,7 +69,7 @@ class ZegoUIKitCoreDataStream {
       'init, '
       'playingStreamInPIPUnderIOS:$playingStreamInPIPUnderIOS, '
       'enablePlatformView:$enablePlatformView, ',
-      tag: 'uikit-streams',
+      tag: 'uikit.streams',
       subTag: 'uninit',
     );
 
@@ -84,7 +84,7 @@ class ZegoUIKitCoreDataStream {
   void uninit() {
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'uikit-streams',
+      tag: 'uikit.streams',
       subTag: 'uninit',
     );
 
@@ -106,7 +106,7 @@ class ZegoUIKitCoreDataStream {
     ZegoLoggerService.logInfo(
       'clear, '
       'room id:$targetRoomID, ',
-      tag: 'uikit-streams',
+      tag: 'uikit.streams',
       subTag: 'uninit',
     );
 
@@ -147,7 +147,7 @@ class ZegoUIKitCoreDataStream {
   }) async {
     ZegoLoggerService.logInfo(
       'start preview',
-      tag: 'uikit-streams',
+      tag: 'uikit.streams',
       subTag: 'start preview',
     );
 
@@ -162,7 +162,7 @@ class ZegoUIKitCoreDataStream {
     ZegoLoggerService.logInfo(
       'start preview, on view created,'
       'view id:${_userCommonData.localUser.mainChannel.viewIDNotifier.value}, ',
-      tag: 'uikit-streams',
+      tag: 'uikit.streams',
       subTag: 'onViewCreatedByStartPreview',
     );
 
@@ -178,7 +178,7 @@ class ZegoUIKitCoreDataStream {
     ZegoLoggerService.logInfo(
       'call express startPreview, for trace enableCustomVideoRender, '
       'isEnableCustomVideoRender:$isEnableCustomVideoRender',
-      tag: 'uikit-streams',
+      tag: 'uikit.streams',
       subTag: 'onViewCreatedByStartPreview',
     );
     await ZegoExpressEngine.instance
@@ -193,7 +193,7 @@ class ZegoUIKitCoreDataStream {
   Future<void> stopPreview() async {
     ZegoLoggerService.logInfo(
       'stop preview',
-      tag: 'uikit-streams',
+      tag: 'uikit.streams',
       subTag: 'stop preview',
     );
 
@@ -208,7 +208,7 @@ class ZegoUIKitCoreDataStream {
     if (canvasViewCreateQueue.currentTaskKey == queueKey) {
       ZegoLoggerService.logInfo(
         'stopped canvas view queue',
-        tag: 'uikit-streams',
+        tag: 'uikit.streams',
         subTag: 'stop preview',
       );
 
@@ -230,7 +230,7 @@ class ZegoUIKitCoreDataStream {
 
     ZegoLoggerService.logInfo(
       'done',
-      tag: 'uikit-streams',
+      tag: 'uikit.streams',
       subTag: 'stop preview',
     );
   }
@@ -248,7 +248,7 @@ class ZegoUIKitCoreDataStream {
 
     ZegoLoggerService.logInfo(
       'with express with key:$canvasViewKey(${canvasViewKey.toString()})',
-      tag: 'uikit-streams',
+      tag: 'uikit.streams',
       subTag: 'create canvas view',
     );
 
@@ -257,7 +257,7 @@ class ZegoUIKitCoreDataStream {
         ZegoLoggerService.logInfo(
           'createCanvasView onViewCreated, '
           'viewID:$viewID, ',
-          tag: 'uikit-streams',
+          tag: 'uikit.streams',
           subTag: 'create canvas view',
         );
 
@@ -287,7 +287,7 @@ class ZegoUIKitCoreDataStream {
     if (localStreamChannel.viewCreatingNotifier.value) {
       ZegoLoggerService.logInfo(
         'view is creating, ignore',
-        tag: 'uikit-streams',
+        tag: 'uikit.streams',
         subTag: 'create local user video view',
       );
 
@@ -305,7 +305,7 @@ class ZegoUIKitCoreDataStream {
       } else {
         ZegoLoggerService.logInfo(
           'add to queue',
-          tag: 'uikit-streams',
+          tag: 'uikit.streams',
           subTag: 'create local user video view',
         );
 
@@ -348,7 +348,7 @@ class ZegoUIKitCoreDataStream {
       'view id:${localStreamChannel.viewIDNotifier.value},'
       'view:${localStreamChannel.viewNotifier}, '
       'view hashCode:${localStreamChannel.viewNotifier.hashCode}',
-      tag: 'uikit-streams',
+      tag: 'uikit.streams',
       subTag: 'create local user video view',
     );
 
@@ -358,7 +358,7 @@ class ZegoUIKitCoreDataStream {
         'user view had created, directly call callback, '
         'view id:${localStreamChannel.viewIDNotifier.value},'
         'view:${localStreamChannel.viewNotifier}',
-        tag: 'uikit-streams',
+        tag: 'uikit.streams',
         subTag: 'create local user video view',
       );
 
@@ -376,7 +376,7 @@ class ZegoUIKitCoreDataStream {
             'view id done, '
             'streamType:$streamType, '
             'viewID:$viewID',
-            tag: 'uikit-streams',
+            tag: 'uikit.streams',
             subTag: 'create local user video view',
           );
 
@@ -394,7 +394,7 @@ class ZegoUIKitCoreDataStream {
           'widget done, '
           'streamType:$streamType, '
           'widget:$widget ${widget.hashCode}',
-          tag: 'uikit-streams',
+          tag: 'uikit.streams',
           subTag: 'create local user video view',
         );
 

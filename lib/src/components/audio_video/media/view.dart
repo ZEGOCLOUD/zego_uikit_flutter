@@ -64,7 +64,7 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
     if (widget.user == null) {
       ZegoLoggerService.logInfo(
         'use id:(${widget.user?.id}) is null',
-        tag: 'uikit-component',
+        tag: 'uikit.component',
         subTag: 'media view',
       );
 
@@ -86,7 +86,7 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
                     if (userView == null) {
                       ZegoLoggerService.logError(
                         '${widget.user?.id}\'s view is null',
-                        tag: 'uikit-component',
+                        tag: 'uikit.component',
                         subTag: 'media view',
                       );
 

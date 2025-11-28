@@ -49,7 +49,7 @@ class ZegoUIKitCoreDataEngine {
     ZegoLoggerService.logInfo(
       'create engine with profile,'
       'withoutCreateEngine:$withoutCreateEngine, ',
-      tag: 'uikit-engine',
+      tag: 'uikit.engine',
       subTag: 'init',
     );
     if (withoutCreateEngine) {
@@ -67,7 +67,7 @@ class ZegoUIKitCoreDataEngine {
         ).then((value) {
           ZegoLoggerService.logInfo(
             'engine created',
-            tag: 'uikit-engine',
+            tag: 'uikit.engine',
             subTag: 'init',
           );
         });
@@ -78,7 +78,7 @@ class ZegoUIKitCoreDataEngine {
         ZegoLoggerService.logInfo(
           'engine error:$e, '
           'app sign:$appSign, ',
-          tag: 'uikit-engine',
+          tag: 'uikit.engine',
           subTag: 'init',
         );
 

@@ -18,7 +18,7 @@ class ZegoUIKitCoreDataSingleRoom {
   ZegoUIKitCoreDataSingleRoom(this.id) {
     ZegoLoggerService.logInfo(
       'room id:$id, ',
-      tag: 'uikit-rooms-room',
+      tag: 'uikit.rooms.room',
       subTag: 'create',
     );
   }
@@ -62,7 +62,7 @@ class ZegoUIKitCoreDataSingleRoom {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$id, ',
-      tag: 'uikit-rooms-room',
+      tag: 'uikit.rooms.room',
       subTag: 'init',
     );
 
@@ -76,7 +76,7 @@ class ZegoUIKitCoreDataSingleRoom {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$id, ',
-      tag: 'uikit-rooms-room',
+      tag: 'uikit.rooms.room',
       subTag: 'uninit',
     );
 
@@ -94,7 +94,7 @@ class ZegoUIKitCoreDataSingleRoom {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
       'room id:$id, ',
-      tag: 'uikit-rooms-room',
+      tag: 'uikit.rooms.room',
       subTag: 'clear',
     );
 
@@ -117,7 +117,7 @@ class ZegoUIKitCoreDataSingleRoom {
       'joining, '
       'markAsLargeRoom:$markAsLargeRoom, '
       'isSimulated:$isSimulated, ',
-      tag: 'uikit-rooms-room',
+      tag: 'uikit.rooms.room',
       subTag: 'join room',
     );
 
@@ -138,7 +138,7 @@ class ZegoUIKitCoreDataSingleRoom {
       'room id:"$id", '
       'result:${result.errorCode},'
       'extendedData:${result.extendedData}',
-      tag: 'uikit-rooms-room',
+      tag: 'uikit.rooms.room',
       subTag: 'join room',
     );
 
@@ -150,7 +150,7 @@ class ZegoUIKitCoreDataSingleRoom {
       'hash:$hashCode, '
       'room id:"$id", '
       'leaving, ',
-      tag: 'uikit-rooms-room',
+      tag: 'uikit.rooms.room',
       subTag: 'leave room',
     );
 
@@ -159,7 +159,7 @@ class ZegoUIKitCoreDataSingleRoom {
         'hash:$hashCode, '
         'room id:"$id", '
         'room state is logout, ignore, ',
-        tag: 'uikit-rooms-room',
+        tag: 'uikit.rooms.room',
         subTag: 'leave room',
       );
 
@@ -172,7 +172,7 @@ class ZegoUIKitCoreDataSingleRoom {
       'room id:"$id", '
       'result:${result.errorCode},'
       'extendedData:${result.extendedData}',
-      tag: 'uikit-rooms-room',
+      tag: 'uikit.rooms.room',
       subTag: 'leave room',
     );
 

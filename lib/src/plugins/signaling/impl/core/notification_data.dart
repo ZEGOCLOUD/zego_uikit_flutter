@@ -22,7 +22,7 @@ mixin ZegoSignalingPluginCoreNotificationData {
   void initNotificationData() {
     ZegoLoggerService.logInfo(
       'init notification data',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'notification data',
     );
 
@@ -37,7 +37,7 @@ mixin ZegoSignalingPluginCoreNotificationData {
   void uninitNotificationData() {
     ZegoLoggerService.logInfo(
       'uninit notification data',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'notification data',
     );
 
@@ -66,7 +66,7 @@ mixin ZegoSignalingPluginCoreNotificationData {
   }) {
     ZegoLoggerService.logInfo(
       'enable notify when app is in the background or quit: $enabled',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'notification data',
     );
     notifyWhenAppIsInTheBackgroundOrQuit = enabled;

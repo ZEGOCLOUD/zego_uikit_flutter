@@ -29,15 +29,15 @@ class ZegoStreamCanvasViewCreateQueue {
   void completeCurrentTask() {
     ZegoLoggerService.logInfo(
       'try complete current task($currentTaskKey)',
-      tag: 'uikit-stream',
+      tag: 'uikit.stream.queue',
       subTag: 'queue',
     );
 
     if (_completer == null) {
       ZegoLoggerService.logInfo(
         'completer is null',
-        tag: 'uikit-stream',
-        subTag: 'queue',
+        tag: 'uikit.stream.queue',
+        subTag: 'completeCurrentTask',
       );
 
       return;
@@ -49,8 +49,8 @@ class ZegoStreamCanvasViewCreateQueue {
     if (!(tempCompleter?.isCompleted ?? true)) {
       ZegoLoggerService.logInfo(
         'current task($currentTaskKey) is completed',
-        tag: 'uikit-stream',
-        subTag: 'queue',
+        tag: 'uikit.stream.queue',
+        subTag: 'completeCurrentTask',
       );
 
       tempCompleter?.complete();
@@ -69,8 +69,8 @@ class ZegoStreamCanvasViewCreateQueue {
           'task($uniqueKey) run finished, task queue size:${_taskList.length}, '
           'keys:${_taskList.map((e) => '${e.key},')}, '
           'run next task',
-          tag: 'uikit-stream',
-          subTag: 'queue',
+          tag: 'uikit.stream.queue',
+          subTag: 'addTask',
         );
 
         if (_taskList.isNotEmpty) {
@@ -85,8 +85,8 @@ class ZegoStreamCanvasViewCreateQueue {
     ZegoLoggerService.logInfo(
       'task($uniqueKey) is added, task queue size:${_taskList.length}, '
       'keys:${_taskList.map((e) => '${e.key},')}',
-      tag: 'uikit-stream',
-      subTag: 'queue',
+      tag: 'uikit.stream.queue',
+      subTag: 'addTask',
     );
     _doTask();
   }
@@ -95,8 +95,8 @@ class ZegoStreamCanvasViewCreateQueue {
     if (_isTaskRunning) {
       ZegoLoggerService.logInfo(
         'task($currentTaskKey) is running, ignore current do request',
-        tag: 'uikit-stream',
-        subTag: 'queue',
+        tag: 'uikit.stream.queue',
+        subTag: 'doTask',
       );
 
       return;
@@ -105,8 +105,8 @@ class ZegoStreamCanvasViewCreateQueue {
     if (_taskList.isEmpty) {
       ZegoLoggerService.logInfo(
         'task queue is empty',
-        tag: 'uikit-stream',
-        subTag: 'queue',
+        tag: 'uikit.stream.queue',
+        subTag: 'doTask',
       );
 
       return;
@@ -115,8 +115,8 @@ class ZegoStreamCanvasViewCreateQueue {
     ZegoLoggerService.logInfo(
       'try get task, task queue size:${_taskList.length}, '
       'keys:${_taskList.map((e) => '${e.key},')}',
-      tag: 'uikit-stream',
-      subTag: 'queue',
+      tag: 'uikit.stream.queue',
+      subTag: 'doTask',
     );
 
     _completer = Completer<void>();
@@ -125,8 +125,8 @@ class ZegoStreamCanvasViewCreateQueue {
 
     ZegoLoggerService.logInfo(
       'run task(${task.key})',
-      tag: 'uikit-stream',
-      subTag: 'queue',
+      tag: 'uikit.stream.queue',
+      subTag: 'doTask',
     );
     try {
       await task.runner.call();
@@ -137,8 +137,8 @@ class ZegoStreamCanvasViewCreateQueue {
     } catch (e) {
       ZegoLoggerService.logInfo(
         'task(${task.key}) exception, $e',
-        tag: 'uikit-stream',
-        subTag: 'queue',
+        tag: 'uikit.stream.queue',
+        subTag: 'doTask',
       );
 
       task.next();

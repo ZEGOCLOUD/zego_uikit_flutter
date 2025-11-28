@@ -24,7 +24,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'nonRoot:$nonRoot',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'backToDesktop',
       );
 
@@ -35,7 +35,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       } on PlatformException catch (e) {
         ZegoLoggerService.logError(
           'Failed to back to desktop: $e.',
-          tag: 'uikit-channel',
+          tag: 'uikit.channel',
           subTag: 'backToDesktop',
         );
       }
@@ -45,7 +45,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       } on PlatformException catch (e) {
         ZegoLoggerService.logError(
           'Failed: $e.',
-          tag: 'uikit-channel',
+          tag: 'uikit.channel',
           subTag: 'backToDesktop',
         );
       }
@@ -57,7 +57,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isIOS) {
       ZegoLoggerService.logInfo(
         'not support in iOS',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'isLockScreen',
       );
       return false;
@@ -69,7 +69,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to check isLock: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'isLockScreen',
       );
     }
@@ -84,7 +84,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isIOS) {
       ZegoLoggerService.logInfo(
         'not support in iOS',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'checkAppRunning',
       );
 
@@ -93,7 +93,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'checkAppRunning',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'checkAppRunning',
     );
 
@@ -104,7 +104,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to check app running: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'checkAppRunning',
       );
     }
@@ -119,7 +119,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isIOS) {
       ZegoLoggerService.logInfo(
         'not support in iOS',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'activeAppToForeground',
       );
 
@@ -128,7 +128,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'activeAppToForeground',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'activeAppToForeground',
     );
 
@@ -137,7 +137,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to active app to foreground: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'activeAppToForeground',
       );
     }
@@ -150,7 +150,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isIOS) {
       ZegoLoggerService.logInfo(
         'not support in iOS',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'requestDismissKeyguard',
       );
 
@@ -159,7 +159,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'requestDismissKeyguard',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'requestDismissKeyguard',
     );
 
@@ -168,7 +168,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request dismiss keyguard: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'requestDismissKeyguard',
       );
     }
@@ -180,7 +180,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'stopIOSPIP',
       );
 
@@ -191,7 +191,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (systemVersion.major < 15) {
       ZegoLoggerService.logInfo(
         'not support smaller than 15',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'stopIOSPIP',
       );
 
@@ -200,7 +200,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       '',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'stopIOSPIP',
     );
 
@@ -210,7 +210,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'stopPIPInIOS',
       );
     }
@@ -224,7 +224,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'isIOSInPIP',
       );
 
@@ -235,7 +235,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (systemVersion.major < 15) {
       ZegoLoggerService.logInfo(
         'not support smaller than 15',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'isIOSInPIP',
       );
 
@@ -244,7 +244,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       '',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'isIOSInPIP',
     );
 
@@ -254,7 +254,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'isIOSInPIP',
       );
     }
@@ -272,7 +272,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableIOSPIP',
       );
 
@@ -283,7 +283,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (systemVersion.major < 15) {
       ZegoLoggerService.logInfo(
         'not support smaller than 15',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableIOSPIP',
       );
 
@@ -292,7 +292,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'streamID:$streamID, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'enableIOSPIP',
     );
 
@@ -305,7 +305,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableIOSPIP',
       );
     }
@@ -317,7 +317,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'updateIOSPIPSource',
       );
 
@@ -328,7 +328,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (systemVersion.major < 15) {
       ZegoLoggerService.logInfo(
         'not support smaller than 15',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'updateIOSPIPSource',
       );
 
@@ -337,7 +337,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'streamID:$streamID, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'updateIOSPIPSource',
     );
 
@@ -348,7 +348,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'updateIOSPIPSource',
       );
     }
@@ -364,7 +364,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableIOSPIPAuto',
       );
 
@@ -375,7 +375,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (systemVersion.major < 15) {
       ZegoLoggerService.logInfo(
         'not support smaller than 15',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableIOSPIPAuto',
       );
 
@@ -384,7 +384,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'enabled:$isEnabled, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'enableIOSPIPAuto',
     );
 
@@ -397,7 +397,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableIOSPIPAuto',
       );
     }
@@ -409,7 +409,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableHardwareDecoder',
       );
 
@@ -418,7 +418,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'enabled:$isEnabled, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'enableHardwareDecoder',
     );
 
@@ -429,7 +429,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableHardwareDecoder',
       );
     }
@@ -441,7 +441,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableCustomVideoRender',
       );
 
@@ -450,7 +450,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'enabled:$isEnabled, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'enableCustomVideoRender',
     );
 
@@ -461,7 +461,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'enableCustomVideoRender',
       );
     }
@@ -479,7 +479,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'startPlayingStreamInPIP',
       );
 
@@ -488,7 +488,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'streamID:$streamID, resourceMode:$resourceMode, roomID:$roomID, cdnConfig:$cdnConfig, videoCodecID:$videoCodecID',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'startPlayingStreamInPIP',
     );
 
@@ -513,7 +513,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'startPlayingStreamInPIP',
       );
     }
@@ -529,7 +529,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'updatePlayingStreamViewInPIP',
       );
 
@@ -540,7 +540,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       'viewID:$viewID, '
       'streamID:$streamID, '
       'viewMode:$viewMode, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'updatePlayingStreamViewInPIP',
     );
 
@@ -553,7 +553,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'updatePlayingStreamViewInPIP',
       );
     }
@@ -565,7 +565,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'stopPlayingStreamInPIP',
       );
 
@@ -574,7 +574,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'streamID:$streamID',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'stopPlayingStreamInPIP',
     );
 
@@ -585,7 +585,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'stopPlayingStreamInPIP',
       );
     }
@@ -602,7 +602,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       'userID:$userID, '
       'appID:$appID, '
       'params:$params, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'reporterCreate',
     );
 
@@ -616,7 +616,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'reporterCreate',
       );
     }
@@ -626,7 +626,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
   Future<void> reporterDestroy() async {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'reporterDestroy',
     );
 
@@ -635,7 +635,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'reporterDestroy',
       );
     }
@@ -645,7 +645,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
   Future<void> reporterUpdateToken(String token) async {
     ZegoLoggerService.logInfo(
       'token:$token, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'reporterUpdateToken',
     );
 
@@ -656,7 +656,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'reporterUpdateToken',
       );
     }
@@ -666,7 +666,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
   Future<void> reporterUpdateCommonParams(Map<String, Object> params) async {
     ZegoLoggerService.logInfo(
       'params:$params, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'reporterUpdateCommonParams',
     );
 
@@ -677,7 +677,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'reporterUpdateCommonParams',
       );
     }
@@ -691,7 +691,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     ZegoLoggerService.logInfo(
       'event:$event, '
       'params:$params, ',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'reporterEvent',
     );
 
@@ -703,7 +703,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'reporterEvent',
       );
     }
@@ -714,7 +714,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     if (Platform.isIOS) {
       ZegoLoggerService.logInfo(
         'not support in iOS',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'openAppSettings',
       );
       return;
@@ -722,7 +722,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
     ZegoLoggerService.logInfo(
       'openAppSettings',
-      tag: 'uikit-channel',
+      tag: 'uikit.channel',
       subTag: 'openAppSettings',
     );
 
@@ -731,7 +731,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to open app settings: $e.',
-        tag: 'uikit-channel',
+        tag: 'uikit.channel',
         subTag: 'openAppSettings',
       );
     }

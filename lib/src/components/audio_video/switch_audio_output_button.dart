@@ -59,7 +59,7 @@ class _ZegoSwitchAudioOutputButtonState
       ZegoLoggerService.logInfo(
         "update audio route by default, "
         "target is speaker:${widget.defaultUseSpeaker}",
-        tag: 'uikit-audio-output',
+        tag: 'uikit.component.audio-output-switch',
         subTag: 'switch audio output button',
       );
 
@@ -147,8 +147,8 @@ class _ZegoSwitchAudioOutputButtonState
       final targetIsSpeaker = audioRoute != ZegoUIKitAudioRoute.Speaker;
       ZegoLoggerService.logInfo(
         "current audio route:$audioRoute, target is speaker:$targetIsSpeaker",
-        tag: 'uikit-audio-output',
-        subTag: 'switch audio output button',
+        tag: 'uikit.component.audio-output-switch',
+        subTag: 'onPressed',
       );
       ZegoUIKit().setAudioOutputToSpeaker(targetIsSpeaker);
 
@@ -158,8 +158,8 @@ class _ZegoSwitchAudioOutputButtonState
     })) {
       ZegoLoggerService.logInfo(
         "Click rate is limited, ignoring the current click",
-        tag: 'uikit-audio-output',
-        subTag: 'switch audio output button',
+        tag: 'uikit.component.audio-output-switch',
+        subTag: 'onPressed',
       );
     }
   }
@@ -175,8 +175,8 @@ class _ZegoSwitchAudioOutputButtonState
         ZegoUIKitAudioRoute.Bluetooth == audioRoute) {
       ZegoLoggerService.logInfo(
         "not support update audio route now when audio route is $audioRoute",
-        tag: 'uikit-audio-output',
-        subTag: 'switch audio output button',
+        tag: 'uikit.component.audio-output-switch',
+        subTag: 'canUpdateAudioRoute',
       );
 
       ///  not support close

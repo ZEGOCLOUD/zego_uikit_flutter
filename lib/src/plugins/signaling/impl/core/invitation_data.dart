@@ -74,7 +74,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
   void initInvitationData() {
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
 
@@ -99,7 +99,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
   void uninitInvitationData() {
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
 
@@ -133,7 +133,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
   void addInvitationData(InvitationData invitationData) {
     ZegoLoggerService.logInfo(
       'add invitation data $invitationData',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
     invitationMap[invitationData.id] = invitationData;
@@ -148,7 +148,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
       ZegoLoggerService.logInfo(
         'append invitation data $invitationData,'
         'now ${invitationData.id}\'s invitees is ${invitationMap[invitationData.id]!.invitees}',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'invitation data',
       );
     } else {
@@ -162,7 +162,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
       'invitationID: $invitationID, '
       'containsKey:${invitationMap.containsKey(invitationID)}'
       'map:$invitationMap, ',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
     return invitationMap.remove(invitationID);
@@ -260,7 +260,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
       if (result.error == null) {
         ZegoLoggerService.logInfo(
           'send invitation done, invitationID:${result.invitationID}',
-          tag: 'uikit-plugin-signaling',
+          tag: 'uikit.plugin.signaling',
           subTag: 'invitation data',
         );
 
@@ -285,7 +285,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
             errorMessage += '$id, reason:$reason;';
             ZegoLoggerService.logInfo(
               'invite error, $errorMessage',
-              tag: 'uikit-plugin-signaling',
+              tag: 'uikit.plugin.signaling',
               subTag: 'invitation data',
             );
           });
@@ -304,7 +304,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
         } else {
           ZegoLoggerService.logInfo(
             'invite success, invitationID:${result.invitationID}',
-            tag: 'uikit-plugin-signaling',
+            tag: 'uikit.plugin.signaling',
             subTag: 'invitation data',
           );
 
@@ -313,7 +313,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
       } else {
         ZegoLoggerService.logError(
           'send invitation failed, error: ${result.error}',
-          tag: 'uikit-plugin-signaling',
+          tag: 'uikit.plugin.signaling',
           subTag: 'invitation data',
         );
       }
@@ -354,21 +354,21 @@ mixin ZegoSignalingPluginCoreInvitationData {
           for (final element in result.errorInvitees) {
             ZegoLoggerService.logInfo(
               'cancel invitation error, invitationID:$invitationID, invitee id:$element',
-              tag: 'uikit-plugin-signaling',
+              tag: 'uikit.plugin.signaling',
               subTag: 'invitation data',
             );
           }
         } else {
           ZegoLoggerService.logInfo(
             'cancel invitation done, invitationID:$invitationID',
-            tag: 'uikit-plugin-signaling',
+            tag: 'uikit.plugin.signaling',
             subTag: 'invitation data',
           );
         }
       } else {
         ZegoLoggerService.logError(
           'cancel invitation failed, error:${result.error}',
-          tag: 'uikit-plugin-signaling',
+          tag: 'uikit.plugin.signaling',
           subTag: 'invitation data',
         );
       }
@@ -393,13 +393,13 @@ mixin ZegoSignalingPluginCoreInvitationData {
       if (result.error == null) {
         ZegoLoggerService.logInfo(
           'accept invitation done, invitationID:$invitationID',
-          tag: 'uikit-plugin-signaling',
+          tag: 'uikit.plugin.signaling',
           subTag: 'invitation data',
         );
       } else {
         ZegoLoggerService.logError(
           'accept invitation failed, error: ${result.error}',
-          tag: 'uikit-plugin-signaling',
+          tag: 'uikit.plugin.signaling',
           subTag: 'invitation data',
         );
       }
@@ -422,13 +422,13 @@ mixin ZegoSignalingPluginCoreInvitationData {
       if (result.error == null) {
         ZegoLoggerService.logInfo(
           'refuse invitation done, invitationID:$invitationID',
-          tag: 'uikit-plugin-signaling',
+          tag: 'uikit.plugin.signaling',
           subTag: 'invitation data',
         );
       } else {
         ZegoLoggerService.logError(
           'refuse invitation failed, error: ${result.error}',
-          tag: 'uikit-plugin-signaling',
+          tag: 'uikit.plugin.signaling',
           subTag: 'invitation data',
         );
       }
@@ -441,7 +441,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
   ) {
     ZegoLoggerService.logInfo(
       'onInvitationUserStateChanged, $event',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
 
@@ -462,7 +462,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
   ) {
     ZegoLoggerService.logInfo(
       'onIncomingInvitationReceived, $event',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
 
@@ -539,7 +539,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
     //  inviter extendedData
     ZegoLoggerService.logInfo(
       'onIncomingInvitationCancelled, $event',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
 
@@ -564,7 +564,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
     //  inviter extendedData
     ZegoLoggerService.logInfo(
       'onOutgoingInvitationAccepted, $event',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
 
@@ -592,7 +592,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
     //  inviter extendedData
     ZegoLoggerService.logInfo(
       'onOutgoingInvitationRejected, $event',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
 
@@ -619,7 +619,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
   ) {
     ZegoLoggerService.logInfo(
       'onIncomingInvitationTimeout, $event',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
 
@@ -643,7 +643,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
   ) {
     ZegoLoggerService.logInfo(
       'onOutgoingInvitationTimeout, $event',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
 
@@ -676,7 +676,7 @@ mixin ZegoSignalingPluginCoreInvitationData {
     //  inviter extendedData
     ZegoLoggerService.logInfo(
       'onOutgoingInvitationEnded, $event',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation data',
     );
 

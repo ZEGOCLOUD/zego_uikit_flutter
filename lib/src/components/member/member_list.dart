@@ -160,7 +160,7 @@ class _ZegoCallMemberListState extends State<ZegoMemberList> {
   void onUserListUpdated(List<ZegoUIKitUser> users) {
     ZegoLoggerService.logInfo(
       'user list update:$users',
-      tag: 'uikit-component',
+      tag: 'uikit.component',
       subTag: 'member list',
     );
     usersNotifier.value = users;

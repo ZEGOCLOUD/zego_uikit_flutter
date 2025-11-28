@@ -23,7 +23,7 @@ class ZegoUIKitEvent with ZegoUIKitExpressEvent, ZegoUIKitMediaEvent {
     if (_isInit) {
       ZegoLoggerService.logInfo(
         'had init before',
-        tag: 'uikit-event',
+        tag: 'uikit.event',
         subTag: 'init',
       );
 
@@ -32,7 +32,7 @@ class ZegoUIKitEvent with ZegoUIKitExpressEvent, ZegoUIKitMediaEvent {
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'uikit-event',
+      tag: 'uikit.event',
       subTag: 'init',
     );
 
@@ -46,7 +46,7 @@ class ZegoUIKitEvent with ZegoUIKitExpressEvent, ZegoUIKitMediaEvent {
     if (!_isInit) {
       ZegoLoggerService.logInfo(
         'is not init',
-        tag: 'uikit-event',
+        tag: 'uikit.event',
         subTag: 'uninit',
       );
 
@@ -55,7 +55,7 @@ class ZegoUIKitEvent with ZegoUIKitExpressEvent, ZegoUIKitMediaEvent {
 
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'uikit-event',
+      tag: 'uikit.event',
       subTag: 'uninit',
     );
 

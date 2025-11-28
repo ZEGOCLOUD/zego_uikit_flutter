@@ -23,7 +23,7 @@ class ZegoBeautyPluginCoreData {
     if (isInit) {
       ZegoLoggerService.logInfo(
         'has created.',
-        tag: 'uikit-plugin-beauty',
+        tag: 'uikit.plugin.beauty',
         subTag: 'beauty core data',
       );
 
@@ -38,7 +38,7 @@ class ZegoBeautyPluginCoreData {
 
     ZegoLoggerService.logInfo(
       'create, appID:$appID, ',
-      tag: 'uikit-plugin-beauty',
+      tag: 'uikit.plugin.beauty',
       subTag: 'beauty core data',
     );
   }
@@ -53,7 +53,7 @@ class ZegoBeautyPluginCoreData {
     isInit = false;
     ZegoLoggerService.logInfo(
       'destroy.',
-      tag: 'uikit-plugin-beauty',
+      tag: 'uikit.plugin.beauty',
       subTag: 'beauty core data',
     );
     clear();
@@ -62,7 +62,7 @@ class ZegoBeautyPluginCoreData {
   void clear() {
     ZegoLoggerService.logInfo(
       'clear',
-      tag: 'uikit-plugin-beauty',
+      tag: 'uikit.plugin.beauty',
       subTag: 'beauty core data',
     );
   }

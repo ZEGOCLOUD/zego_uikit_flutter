@@ -37,7 +37,7 @@ mixin ZegoPluginInvitationService {
     if (invitees.isEmpty) {
       ZegoLoggerService.logError(
         'invitees is empty',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'invitation service, send invitation',
       );
       return ZegoSignalingPluginSendInvitationResult(
@@ -56,7 +56,7 @@ mixin ZegoPluginInvitationService {
           'limited frequency, '
           'last access time was $sendInvitationStartTime, '
           'please request again after ${maxMilliSeconds - diffMilliSeconds} milliseconds',
-          tag: 'uikit-plugin-signaling',
+          tag: 'uikit.plugin.signaling',
           subTag: 'invitation service, send invitation',
         );
 
@@ -108,7 +108,7 @@ mixin ZegoPluginInvitationService {
       'invitees:$invitees, timeout:$timeout, type:$type, '
       'zimExtendedData:$zimExtendedData, '
       'notification config:$zegoNotificationConfig',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation service, send invitation',
     );
 
@@ -155,7 +155,7 @@ mixin ZegoPluginInvitationService {
     } catch (e) {
       ZegoLoggerService.logError(
         'cancel invitation, data is not a json:$data',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'invitation service',
       );
     } finally {
@@ -170,7 +170,7 @@ mixin ZegoPluginInvitationService {
     if (invitees.isEmpty) {
       ZegoLoggerService.logError(
         'invitees is empty',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'invitation service',
       );
       return ZegoSignalingPluginCancelInvitationResult(
@@ -187,7 +187,7 @@ mixin ZegoPluginInvitationService {
       ZegoLoggerService.logError(
         'cancel invitation, '
         'invitationID is empty',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'invitation service',
       );
       return ZegoSignalingPluginCancelInvitationResult(
@@ -213,7 +213,7 @@ mixin ZegoPluginInvitationService {
       'invitees:$invitees, '
       'data:$data, '
       'pushConfig:$pushConfig',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation service',
     );
 
@@ -237,7 +237,7 @@ mixin ZegoPluginInvitationService {
       'inviterID:$inviterID, '
       'data:$data, '
       'targetInvitationID:$targetInvitationID, ',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation service, refuse invitation',
     );
 
@@ -248,13 +248,13 @@ mixin ZegoPluginInvitationService {
     } catch (e) {
       ZegoLoggerService.logError(
         'data is not a json:$data',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'invitation service, refuse invitation',
       );
     } finally {
       ZegoLoggerService.logInfo(
         'extendedDataMap:$extendedDataMap',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'invitation service, refuse invitation',
       );
 
@@ -270,7 +270,7 @@ mixin ZegoPluginInvitationService {
     if (invitationID.isEmpty) {
       ZegoLoggerService.logError(
         'invitationID is empty, inviter id:$inviterID',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'invitation service, refuse invitation',
       );
       return ZegoSignalingPluginResponseInvitationResult(
@@ -286,7 +286,7 @@ mixin ZegoPluginInvitationService {
       'network state:${ZegoUIKit().getNetworkState()}, '
       'invitationID:$invitationID, '
       'inviter id:$inviterID, data:$data',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation service, refuse invitation',
     );
 
@@ -302,7 +302,7 @@ mixin ZegoPluginInvitationService {
       ZegoLoggerService.logError(
         'refuse invitation: '
         'invitationID is empty',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'invitation service',
       );
       return ZegoSignalingPluginResponseInvitationResult(
@@ -314,7 +314,7 @@ mixin ZegoPluginInvitationService {
       'refuse invitation: '
       'network state:${ZegoUIKit().getNetworkState()}, '
       'invitationID:$invitationID, data:$data',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation service',
     );
 
@@ -338,7 +338,7 @@ mixin ZegoPluginInvitationService {
       ZegoLoggerService.logError(
         'accept invitation, '
         'invitationID is empty',
-        tag: 'uikit-plugin-signaling',
+        tag: 'uikit.plugin.signaling',
         subTag: 'invitation service',
       );
       return ZegoSignalingPluginResponseInvitationResult(
@@ -354,7 +354,7 @@ mixin ZegoPluginInvitationService {
       'accept invitation, '
       'network state:${ZegoUIKit().getNetworkState()}, '
       'invitationID:$invitationID, inviter id:$inviterID, data:$data',
-      tag: 'uikit-plugin-signaling',
+      tag: 'uikit.plugin.signaling',
       subTag: 'invitation service',
     );
 

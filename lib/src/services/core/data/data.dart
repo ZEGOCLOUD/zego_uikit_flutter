@@ -150,7 +150,7 @@ class ZegoUIKitCoreData {
     ).streamID.isEmpty) {
       ZegoLoggerService.logError(
         'local user has not publish stream, send sei will be failed',
-        tag: 'uikit-sei',
+        tag: 'uikit.sei',
         subTag: 'sendSEI',
       );
     }

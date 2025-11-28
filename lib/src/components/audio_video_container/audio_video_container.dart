@@ -4,7 +4,6 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/audio_video.dart';
 import 'package:zego_uikit/src/components/audio_video/defines.dart';
@@ -92,7 +91,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
   ZegoScreenSharingViewController get screenSharingController =>
       widget.screenSharingViewController ?? defaultScreenSharingViewController;
 
-  bool get userDebugMode => false && kDebugMode;
+  bool get useDebugMode => true && kDebugMode;
 
   @override
   void initState() {
@@ -206,7 +205,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
       },
     );
 
-    return userDebugMode
+    return useDebugMode
         ? Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.red, width: 2),

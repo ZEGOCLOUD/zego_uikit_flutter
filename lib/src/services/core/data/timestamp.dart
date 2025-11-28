@@ -19,7 +19,7 @@ class ZegoUIKitCoreDataTimestamp {
   Future<void> init() async {
     ZegoLoggerService.logInfo(
       'get network time info',
-      tag: 'uikit-timestamp',
+      tag: 'uikit.timestamp',
       subTag: 'init',
     );
 
@@ -41,7 +41,7 @@ class ZegoUIKitCoreDataTimestamp {
 
       ZegoLoggerService.logInfo(
         'network time info is init, timestamp:${timeInfo.timestamp}, max deviation:${timeInfo.maxDeviation}',
-        tag: 'uikit-timestamp',
+        tag: 'uikit.timestamp',
         subTag: 'init',
       );
     });
