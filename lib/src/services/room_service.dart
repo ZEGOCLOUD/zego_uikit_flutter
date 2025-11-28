@@ -10,7 +10,7 @@ mixin ZegoRoomService {
     ZegoUIKitCore.shared.coreData.room.rooms.forEachSync((roomID, room) {
       if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(roomID)) {
         /// Skip hall room
-        value = skipHallRoom ? false : true;
+        value = skipHallRoom ? false : room.isLogin;
         return;
       }
 
