@@ -211,6 +211,23 @@ mixin ZegoAudioVideoService {
     ZegoUIKitCore.shared.enableVideoMirroring(isVideoMirror);
   }
 
+  Future<void> stopPublishingAllStream({
+    required String targetRoomID,
+  }) async {
+    await ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .stopPublishingAllStream();
+  }
+
+  Future<void> stopPlayingAllStream({
+    required String targetRoomID,
+    List<String> ignoreStreamIDs = const [],
+  }) async {
+    await ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .stopPlayingAllStream(ignoreStreamIDs: ignoreStreamIDs);
+  }
+
   void setPlayerResourceMode(
     ZegoUIKitStreamResourceMode mode, {
     required String targetRoomID,

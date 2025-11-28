@@ -3,15 +3,14 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/modules/hall_room/helper.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'data.dart';
 import 'device.dart';
 import 'room.single.dart';
@@ -234,7 +233,9 @@ class ZegoUIKitCoreDataRoom {
       toRoomID,
       config: ZegoRoomConfig(0, true, token),
     );
+
     rooms.removeRoom(fromRoomID);
+
     ZegoLoggerService.logInfo(
       'done, ',
       tag: 'uikit.rooms',
@@ -283,6 +284,7 @@ class ZegoUIKitCoreDataRoom {
     _coreData.clear(targetRoomID: targetRoomID);
 
     final result = await rooms.getRoom(targetRoomID).leave();
+
     rooms.removeRoom(targetRoomID);
 
     await clearAfterLeave();
