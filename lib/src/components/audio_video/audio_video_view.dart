@@ -3,9 +3,12 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io' show Platform;
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:native_device_orientation/native_device_orientation.dart';
+
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/avatar/avatar.dart';
 import 'package:zego_uikit/src/components/audio_video/defines.dart';

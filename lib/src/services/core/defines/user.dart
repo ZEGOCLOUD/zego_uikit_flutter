@@ -1,7 +1,9 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
+
 // Project imports:
 import 'package:zego_uikit/src/services/core/defines/user_attributes.dart';
 import 'package:zego_uikit/src/services/defines/audio_video/stream_type.dart';
@@ -9,7 +11,6 @@ import 'package:zego_uikit/src/services/defines/device/exception.dart';
 import 'package:zego_uikit/src/services/defines/express.dart';
 import 'package:zego_uikit/src/services/defines/user/user.dart';
 import 'package:zego_uikit/src/services/uikit_service.dart';
-
 import 'stream_info.dart';
 
 /// @nodoc
