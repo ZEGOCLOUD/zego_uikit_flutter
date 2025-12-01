@@ -1,12 +1,9 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-import 'package:flutter/foundation.dart';
-
 // Package imports:
 import 'package:synchronized/synchronized.dart';
-
+import 'package:zego_uikit/src/services/core/core.dart';
 // Project imports:
 import 'package:zego_uikit/src/services/uikit_service.dart';
 
@@ -41,7 +38,7 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
     void Function(T room, String roomID)? onUpgradeEmptyRoom,
   }) : _onUpgradeEmptyRoom = onUpgradeEmptyRoom {
     // Start timer, output _innerRoomMap every second
-    if (kDebugMode) {
+    if (ZegoUIKitCore.shared.coreData.useDebugMode) {
       _debugTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
         ZegoLoggerService.logInfo(
           'hash:$hashCode, '

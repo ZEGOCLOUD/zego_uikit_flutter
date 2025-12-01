@@ -4,15 +4,14 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/channel/platform_interface.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'data.dart';
 import 'room.dart';
 import 'screen_sharing.dart';
@@ -75,8 +74,6 @@ class ZegoUIKitCoreDataRoomStream {
 
   StreamController<ZegoUIKitReceiveSEIEvent>? receiveSEIStreamCtrl;
 
-  Timer? _debugTimer;
-
   void init() {
     ZegoLoggerService.logInfo(
       'hash:$hashCode, '
@@ -93,20 +90,6 @@ class ZegoUIKitCoreDataRoomStream {
         ZegoUIKitReceiveTurnOnLocalMicrophoneEvent>.broadcast();
     receiveSEIStreamCtrl ??=
         StreamController<ZegoUIKitReceiveSEIEvent>.broadcast();
-
-    // Start debug timer (only in debug mode)
-    if (kDebugMode) {
-      _debugTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-        ZegoLoggerService.logInfo(
-          'hash:$hashCode, '
-          'room id:$roomID, '
-          'streamDic:${streamDicNotifier.value}, '
-          'mixerStreamDic:$mixerStreamDic',
-          tag: 'uikit.streams.room',
-          subTag: 'debug-timer',
-        );
-      });
-    }
   }
 
   void uninit() {
@@ -117,9 +100,6 @@ class ZegoUIKitCoreDataRoomStream {
       tag: 'uikit.streams.room',
       subTag: 'uninit',
     );
-
-    _debugTimer?.cancel();
-    _debugTimer = null;
 
     audioVideoListStreamCtrl?.close();
     audioVideoListStreamCtrl = null;
