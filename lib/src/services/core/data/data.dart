@@ -39,7 +39,7 @@ class ZegoUIKitCoreData {
   final error = ZegoUIKitCoreDataError();
   final engine = ZegoUIKitCoreDataEngine();
 
-  bool useDebugMode = true && kDebugMode;
+  bool useDebugMode = false && kDebugMode;
   Timer? mixerSEITimer;
 
   StreamController<ZegoInRoomCommandReceivedData>?
