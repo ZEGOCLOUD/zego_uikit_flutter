@@ -1541,9 +1541,9 @@ extension ZegoUIKitCoreMixer on ZegoUIKitCore {
 /// @nodoc
 extension ZegoUIKitCoreAudioVideo on ZegoUIKitCore {
   Future<void> startPlayingAnotherRoomStream(
-    String roomID,
-    String userID,
-    String userName, {
+    String anotherRoomID,
+    String anotherUserID,
+    String anotherUserName, {
     required String targetRoomID,
 
     /// Whether to transfer (cut) user/stream to the target room, current room does not retain data
@@ -1551,11 +1551,11 @@ extension ZegoUIKitCoreAudioVideo on ZegoUIKitCore {
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     return coreData.stream.roomStreams
-        .getRoom(playOnAnotherRoom ? roomID : targetRoomID)
+        .getRoom(playOnAnotherRoom ? anotherRoomID : targetRoomID)
         .startPlayingAnotherRoomStream(
-          roomID,
-          userID,
-          userName,
+          anotherRoomID,
+          anotherUserID,
+          anotherUserName,
           onPlayerStateUpdated: onPlayerStateUpdated,
         );
   }

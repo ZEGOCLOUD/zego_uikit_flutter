@@ -432,7 +432,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
         targetRoomID: roomID,
         streamUser.roomID,
         streamUser.user.id,
-        userName: streamUser.user.name,
+        anotherUserName: streamUser.user.name,
 
         /// Will copy to respective rooms later after entering
         playOnAnotherRoom: false,

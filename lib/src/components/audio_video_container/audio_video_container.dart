@@ -1,8 +1,6 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/audio_video.dart';
@@ -90,8 +88,6 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
 
   ZegoScreenSharingViewController get screenSharingController =>
       widget.screenSharingViewController ?? defaultScreenSharingViewController;
-
-  bool get useDebugMode => false && kDebugMode;
 
   List<ZegoUIKitUser> _deduplicateUserList(
     List<ZegoUIKitUser> userList,
@@ -226,7 +222,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
       },
     );
 
-    return useDebugMode
+    return ZegoUIKit().useDebugMode
         ? Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.red, width: 2),

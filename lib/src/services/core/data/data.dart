@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
+import 'package:zego_uikit/src/services/core/core.dart';
 // Project imports:
 import 'package:zego_uikit/src/services/core/data/device.dart';
 import 'package:zego_uikit/src/services/core/data/engine.dart';
@@ -36,6 +37,7 @@ class ZegoUIKitCoreData {
   final error = ZegoUIKitCoreDataError();
   final engine = ZegoUIKitCoreDataEngine();
 
+  bool useDebugMode = true && kDebugMode;
   Timer? mixerSEITimer;
 
   StreamController<ZegoInRoomCommandReceivedData>?
@@ -155,6 +157,13 @@ class ZegoUIKitCoreData {
         tag: 'uikit.sei',
         subTag: 'sendSEI',
       );
+    }
+
+    if (ZegoUIKitCore.shared.coreData.useDebugMode) {
+      debugPrint('sendSEI, '
+          'typeid:$typeIdentifier, '
+          'streamType:$streamType,'
+          'data:$seiData, ');
     }
 
     final dataJson = jsonEncode({

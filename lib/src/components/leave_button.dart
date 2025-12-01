@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
@@ -85,6 +84,7 @@ class _ZegoLeaveButtonState extends State<ZegoLeaveButton> {
                   if (!clickable || !isRoomLogin) {
                     ZegoLoggerService.logInfo(
                       'clickable:$clickable, '
+                      'room id:${widget.roomID}, '
                       'isRoomLogin:$isRoomLogin, '
                       'ignore',
                       tag: 'uikit.component',
@@ -125,6 +125,7 @@ class _ZegoLeaveButtonState extends State<ZegoLeaveButton> {
   void quit() {
     if (null != widget.quitDelegate) {
       ZegoLoggerService.logInfo(
+        'room id:${widget.roomID}, '
         'has quit delegate, call',
         tag: 'uikit.component',
         subTag: 'leave button',
@@ -134,6 +135,7 @@ class _ZegoLeaveButtonState extends State<ZegoLeaveButton> {
     } else {
       ZegoUIKit().leaveRoom(targetRoomID: widget.roomID).then((result) {
         ZegoLoggerService.logInfo(
+          'room id:${widget.roomID}, '
           'leave room result, ${result.errorCode} ${result.extendedData}',
           tag: 'uikit.component',
           subTag: 'leave button',

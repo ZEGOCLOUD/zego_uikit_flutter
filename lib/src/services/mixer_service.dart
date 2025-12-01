@@ -2,17 +2,17 @@ part of 'uikit_service.dart';
 
 mixin ZegoMixerService {
   Future<void> startPlayAnotherRoomAudioVideo(
-    String roomID,
-    String userID, {
-    String userName = '',
+    String anotherRoomID,
+    String anotherUserID, {
+    String anotherUserName = '',
     required String targetRoomID,
     required bool playOnAnotherRoom,
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     return ZegoUIKitCore.shared.startPlayingAnotherRoomStream(
-      roomID,
-      userID,
-      userName,
+      anotherRoomID,
+      anotherUserID,
+      anotherUserName,
       targetRoomID: targetRoomID,
       playOnAnotherRoom: playOnAnotherRoom,
     );

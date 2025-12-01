@@ -6,12 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-
 // Package imports:
 import 'package:flutter_logs_yoer/flutter_logs_yoer.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/channel/platform_interface.dart';
 import 'package:zego_uikit/src/modules/hall_room/helper.dart';
@@ -24,30 +22,18 @@ import 'package:zego_uikit/src/services/defines/defines.dart';
 import 'package:zego_uikit/src/services/log_exporter/logs_share_manager.dart';
 
 part 'audio_video_service.dart';
-
-part 'custom_command_service.dart';
-
 part 'channel_service.dart';
-
+part 'custom_command_service.dart';
 part 'device_service.dart';
-
 part 'effect_service.dart';
-
-part 'logger_service.dart';
-
-part 'media_service.dart';
-
-part 'message_service.dart';
-
-part 'plugin_service.dart';
-
-part 'room_service.dart';
-
-part 'user_service.dart';
-
 part 'event_service.dart';
-
+part 'logger_service.dart';
+part 'media_service.dart';
+part 'message_service.dart';
 part 'mixer_service.dart';
+part 'plugin_service.dart';
+part 'room_service.dart';
+part 'user_service.dart';
 
 /// {@category APIs}
 /// {@category Features}
@@ -149,6 +135,11 @@ class ZegoUIKit
   ZegoUIKitReporter reporter() {
     return ZegoUIKitCore.shared.reporter;
   }
+
+  bool get useDebugMode => ZegoUIKitCore.shared.coreData.useDebugMode;
+
+  set useDebugMode(bool value) =>
+      ZegoUIKitCore.shared.coreData.useDebugMode = value;
 
   ValueNotifier<bool> get engineCreatedNotifier =>
       ZegoUIKitCore.shared.coreData.engine.createdNotifier;
