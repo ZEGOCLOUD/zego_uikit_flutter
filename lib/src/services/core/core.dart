@@ -8,10 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/core/data/data.dart';
 import 'package:zego_uikit/src/services/core/data/message.room.dart';
@@ -22,7 +20,6 @@ import 'package:zego_uikit/src/services/defines/defines.dart';
 import 'package:zego_uikit/src/services/uikit_service.dart';
 
 part 'media.dart';
-
 part 'message.dart';
 
 /// @nodoc
@@ -684,6 +681,35 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
     await ZegoUIKit().setAdvanceConfigs({
       'switch_room_not_stop_play': enabled ? 'true' : 'false',
     });
+  }
+
+  void enableSyncDeviceStatusBySEI(
+    bool value, {
+    required String targetRoomID,
+  }) {
+    coreData.stream.isSyncDeviceStatusBySEI = value;
+
+    ZegoLoggerService.logInfo(
+      'value: $value',
+      tag: 'uikit-service-core',
+      subTag: 'enableSyncDeviceStatusByStreamExtraInfo',
+    );
+  }
+
+  Future<void> startPlayAllAudioVideo({
+    required String targetRoomID,
+  }) async {
+    await coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .muteAllPlayStreamAudioVideo(false);
+  }
+
+  Future<void> stopPlayAllAudioVideo({
+    required String targetRoomID,
+  }) async {
+    await coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .muteAllPlayStreamAudioVideo(true);
   }
 
   void setPlayerResourceMode(

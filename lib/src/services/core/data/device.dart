@@ -5,7 +5,6 @@ import 'dart:io';
 // Package imports:
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/data/data.dart';
@@ -22,6 +21,7 @@ class ZegoUIKitCoreDataDevice {
   IosDeviceInfo? _iosDeviceInfo;
 
   AndroidDeviceInfo? get androidDeviceInfo => _androidDeviceInfo;
+
   IosDeviceInfo? get iosDeviceInfo => _iosDeviceInfo;
 
   /// sync device status via stream extra info
@@ -34,7 +34,9 @@ class ZegoUIKitCoreDataDevice {
     final extraInfo = jsonEncode(streamExtraInfo);
     await ZegoExpressEngine.instance.setStreamExtraInfo(extraInfo);
 
-    await syncDeviceStatusBySEI();
+    if (_coreData.stream.isSyncDeviceStatusBySEI) {
+      await syncDeviceStatusBySEI();
+    }
   }
 
   Future<void> syncDeviceStatusBySEI() async {

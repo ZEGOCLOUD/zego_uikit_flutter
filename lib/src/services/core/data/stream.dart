@@ -12,6 +12,7 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'canvas_view_create_queue.dart';
 import 'room.dart';
 import 'room_map.dart';
@@ -26,6 +27,7 @@ class ZegoUIKitCoreDataStream {
   bool isEnableCustomVideoProcessing = false;
   bool isEnableCustomVideoRender = false;
   bool isUsingFrontCameraRequesting = false;
+  bool isSyncDeviceStatusBySEI = true;
   bool useVideoViewAspectFill = false;
   bool playingStreamInPIPUnderIOS = false;
   bool isEnableSwitchRoomNotStopPlay = false;

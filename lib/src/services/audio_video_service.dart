@@ -267,6 +267,16 @@ mixin ZegoAudioVideoService {
     );
   }
 
+  void enableSyncDeviceStatusBySEI(
+    bool value, {
+    required String targetRoomID,
+  }) {
+    ZegoUIKitCore.shared.enableSyncDeviceStatusBySEI(
+      value,
+      targetRoomID: targetRoomID,
+    );
+  }
+
   /// MUST call after pushing the stream(turn on camera of microphone)
   /// SEI data will  transmit by the audio and video stream
   Future<bool> sendCustomSEI(
