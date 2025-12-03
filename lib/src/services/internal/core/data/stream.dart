@@ -41,6 +41,7 @@ mixin ZegoUIKitCoreDataStream {
   bool isPreviewing = false;
   bool isEnableCustomVideoRender = false;
   bool isUsingFrontCameraRequesting = false;
+  bool isSyncDeviceStatusBySEI = true;
 
   Map<String, List<PlayerStateUpdateCallback>> playerStateUpdateCallbackList =
       {};

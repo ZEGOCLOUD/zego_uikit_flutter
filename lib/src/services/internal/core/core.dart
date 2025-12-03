@@ -873,6 +873,16 @@ class ZegoUIKitCore
     );
   }
 
+  void enableSyncDeviceStatusBySEI(bool value) {
+    coreData.isSyncDeviceStatusBySEI = value;
+
+    ZegoLoggerService.logInfo(
+      'value: $value',
+      tag: 'uikit-service-core',
+      subTag: 'enableSyncDeviceStatusByStreamExtraInfo',
+    );
+  }
+
   Future<void> startPlayAllAudioVideo() async {
     await coreData.muteAllPlayStreamAudioVideo(false);
   }
@@ -1181,7 +1191,10 @@ class ZegoUIKitCore
 
     final extraInfo = jsonEncode(streamExtraInfo);
     await ZegoExpressEngine.instance.setStreamExtraInfo(extraInfo);
-    await syncDeviceStatusBySEI();
+
+    if (coreData.isSyncDeviceStatusBySEI) {
+      await syncDeviceStatusBySEI();
+    }
   }
 
   Future<void> syncDeviceStatusBySEI() async {
