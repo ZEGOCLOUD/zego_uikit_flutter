@@ -58,6 +58,11 @@ class ZegoUIKitCoreDataTimestamp {
 
   void uninit() {
     _durationTimer?.cancel();
+    _durationTimer = null;
+    _networkTimeInfoFixerTimer?.cancel();
+    _networkTimeInfoFixerTimer = null;
+    _beginDateTime = null;
+    _syncStartTime = null;
   }
 
   void _sync(int timestamp) {

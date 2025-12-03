@@ -151,6 +151,14 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
     });
   }
 
+  /// Dispose resources, cancel timers
+  void dispose() {
+    _debugTimer?.cancel();
+    _debugTimer = null;
+    _emptyRoomCache = null;
+    clearRooms();
+  }
+
   /// Async iterate all room data (key is roomID, value is corresponding data)
   /// Protected by lock to avoid concurrent modification exceptions
   /// Suitable for scenarios where async operations need to be executed in callback
