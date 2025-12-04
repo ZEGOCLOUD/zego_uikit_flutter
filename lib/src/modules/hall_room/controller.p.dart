@@ -356,9 +356,10 @@ class ZegoUIKitHallRoomListControllerPrivate {
     /// Categorize
     final streamUserIDs = streamUsers.map((e) => e.user.id).toList();
     List<ZegoUIKitHallRoomListStreamUser> stopPlayingStreamUsers = [];
-    List<ZegoUIKitHallRoomListStreamUser> startPlayingStreamUsers = streamUsers;
+    List<ZegoUIKitHallRoomListStreamUser> startPlayingStreamUsers =
+        List.from(streamUsers);
     for (var streamUser in streamsNotifier.value) {
-      if (!streamUserIDs.contains(streamUser.user.id) && streamUser.isPlaying) {
+      if (!streamUserIDs.contains(streamUser.user.id)) {
         stopPlayingStreamUsers.add(streamUser);
       }
 
@@ -370,16 +371,20 @@ class ZegoUIKitHallRoomListControllerPrivate {
 
     /// Stop pulling streams
     for (var streamUser in stopPlayingStreamUsers) {
-      await playOne(streamUser: streamUser, toPlay: false, isMuted: false);
+      await playOne(streamUser: streamUser, toPlay: false);
     }
 
     /// Pull streams
     final muteStreamUserIDs = muteStreamUsers.map((e) => e.user.id).toList();
     for (var streamUser in startPlayingStreamUsers) {
-      await playOne(
-        streamUser: streamUser,
-        toPlay: true,
-        isMuted: muteStreamUserIDs.contains(streamUser.user.id),
+      await playOne(streamUser: streamUser, toPlay: true);
+    }
+
+    for (var streamUser in streamUsers) {
+      await ZegoUIKit().muteUserAudioVideo(
+        streamUser.user.id,
+        muteStreamUserIDs.contains(streamUser.user.id),
+        targetRoomID: roomID,
       );
     }
 
@@ -389,7 +394,6 @@ class ZegoUIKitHallRoomListControllerPrivate {
   Future<bool> playOne({
     required ZegoUIKitHallRoomListStreamUser streamUser,
     required bool toPlay,
-    required bool isMuted,
   }) async {
     if (toPlay && streamUser.isPlaying) {
       ZegoLoggerService.logInfo(
@@ -399,12 +403,6 @@ class ZegoUIKitHallRoomListControllerPrivate {
       );
 
       addToStreams(streamUser);
-
-      await ZegoUIKit().muteUserAudio(
-        streamUser.user.id,
-        isMuted,
-        targetRoomID: roomID,
-      );
 
       return true;
     } else if (!toPlay && !streamUser.isPlaying) {
@@ -448,14 +446,6 @@ class ZegoUIKitHallRoomListControllerPrivate {
       );
 
       removeFromStreams(streamUser);
-    }
-
-    if (toPlay) {
-      await ZegoUIKit().muteUserAudio(
-        streamUser.user.id,
-        isMuted,
-        targetRoomID: roomID,
-      );
     }
 
     return true;
@@ -530,7 +520,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
       subTag: 'stopPlayAll',
     );
     for (var streamUser in List.from(streamsNotifier.value)) {
-      await playOne(streamUser: streamUser, toPlay: false, isMuted: false);
+      await playOne(streamUser: streamUser, toPlay: false);
     }
     streamsNotifier.value = [];
 
