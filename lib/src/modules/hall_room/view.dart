@@ -3,11 +3,9 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:loop_page_view/loop_page_view.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/components.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
@@ -15,6 +13,7 @@ import 'package:zego_uikit/src/modules/hall_room/config.dart';
 import 'package:zego_uikit/src/modules/hall_room/controller.dart';
 import 'package:zego_uikit/src/modules/hall_room/style.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'defines.dart';
 import 'model.dart';
 
@@ -100,6 +99,16 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
 
   int currentPageIndex = 0;
   late final LoopPageController pageController;
+
+  /// Track mute state for previous/next pages during scrolling
+  bool _isPreviousUnmuted = false;
+  bool _isNextUnmuted = false;
+
+  /// Track last pixels value to calculate scroll direction
+  double? _lastPixels;
+
+  /// Accumulated offset from current page
+  double _accumulatedOffset = 0.0;
 
   int get startIndex => 0;
 
@@ -213,47 +222,191 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
   }
 
   Widget pageView() {
-    return LoopPageView.builder(
-      controller: pageController,
-      scrollDirection: Axis.vertical,
-      // allowImplicitScrolling: true,
-      onPageChanged: onPageChanged,
-      itemCount: pageCount,
-      itemBuilder: (context, pageIndex) {
-        ZegoUIKitHallRoomListStreamUser? itemStreamUser;
+    return NotificationListener<ScrollNotification>(
+      onNotification: onScrollNotification,
+      child: LoopPageView.builder(
+        controller: pageController,
+        scrollDirection: Axis.vertical,
 
-        if (pageIndex == currentPageIndex) {
-          itemStreamUser =
-              widget.model?.activeRoom ?? widget.modelDelegate?.activeRoom;
-        } else {
-          bool toNext = false;
-          if (currentPageIndex == startIndex && pageIndex == endIndex) {
-            toNext = false;
-          } else if (currentPageIndex == endIndex && pageIndex == startIndex) {
-            toNext = true;
+        /// allowImplicitScrolling: true,
+        onPageChanged: onPageChanged,
+        itemCount: pageCount,
+        itemBuilder: (context, pageIndex) {
+          ZegoUIKitHallRoomListStreamUser? itemStreamUser;
+
+          if (pageIndex == currentPageIndex) {
+            itemStreamUser =
+                widget.model?.activeRoom ?? widget.modelDelegate?.activeRoom;
           } else {
-            toNext = pageIndex > currentPageIndex;
+            bool toNext = false;
+            if (currentPageIndex == startIndex && pageIndex == endIndex) {
+              toNext = false;
+            } else if (currentPageIndex == endIndex &&
+                pageIndex == startIndex) {
+              toNext = true;
+            } else {
+              toNext = pageIndex > currentPageIndex;
+            }
+
+            itemStreamUser = toNext ? nextStreamUser : previousStreamUser;
           }
 
-          itemStreamUser = toNext ? nextStreamUser : previousStreamUser;
-        }
+          itemStreamUser ??= ZegoUIKitHallRoomListStreamUser.empty();
 
-        itemStreamUser ??= ZegoUIKitHallRoomListStreamUser.empty();
+          ZegoLoggerService.logInfo(
+            'user:$itemStreamUser, ',
+            tag: 'uikit.hall-room-view',
+            subTag: 'itemBuilder',
+          );
 
-        ZegoLoggerService.logInfo(
-          'user:$itemStreamUser, ',
-          tag: 'uikit.hall-room-view',
-          subTag: 'itemBuilder',
-        );
+          return Stack(
+            children: [
+              background(itemStreamUser),
+              videoView(itemStreamUser),
+              foreground(itemStreamUser),
+            ],
+          );
+        },
+      ),
+    );
+  }
 
-        return Stack(
-          children: [
-            background(itemStreamUser),
-            videoView(itemStreamUser),
-            foreground(itemStreamUser),
-          ],
-        );
-      },
+  bool onScrollNotification(ScrollNotification notification) {
+    if (notification is ScrollUpdateNotification) {
+      _handleScrollUpdate(notification);
+    } else if (notification is ScrollEndNotification) {
+      _handleScrollEnd();
+    }
+    return false;
+  }
+
+  void _handleScrollUpdate(ScrollNotification notification) {
+    final metrics = notification.metrics;
+
+    /// Check if metrics has pixels and viewport dimension
+    if (!metrics.hasPixels || !metrics.hasContentDimensions) {
+      return;
+    }
+
+    final currentPixels = metrics.pixels;
+
+    /// Initialize lastPixels if not set
+    if (_lastPixels == null) {
+      _lastPixels = currentPixels;
+      return;
+    }
+
+    /// Calculate offset based on pixels change relative to viewport
+    /// For LoopPageView, pixels can be very large, so we calculate relative offset
+    final pixelsDelta = currentPixels - _lastPixels!;
+    final incrementalOffset = pixelsDelta / metrics.viewportDimension;
+
+    /// Accumulate offset to track total scroll distance from current page
+    _accumulatedOffset += incrementalOffset;
+
+    /// Update lastPixels for next calculation
+    _lastPixels = currentPixels;
+
+    /// Calculate if previous/next page is visible
+    /// When accumulatedOffset > 0, scrolling down (next page visible)
+    /// When accumulatedOffset < 0, scrolling up (previous page visible)
+    /// Threshold: if accumulatedOffset > 0.01, next page is visible; if accumulatedOffset < -0.01, previous page is visible
+    const threshold = 0.01;
+
+    final isNextVisible = _accumulatedOffset > threshold;
+    final isPreviousVisible = _accumulatedOffset < -threshold;
+
+    /// Unmute next page if visible and not already unmuted
+    if (isNextVisible && !_isNextUnmuted && nextStreamUser != null) {
+      _unmuteStreamUser(nextStreamUser!);
+      _isNextUnmuted = true;
+      ZegoLoggerService.logInfo(
+        'unmute next page during scroll, accumulatedOffset:$_accumulatedOffset',
+        tag: 'uikit.hall-room-view',
+        subTag: 'scroll',
+      );
+    } else if (!isNextVisible && _isNextUnmuted && nextStreamUser != null) {
+      /// Mute next page if not visible and currently unmuted
+      _muteStreamUser(nextStreamUser!);
+      _isNextUnmuted = false;
+      ZegoLoggerService.logInfo(
+        'mute next page during scroll, accumulatedOffset:$_accumulatedOffset',
+        tag: 'uikit.hall-room-view',
+        subTag: 'scroll',
+      );
+    }
+
+    /// Unmute previous page if visible and not already unmuted
+    if (isPreviousVisible &&
+        !_isPreviousUnmuted &&
+        previousStreamUser != null) {
+      _unmuteStreamUser(previousStreamUser!);
+      _isPreviousUnmuted = true;
+      ZegoLoggerService.logInfo(
+        'unmute previous page during scroll, accumulatedOffset:$_accumulatedOffset',
+        tag: 'uikit.hall-room-view',
+        subTag: 'scroll',
+      );
+    } else if (!isPreviousVisible &&
+        _isPreviousUnmuted &&
+        previousStreamUser != null) {
+      /// Mute previous page if not visible and currently unmuted
+      _muteStreamUser(previousStreamUser!);
+      _isPreviousUnmuted = false;
+      ZegoLoggerService.logInfo(
+        'mute previous page during scroll, accumulatedOffset:$_accumulatedOffset',
+        tag: 'uikit.hall-room-view',
+        subTag: 'scroll',
+      );
+    }
+  }
+
+  void _handleScrollEnd() {
+    /// Reset tracking variables when scroll ends
+    _lastPixels = null;
+    _accumulatedOffset = 0.0;
+
+    /// When scroll ends (user releases finger), re-mute any unmuted pages
+    /// that are not the current page
+    if (_isNextUnmuted && nextStreamUser != null) {
+      _muteStreamUser(nextStreamUser!);
+      _isNextUnmuted = false;
+      ZegoLoggerService.logInfo(
+        'mute next page on scroll end',
+        tag: 'uikit.hall-room-view',
+        subTag: 'scroll',
+      );
+    }
+    if (_isPreviousUnmuted && previousStreamUser != null) {
+      _muteStreamUser(previousStreamUser!);
+      _isPreviousUnmuted = false;
+      ZegoLoggerService.logInfo(
+        'mute previous page on scroll end',
+        tag: 'uikit.hall-room-view',
+        subTag: 'scroll',
+      );
+    }
+  }
+
+  Future<void> _muteStreamUser(
+      ZegoUIKitHallRoomListStreamUser streamUser) async {
+    await ZegoUIKit().muteUserAudioVideo(
+      streamUser.user.id,
+      true,
+
+      /// mute
+      targetRoomID: widget.controller.roomID,
+    );
+  }
+
+  Future<void> _unmuteStreamUser(
+      ZegoUIKitHallRoomListStreamUser streamUser) async {
+    await ZegoUIKit().muteUserAudioVideo(
+      streamUser.user.id,
+      false,
+
+      /// unmute
+      targetRoomID: widget.controller.roomID,
     );
   }
 
@@ -283,6 +436,12 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
     final oldCurrentPageIndex = currentPageIndex;
     currentPageIndex = pageIndex;
 
+    /// Reset scroll mute state when page actually changes
+    _isPreviousUnmuted = false;
+    _isNextUnmuted = false;
+    _accumulatedOffset = 0.0;
+    _lastPixels = null;
+
     if (toNext) {
       widget.model?.next();
     } else {
@@ -295,7 +454,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
       'previous stream:$previousStreamUser, '
       'current stream:$currentStreamUser, '
       'next stream:$nextStreamUser, ',
-      tag: 'hall view',
+      tag: 'uikit.hall-room-view',
       subTag: 'onPageChanged',
     );
 
@@ -411,7 +570,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
           ZegoLoggerService.logInfo(
             '${stream.user.id}\'s camera is not open',
             tag: 'uikit.component',
-            subTag: 'hall view',
+            subTag: 'uikit.hall-room-view',
           );
 
           return Container();
@@ -430,7 +589,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
                     ZegoLoggerService.logError(
                       '${stream.user.id}\'s view is null',
                       tag: 'uikit.component',
-                      subTag: 'hall view',
+                      subTag: 'uikit.hall-room-view',
                     );
 
                     return Center(
@@ -446,7 +605,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
                   ZegoLoggerService.logInfo(
                     'render ${stream.user.id}\'s view',
                     tag: 'uikit.component',
-                    subTag: 'hall view',
+                    subTag: 'uikit.hall-room-view',
                   );
 
                   return StreamBuilder(
@@ -575,7 +734,9 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
       case ZegoAvatarAlignment.center:
         return (maxHeight - avatarHeight) / 2;
       case ZegoAvatarAlignment.start:
-        return 15.zR; //  sound level height
+        return 15.zR;
+
+      ///  sound level height
       case ZegoAvatarAlignment.end:
         return maxHeight - avatarHeight;
     }
