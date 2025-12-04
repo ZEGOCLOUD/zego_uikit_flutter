@@ -39,7 +39,6 @@ class ZegoUIKitCoreData {
   final error = ZegoUIKitCoreDataError();
   final engine = ZegoUIKitCoreDataEngine();
 
-  bool useDebugMode = false && kDebugMode;
   Timer? mixerSEITimer;
 
   StreamController<ZegoInRoomCommandReceivedData>?
@@ -161,7 +160,7 @@ class ZegoUIKitCoreData {
       );
     }
 
-    if (ZegoUIKitCore.shared.coreData.useDebugMode) {
+    if (ZegoUIKitCore.shared.useDebugMode) {
       debugPrint('sendSEI, '
           'typeid:$typeIdentifier, '
           'streamType:$streamType,'

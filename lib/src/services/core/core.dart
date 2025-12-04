@@ -5,6 +5,7 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -39,6 +40,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   bool isInit = false;
   List<StreamSubscription<dynamic>?> subscriptions = [];
   String? version;
+  bool useDebugMode = false && kDebugMode;
 
   Future<String> getZegoUIKitVersion() async {
     if (null == version) {
