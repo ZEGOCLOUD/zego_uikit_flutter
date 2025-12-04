@@ -401,7 +401,9 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
 
   Future<void> _unmuteStreamUser(
       ZegoUIKitHallRoomListStreamUser streamUser) async {
-    await ZegoUIKit().muteUserAudioVideo(
+    /// Only enable video;
+    /// audio should only be enabled when the page is actually switched to onPageChanged.
+    await ZegoUIKit().muteUserVideo(
       streamUser.user.id,
       false,
 
