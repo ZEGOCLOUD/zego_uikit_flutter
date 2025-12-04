@@ -6,6 +6,8 @@ class ZegoUIKitHallRoomListStreamUser {
   ZegoUIKitUser user;
   String roomID;
 
+  bool isPlayed = false;
+
   /// stream is playing or not
   bool isPlaying = false;
 
@@ -21,7 +23,9 @@ class ZegoUIKitHallRoomListStreamUser {
         .getUser(user.id, targetRoomID: syncRoomID ?? roomID)
         .playerState
         .value;
-    isPlaying = ZegoUIKitPlayerState.Playing == playerState;
+    isPlayed = ZegoUIKitPlayerState.Playing == playerState;
+    isPlaying = ZegoUIKitPlayerState.PlayRequesting == playerState ||
+        ZegoUIKitPlayerState.Playing == playerState;
     _listenPlayingState(syncRoomID: syncRoomID);
   }
 
@@ -80,6 +84,7 @@ class ZegoUIKitHallRoomListStreamUser {
     return '{'
         'room id:$roomID, '
         'user id:${user.id}, '
+        'isPlayed:$isPlayed, '
         'isPlaying:$isPlaying, '
         '}';
   }

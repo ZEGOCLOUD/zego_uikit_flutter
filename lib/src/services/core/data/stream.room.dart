@@ -678,15 +678,6 @@ class ZegoUIKitCoreDataRoomStream {
     bool forAudio = true,
     bool forVideo = true,
   }) async {
-    ZegoLoggerService.logInfo(
-      'hash:$hashCode, '
-      'room id:$roomID, '
-      'user id:  $userID, mute: $mute, '
-      'for audio:$forAudio, for video:$forVideo',
-      tag: 'uikit.streams.room',
-      subTag: 'mute play stream audio video',
-    );
-
     final targetRoomRemoteUserList =
         _userCommonData.roomUsers.getRoom(roomID).remoteUsers;
 
@@ -706,12 +697,24 @@ class ZegoUIKitCoreDataRoomStream {
     if (targetUser.mainChannel.streamID.isEmpty) {
       ZegoLoggerService.logError(
         'hash:$hashCode, '
-        "can't find $userID's stream",
+        "$userID's stream is empty",
         tag: 'uikit.streams.room',
         subTag: 'mute play stream audio video',
       );
       return false;
     }
+
+    ZegoLoggerService.logInfo(
+      'hash:$hashCode, '
+      'room id:$roomID, '
+      'user id:$userID, mute:$mute, '
+      'for audio:$forAudio, for video:$forVideo, '
+      'stream id:${targetUser.mainChannel.streamID}, '
+      'now audio mute:${targetUser.microphoneMuteMode.value}, '
+      'now video mute:${targetUser.cameraMuteMode.value}, ',
+      tag: 'uikit.streams.room',
+      subTag: 'mute play stream audio video',
+    );
 
     if (forAudio) {
       targetUser.microphoneMuteMode.value = mute;
