@@ -123,6 +123,25 @@ mixin ZegoAudioVideoService {
     );
   }
 
+  Future<void> startPlayingStream(
+    String streamID,
+    String streamUserID, {
+    required String targetRoomID,
+  }) async {
+    await ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .startPlayingStreamQueue(streamID, streamUserID);
+  }
+
+  Future<void> stopPlayingStream(
+    String streamID, {
+    required String targetRoomID,
+  }) async {
+    await ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .stopPlayingStream(streamID, removeDic: true);
+  }
+
   /// turn on/off camera
   Future<bool> turnCameraOn(
     bool isOn, {

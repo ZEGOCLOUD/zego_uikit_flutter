@@ -1,9 +1,21 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/uikit_service.dart';
+
 import 'defines.dart';
+
+/// Stream mode for hall room list
+enum ZegoUIKitHallRoomStreamMode {
+  /// Pre-pull streams and mute/unmute for smooth switching.
+  /// More smooth experience but costs extra for two additional streams (previous/next).
+  preloaded,
+
+  /// Stop/start streams when switching.
+  /// No extra stream costs, but may have brief video/audio rendering delays,
+  /// black screen, or stuttering during switching.
+  economy,
+}
 
 /// Context for adjacent room data in room sliding scenarios
 ///

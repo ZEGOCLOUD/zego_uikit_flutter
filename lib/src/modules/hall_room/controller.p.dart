@@ -4,15 +4,14 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/modules/hall_room/config.dart';
 import 'package:zego_uikit/src/modules/hall_room/controller.event.dart';
 import 'package:zego_uikit/src/modules/hall_room/defines.dart';
 import 'package:zego_uikit/src/modules/hall_room/helper.dart';
+import 'package:zego_uikit/src/modules/hall_room/model.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
@@ -330,8 +329,9 @@ class ZegoUIKitHallRoomListControllerPrivate {
   }
 
   Future<bool> playOnly({
-    required List<ZegoUIKitHallRoomListStreamUser> streamUsers,
-    required List<ZegoUIKitHallRoomListStreamUser> muteStreamUsers,
+    required ZegoUIKitHallRoomListStreamUser? currentStreamUser,
+    required ZegoUIKitHallRoomListStreamUser? previousStreamUser,
+    required ZegoUIKitHallRoomListStreamUser? nextStreamUser,
   }) async {
     if (!ZegoUIKitCore.shared.isInit) {
       ZegoLoggerService.logInfo(
@@ -353,39 +353,67 @@ class ZegoUIKitHallRoomListControllerPrivate {
       return false;
     }
 
-    /// Categorize
-    final streamUserIDs = streamUsers.map((e) => e.user.id).toList();
-    List<ZegoUIKitHallRoomListStreamUser> stopPlayingStreamUsers = [];
-    List<ZegoUIKitHallRoomListStreamUser> startPlayingStreamUsers =
-        List.from(streamUsers);
-    for (var streamUser in streamsNotifier.value) {
-      if (!streamUserIDs.contains(streamUser.user.id)) {
-        stopPlayingStreamUsers.add(streamUser);
+    /// Apply mute/unmute or stop/start based on stream mode
+    if (config.streamMode == ZegoUIKitHallRoomStreamMode.preloaded) {
+      final streamUsers = [
+        ...currentStreamUser == null ? [] : [currentStreamUser],
+        ...previousStreamUser == null ? [] : [previousStreamUser],
+        ...nextStreamUser == null ? [] : [nextStreamUser],
+      ];
+      final muteStreamUsers = [
+        ...previousStreamUser == null ? [] : [previousStreamUser],
+        ...nextStreamUser == null ? [] : [nextStreamUser],
+      ];
+
+      /// Categorize
+      final streamUserIDs = streamUsers.map((e) => e.user.id).toList();
+      List<ZegoUIKitHallRoomListStreamUser> stopPlayingStreamUsers = [];
+      List<ZegoUIKitHallRoomListStreamUser> startPlayingStreamUsers =
+          List.from(streamUsers);
+      for (var streamUser in streamsNotifier.value) {
+        if (!streamUserIDs.contains(streamUser.user.id)) {
+          stopPlayingStreamUsers.add(streamUser);
+        }
+
+        if (streamUserIDs.contains(streamUser.user.id) &&
+            streamUser.isPlaying) {
+          startPlayingStreamUsers.removeWhere((e) =>
+              e.user.id == streamUser.user.id && e.roomID == streamUser.roomID);
+        }
       }
 
-      if (streamUserIDs.contains(streamUser.user.id) && streamUser.isPlaying) {
-        startPlayingStreamUsers.removeWhere((e) =>
-            e.user.id == streamUser.user.id && e.roomID == streamUser.roomID);
+      /// Stop pulling streams
+      for (var streamUser in stopPlayingStreamUsers) {
+        await playOne(streamUser: streamUser, toPlay: false);
       }
-    }
 
-    /// Stop pulling streams
-    for (var streamUser in stopPlayingStreamUsers) {
-      await playOne(streamUser: streamUser, toPlay: false);
-    }
+      /// Pull streams
+      final muteStreamUserIDs = muteStreamUsers.map((e) => e.user.id).toList();
+      for (var streamUser in startPlayingStreamUsers) {
+        await playOne(streamUser: streamUser, toPlay: true);
+      }
 
-    /// Pull streams
-    final muteStreamUserIDs = muteStreamUsers.map((e) => e.user.id).toList();
-    for (var streamUser in startPlayingStreamUsers) {
-      await playOne(streamUser: streamUser, toPlay: true);
-    }
-
-    for (var streamUser in streamUsers) {
-      await ZegoUIKit().muteUserAudioVideo(
-        streamUser.user.id,
-        muteStreamUserIDs.contains(streamUser.user.id),
-        targetRoomID: roomID,
-      );
+      /// Quick mode: use mute/unmute
+      for (var streamUser in streamUsers) {
+        await ZegoUIKit().muteUserAudioVideo(
+          streamUser.user.id,
+          muteStreamUserIDs.contains(streamUser.user.id),
+          targetRoomID: roomID,
+        );
+      }
+    } else {
+      /// Normal mode: stop/start streams for non-current pages
+      for (var streamUser in [
+        ...currentStreamUser == null ? [] : [currentStreamUser],
+      ]) {
+        await playOne(streamUser: streamUser, toPlay: true);
+      }
+      for (var streamUser in [
+        ...previousStreamUser == null ? [] : [previousStreamUser],
+        ...nextStreamUser == null ? [] : [nextStreamUser],
+      ]) {
+        await playOne(streamUser: streamUser, toPlay: false);
+      }
     }
 
     return true;

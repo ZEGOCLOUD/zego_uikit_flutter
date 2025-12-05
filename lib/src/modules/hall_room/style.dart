@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
@@ -17,6 +16,14 @@ class ZegoUIKitHallRoomListStyle {
     this.loadingBuilder,
     this.item = const ZegoUIKitHallRoomListItemStyle(),
   });
+
+  @override
+  String toString() {
+    return '{'
+        'loadingBuilder:$loadingBuilder, '
+        'item:$item, '
+        '}';
+  }
 }
 
 /// item style
@@ -54,4 +61,14 @@ class ZegoUIKitHallRoomListItemStyle {
     this.loadingBuilder,
     this.avatar,
   });
+
+  @override
+  String toString() {
+    return '{'
+        'backgroundBuilder:$backgroundBuilder, '
+        'foregroundBuilder:$foregroundBuilder, '
+        'loadingBuilder:$loadingBuilder, '
+        'avatar:$avatar, '
+        '}';
+  }
 }
