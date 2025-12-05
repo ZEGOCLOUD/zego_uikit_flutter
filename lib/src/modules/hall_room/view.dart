@@ -3,9 +3,11 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:loop_page_view/loop_page_view.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
+
 // Project imports:
 import 'package:zego_uikit/src/components/components.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
@@ -13,7 +15,6 @@ import 'package:zego_uikit/src/modules/hall_room/config.dart';
 import 'package:zego_uikit/src/modules/hall_room/controller.dart';
 import 'package:zego_uikit/src/modules/hall_room/style.dart';
 import 'package:zego_uikit/src/services/services.dart';
-
 import 'defines.dart';
 import 'model.dart';
 

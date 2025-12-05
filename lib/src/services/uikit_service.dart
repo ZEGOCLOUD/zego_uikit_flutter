@@ -140,8 +140,7 @@ class ZegoUIKit
 
   bool get useDebugMode => ZegoUIKitCore.shared.useDebugMode;
 
-  set useDebugMode(bool value) =>
-      ZegoUIKitCore.shared.useDebugMode = value;
+  set useDebugMode(bool value) => ZegoUIKitCore.shared.useDebugMode = value;
 
   ValueNotifier<bool> get engineCreatedNotifier =>
       ZegoUIKitCore.shared.coreData.engine.createdNotifier;

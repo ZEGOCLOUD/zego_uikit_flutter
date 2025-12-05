@@ -1,9 +1,12 @@
 // Dart imports:
 import 'dart:async';
 
-// Package imports:
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Package imports:
 import 'package:synchronized/synchronized.dart';
+
 // Project imports:
 import 'package:zego_uikit/src/services/uikit_service.dart';
 
