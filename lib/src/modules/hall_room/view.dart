@@ -407,14 +407,14 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
   Future<void> _muteStreamUser(
       ZegoUIKitHallRoomListStreamUser streamUser) async {
     if (streamMode == ZegoUIKitHallRoomStreamMode.preloaded) {
-      /// Quick mode: use mute/unmute
+      /// use mute/unmute
       await ZegoUIKit().muteUserAudioVideo(
         streamUser.user.id,
         true, // mute
         targetRoomID: widget.controller.roomID,
       );
     } else {
-      /// Normal mode: stop playing stream to avoid extra costs
+      /// stop playing stream to avoid extra costs
       widget.controller.private.playOne(streamUser: streamUser, toPlay: false);
     }
   }
@@ -423,7 +423,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
     ZegoUIKitHallRoomListStreamUser streamUser,
   ) async {
     if (streamMode == ZegoUIKitHallRoomStreamMode.preloaded) {
-      /// Quick mode: only enable video;
+      /// only enable video;
       /// audio should only be enabled when the page is actually switched to onPageChanged.
       await ZegoUIKit().muteUserVideo(
         streamUser.user.id,
@@ -431,8 +431,13 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
         targetRoomID: widget.controller.roomID,
       );
     } else {
-      /// Normal mode: start playing stream
+      /// start playing stream
       widget.controller.private.playOne(streamUser: streamUser, toPlay: true);
+      await ZegoUIKit().muteUserAudio(
+        streamUser.user.id,
+        true,
+        targetRoomID: widget.controller.roomID,
+      );
     }
   }
 

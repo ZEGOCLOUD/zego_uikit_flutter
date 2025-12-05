@@ -402,11 +402,16 @@ class ZegoUIKitHallRoomListControllerPrivate {
         );
       }
     } else {
-      /// Normal mode: stop/start streams for non-current pages
+      /// stop/start streams for non-current pages
       for (var streamUser in [
         ...currentStreamUser == null ? [] : [currentStreamUser],
       ]) {
         await playOne(streamUser: streamUser, toPlay: true);
+        await ZegoUIKit().muteUserAudio(
+          streamUser.user.id,
+          false,
+          targetRoomID: roomID,
+        );
       }
       for (var streamUser in [
         ...previousStreamUser == null ? [] : [previousStreamUser],
