@@ -82,6 +82,10 @@ class ZegoSignalingPluginCore with ZegoSignalingPluginCoreEvent {
     return coreData.currentRoomID ?? '';
   }
 
+  ZegoSignalingPluginRoomState getRoomState() {
+    return coreData.currentRoomState;
+  }
+
   /// leave room
   Future<void> leaveRoom() async {
     await coreData.leaveRoom();

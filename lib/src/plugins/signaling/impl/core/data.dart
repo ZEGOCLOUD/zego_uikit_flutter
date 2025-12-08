@@ -30,6 +30,8 @@ class ZegoSignalingPluginCoreData
   String? currentUserID;
   String? currentUserName;
   String? currentRoomID;
+  ZegoSignalingPluginRoomState currentRoomState =
+      ZegoSignalingPluginRoomState.disconnected;
   String? currentRoomName;
 
   /// create engine
@@ -508,14 +510,18 @@ class ZegoSignalingPluginCoreData
       subTag: 'core data',
     );
 
-    if (event.state == ZegoSignalingPluginRoomState.disconnected) {
-      ZegoLoggerService.logInfo(
-        'room has been disconnect.',
-        tag: 'uikit-plugin-signaling',
-        subTag: 'core data',
-      );
-      currentRoomID = null;
-      currentRoomName = null;
+    if (event.roomID == currentRoomID) {
+      currentRoomState = event.state;
+
+      if (currentRoomState == ZegoSignalingPluginRoomState.disconnected) {
+        ZegoLoggerService.logInfo(
+          'room has been disconnect.',
+          tag: 'uikit.plugin.signaling-coredata',
+          subTag: 'core data',
+        );
+        currentRoomID = null;
+        currentRoomName = null;
+      }
     }
   }
 }
