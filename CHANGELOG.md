@@ -1,3 +1,7 @@
+## 2.28.36
+
+- Modify the update source of the zim plugin room status
+
 ## 2.28.35
 
 - Features
