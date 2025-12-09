@@ -490,15 +490,17 @@ mixin ZegoAudioVideoService {
     String userID, {
     required String targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.user
-            .getUser(
-              userID,
-              targetRoomID: targetRoomID,
-            )
-            .mainChannel
-            .soundLevelStream
-            ?.stream ??
-        const Stream.empty();
+    final stream = ZegoUIKitCore.shared.coreData.user
+        .getUser(
+          userID,
+          targetRoomID: targetRoomID,
+        )
+        .mainChannel
+        .soundLevelStream
+        ?.stream;
+
+    assert(null != stream);
+    return stream ?? const Stream.empty();
   }
 
   void moveToAnotherRoom({
@@ -536,14 +538,16 @@ mixin ZegoAudioVideoService {
   Stream<List<ZegoUIKitUser>> getAudioVideoListStream({
     required String targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.stream.roomStreams
-            .getRoom(
-              targetRoomID,
-            )
-            .audioVideoListStreamCtrl
-            ?.stream
-            .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
-        const Stream.empty();
+    final stream = ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(
+          targetRoomID,
+        )
+        .audioVideoListStreamCtrl
+        ?.stream
+        .map((users) => users.map((e) => e.toZegoUikitUser()).toList());
+
+    assert(null != stream);
+    return stream ?? const Stream.empty();
   }
 
   /// get audio video list
@@ -562,10 +566,12 @@ mixin ZegoAudioVideoService {
   Stream<List<ZegoUIKitUser>> getScreenSharingListStream({
     required String targetRoomID,
   }) {
-    return ZegoUIKitCore
-            .shared.coreData.screenSharing.screenSharingListStreamCtrl?.stream
-            .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
-        const Stream.empty();
+    final stream = ZegoUIKitCore
+        .shared.coreData.screenSharing.screenSharingListStreamCtrl?.stream
+        .map((users) => users.map((e) => e.toZegoUikitUser()).toList());
+
+    assert(null != stream);
+    return stream ?? const Stream.empty();
   }
 
   /// get screen sharing list
@@ -586,9 +592,12 @@ mixin ZegoAudioVideoService {
   Stream<List<ZegoUIKitUser>> getMediaListStream({
     required String targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.media.mediaListStreamCtrl?.stream
-            .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
-        const Stream.empty();
+    final stream = ZegoUIKitCore
+        .shared.coreData.media.mediaListStreamCtrl?.stream
+        .map((users) => users.map((e) => e.toZegoUikitUser()).toList());
+
+    assert(null != stream);
+    return stream ?? const Stream.empty();
   }
 
   /// get media list
@@ -669,28 +678,28 @@ mixin ZegoAudioVideoService {
   Stream<ZegoUIKitReceiveSEIEvent> getReceiveSEIStream({
     required String targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.stream.roomStreams
-            .getRoom(
-              targetRoomID,
-            )
-            .receiveSEIStreamCtrl
-            ?.stream ??
-        const Stream.empty();
+    final stream = ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .receiveSEIStreamCtrl
+        ?.stream;
+
+    assert(null != stream);
+    return stream ?? const Stream.empty();
   }
 
   Stream<ZegoUIKitReceiveSEIEvent> getReceiveCustomSEIStream({
     required String targetRoomID,
   }) {
-    return ZegoUIKitCore.shared.coreData.stream.roomStreams
-            .getRoom(
-              targetRoomID,
-            )
-            .receiveSEIStreamCtrl
-            ?.stream
-            .where((event) {
-          return event.typeIdentifier == ZegoUIKitInnerSEIType.custom.name;
-        }) ??
-        const Stream.empty();
+    final stream = ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .receiveSEIStreamCtrl
+        ?.stream
+        .where((event) {
+      return event.typeIdentifier == ZegoUIKitInnerSEIType.custom.name;
+    });
+
+    assert(null != stream);
+    return stream ?? const Stream.empty();
   }
 
   String getGeneratedStreamID(

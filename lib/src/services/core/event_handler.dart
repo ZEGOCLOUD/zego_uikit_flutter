@@ -429,7 +429,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
     coreData.stream.roomStreams.forEachSync((roomID, roomStream) {
       /// Stream may have been copied or transferred to other rooms, so update all
-      if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
+      if (!roomStream.streamDicNotifier.value.containsKey(streamID) &&
+          !roomStream.mixerStreamDic.containsKey(streamID)) {
         return;
       }
 
@@ -531,7 +532,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     );
 
     coreData.stream.roomStreams.forEachSync((roomID, roomStream) {
-      if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
+      if (!roomStream.streamDicNotifier.value.containsKey(streamID) &&
+          !roomStream.mixerStreamDic.containsKey(streamID)) {
         return;
       }
 
@@ -551,7 +553,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
       /// update users' camera state
 
-      if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
+      if (!roomStream.streamDicNotifier.value.containsKey(streamID) &&
+          !roomStream.mixerStreamDic.containsKey(streamID)) {
         ZegoLoggerService.logInfo(
           'stream $streamID is not exist',
           tag: 'uikit.service.event-handler',
@@ -639,7 +642,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     );
 
     coreData.stream.roomStreams.forEachSync((roomID, roomStream) {
-      if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
+      if (!roomStream.streamDicNotifier.value.containsKey(streamID) &&
+          !roomStream.mixerStreamDic.containsKey(streamID)) {
         return;
       }
 
@@ -659,7 +663,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
       /// update users' camera state
 
-      if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
+      if (!roomStream.streamDicNotifier.value.containsKey(streamID) &&
+          !roomStream.mixerStreamDic.containsKey(streamID)) {
         ZegoLoggerService.logInfo(
           'stream $streamID is not exist',
           tag: 'uikit.service.event-handler',
@@ -738,10 +743,6 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     soundLevels.forEach((streamID, soundLevel) {
       coreData.stream.roomStreams.forEachSync((roomID, roomStream) {
         if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
-          return;
-        }
-
-        if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
           if (roomStream.mixerStreamDic.containsKey(streamID)) {
             return;
           }
@@ -799,7 +800,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onPlayerVideoSizeChanged(String streamID, int width, int height) {
     coreData.stream.roomStreams.forEachSync((roomID, roomStream) {
-      if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
+      if (!roomStream.streamDicNotifier.value.containsKey(streamID) &&
+          !roomStream.mixerStreamDic.containsKey(streamID)) {
         return;
       }
 
@@ -1105,7 +1107,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onPlayerRecvVideoFirstFrame(String streamID) {
     coreData.stream.roomStreams.forEachSync((roomID, roomStream) {
-      if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
+      if (!roomStream.streamDicNotifier.value.containsKey(streamID) &&
+          !roomStream.mixerStreamDic.containsKey(streamID)) {
         return;
       }
 
@@ -1116,7 +1119,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onPlayerRecvAudioFirstFrame(String streamID) {
     coreData.stream.roomStreams.forEachSync((roomID, roomStream) {
-      if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
+      if (!roomStream.streamDicNotifier.value.containsKey(streamID) &&
+          !roomStream.mixerStreamDic.containsKey(streamID)) {
         return;
       }
 
@@ -1127,7 +1131,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onPlayerRecvSEI(String streamID, Uint8List data) {
     coreData.stream.roomStreams.forEachSync((roomID, roomStream) {
-      if (!roomStream.streamDicNotifier.value.containsKey(streamID)) {
+      if (!roomStream.streamDicNotifier.value.containsKey(streamID) &&
+          !roomStream.mixerStreamDic.containsKey(streamID)) {
         return;
       }
 
