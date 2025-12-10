@@ -3,17 +3,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 
+// Package imports:
+import 'package:connectivity_plus/connectivity_plus.dart';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-
-// Package imports:
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'data/data.dart';
 import 'data/stream.data.dart';
 import 'defines/defines.dart';
@@ -30,6 +29,30 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
   final Connectivity _connectivity = Connectivity();
 
   ZegoUIKitCoreData get coreData => ZegoUIKitCore.shared.coreData;
+
+  /// Short time window (milliseconds), debounce RTC SDK state updates within this time to avoid UI flickering
+  static const int _debounceWindowMs = 500;
+
+  /// Long time window (milliseconds), sync RTC SDK real state if state is inconsistent within this time
+  static const int _syncWindowMs = 1000;
+
+  /// Record state and timestamp parsed from stream extra info for debouncing and state sync (microphone)
+  final Map<String, _StreamExtraInfoState> _streamExtraInfoStates = {};
+
+  /// Record pending sync timers for state synchronization within long time window (microphone)
+  final Map<String, Timer> _pendingSyncTimers = {};
+
+  /// Record pending RTC SDK states to be synced, updated to the latest state during delay period (microphone)
+  final Map<String, ZegoRemoteDeviceState> _pendingSyncStates = {};
+
+  /// Record state and timestamp parsed from stream extra info for debouncing and state sync (camera)
+  final Map<String, _StreamExtraInfoState> _streamExtraInfoCameraStates = {};
+
+  /// Record pending sync timers for state synchronization within long time window (camera)
+  final Map<String, Timer> _pendingSyncCameraTimers = {};
+
+  /// Record pending RTC SDK states to be synced, updated to the latest state during delay period (camera)
+  final Map<String, ZegoRemoteDeviceState> _pendingSyncCameraStates = {};
 
   Future<void> initConnectivity() async {
     ZegoLoggerService.logInfo(
@@ -164,6 +187,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       }
     }
 
+    /// After data processing is completed, send the notification event
     final streamIDs = streamList.map((e) => e.streamID).toList();
     if (-1 !=
         streamIDs.indexWhere(
@@ -524,6 +548,79 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
   @override
   void onRemoteCameraStateUpdate(String streamID, ZegoRemoteDeviceState state) {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final extraInfoState = _streamExtraInfoCameraStates[streamID];
+
+    if (extraInfoState != null) {
+      final timeSinceExtraInfo = now - extraInfoState.timestamp;
+
+      /// Within sync window, delay sync if state is inconsistent
+      if (timeSinceExtraInfo < _syncWindowMs) {
+        if (state != extraInfoState.state) {
+          /// Record pending sync state (update to latest if already exists)
+          _pendingSyncCameraStates[streamID] = state;
+
+          /// Calculate delay time: use short delay in short window, long delay in long window
+          final delayMs = timeSinceExtraInfo < _debounceWindowMs
+              ? _debounceWindowMs - timeSinceExtraInfo
+              : _syncWindowMs - timeSinceExtraInfo;
+
+          /// Create a new delay timer if not exists or need to update delay time
+          _pendingSyncCameraTimers[streamID]?.cancel();
+          _pendingSyncCameraTimers[streamID] = Timer(
+            Duration(milliseconds: delayMs),
+            () {
+              final syncState = _pendingSyncCameraStates[streamID];
+              _pendingSyncCameraTimers.remove(streamID);
+              _pendingSyncCameraStates.remove(streamID);
+              _streamExtraInfoCameraStates.remove(streamID);
+
+              if (syncState != null) {
+                ZegoLoggerService.logInfo(
+                  'stream id:$streamID, '
+                  'sync camera state from RTC SDK: $syncState '
+                  '(extraInfo state: ${extraInfoState.state}, timeSinceExtraInfo: ${DateTime.now().millisecondsSinceEpoch - extraInfoState.timestamp}ms)',
+                  tag: 'uikit.service.event-handler',
+                  subTag: 'onRemoteCameraStateUpdate',
+                );
+
+                _onRemoteCameraStateUpdateInternal(streamID, syncState);
+              }
+            },
+          );
+
+          ZegoLoggerService.logInfo(
+            'stream id:$streamID, '
+            'camera state:$state, '
+            'pending sync (within sync window: ${timeSinceExtraInfo}ms < ${_syncWindowMs}ms, '
+            'delay: ${delayMs}ms, extraInfo state: ${extraInfoState.state})',
+            tag: 'uikit.service.event-handler',
+            subTag: 'onRemoteCameraStateUpdate',
+          );
+          return;
+        } else {
+          /// State is consistent, clear records
+          _streamExtraInfoCameraStates.remove(streamID);
+          _pendingSyncCameraTimers[streamID]?.cancel();
+          _pendingSyncCameraTimers.remove(streamID);
+          _pendingSyncCameraStates.remove(streamID);
+        }
+      } else {
+        /// Exceed long time window, clear records and process normally
+        _streamExtraInfoCameraStates.remove(streamID);
+        _pendingSyncCameraTimers[streamID]?.cancel();
+        _pendingSyncCameraTimers.remove(streamID);
+        _pendingSyncCameraStates.remove(streamID);
+      }
+    }
+
+    _onRemoteCameraStateUpdateInternal(streamID, state);
+  }
+
+  void _onRemoteCameraStateUpdateInternal(
+    String streamID,
+    ZegoRemoteDeviceState state,
+  ) {
     ZegoLoggerService.logInfo(
       'stream id:$streamID, '
       'state:{$state,${state.name}}',
@@ -599,7 +696,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           }
           break;
         default:
-          // disable or errors
+
+          /// disable or errors
           targetUser.camera.value = false;
       }
 
@@ -634,6 +732,79 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
   @override
   void onRemoteMicStateUpdate(String streamID, ZegoRemoteDeviceState state) {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final extraInfoState = _streamExtraInfoStates[streamID];
+
+    if (extraInfoState != null) {
+      final timeSinceExtraInfo = now - extraInfoState.timestamp;
+
+      /// Within sync window, delay sync if state is inconsistent
+      if (timeSinceExtraInfo < _syncWindowMs) {
+        if (state != extraInfoState.state) {
+          /// Record pending sync state (update to latest if already exists)
+          _pendingSyncStates[streamID] = state;
+
+          /// Calculate delay time: use short delay in short window, long delay in long window
+          final delayMs = timeSinceExtraInfo < _debounceWindowMs
+              ? _debounceWindowMs - timeSinceExtraInfo
+              : _syncWindowMs - timeSinceExtraInfo;
+
+          /// Create a new delay timer if not exists or need to update delay time
+          _pendingSyncTimers[streamID]?.cancel();
+          _pendingSyncTimers[streamID] = Timer(
+            Duration(milliseconds: delayMs),
+            () {
+              final syncState = _pendingSyncStates[streamID];
+              _pendingSyncTimers.remove(streamID);
+              _pendingSyncStates.remove(streamID);
+              _streamExtraInfoStates.remove(streamID);
+
+              if (syncState != null) {
+                ZegoLoggerService.logInfo(
+                  'stream id:$streamID, '
+                  'sync state from RTC SDK: $syncState '
+                  '(extraInfo state: ${extraInfoState.state}, timeSinceExtraInfo: ${DateTime.now().millisecondsSinceEpoch - extraInfoState.timestamp}ms)',
+                  tag: 'uikit.service.event-handler',
+                  subTag: 'onRemoteMicStateUpdate',
+                );
+
+                _onRemoteMicStateUpdateInternal(streamID, syncState);
+              }
+            },
+          );
+
+          ZegoLoggerService.logInfo(
+            'stream id:$streamID, '
+            'state:$state, '
+            'pending sync (within sync window: ${timeSinceExtraInfo}ms < ${_syncWindowMs}ms, '
+            'delay: ${delayMs}ms, extraInfo state: ${extraInfoState.state})',
+            tag: 'uikit.service.event-handler',
+            subTag: 'onRemoteMicStateUpdate',
+          );
+          return;
+        } else {
+          /// State is consistent, clear records
+          _streamExtraInfoStates.remove(streamID);
+          _pendingSyncTimers[streamID]?.cancel();
+          _pendingSyncTimers.remove(streamID);
+          _pendingSyncStates.remove(streamID);
+        }
+      } else {
+        /// Exceed long time window, clear records and process normally
+        _streamExtraInfoStates.remove(streamID);
+        _pendingSyncTimers[streamID]?.cancel();
+        _pendingSyncTimers.remove(streamID);
+        _pendingSyncStates.remove(streamID);
+      }
+    }
+
+    _onRemoteMicStateUpdateInternal(streamID, state);
+  }
+
+  void _onRemoteMicStateUpdateInternal(
+    String streamID,
+    ZegoRemoteDeviceState state,
+  ) {
     ZegoLoggerService.logInfo(
       'stream id:$streamID, '
       'state:$state',
@@ -703,7 +874,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           targetUser.microphoneMuteMode.value = true;
           break;
         default:
-          // disable or errors
+
+          /// disable or errors
           targetUser.microphone.value = false;
       }
 
@@ -1053,21 +1225,55 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     }
 
     if (extraInfos.containsKey(streamExtraInfoCameraKey)) {
-      onRemoteCameraStateUpdate(
-        streamID,
-        extraInfos[streamExtraInfoCameraKey]!
-            ? ZegoRemoteDeviceState.Open
-            : ZegoRemoteDeviceState.Mute,
+      final state = extraInfos[streamExtraInfoCameraKey]!
+          ? ZegoRemoteDeviceState.Open
+          : ZegoRemoteDeviceState.Mute;
+
+      /// Record state and timestamp parsed from stream extra info
+      _streamExtraInfoCameraStates[streamID] = _StreamExtraInfoState(
+        state: state,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
       );
+
+      /// Cancel previous pending sync timer
+      _pendingSyncCameraTimers[streamID]?.cancel();
+      _pendingSyncCameraTimers.remove(streamID);
+      _pendingSyncCameraStates.remove(streamID);
+
+      ZegoLoggerService.logInfo(
+        'stream id:$streamID, '
+        'camera state from extraInfo: $state',
+        tag: 'uikit.service.event-handler',
+        subTag: 'onRoomStreamExtraInfoUpdate-parseStreamExtraInfo',
+      );
+
+      _onRemoteCameraStateUpdateInternal(streamID, state);
     }
 
     if (extraInfos.containsKey(streamExtraInfoMicrophoneKey)) {
-      onRemoteMicStateUpdate(
-        streamID,
-        extraInfos[streamExtraInfoMicrophoneKey]!
-            ? ZegoRemoteDeviceState.Open
-            : ZegoRemoteDeviceState.Mute,
+      final state = extraInfos[streamExtraInfoMicrophoneKey]!
+          ? ZegoRemoteDeviceState.Open
+          : ZegoRemoteDeviceState.Mute;
+
+      /// Record state and timestamp parsed from stream extra info
+      _streamExtraInfoStates[streamID] = _StreamExtraInfoState(
+        state: state,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
       );
+
+      /// Cancel previous pending sync timer
+      _pendingSyncTimers[streamID]?.cancel();
+      _pendingSyncTimers.remove(streamID);
+      _pendingSyncStates.remove(streamID);
+
+      ZegoLoggerService.logInfo(
+        'stream id:$streamID, '
+        'state from extraInfo: $state',
+        tag: 'uikit.service.event-handler',
+        subTag: 'onRoomStreamExtraInfoUpdate-parseStreamExtraInfo',
+      );
+
+      _onRemoteMicStateUpdateInternal(streamID, state);
     }
 
     if (extraInfos.containsKey(ZegoUIKitSEIDefines.keyMediaType)) {
@@ -1234,4 +1440,15 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       );
     }
   }
+}
+
+/// Record state parsed from stream extra info for debouncing and state sync
+class _StreamExtraInfoState {
+  final ZegoRemoteDeviceState state;
+  final int timestamp;
+
+  _StreamExtraInfoState({
+    required this.state,
+    required this.timestamp,
+  });
 }
