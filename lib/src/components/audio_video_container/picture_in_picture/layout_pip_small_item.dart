@@ -85,15 +85,11 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
   Widget view() {
     return calculatePosition(
       child: makeDraggable(
-        child: GestureDetector(
-          onTap: () {
-            widget.onTap(widget.targetUser);
-          },
-          child: AbsorbPointer(
-            absorbing: false,
-            child: calculateSize(
-              user: widget.targetUser,
-              child: ZegoAudioVideoView(
+        child: calculateSize(
+          user: widget.targetUser,
+          child: Stack(
+            children: [
+              ZegoAudioVideoView(
                 roomID: widget.roomID,
                 user: widget.targetUser,
                 borderRadius: widget.borderRadius ?? 18.0.zR,
@@ -101,7 +97,19 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
                 foregroundBuilder: widget.foregroundBuilder,
                 avatarConfig: widget.avatarConfig,
               ),
-            ),
+
+              /// Add a transparent GestureDetector overlay to ensure click responsiveness on iOS as well
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: () {
+                    widget.onTap(widget.targetUser);
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
