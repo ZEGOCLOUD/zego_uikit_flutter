@@ -32,17 +32,30 @@ mixin ZegoPluginService {
     /// make sure core data's stream had created
     ZegoSignalingPluginCore.shared.coreData.initData();
 
-    assert(
-        ZegoPluginAdapter().signalingPlugin != null,
+    if (ZegoPluginAdapter().signalingPlugin == null) {
+      ZegoLoggerService.logError(
         'ZegoUIKitSignalingPluginImpl: ZegoUIKitPluginType.signaling is null, '
-        'plugins should contain ZegoUIKitSignalingPlugin');
+        'plugins should contain ZegoUIKitSignalingPlugin',
+        tag: 'uikit.service.event-handler',
+        subTag: 'onRoomStreamUpdate',
+      );
+
+      assert(false);
+    }
 
     return ZegoUIKitSignalingPluginImpl.shared;
   }
 
   ZegoUIKitBeautyPluginImpl getBeautyPlugin() {
-    assert(ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null,
-        'ZegoUIKitBeautyPluginImpl: ZegoUIKitPluginType.beauty is null');
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
+      ZegoLoggerService.logError(
+        'ZegoUIKitBeautyPluginImpl: ZegoUIKitPluginType.beauty is null',
+        tag: 'uikit.service.event-handler',
+        subTag: 'onRoomStreamUpdate',
+      );
+
+      assert(false);
+    }
 
     return ZegoUIKitBeautyPluginImpl.shared;
   }
