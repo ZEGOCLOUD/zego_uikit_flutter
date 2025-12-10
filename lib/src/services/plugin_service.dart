@@ -47,7 +47,7 @@ mixin ZegoPluginService {
   }
 
   ZegoUIKitBeautyPluginImpl getBeautyPlugin() {
-    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) == null) {
       ZegoLoggerService.logError(
         'ZegoUIKitBeautyPluginImpl: ZegoUIKitPluginType.beauty is null',
         tag: 'uikit.service.event-handler',
