@@ -116,29 +116,16 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
   void initState() {
     super.initState();
 
-    if (widget.sources.contains(ZegoAudioVideoContainerSource.user)) {
-      subscriptions.add(
-        ZegoUIKit()
-            .getUserListStream(targetRoomID: widget.roomID)
-            .listen(onUserListUpdated),
-      );
-    }
-
-    if (widget.sources.contains(ZegoAudioVideoContainerSource.audioVideo)) {
-      subscriptions.add(
-        ZegoUIKit()
-            .getAudioVideoListStream(targetRoomID: widget.roomID)
-            .listen(onStreamListUpdated),
-      );
-    }
-
-    if (widget.sources.contains(ZegoAudioVideoContainerSource.screenSharing)) {
-      subscriptions.add(
-        ZegoUIKit()
-            .getScreenSharingListStream(targetRoomID: widget.roomID)
-            .listen(onStreamListUpdated),
-      );
-    }
+    subscriptions.add(
+      ZegoUIKit()
+          .getUserListStream(targetRoomID: widget.roomID)
+          .listen(onUserListUpdated),
+    );
+    subscriptions.add(
+      ZegoUIKit()
+          .getAudioVideoListStream(targetRoomID: widget.roomID)
+          .listen(onStreamListUpdated),
+    );
 
     if (widget.sources.contains(ZegoAudioVideoContainerSource.virtualUser)) {
       virtualUsers = widget.virtualUsersNotifier?.value ?? [];
@@ -368,7 +355,12 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
     final deduplicatedList =
         _deduplicateUserList(updateUserList, 'updateUserList');
 
-    userListNotifier.value = deduplicatedList;
-    widget.onUserListUpdated?.call(deduplicatedList);
+    /// Update only when the old user and new user IDs are different
+    final oldUserIds = userListNotifier.value.map((user) => user.id).toSet();
+    final newUserIds = deduplicatedList.map((user) => user.id).toSet();
+    if (oldUserIds != newUserIds) {
+      userListNotifier.value = deduplicatedList;
+      widget.onUserListUpdated?.call(deduplicatedList);
+    }
   }
 }

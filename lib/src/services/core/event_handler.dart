@@ -980,7 +980,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       final targetRemoteUserList =
           coreData.user.roomUsers.getRoom(roomID).remoteUsers;
       final targetUserIndex = targetRemoteUserList.indexWhere((user) =>
-          roomStream.streamDicNotifier.value[streamID]!.userID == user.id);
+          (roomStream.streamDicNotifier.value[streamID]?.userID ?? '') ==
+          user.id);
       if (-1 == targetUserIndex) {
         ZegoLoggerService.logInfo(
           'stream user $streamID is not exist in $roomID ',
