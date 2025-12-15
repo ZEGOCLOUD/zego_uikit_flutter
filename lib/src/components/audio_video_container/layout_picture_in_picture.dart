@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/audio_video_view.dart';
 import 'package:zego_uikit/src/components/audio_video/defines.dart';
@@ -75,6 +74,7 @@ class ZegoLayoutPictureInPicture extends StatefulWidget {
     this.backgroundBuilder,
     this.avatarConfig,
   });
+
   final String roomID;
   final List<ZegoUIKitUser> userList;
   final ZegoLayoutPictureInPictureConfig layoutConfig;
@@ -139,6 +139,10 @@ class _ZegoLayoutPictureInPictureState
         else
           LayoutBuilder(builder: (context, constraints) {
             return ZegoAudioVideoView(
+              // Use a key based on user.id to ensure Flutter properly rebuilds the widget
+              // when the user changes. Without this key, especially on iOS, the platform view
+              // may not update correctly when switching between users.
+              key: ValueKey('large_view_${largeViewUser!.id}'),
               roomID: widget.roomID,
               user: largeViewUser,
               backgroundBuilder: widget.backgroundBuilder,
@@ -207,6 +211,10 @@ class _ZegoLayoutPictureInPictureState
       children: [
         LayoutBuilder(builder: (context, constraints) {
           return ZegoAudioVideoView(
+            // Use a key based on user.id to ensure Flutter properly rebuilds the widget
+            // when the user changes. Without this key, especially on iOS, the platform view
+            // may not update correctly when switching between users.
+            key: ValueKey('large_view_${largeViewUser.id}'),
             roomID: widget.roomID,
             user: largeViewUser,
             backgroundBuilder: widget.backgroundBuilder,
