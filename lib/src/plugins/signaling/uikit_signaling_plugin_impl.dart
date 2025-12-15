@@ -3,10 +3,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
 // Package imports:
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/plugins/signaling/impl/core/core.dart';
 import 'package:zego_uikit/src/plugins/signaling/impl/service/background_message_service.dart';
@@ -130,6 +128,18 @@ class ZegoUIKitSignalingPluginImpl
     return ZegoPluginAdapter()
         .signalingPlugin!
         .getRoomStateChangedEventStream();
+  }
+
+  Stream<ZegoSignalingPluginRoomMemberJoinedEvent>
+      getRoomMemberJoinedEventStream() {
+    return ZegoPluginAdapter()
+        .signalingPlugin!
+        .getRoomMemberJoinedEventStream();
+  }
+
+  Stream<ZegoSignalingPluginRoomMemberLeftEvent>
+      getRoomMemberLeftEventStream() {
+    return ZegoPluginAdapter().signalingPlugin!.getRoomMemberLeftEventStream();
   }
 
   Stream<ZegoSignalingError> getErrorStream() {
