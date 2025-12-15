@@ -138,7 +138,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         'room id:${widget.roomID}, '
         'user id:(${widget.user?.id}), '
         'user is null',
-        tag: 'uikit.component.audio-video-view',
+        tag: 'uikit.component.audio-video-view($hashCode)',
         subTag: 'build',
       );
 
@@ -165,7 +165,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         'room id:${widget.roomID}, '
         'user id:(${widget.user?.id}), '
         'build,',
-        tag: 'uikit.component.audio-video-view',
+        tag: 'uikit.component.audio-video-view($hashCode)',
         subTag: 'build',
       );
     }
@@ -181,7 +181,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
             'room id:${widget.roomID}, '
             'user id:(${widget.user?.id}), '
             'camera changed $isCameraOn,',
-            tag: 'uikit.component.audio-video-view',
+            tag: 'uikit.component.audio-video-view($hashCode)',
             subTag: 'build',
           );
 
@@ -303,7 +303,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     if (ZegoUIKit().useDebugMode) {
       ZegoLoggerService.logInfo(
         'flipped:${isLocalUserFlippedNotifier.value}',
-        tag: 'uikit.component.audio-video-view',
+        tag: 'uikit.component.audio-video-view($hashCode)',
         subTag: 'onCapturedVideoFirstFrameAfterSwitchCamera',
       );
     }
@@ -328,7 +328,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
             'room id:${widget.roomID}, '
             'user id:(${widget.user?.id}), '
             'user is null on videoView,',
-            tag: 'uikit.component.audio-video-view',
+            tag: 'uikit.component.audio-video-view($hashCode)',
             subTag: 'build',
           );
         }
@@ -345,7 +345,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                       'width:${constraints.maxWidth}, '
                       'height:${constraints.maxHeight}, '
                       'isCameraOn:$isCameraOn, ',
-                      tag: 'uikit.component.audio-video-view',
+                      tag: 'uikit.component.audio-video-view($hashCode)',
                       subTag: 'videoView',
                     );
                   }
@@ -379,7 +379,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
             'room id:${widget.roomID}, '
             'user id:(${widget.user?.id}), '
             '\'s view is null',
-            tag: 'uikit.component.audio-video-view',
+            tag: 'uikit.component.audio-video-view($hashCode)',
             subTag: 'userViewListenerBuilder',
           );
 
@@ -392,7 +392,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
             'room id:${widget.roomID}, '
             'user id:(${widget.user?.id}), '
             'render view ${userView.hashCode}',
-            tag: 'uikit.component.audio-video-view',
+            tag: 'uikit.component.audio-video-view($hashCode)',
             subTag: 'userViewListenerBuilder',
           );
         }
@@ -559,7 +559,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         'room id:${widget.roomID}, '
         'user id:(${widget.user?.id}), '
         'guard run, view id is:$userViewID',
-        tag: 'uikit.component.audio-video-view',
+        tag: 'uikit.component.audio-video-view($hashCode)',
         subTag: 'runViewIDTimeGuard',
       );
     }
@@ -574,7 +574,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
           'room id:${widget.roomID}, '
           'user id:(${widget.user?.id}), '
           'guard check, view id is:$userViewID',
-          tag: 'uikit.component.audio-video-view',
+          tag: 'uikit.component.audio-video-view($hashCode)',
           subTag: 'runViewIDTimeGuard',
         );
       }
@@ -587,7 +587,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
             'room id:${widget.roomID}, '
             'user id:(${widget.user?.id}), '
             'guard check, view-id($userViewID) is not valid now, force update',
-            tag: 'uikit.component.audio-video-view',
+            tag: 'uikit.component.audio-video-view($hashCode)',
             subTag: 'runViewIDTimeGuard',
           );
         }
