@@ -440,6 +440,8 @@ mixin ZegoAudioVideoService {
     await ZegoUIKitCore.shared.coreData.startSharingScreen();
     await ZegoUIKitCore.shared.syncDeviceStatusByStreamExtraInfo(
       streamType: ZegoStreamType.screenSharing,
+      hardcodeCamera: true,
+      hardcodeMicrophone: true,
     );
   }
 

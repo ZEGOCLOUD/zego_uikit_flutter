@@ -1,4 +1,4 @@
-## 2.28.37
+## 2.28.37/2.28.38
 
 - Bugs
     - Fixed the issue where screen sharing did not appear in the web window

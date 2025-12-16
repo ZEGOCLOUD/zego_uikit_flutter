@@ -1184,6 +1184,8 @@ class ZegoUIKitCore
 
   Future<void> syncDeviceStatusByStreamExtraInfo({
     required ZegoStreamType streamType,
+    bool? hardcodeCamera,
+    bool? hardcodeMicrophone,
   }) async {
     if (!coreData.isPublishingStream) {
       ZegoLoggerService.logWarn(
@@ -1196,8 +1198,10 @@ class ZegoUIKitCore
 
     // sync device status via stream extra info
     final streamExtraInfo = <String, dynamic>{
-      streamExtraInfoCameraKey: coreData.localUser.camera.value,
-      streamExtraInfoMicrophoneKey: coreData.localUser.microphone.value,
+      streamExtraInfoCameraKey:
+          hardcodeCamera ?? coreData.localUser.camera.value,
+      streamExtraInfoMicrophoneKey:
+          hardcodeMicrophone ?? coreData.localUser.microphone.value,
     };
 
     final extraInfo = jsonEncode(streamExtraInfo);
@@ -1207,14 +1211,22 @@ class ZegoUIKitCore
     );
 
     if (coreData.isSyncDeviceStatusBySEI) {
-      await syncDeviceStatusBySEI();
+      await syncDeviceStatusBySEI(
+        hardcodeCamera: hardcodeCamera,
+        hardcodeMicrophone: hardcodeMicrophone,
+      );
     }
   }
 
-  Future<void> syncDeviceStatusBySEI() async {
+  Future<void> syncDeviceStatusBySEI({
+    bool? hardcodeCamera,
+    bool? hardcodeMicrophone,
+  }) async {
     final seiMap = <String, dynamic>{
-      ZegoUIKitSEIDefines.keyCamera: coreData.localUser.camera.value,
-      ZegoUIKitSEIDefines.keyMicrophone: coreData.localUser.microphone.value,
+      ZegoUIKitSEIDefines.keyCamera:
+          hardcodeCamera ?? coreData.localUser.camera.value,
+      ZegoUIKitSEIDefines.keyMicrophone:
+          hardcodeMicrophone ?? coreData.localUser.microphone.value,
     };
     await coreData.sendSEI(
       ZegoUIKitInnerSEIType.mixerDeviceState.name,
