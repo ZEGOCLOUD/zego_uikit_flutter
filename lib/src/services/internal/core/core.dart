@@ -383,7 +383,7 @@ class ZegoUIKitCore
 
     if (ZegoErrorCode.CommonSuccess == joinRoomResult.errorCode) {
       await coreData.startPublishOrNot();
-      await syncDeviceStatusByStreamExtraInfo();
+      await syncDeviceStatusByStreamExtraInfo(streamType: ZegoStreamType.main);
 
       if (isSimulated) {
         /// at this time, express will not throw the stream event again,
@@ -1077,7 +1077,7 @@ class ZegoUIKitCore
 
     await coreData.startPublishOrNot();
 
-    await syncDeviceStatusByStreamExtraInfo();
+    await syncDeviceStatusByStreamExtraInfo(streamType: ZegoStreamType.main);
 
     return true;
   }
@@ -1179,10 +1179,21 @@ class ZegoUIKitCore
     coreData.localUser.microphone.value = isOn;
     await coreData.startPublishOrNot();
 
-    await syncDeviceStatusByStreamExtraInfo();
+    await syncDeviceStatusByStreamExtraInfo(streamType: ZegoStreamType.main);
   }
 
-  Future<void> syncDeviceStatusByStreamExtraInfo() async {
+  Future<void> syncDeviceStatusByStreamExtraInfo({
+    required ZegoStreamType streamType,
+  }) async {
+    if (!coreData.isPublishingStream) {
+      ZegoLoggerService.logWarn(
+        'not publishing',
+        tag: 'uikit-stream',
+        subTag: 'syncDeviceStatusByStreamExtraInfo',
+      );
+      return;
+    }
+
     // sync device status via stream extra info
     final streamExtraInfo = <String, dynamic>{
       streamExtraInfoCameraKey: coreData.localUser.camera.value,
@@ -1190,7 +1201,10 @@ class ZegoUIKitCore
     };
 
     final extraInfo = jsonEncode(streamExtraInfo);
-    await ZegoExpressEngine.instance.setStreamExtraInfo(extraInfo);
+    await ZegoExpressEngine.instance.setStreamExtraInfo(
+      extraInfo,
+      channel: streamType.channel,
+    );
 
     if (coreData.isSyncDeviceStatusBySEI) {
       await syncDeviceStatusBySEI();

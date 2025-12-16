@@ -437,7 +437,10 @@ mixin ZegoAudioVideoService {
 
   /// start share screen
   Future<void> startSharingScreen() async {
-    return ZegoUIKitCore.shared.coreData.startSharingScreen();
+    await ZegoUIKitCore.shared.coreData.startSharingScreen();
+    await ZegoUIKitCore.shared.syncDeviceStatusByStreamExtraInfo(
+      streamType: ZegoStreamType.screenSharing,
+    );
   }
 
   /// stop share screen
