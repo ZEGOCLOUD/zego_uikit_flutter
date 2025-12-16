@@ -3,6 +3,20 @@
 - Feature
     - Support multi-room mode, lots of API had changed.
 
+## 2.28.37
+
+- Bugs
+    - Fixed the issue where screen sharing did not appear in the web window
+
+## 2.28.36
+
+- Modify the update source of the zim plugin room status
+
+## 2.28.35
+
+- Features
+    - Add `enableSyncDeviceStatusBySEI` API
+
 ## 2.28.34
 
 - Bugs

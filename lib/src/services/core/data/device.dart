@@ -25,7 +25,20 @@ class ZegoUIKitCoreDataDevice {
   IosDeviceInfo? get iosDeviceInfo => _iosDeviceInfo;
 
   /// sync device status via stream extra info
-  Future<void> syncDeviceStatusByStreamExtraInfo() async {
+  Future<void> syncDeviceStatusByStreamExtraInfo({
+    required String targetRoomID,
+    required ZegoStreamType streamType,
+  }) async {
+    if (!_coreData.stream.roomStreams.getRoom(targetRoomID).isPublishing) {
+      ZegoLoggerService.logWarn(
+        'not publishing, '
+        'room id:$targetRoomID, ',
+        tag: 'uikit-stream',
+        subTag: 'syncDeviceStatusByStreamExtraInfo',
+      );
+      return;
+    }
+
     final streamExtraInfo = <String, dynamic>{
       streamExtraInfoCameraKey: _coreData.user.localUser.camera.value,
       streamExtraInfoMicrophoneKey: _coreData.user.localUser.microphone.value,

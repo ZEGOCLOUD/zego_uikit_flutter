@@ -629,8 +629,14 @@ mixin ZegoAudioVideoService {
   Future<void> startSharingScreen({
     required String targetRoomID,
   }) async {
-    return ZegoUIKitCore.shared.coreData.screenSharing.startSharingScreen(
+    await ZegoUIKitCore.shared.coreData.screenSharing.startSharingScreen(
       targetRoomID: targetRoomID,
+    );
+
+    await ZegoUIKitCore.shared.coreData.device
+        .syncDeviceStatusByStreamExtraInfo(
+      targetRoomID: targetRoomID,
+      streamType: ZegoStreamType.screenSharing,
     );
   }
 

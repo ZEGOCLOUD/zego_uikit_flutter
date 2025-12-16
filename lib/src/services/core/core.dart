@@ -916,7 +916,10 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
           .getRoom(targetRoomID)
           .startPublishOrNot();
 
-      await coreData.device.syncDeviceStatusByStreamExtraInfo();
+      await coreData.device.syncDeviceStatusByStreamExtraInfo(
+        targetRoomID: targetRoomID,
+        streamType: ZegoStreamType.main,
+      );
     }
 
     return true;
@@ -1051,7 +1054,10 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
           .getRoom(targetRoomID)
           .startPublishOrNot();
 
-      await coreData.device.syncDeviceStatusByStreamExtraInfo();
+      await coreData.device.syncDeviceStatusByStreamExtraInfo(
+        targetRoomID: targetRoomID,
+        streamType: ZegoStreamType.main,
+      );
     }
 
     return true;

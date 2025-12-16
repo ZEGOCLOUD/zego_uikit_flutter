@@ -3,15 +3,14 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/modules/hall_room/helper.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'data.dart';
 import 'device.dart';
 import 'room.single.dart';
@@ -160,7 +159,10 @@ class ZegoUIKitCoreDataRoom {
       await _streamCommonData.roomStreams
           .getRoom(targetRoomID)
           .startPublishOrNot();
-      await _deviceCommonData.syncDeviceStatusByStreamExtraInfo();
+      await _deviceCommonData.syncDeviceStatusByStreamExtraInfo(
+        targetRoomID: targetRoomID,
+        streamType: ZegoStreamType.main,
+      );
 
       if (isSimulated) {
         /// at this time, express will not throw the stream event again,
