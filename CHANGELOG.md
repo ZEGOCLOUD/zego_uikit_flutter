@@ -1,3 +1,8 @@
+## 2.28.37
+
+- Bugs
+    - Fixed the issue where screen sharing did not appear in the web window
+
 ## 2.28.36
 
 - Modify the update source of the zim plugin room status
