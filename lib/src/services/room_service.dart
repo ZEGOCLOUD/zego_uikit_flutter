@@ -53,6 +53,10 @@ mixin ZegoRoomService {
     return count;
   }
 
+  List<String> getAllRoomIDs() {
+    return ZegoUIKitCore.shared.coreData.room.rooms.allRoomIDs;
+  }
+
   /// get room object
   /// Only for single room mode, if multi-room mode, please use [getRoom]
   ZegoUIKitRoom getCurrentRoom({
@@ -204,6 +208,18 @@ mixin ZegoRoomService {
   /// get room state notifier
   ValueNotifier<Map<String, ZegoUIKitRoomState>> getRoomsStateStream() {
     return ZegoUIKitCore.shared.coreData.room.roomsStateNotifier;
+  }
+
+  void clearRoomData({
+    required String targetRoomID,
+    bool stopPublishAllStream = true,
+    bool stopPlayAllStream = true,
+  }) {
+    ZegoUIKitCore.shared.coreData.clear(
+      targetRoomID: targetRoomID,
+      stopPublishAllStream: stopPublishAllStream,
+      stopPlayAllStream: stopPlayAllStream,
+    );
   }
 
   /// get room state notifier

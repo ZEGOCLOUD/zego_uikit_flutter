@@ -921,6 +921,12 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       );
     }
 
+    ZegoLoggerService.logInfo(
+      'turn ${isOn ? "on" : "off"} local camera, done',
+      tag: 'uikit.camera',
+      subTag: 'switch camera',
+    );
+
     return true;
   }
 
@@ -1027,6 +1033,7 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       subTag: 'switch microphone',
     );
 
+    coreData.user.localUser.microphone.value = isOn;
     if (isOn) {
       await ZegoExpressEngine.instance.muteMicrophone(false);
       await ZegoExpressEngine.instance.mutePublishStreamAudio(false);
@@ -1046,8 +1053,6 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       }
     }
 
-    coreData.user.localUser.microphone.value = isOn;
-
     if (!onlyPreview) {
       await coreData.stream.roomStreams
           .getRoom(targetRoomID)
@@ -1058,6 +1063,12 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
         streamType: ZegoStreamType.main,
       );
     }
+
+    ZegoLoggerService.logInfo(
+      'turn ${isOn ? "on" : "off"} local microphone, done',
+      tag: 'uikit.microphone',
+      subTag: 'switch microphone',
+    );
 
     return true;
   }
