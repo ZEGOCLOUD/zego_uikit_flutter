@@ -267,14 +267,8 @@ mixin ZegoAudioVideoService {
     );
   }
 
-  void enableSyncDeviceStatusBySEI(
-    bool value, {
-    required String targetRoomID,
-  }) {
-    ZegoUIKitCore.shared.enableSyncDeviceStatusBySEI(
-      value,
-      targetRoomID: targetRoomID,
-    );
+  void enableSyncDeviceStatusBySEI(bool value) {
+    ZegoUIKitCore.shared.enableSyncDeviceStatusBySEI(value);
   }
 
   /// MUST call after pushing the stream(turn on camera of microphone)

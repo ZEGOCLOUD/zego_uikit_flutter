@@ -149,8 +149,15 @@ class ZegoUIKitCoreUser {
     lastAudioRoute = value;
   }
 
-  Future<void> destroyTextureRenderer(
-      {required ZegoStreamType streamType}) async {
+  Future<void> destroyTextureRenderer({
+    required ZegoStreamType streamType,
+  }) async {
+    ZegoLoggerService.logInfo(
+      'streamType:$streamType, ',
+      tag: 'uikit.service-core',
+      subTag: 'destroyTextureRenderer',
+    );
+
     switch (streamType) {
       case ZegoStreamType.main:
         if (mainChannel.viewIDNotifier.value != -1) {

@@ -134,6 +134,8 @@ class ZegoUIKitCoreData {
     }
 
     media.clear();
+    message.clear(targetRoomID: targetRoomID);
+
     stream.clear(
       targetRoomID: targetRoomID,
       stopPublishAllStream: stopPublishAllStream,
@@ -141,7 +143,6 @@ class ZegoUIKitCoreData {
     );
     user.clear(targetRoomID: targetRoomID);
     room.clear(targetRoomID: targetRoomID);
-    message.clear(targetRoomID: targetRoomID);
   }
 
   Future<bool> sendSEI(

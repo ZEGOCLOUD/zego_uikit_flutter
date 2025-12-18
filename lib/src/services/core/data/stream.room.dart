@@ -1381,6 +1381,12 @@ class ZegoUIKitCoreDataRoomStream {
           stopPlayingStream(user.mainChannel.streamID);
         }
         user.destroyTextureRenderer(streamType: ZegoStreamType.main);
+      } else {
+        ZegoLoggerService.logInfo(
+          'ignore:${user.mainChannel.streamID}, ',
+          tag: 'uikit.streams.room(hash:$hashCode, room id:$roomID)',
+          subTag: 'stop play all stream',
+        );
       }
 
       if (!ignoreStreamIDs.contains(user.auxChannel.streamID)) {
@@ -1388,6 +1394,12 @@ class ZegoUIKitCoreDataRoomStream {
           stopPlayingStream(user.auxChannel.streamID);
         }
         user.destroyTextureRenderer(streamType: ZegoStreamType.screenSharing);
+      } else {
+        ZegoLoggerService.logInfo(
+          'ignore:${user.auxChannel.streamID}, ',
+          tag: 'uikit.streams.room(hash:$hashCode, room id:$roomID)',
+          subTag: 'stop play all stream',
+        );
       }
     }
 

@@ -3,14 +3,15 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+
 // Package imports:
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
+
 // Project imports:
 import 'package:zego_uikit/src/modules/hall_room/helper.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
-
 import 'data.dart';
 import 'device.dart';
 import 'room.single.dart';
@@ -206,6 +207,8 @@ class ZegoUIKitCoreDataRoom {
     ZegoLoggerService.logInfo(
       'from room id:$fromRoomID, '
       'to room id:"$toRoomID", '
+      'stopPublishAllStream:$stopPublishAllStream, '
+      'stopPlayAllStream:$stopPlayAllStream, '
       'network state:${ZegoUIKit().getNetworkState()}, ',
       tag: 'uikit.rooms',
       subTag: 'switch room',
