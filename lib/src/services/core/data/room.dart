@@ -253,8 +253,8 @@ class ZegoUIKitCoreDataRoom {
       targetRoomID: fromRoomID,
       stopPublishAllStream: stopPublishAllStream,
       stopPlayAllStream: stopPlayAllStream,
-      clearStream: false,
-      clearUser: false,
+      clearStream: clearStreamData,
+      clearUser: clearUserData,
     );
 
     ZegoLoggerService.logInfo(
