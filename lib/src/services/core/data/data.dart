@@ -4,10 +4,8 @@ import 'dart:convert';
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/data/device.dart';
@@ -116,6 +114,9 @@ class ZegoUIKitCoreData {
     required String targetRoomID,
     required bool stopPublishAllStream,
     required bool stopPlayAllStream,
+    bool clearStream = true,
+    bool clearUser = true,
+    bool clearRoom = true,
   }) {
     ZegoLoggerService.logInfo(
       'clear',
@@ -136,13 +137,19 @@ class ZegoUIKitCoreData {
     media.clear();
     message.clear(targetRoomID: targetRoomID);
 
-    stream.clear(
-      targetRoomID: targetRoomID,
-      stopPublishAllStream: stopPublishAllStream,
-      stopPlayAllStream: stopPlayAllStream,
-    );
-    user.clear(targetRoomID: targetRoomID);
-    room.clear(targetRoomID: targetRoomID);
+    if (clearStream) {
+      stream.clear(
+        targetRoomID: targetRoomID,
+        stopPublishAllStream: stopPublishAllStream,
+        stopPlayAllStream: stopPlayAllStream,
+      );
+    }
+    if (clearUser) {
+      user.clear(targetRoomID: targetRoomID);
+    }
+    if (clearRoom) {
+      room.clear(targetRoomID: targetRoomID);
+    }
   }
 
   Future<bool> sendSEI(

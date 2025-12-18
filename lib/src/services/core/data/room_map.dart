@@ -33,7 +33,7 @@ class ZegoUIKitCoreRoomMap<T extends Object> {
   /// Timer for periodically outputting _innerRoomMap
   Timer? _debugTimer;
 
-  bool useDebugMode = false && kDebugMode;
+  bool useDebugMode = true && kDebugMode;
 
   /// Constructor: must pass in method for creating T instance
   /// [onUpgradeEmptyRoom] Optional upgrade callback for updating prepared room's roomID and other properties

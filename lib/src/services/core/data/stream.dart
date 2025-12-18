@@ -127,6 +127,7 @@ class ZegoUIKitCoreDataStream {
       streamInfo.clearDict();
       streamInfo.extraInfo.clear();
     }
+    roomStreams.removeRoom(targetRoomID);
   }
 
   String? queryRoomIDByStreamID(String streamID) {

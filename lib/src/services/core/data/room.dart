@@ -3,15 +3,12 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
-
-// Project imports:
-import 'package:zego_uikit/src/modules/hall_room/helper.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'data.dart';
 import 'device.dart';
 import 'room.single.dart';
@@ -98,6 +95,7 @@ class ZegoUIKitCoreDataRoom {
     if (rooms.containsRoom(targetRoomID)) {
       rooms.getRoom(targetRoomID).clear();
     }
+    rooms.removeRoom(targetRoomID);
   }
 
   Future<ZegoUIKitRoomLoginResult> join({
@@ -111,6 +109,7 @@ class ZegoUIKitCoreDataRoom {
     ZegoLoggerService.logInfo(
       'try join room, '
       'target room id:"$targetRoomID", '
+      'current room id:$currentID, '
       'has token:${token.isNotEmpty}, '
       'markAsLargeRoom:$markAsLargeRoom, '
       'network state:${ZegoUIKit().getNetworkState()}, ',
@@ -128,23 +127,24 @@ class ZegoUIKitCoreDataRoom {
       return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
     }
 
-    if (currentID.isNotEmpty) {
-      /// clear old room data
-      _coreData.clear(
-        targetRoomID: currentID,
-        stopPublishAllStream: true,
-        stopPlayAllStream: true,
+    if (currentID == targetRoomID) {
+      ZegoLoggerService.logInfo(
+        'same room',
+        tag: 'uikit.rooms',
+        subTag: 'join room',
       );
 
-      if (ZegoUIKitHallRoomIDHelper.isRandomRoomID(currentID)) {
-        ZegoLoggerService.logInfo(
-          'has join outside room, leaving first...',
-          tag: 'uikit.rooms',
-          subTag: 'join room',
-        );
+      return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.success, {});
+    }
 
-        await leave(targetRoomID: currentID);
-      }
+    if (currentID.isNotEmpty) {
+      ZegoLoggerService.logInfo(
+        'has join room($currentID), leaving first...',
+        tag: 'uikit.rooms',
+        subTag: 'join room',
+      );
+
+      await leave(targetRoomID: currentID);
     }
 
     final result = await rooms.getRoom(targetRoomID).join(
@@ -202,6 +202,8 @@ class ZegoUIKitCoreDataRoom {
     required bool stopPublishAllStream,
     required bool stopPlayAllStream,
     String token = '',
+    bool clearStreamData = true,
+    bool clearUserData = true,
   }) async {
     final fromRoomID = currentID;
     ZegoLoggerService.logInfo(
@@ -234,19 +236,6 @@ class ZegoUIKitCoreDataRoom {
       return ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.paramsInvalid, {});
     }
 
-    /// todo: 不能直接coreData.clear，否则直播滑动的时候，需要重新拉流构建texture
-    if (stopPublishAllStream) {
-      ZegoUIKit().stopPublishingAllStream(targetRoomID: fromRoomID);
-    }
-    if (stopPlayAllStream) {
-      ZegoUIKit().stopPlayingAllStream(targetRoomID: fromRoomID);
-    }
-    // _coreData.clear(
-    //   targetRoomID: fromRoomID,
-    //   stopPublishAllStream: stopPublishAllStream,
-    //   stopPlayAllStream: stopPlayAllStream,
-    // );
-
     rooms.getRoom(fromRoomID).state.value.reason =
         ZegoUIKitRoomStateChangedReason.Logout;
     rooms.getRoom(toRoomID).state.value.reason =
@@ -257,7 +246,16 @@ class ZegoUIKitCoreDataRoom {
       config: ZegoRoomConfig(0, true, token),
     );
 
-    rooms.removeRoom(fromRoomID);
+    /// cannot clear user and stream,
+    /// otherwise when sliding during the LIVE broadcast,
+    /// it will be necessary to re-initiate pull-based streaming to construct the texture
+    _coreData.clear(
+      targetRoomID: fromRoomID,
+      stopPublishAllStream: stopPublishAllStream,
+      stopPlayAllStream: stopPlayAllStream,
+      clearStream: false,
+      clearUser: false,
+    );
 
     ZegoLoggerService.logInfo(
       'done, ',
@@ -280,6 +278,12 @@ class ZegoUIKitCoreDataRoom {
     );
 
     clearAfterLeave() async {
+      _coreData.clear(
+        targetRoomID: targetRoomID,
+        stopPublishAllStream: true,
+        stopPlayAllStream: true,
+      );
+
       if (hasLogin) {
         /// Still have rooms in login state
       } else {
@@ -304,18 +308,9 @@ class ZegoUIKitCoreDataRoom {
       return ZegoUIKitRoomLogoutResult(ZegoUIKitErrorCode.success, {});
     }
 
-    _coreData.clear(
-      targetRoomID: targetRoomID,
-      stopPublishAllStream: true,
-      stopPlayAllStream: true,
-    );
-
     final result = await rooms.getRoom(targetRoomID).leave();
 
-    rooms.removeRoom(targetRoomID);
-
     await clearAfterLeave();
-
     return ZegoUIKitRoomLogoutResult(result.errorCode, result.extendedData);
   }
 

@@ -68,6 +68,7 @@ class ZegoUIKitCoreDataUser {
     if (roomUsers.containsRoom(targetRoomID)) {
       roomUsers.getRoom(targetRoomID).remoteUsers.clear();
     }
+    roomUsers.removeRoom(targetRoomID);
   }
 
   ZegoUIKitCoreUser getUser(

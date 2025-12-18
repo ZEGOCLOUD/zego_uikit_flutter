@@ -169,12 +169,16 @@ mixin ZegoRoomService {
     required bool stopPublishAllStream,
     required bool stopPlayAllStream,
     String token = '',
+    bool clearStreamData = true,
+    bool clearUserData = true,
   }) async {
     await ZegoUIKitCore.shared.coreData.room.switchTo(
       toRoomID: toRoomID,
       token: token,
       stopPublishAllStream: stopPublishAllStream,
       stopPlayAllStream: stopPlayAllStream,
+      clearStreamData: clearStreamData,
+      clearUserData: clearUserData,
     );
   }
 
