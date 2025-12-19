@@ -38,14 +38,14 @@ mixin ZegoMixerService {
 
   /// *[userSoundIDs], a map of user id to sound id
   Future<void> startPlayMixAudioVideo(
-    String mixerID,
+    String mixerStreamID,
     List<ZegoUIKitUser> users,
     Map<String, int> userSoundIDs, {
     required String targetRoomID,
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     return ZegoUIKitCore.shared.startPlayMixAudioVideo(
-      mixerID,
+      mixerStreamID,
       users
           .map((e) => ZegoUIKitCoreUser(e.id, e.name, targetRoomID, false))
           .toList(),
@@ -55,11 +55,11 @@ mixin ZegoMixerService {
   }
 
   Future<void> stopPlayMixAudioVideo(
-    String mixerID, {
+    String mixerStreamID, {
     required String targetRoomID,
   }) async {
     return ZegoUIKitCore.shared.stopPlayMixAudioVideo(
-      mixerID,
+      mixerStreamID,
       targetRoomID: targetRoomID,
     );
   }

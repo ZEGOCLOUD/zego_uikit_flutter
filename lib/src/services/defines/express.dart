@@ -27,3 +27,4 @@ typedef ZegoUIKitMediaPlayerMediaInfo = ZegoMediaPlayerMediaInfo;
 typedef ZegoUIKitExpressErrorCode = ZegoErrorCode;
 typedef ZegoUIKitRoomLogoutResult = ZegoRoomLogoutResult;
 typedef ZegoUIKitRoomLoginResult = ZegoRoomLoginResult;
+typedef ZegoUIKitPublishChannel = ZegoPublishChannel;

@@ -1556,7 +1556,7 @@ extension ZegoUIKitCoreMixer on ZegoUIKitCore {
   }
 
   Future<void> startPlayMixAudioVideo(
-    String mixerID,
+    String mixerStreamID,
     List<ZegoUIKitCoreUser> users,
     Map<String, int> userSoundIDs, {
     required String targetRoomID,
@@ -1565,7 +1565,7 @@ extension ZegoUIKitCoreMixer on ZegoUIKitCore {
     return coreData.stream.roomStreams
         .getRoom(targetRoomID)
         .startPlayMixAudioVideo(
-          mixerID,
+          mixerStreamID,
           users,
           userSoundIDs,
           onPlayerStateUpdated: onPlayerStateUpdated,
@@ -1573,12 +1573,12 @@ extension ZegoUIKitCoreMixer on ZegoUIKitCore {
   }
 
   Future<void> stopPlayMixAudioVideo(
-    String mixerID, {
+    String mixerStreamID, {
     required String targetRoomID,
   }) {
     return coreData.stream.roomStreams
         .getRoom(targetRoomID)
-        .stopPlayMixAudioVideo(mixerID);
+        .stopPlayMixAudioVideo(mixerStreamID);
   }
 }
 

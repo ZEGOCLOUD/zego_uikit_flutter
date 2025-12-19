@@ -1,3 +1,6 @@
+// Flutter imports:
+import 'package:flutter/cupertino.dart';
+
 // Project imports:
 import 'package:zego_uikit/src/services/services.dart';
 
@@ -11,35 +14,64 @@ class ZegoUIKitHallRoomListStreamUser {
   /// stream is playing or not
   bool isPlaying = false;
 
+  ZegoStreamType streamType = ZegoStreamType.main;
+
   ZegoUIKitHallRoomListStreamUser({
     required this.user,
     required this.roomID,
   });
 
+  void updateStreamType(ZegoStreamType streamType) {
+    if (this.streamType == streamType) {
+      return;
+    }
+
+    _getPlayerStateNotifier(
+      roomID: roomID,
+      userID: user.id,
+    ).removeListener(_onPlayerStateUpdated);
+
+    this.streamType = streamType;
+
+    syncPlayingState();
+  }
+
   void syncPlayingState({
     String? syncRoomID,
   }) {
-    final playerState = ZegoUIKit()
-        .getUser(user.id, targetRoomID: syncRoomID ?? roomID)
-        .playerState
-        .value;
+    final playerState = _getPlayerStateNotifier(
+      roomID: syncRoomID ?? roomID,
+      userID: user.id,
+    ).value;
     isPlayed = ZegoUIKitPlayerState.Playing == playerState;
     isPlaying = ZegoUIKitPlayerState.PlayRequesting == playerState ||
         ZegoUIKitPlayerState.Playing == playerState;
+
     _listenPlayingState(syncRoomID: syncRoomID);
+  }
+
+  ValueNotifier<ZegoUIKitPlayerState> _getPlayerStateNotifier({
+    required String roomID,
+    required String userID,
+  }) {
+    final targetUser = ZegoUIKit().getUser(
+      userID,
+      targetRoomID: roomID,
+    );
+    return streamType.channel == ZegoUIKitPublishChannel.Main
+        ? targetUser.playerState
+        : targetUser.auxPlayerState;
   }
 
   void _listenPlayingState({
     String? syncRoomID,
   }) {
-    ZegoUIKit()
-        .getUser(user.id, targetRoomID: syncRoomID ?? roomID)
-        .playerState
-        .removeListener(_onPlayerStateUpdated);
-    ZegoUIKit()
-        .getUser(user.id, targetRoomID: syncRoomID ?? roomID)
-        .playerState
-        .addListener(_onPlayerStateUpdated);
+    final playerStateNotifier = _getPlayerStateNotifier(
+      roomID: syncRoomID ?? roomID,
+      userID: user.id,
+    );
+    playerStateNotifier.removeListener(_onPlayerStateUpdated);
+    playerStateNotifier.addListener(_onPlayerStateUpdated);
   }
 
   void _onPlayerStateUpdated() {
@@ -47,7 +79,7 @@ class ZegoUIKitHallRoomListStreamUser {
   }
 
   String get streamID {
-    return generateStreamID(user.id, roomID, ZegoStreamType.main);
+    return generateStreamID(user.id, roomID, streamType);
   }
 
   bool get isEmpty => user.isEmpty() || roomID.isEmpty;
