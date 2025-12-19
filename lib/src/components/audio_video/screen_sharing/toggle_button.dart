@@ -16,6 +16,7 @@ class ZegoScreenSharingToggleButton extends StatefulWidget {
     this.buttonSize,
     this.iconSize,
     this.onPressed,
+    this.canStart,
   });
 
   final String roomID;
@@ -27,6 +28,8 @@ class ZegoScreenSharingToggleButton extends StatefulWidget {
 
   /// the size of button
   final Size? buttonSize;
+
+  final bool Function()? canStart;
 
   ///  You can do what you want after pressed.
   final void Function(bool isStart)? onPressed;
@@ -74,6 +77,16 @@ class _ZegoScreenSharingToggleButtonState
   }
 
   Future<void> onPressed() async {
+    if(! (widget.canStart?.call() ?? true)) {
+      ZegoLoggerService.logInfo(
+        "can not start by outside, ",
+        tag: 'uikit.component',
+        subTag: 'ZegoScreenSharingToggleButton',
+      );
+
+      return;
+    }
+
     if (ZegoUIKit()
         .getScreenSharingList(targetRoomID: widget.roomID)
         .isNotEmpty) {
