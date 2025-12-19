@@ -1,13 +1,14 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show Platform;
+import 'dart:io' show File, Platform;
 
 // Package imports:
 import 'package:connectivity_plus/connectivity_plus.dart';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
@@ -95,6 +96,45 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
             : ZegoUIKitNetworkState.offline;
 
     coreData.networkStateStreamCtrl?.add(coreData.networkStateNotifier.value);
+  }
+
+  /// 保存图片到本地，文件名包含时间戳
+  Future<void> _saveSnapshotImage({
+    required String prefix,
+    Uint8List? imageData,
+  }) async {
+    return;
+
+    try {
+      if (imageData == null || imageData.isEmpty) {
+        ZegoLoggerService.logWarn(
+          'image data is null or empty, prefix:$prefix',
+          tag: 'uikit.service.event-handler',
+          subTag: '_saveSnapshotImage',
+        );
+        return;
+      }
+
+      final directory = await getApplicationDocumentsDirectory();
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final fileName = '${prefix}_$timestamp.png';
+      final filePath = '${directory.path}/$fileName';
+
+      final file = File(filePath);
+      await file.writeAsBytes(imageData);
+
+      ZegoLoggerService.logInfo(
+        'saved snapshot image: $filePath',
+        tag: 'uikit.service.event-handler',
+        subTag: '_saveSnapshotImage',
+      );
+    } catch (e) {
+      ZegoLoggerService.logError(
+        'save snapshot image error: $e, prefix:$prefix',
+        tag: 'uikit.service.event-handler',
+        subTag: '_saveSnapshotImage',
+      );
+    }
   }
 
   @override
@@ -377,6 +417,22 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       ),
     ).isCapturedVideoFirstFrameNotifier.value = true;
 
+    // 保存图片
+    ZegoExpressEngine.instance.takePublishStreamSnapshot().then((result) {
+      if (result.errorCode == 0 && result.image?.bytes != null) {
+        _saveSnapshotImage(
+          prefix: 'publisher_captured_${channel.name}',
+          imageData: result.image!.bytes,
+        );
+      }
+    }).catchError((e) {
+      ZegoLoggerService.logWarn(
+        'takePublishStreamSnapshot error: $e, channel:$channel',
+        tag: 'uikit.service.event-handler',
+        subTag: 'onPublisherCapturedVideoFirstFrame',
+      );
+    });
+
     try {
       /// onPublisherRenderVideoFirstFrame only once callback
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -406,6 +462,22 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         channel,
       ),
     ).isRenderedVideoFirstFrameNotifier.value = true;
+
+    // 保存图片
+    ZegoExpressEngine.instance.takePublishStreamSnapshot().then((result) {
+      if (result.errorCode == 0 && result.image?.bytes != null) {
+        _saveSnapshotImage(
+          prefix: 'publisher_render_${channel.name}',
+          imageData: result.image!.bytes,
+        );
+      }
+    }).catchError((e) {
+      ZegoLoggerService.logWarn(
+        'takePublishStreamSnapshot error: $e, channel:$channel',
+        tag: 'uikit.service.event-handler',
+        subTag: 'onPublisherRenderVideoFirstFrame',
+      );
+    });
   }
 
   @override
@@ -428,6 +500,22 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         channel,
       ),
     ).isSendVideoFirstFrameNotifier.value = true;
+
+    // 保存图片
+    ZegoExpressEngine.instance.takePublishStreamSnapshot().then((result) {
+      if (result.errorCode == 0 && result.image?.bytes != null) {
+        _saveSnapshotImage(
+          prefix: 'publisher_send_${channel.name}',
+          imageData: result.image!.bytes,
+        );
+      }
+    }).catchError((e) {
+      ZegoLoggerService.logWarn(
+        'takePublishStreamSnapshot error: $e, channel:$channel',
+        tag: 'uikit.service.event-handler',
+        subTag: 'onPublisherSendVideoFirstFrame',
+      );
+    });
   }
 
   @override
@@ -1321,6 +1409,22 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
       roomStream.mixerStreamDic[streamID]?.loaded.value = true;
     });
+
+    // 保存图片
+    ZegoExpressEngine.instance.takePlayStreamSnapshot(streamID).then((result) {
+      if (result.errorCode == 0 && result.image?.bytes != null) {
+        _saveSnapshotImage(
+          prefix: 'player_recv_$streamID',
+          imageData: result.image!.bytes,
+        );
+      }
+    }).catchError((e) {
+      ZegoLoggerService.logWarn(
+        'takePlayStreamSnapshot error: $e, streamID:$streamID',
+        tag: 'uikit.service.event-handler',
+        subTag: 'onPlayerRecvVideoFirstFrame',
+      );
+    });
   }
 
   @override
@@ -1332,6 +1436,44 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       }
 
       roomStream.mixerStreamDic[streamID]?.loaded.value = true;
+    });
+  }
+
+  @override
+  void onPlayerRenderVideoFirstFrame(String streamID) {
+    // 保存图片
+    ZegoExpressEngine.instance.takePlayStreamSnapshot(streamID).then((result) {
+      if (result.errorCode == 0 && result.image?.bytes != null) {
+        _saveSnapshotImage(
+          prefix: 'player_render_$streamID',
+          imageData: result.image!.bytes,
+        );
+      }
+    }).catchError((e) {
+      ZegoLoggerService.logWarn(
+        'takePlayStreamSnapshot error: $e, streamID:$streamID',
+        tag: 'uikit.service.event-handler',
+        subTag: 'onPlayerRenderVideoFirstFrame',
+      );
+    });
+  }
+
+  @override
+  void onPlayerRenderCameraVideoFirstFrame(String streamID) {
+    // 保存图片
+    ZegoExpressEngine.instance.takePlayStreamSnapshot(streamID).then((result) {
+      if (result.errorCode == 0 && result.image?.bytes != null) {
+        _saveSnapshotImage(
+          prefix: 'player_render_camera_$streamID',
+          imageData: result.image!.bytes,
+        );
+      }
+    }).catchError((e) {
+      ZegoLoggerService.logWarn(
+        'takePlayStreamSnapshot error: $e, streamID:$streamID',
+        tag: 'uikit.service.event-handler',
+        subTag: 'onPlayerRenderCameraVideoFirstFrame',
+      );
     });
   }
 
