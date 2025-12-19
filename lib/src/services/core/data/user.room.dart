@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
-
 import 'user.dart';
 
 class ZegoUIKitCoreDataRoomUser {

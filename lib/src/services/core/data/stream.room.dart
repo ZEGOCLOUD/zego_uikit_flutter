@@ -1652,38 +1652,41 @@ class ZegoUIKitCoreDataRoomStream {
   }
 
   Future<void> startPlayMixAudioVideo(
-    String mixerID,
+    String mixerStreamID,
     List<ZegoUIKitCoreUser> users,
     Map<String, int> userSoundIDs, {
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     ZegoLoggerService.logInfo(
       'begin, '
-      'mixerID:$mixerID, users:$users, userSoundIDs:$userSoundIDs',
+      'mixerStreamID:$mixerStreamID, '
+      'users:$users, '
+      'userSoundIDs:$userSoundIDs',
       tag: 'uikit.mixstream',
       subTag: 'start play mix audio video',
     );
 
-    if (mixerStreamDic.containsKey(mixerID)) {
+    if (mixerStreamDic.containsKey(mixerStreamID)) {
       for (ZegoUIKitCoreUser user in users) {
         if (-1 ==
-            mixerStreamDic[mixerID]!
+            mixerStreamDic[mixerStreamID]!
                 .usersNotifier
                 .value
                 .indexWhere((e) => e.id == user.id)) {
-          mixerStreamDic[mixerID]!.addUser(user);
+          mixerStreamDic[mixerStreamID]!.addUser(user);
         }
       }
-      mixerStreamDic[mixerID]!.userSoundIDs.addAll(userSoundIDs);
+      mixerStreamDic[mixerStreamID]!.userSoundIDs.addAll(userSoundIDs);
     } else {
-      mixerStreamDic[mixerID] = ZegoUIKitCoreMixerStream(
-        mixerID,
+      mixerStreamDic[mixerStreamID] = ZegoUIKitCoreMixerStream(
+        mixerStreamID,
         userSoundIDs,
         users,
       );
 
       await playStreamOnViewWillCreated(
-        streamChannel: ZegoUIKitCoreStreamInfo.empty()..streamID = mixerID,
+        streamChannel: ZegoUIKitCoreStreamInfo.empty()
+          ..streamID = mixerStreamID,
         onPlayerStateUpdated: onPlayerStateUpdated,
       );
 
@@ -1695,29 +1698,29 @@ class ZegoUIKitCoreDataRoomStream {
           subTag: 'start play mix audio video',
         );
 
-        mixerStreamDic[mixerID]!.viewID = viewID;
+        mixerStreamDic[mixerStreamID]!.viewID = viewID;
 
         final canvas = ZegoCanvas(viewID, viewMode: ZegoViewMode.AspectFill);
         await updatePlayingStreamViewCanvasOnViewCreated(
-          streamID: mixerID,
+          streamID: mixerStreamID,
           viewID: viewID,
           canvas: canvas,
         );
 
         Future.delayed(const Duration(seconds: 3), () {
-          mixerStreamDic[mixerID]?.loaded.value = true;
+          mixerStreamDic[mixerStreamID]?.loaded.value = true;
         });
       }).then((widget) {
         assert(widget != null);
-        mixerStreamDic[mixerID]!.view.value = widget;
+        mixerStreamDic[mixerStreamID]!.view.value = widget;
 
         notifyStreamListControl(ZegoStreamType.main);
       });
     }
   }
 
-  Future<void> stopPlayMixAudioVideo(String mixerID) async {
-    if (!mixerStreamDic.containsKey(mixerID)) {
+  Future<void> stopPlayMixAudioVideo(String mixerStreamID) async {
+    if (!mixerStreamDic.containsKey(mixerStreamID)) {
       ZegoLoggerService.logInfo(
         'not contain, ignore, ',
         tag: 'uikit.mixstream',
@@ -1728,15 +1731,15 @@ class ZegoUIKitCoreDataRoomStream {
     }
 
     ZegoLoggerService.logInfo(
-      'mixerID:$mixerID',
+      'mixerStreamID:$mixerStreamID',
       tag: 'uikit.mixstream',
       subTag: 'stop play mix audio video',
     );
 
-    stopPlayingStreamByExpress(mixerID);
+    stopPlayingStreamByExpress(mixerStreamID);
 
-    mixerStreamDic[mixerID]?.destroyTextureRenderer();
-    mixerStreamDic.remove(mixerID);
+    mixerStreamDic[mixerStreamID]?.destroyTextureRenderer();
+    mixerStreamDic.remove(mixerStreamID);
   }
 
   /// Attribute–Value Pair of sound wave for each single stream in the mixed stream
