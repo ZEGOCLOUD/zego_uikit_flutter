@@ -4,15 +4,14 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/channel/platform_interface.dart';
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'data.dart';
 import 'room.dart';
 import 'screen_sharing.dart';
@@ -50,7 +49,7 @@ class ZegoUIKitCoreDataRoomStream {
       ZegoUIKitCore.shared.coreData.screenSharing;
 
   bool isPlaying = false;
-  bool isPublishing = false;
+  Map<ZegoStreamType, bool> isChannelPublishing = {};
 
   Map<String, List<PlayerStateUpdateCallback>> playerStateUpdateCallbackList =
       {};
@@ -110,7 +109,7 @@ class ZegoUIKitCoreDataRoomStream {
     receiveSEIStreamCtrl?.close();
     receiveSEIStreamCtrl = null;
 
-    isPublishing = false;
+    isChannelPublishing.clear();
     isPlaying = false;
   }
 
@@ -149,7 +148,7 @@ class ZegoUIKitCoreDataRoomStream {
       }
     }
 
-    isPublishing = false;
+    isChannelPublishing.clear();
     isPlaying = false;
   }
 
@@ -304,7 +303,7 @@ class ZegoUIKitCoreDataRoomStream {
       streamType,
     );
 
-    if (isPublishing) {
+    if (isChannelPublishing[streamType] ?? false) {
       ///  stream id had generated, that mean is publishing
       ZegoLoggerService.logWarn(
         'local user is publishing,'
@@ -315,7 +314,7 @@ class ZegoUIKitCoreDataRoomStream {
       return;
     }
 
-    isPublishing = true;
+    isChannelPublishing[streamType] = true;
 
     final localUserStreamViewID =
         localUserStreamChannel.viewIDNotifier.value ?? -1;
@@ -557,7 +556,7 @@ class ZegoUIKitCoreDataRoomStream {
     await ZegoExpressEngine.instance
         .stopPublishingStream(channel: streamType.channel)
         .then((value) {
-      isPublishing = false;
+      isChannelPublishing[streamType] = false;
 
       audioVideoListStreamCtrl?.add(getAudioVideoList());
       _screenSharingCommonData.screenSharingListStreamCtrl

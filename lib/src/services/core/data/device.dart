@@ -5,7 +5,6 @@ import 'dart:io';
 // Package imports:
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/data/data.dart';
@@ -30,7 +29,10 @@ class ZegoUIKitCoreDataDevice {
     required String targetRoomID,
     required ZegoStreamType streamType,
   }) async {
-    if (!_coreData.stream.roomStreams.getRoom(targetRoomID).isPublishing) {
+    if (!(_coreData.stream.roomStreams
+            .getRoom(targetRoomID)
+            .isChannelPublishing[streamType] ??
+        false)) {
       ZegoLoggerService.logWarn(
         'not publishing, '
         'room id:$targetRoomID, ',
