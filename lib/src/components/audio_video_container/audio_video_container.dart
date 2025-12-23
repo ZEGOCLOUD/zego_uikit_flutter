@@ -3,7 +3,6 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/audio_video.dart';
 import 'package:zego_uikit/src/components/audio_video/defines.dart';
@@ -116,17 +115,6 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
   void initState() {
     super.initState();
 
-    subscriptions.add(
-      ZegoUIKit()
-          .getUserListStream(targetRoomID: widget.roomID)
-          .listen(onUserListUpdated),
-    );
-    subscriptions.add(
-      ZegoUIKit()
-          .getAudioVideoListStream(targetRoomID: widget.roomID)
-          .listen(onStreamListUpdated),
-    );
-
     if (widget.sources.contains(ZegoAudioVideoContainerSource.virtualUser)) {
       virtualUsers = widget.virtualUsersNotifier?.value ?? [];
       widget.virtualUsersNotifier?.addListener(onVirtualUsersUpdated);
@@ -135,12 +123,36 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
     List<ZegoUIKitUser> streamUsers = [];
     if (widget.sources.contains(ZegoAudioVideoContainerSource.user)) {
       streamUsers.addAll(ZegoUIKit().getAllUsers(targetRoomID: widget.roomID));
+
+      subscriptions.add(
+        ZegoUIKit()
+            .getUserListStream(targetRoomID: widget.roomID)
+            .listen(onUserListUpdated),
+      );
     }
-    if (widget.sources.contains(ZegoAudioVideoContainerSource.audioVideo) ||
-        widget.sources.contains(ZegoAudioVideoContainerSource.screenSharing)) {
+
+    if (widget.sources.contains(ZegoAudioVideoContainerSource.audioVideo)) {
       streamUsers.addAll(ZegoUIKit().getAudioVideoList(
         targetRoomID: widget.roomID,
       ));
+
+      subscriptions.add(
+        ZegoUIKit()
+            .getAudioVideoListStream(targetRoomID: widget.roomID)
+            .listen(onStreamListUpdated),
+      );
+    }
+
+    if (widget.sources.contains(ZegoAudioVideoContainerSource.screenSharing)) {
+      streamUsers.addAll(ZegoUIKit().getScreenSharingList(
+        targetRoomID: widget.roomID,
+      ));
+
+      subscriptions.add(
+        ZegoUIKit()
+            .getScreenSharingListStream(targetRoomID: widget.roomID)
+            .listen(onStreamListUpdated),
+      );
     }
     userListNotifier.value = _deduplicateUserList(streamUsers, 'init state');
 
