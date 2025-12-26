@@ -27,7 +27,6 @@ class ZegoUIKitUser {
         'id': id,
         'name': name,
         'room_id': roomID,
-        'another_room': isAnotherRoomUser
       };
 
   factory ZegoUIKitUser.fromJson(Map<String, dynamic> json) {
@@ -35,7 +34,6 @@ class ZegoUIKitUser {
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       roomID: json['room_id'] ?? '',
-      isAnotherRoomUser: json['another_room'] ?? false,
     );
   }
 
