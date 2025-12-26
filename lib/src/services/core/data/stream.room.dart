@@ -899,7 +899,6 @@ class ZegoUIKitCoreDataRoomStream {
       await updatePlayingStreamViewCanvasOnViewCreated(
         streamID: streamID,
         viewID: viewID,
-        streamType: streamType,
       );
     } else {
       targetUserStreamChannel.viewCreatingNotifier.value = true;
@@ -922,7 +921,6 @@ class ZegoUIKitCoreDataRoomStream {
           await updatePlayingStreamViewCanvasOnViewCreated(
             streamID: streamID,
             viewID: viewID,
-            streamType: streamType,
           );
         },
         key: streamType == ZegoStreamType.main
@@ -1081,16 +1079,16 @@ class ZegoUIKitCoreDataRoomStream {
   Future<void> updatePlayingStreamViewCanvasOnViewCreated({
     required String streamID,
     required int viewID,
-    ZegoStreamType? streamType,
     ZegoCanvas? canvas,
   }) async {
-    final viewMode = ZegoStreamType.main == streamType
-        ? (_streamCommonData.useVideoViewAspectFill
-            ? ZegoViewMode.AspectFill
-            : ZegoViewMode.AspectFit)
+    final viewMode =
+        ZegoStreamType.main == ZegoUIKitStreamHelper.getStreamTypeByID(streamID)
+            ? (_streamCommonData.useVideoViewAspectFill
+                ? ZegoViewMode.AspectFill
+                : ZegoViewMode.AspectFit)
 
-        /// screen share/media default AspectFit
-        : ZegoViewMode.AspectFit;
+            /// screen share/media default AspectFit
+            : ZegoViewMode.AspectFit;
     final updateCanvas = canvas ??
         ZegoCanvas(
           viewID,
@@ -1105,16 +1103,17 @@ class ZegoUIKitCoreDataRoomStream {
       ZegoLoggerService.logInfo(
         'isPlayingStreamInIOSPIP:$startPlayingStreamInIOSPIP, ',
         tag: 'uikit.streams.room(hash:$hashCode, room id:$roomID)',
-        subTag: 'start play stream',
+        subTag: 'update play stream canvas',
       );
     }
 
     ZegoLoggerService.logInfo(
       'ready start, '
       'streamID: $streamID, '
+      'useVideoViewAspectFill:${_streamCommonData.useVideoViewAspectFill}, '
       'view mode:$viewMode(${viewMode.index}), ',
       tag: 'uikit.streams.room(hash:$hashCode, room id:$roomID)',
-      subTag: 'start play stream',
+      subTag: 'update play stream canvas',
     );
 
     if (startPlayingStreamInIOSPIP) {
@@ -1126,7 +1125,7 @@ class ZegoUIKitCoreDataRoomStream {
           'stream id:$streamID, '
           'view id:$viewID, ',
           tag: 'uikit.streams.room(hash:$hashCode, room id:$roomID)',
-          subTag: 'start play stream',
+          subTag: 'update play stream canvas',
         );
       });
     } else {
@@ -1138,7 +1137,7 @@ class ZegoUIKitCoreDataRoomStream {
           'streamID: $streamID, '
           'canvas:$updateCanvas, ',
           tag: 'uikit.streams.room(hash:$hashCode, room id:$roomID)',
-          subTag: 'start play stream',
+          subTag: 'update play stream canvas',
         );
       });
     }

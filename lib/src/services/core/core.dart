@@ -8,10 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/core/data/data.dart';
 import 'package:zego_uikit/src/services/core/data/message.room.dart';
@@ -1219,14 +1217,16 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
   void updateVideoViewMode(bool useVideoViewAspectFill) {
     if (coreData.stream.useVideoViewAspectFill == useVideoViewAspectFill) {
       ZegoLoggerService.logInfo(
-        'mode is equal',
+        'mode is equal, '
+        'useVideoViewAspectFill:$useVideoViewAspectFill, ',
         tag: 'uikit.stream',
         subTag: 'update video view mode',
       );
       return;
     } else {
       ZegoLoggerService.logInfo(
-        'mode:$useVideoViewAspectFill',
+        'mode:$useVideoViewAspectFill, '
+        'useVideoViewAspectFill:$useVideoViewAspectFill, ',
         tag: 'uikit.stream',
         subTag: 'update video view mode',
       );
