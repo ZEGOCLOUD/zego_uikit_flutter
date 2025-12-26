@@ -5,10 +5,8 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:native_device_orientation/native_device_orientation.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/avatar/avatar.dart';
 import 'package:zego_uikit/src/components/audio_video/defines.dart';
@@ -389,7 +387,15 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                     width: constraints.maxWidth,
                     height: constraints.maxHeight,
                     child: isCameraOn
-                        ? audioVideoView
+                        ? (ZegoUIKit().useDebugMode
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.orange, width: 2),
+                                ),
+                                child: audioVideoView,
+                              )
+                            : audioVideoView)
                         : Container(color: Colors.transparent),
                   );
                 },
