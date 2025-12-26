@@ -178,23 +178,20 @@ class _ZegoLayoutPIPSmallItemListState
           child: SizedBox(
             width: designedSize.width,
             height: designedSize.height,
-            child: GestureDetector(
-              onTap: () {
-                widget.onTap(targetUser);
-              },
-              child: AbsorbPointer(
-                absorbing: false,
-                child: calculateSize(
-                  user: targetUser,
-                  child: ZegoAudioVideoView(
-                    roomID: widget.roomID,
-                    user: targetUser,
-                    borderRadius: widget.borderRadius ?? 18.0.zW,
-                    backgroundBuilder: widget.backgroundBuilder,
-                    foregroundBuilder: widget.foregroundBuilder,
-                    avatarConfig: widget.avatarConfig,
-                  ),
-                ),
+            child: calculateSize(
+              user: targetUser,
+              child: ZegoAudioVideoView(
+                roomID: widget.roomID,
+                user: targetUser,
+                onTap: (user) {
+                  if (user != null) {
+                    widget.onTap(user);
+                  }
+                },
+                borderRadius: widget.borderRadius ?? 18.0.zW,
+                backgroundBuilder: widget.backgroundBuilder,
+                foregroundBuilder: widget.foregroundBuilder,
+                avatarConfig: widget.avatarConfig,
               ),
             ),
           ),

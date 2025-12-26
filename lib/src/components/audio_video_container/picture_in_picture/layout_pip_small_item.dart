@@ -98,20 +98,9 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
                 user: widget.targetUser,
                 borderRadius: widget.borderRadius ?? 18.0.zR,
                 backgroundBuilder: widget.backgroundBuilder,
+                onTap: widget.onTap,
                 foregroundBuilder: widget.foregroundBuilder,
                 avatarConfig: widget.avatarConfig,
-              ),
-
-              /// Add a transparent GestureDetector overlay to ensure click responsiveness on iOS as well
-              Positioned.fill(
-                child: GestureDetector(
-                  onTap: () {
-                    widget.onTap(widget.targetUser);
-                  },
-                  child: Container(
-                    color: Colors.transparent,
-                  ),
-                ),
               ),
             ],
           ),

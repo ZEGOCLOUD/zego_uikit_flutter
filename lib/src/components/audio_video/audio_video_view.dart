@@ -36,6 +36,7 @@ class ZegoAudioVideoView extends StatefulWidget {
     this.borderColor,
     this.extraInfo,
     this.avatarConfig,
+    this.onTap,
   });
 
   final String roomID;
@@ -45,6 +46,8 @@ class ZegoAudioVideoView extends StatefulWidget {
   /// foreground builder, you can display something you want on top of the view,
   /// foreground will always show
   final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
+
+  final void Function(ZegoUIKitUser? user)? onTap;
 
   /// background builder, you can display something when user close camera
   final ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
@@ -146,6 +149,18 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         child: Stack(
           children: [
             background(),
+
+            /// Add a transparent GestureDetector overlay to ensure click responsiveness on iOS as well
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () {
+                  widget.onTap?.call(widget.user);
+                },
+                child: Container(
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
             foreground(),
           ],
         ),
@@ -193,6 +208,16 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                   children: [
                     background(),
                     videoView(isCameraOn: true),
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: () {
+                          widget.onTap?.call(widget.user);
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
                     foreground(),
                     testViewID(),
                   ],
@@ -201,6 +226,16 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
                   children: [
                     videoView(isCameraOn: false), //
                     background(),
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: () {
+                          widget.onTap?.call(widget.user);
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
                     foreground(),
                     testViewID(),
                   ],
