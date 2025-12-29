@@ -59,9 +59,13 @@ class _ZegoLayoutPIPSmallItemListState
   late ZegoViewPosition currentPosition;
   var displayUsersNotifier = ValueNotifier<List<ZegoUIKitUser>>([]);
 
-  Size get designedSize => widget.size ?? Size(139.5.zW, 248.0.zH);
+  Size get designedSize => widget.size ?? Size(248.5.zW, 248.0.zH);
 
-  double get designedRatio => 9.0 / 16.0;
+  double get designedRatio => 1.0; //9.0 / 16.0;
+
+  double get itemsSpacing => 5.zR;
+
+  double get itemSpacing => 2.zR;
 
   @override
   void initState() {
@@ -108,12 +112,12 @@ class _ZegoLayoutPIPSmallItemListState
             constraints: BoxConstraints.loose(
               Size(
                 designedSize.width,
-                (visibleItemCount - 1) * 16.zR +
+                (visibleItemCount - 1) * itemsSpacing +
                     visibleItemCount * designedSize.height +
 
                     /// make user can see the last item's head area, so he can
                     /// know scrollable
-                    (hasInvisibleUsers ? 16.zR * 3 : 0),
+                    (hasInvisibleUsers ? itemsSpacing * 3 : 0),
               ),
             ),
             //  remove listview padding
@@ -137,12 +141,12 @@ class _ZegoLayoutPIPSmallItemListState
         mediaQueryData.padding.top -
         mediaQueryData.padding.bottom;
     final maxItemCount =
-        (screenHeight + 16.zR) ~/ (16.zR + designedSize.height);
+        (screenHeight + itemsSpacing) ~/ (itemsSpacing + designedSize.height);
 
     if (visibleItemCount < 0) {
       visibleItemCount = maxItemCount;
     } else {
-      final displayHeight = (widget.visibleItemCount - 1) * 16.zR +
+      final displayHeight = (widget.visibleItemCount - 1) * itemsSpacing +
           widget.visibleItemCount * designedSize.height;
       if (displayHeight > screenHeight) {
         visibleItemCount = maxItemCount;
@@ -173,11 +177,13 @@ class _ZegoLayoutPIPSmallItemListState
                 widget.spacingBetweenSmallViews?.right ?? 0,
                 (index == userItems.length - 1)
                     ? 0
-                    : widget.spacingBetweenSmallViews?.bottom ?? 16.zR,
+                    : widget.spacingBetweenSmallViews?.bottom ?? itemsSpacing,
               ),
-          child: SizedBox(
+          child: Container(
             width: designedSize.width,
             height: designedSize.height,
+            padding: EdgeInsets.all(itemSpacing),
+            color: Colors.black.withAlpha(80),
             child: calculateSize(
               user: targetUser,
               child: ZegoAudioVideoView(
@@ -188,7 +194,7 @@ class _ZegoLayoutPIPSmallItemListState
                     widget.onTap(user);
                   }
                 },
-                borderRadius: widget.borderRadius ?? 18.0.zW,
+                borderRadius: widget.borderRadius ?? 6.0.zW,
                 backgroundBuilder: widget.backgroundBuilder,
                 foregroundBuilder: widget.foregroundBuilder,
                 avatarConfig: widget.avatarConfig,
