@@ -518,7 +518,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       );
     }
 
-    return Container(color: Colors.transparent);
+    return const SizedBox();
   }
 
   Widget circleBorder({required Widget child}) {

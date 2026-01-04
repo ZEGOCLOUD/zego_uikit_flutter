@@ -102,6 +102,15 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
                 foregroundBuilder: widget.foregroundBuilder,
                 avatarConfig: widget.avatarConfig,
               ),
+              Positioned.fill(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    widget.onTap(widget.targetUser);
+                  },
+                  child: Container(color: Colors.transparent),
+                ),
+              ),
             ],
           ),
         ),
