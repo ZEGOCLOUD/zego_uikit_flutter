@@ -18,7 +18,7 @@ API_AVAILABLE(ios(15.0))
 @property (nonatomic, assign) BOOL isAutoStarted;
 @property (nonatomic, assign) CGFloat aspectWidth;
 @property (nonatomic, assign) CGFloat aspectHeight;
-@property (nonatomic, assign) ZegoViewMode currentViewMode;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *streamViewModes;
 
 @property (nonatomic, strong) AVPictureInPictureController *pipController;
 @property (nonatomic, strong) AVPictureInPictureVideoCallViewController *pipCallVC;
@@ -46,7 +46,7 @@ API_AVAILABLE(ios(15.0))
         self.isAutoStarted = YES;
         self.aspectWidth = 9;
         self.aspectHeight = 16;
-        self.currentViewMode = ZegoViewModeAspectFit;
+        self.streamViewModes = [NSMutableDictionary dictionary];
         
         self.flutterVideoViewDictionary = [NSMutableDictionary dictionary];
     }
@@ -134,6 +134,13 @@ API_AVAILABLE(ios(15.0))
     }
     [self updatePIPStreamID:streamID];
     
+    if (self.pipLayer) {
+        ZegoViewMode viewMode = [self viewModeForStream:streamID];
+        NSString *gravity = [self videoGravityForViewMode:viewMode];
+        self.pipLayer.videoGravity = gravity;
+        NSLog(@"[PIPManager] updatePIPSource, update pip layer gravity to %@", gravity);
+    }
+    
     if(nil == self.pipController) {
         NSLog(@"[PIPManager] updatePIPSource, pip controller is nil");
         
@@ -207,6 +214,11 @@ API_AVAILABLE(ios(15.0))
             }];
             
             self.pipLayer = [self createAVSampleBufferDisplayLayer];
+            ZegoViewMode viewMode = [self viewModeForStream:streamID];
+            NSString *gravity = [self videoGravityForViewMode:viewMode];
+            self.pipLayer.videoGravity = gravity;
+            NSLog(@"[PIPManager] enablePIP, apply currentViewMode:%d to pip layer, videoGravity:%@", (int)viewMode, gravity);
+            
             [self.pipVideoView addDisplayLayer:self.pipLayer];
             
             NSLog(@"[PIPManager] enablePIP, update auto started to %@", self.isAutoStarted ? @"YES" : @"NO");
@@ -309,9 +321,13 @@ API_AVAILABLE(ios(15.0))
 - (void)updatePlayingStreamView:(NSString *)streamID videoView:(UIView *)videoView viewMode:(NSNumber *)viewMode{
     NSLog(@"[PIPManager] updatePlayingStreamView, stream id:%@, video view:%@, view mode:%@", streamID, videoView, viewMode);
     
-    // add a layer for custom rendering to the video view, if not found, add one
     [self addFlutterLayerWithView:streamID :videoView];
-    [self setViewMode:(ZegoViewMode)[viewMode integerValue]];
+    
+    [self updateViewMode:(ZegoViewMode)[viewMode integerValue] forStream:streamID];
+    
+    ZegoCanvas *canvas = [ZegoCanvas canvasWithView:videoView];
+    canvas.viewMode = (ZegoViewMode)[viewMode integerValue];
+    [[ZegoExpressEngine sharedEngine] updatePlayingCanvas:streamID canvas:canvas];
     
     if(self.pipController != nil && self.pipController.isPictureInPictureActive) {
         [self updatePIPStreamID: streamID];
@@ -335,7 +351,7 @@ API_AVAILABLE(ios(15.0))
     NSLog(@"[PIPManager] createAVSampleBufferDisplayLayer");
     
     AVSampleBufferDisplayLayer *layer = [[AVSampleBufferDisplayLayer alloc] init];
-    layer.videoGravity = [self videoGravityForViewMode:self.currentViewMode];
+    layer.videoGravity = AVLayerVideoGravityResizeAspect;
     layer.opaque = YES;
     
     return layer;
@@ -549,7 +565,11 @@ API_AVAILABLE(ios(15.0))
         [videoView.layer addSublayer:displayLayer];
         
         displayLayer.frame = videoView.bounds;
-        displayLayer.videoGravity = [self videoGravityForViewMode:self.currentViewMode];
+        
+        ZegoViewMode viewMode = [self viewModeForStream:streamID];
+        NSString *gravity = [self videoGravityForViewMode:viewMode];
+        displayLayer.videoGravity = gravity;
+        NSLog(@"[PIPManager] apply currentViewMode:%d to flutter layer, videoGravity:%@", (int)viewMode, gravity);
         
         NSLog(@"[PIPManager] addFlutterLayerWithView, layer not found, add layer:%@ in videoView:%@", displayLayer, videoView);
     }
@@ -590,26 +610,51 @@ API_AVAILABLE(ios(15.0))
         }
         
         self.pipLayer = [self createAVSampleBufferDisplayLayer];
+        
+        if (self.pipStreamID) {
+            ZegoViewMode viewMode = [self viewModeForStream:self.pipStreamID];
+            NSString *gravity = [self videoGravityForViewMode:viewMode];
+            self.pipLayer.videoGravity = gravity;
+            NSLog(@"[PIPManager] rebuildPIPLayer, apply currentViewMode:%d to pip layer, videoGravity:%@", (int)viewMode, gravity);
+        }
+        
         [self.pipVideoView addDisplayLayer:self.pipLayer];
     }
 }
 
-- (void)setViewMode:(ZegoViewMode)viewMode {
-    NSLog(@"[PIPManager] setViewMode: %d", (int)viewMode);
+- (ZegoViewMode)viewModeForStream:(NSString *)streamID {
+    NSNumber *mode = [self.streamViewModes objectForKey:streamID];
+    if (mode) {
+        return (ZegoViewMode)[mode integerValue];
+    }
+    return ZegoViewModeAspectFit;
+}
+
+- (void)updateViewMode:(ZegoViewMode)viewMode forStream:(NSString *)streamID {
+    NSLog(@"[PIPManager] updateViewMode: %d for stream: %@", (int)viewMode, streamID);
     
-    self.currentViewMode = viewMode;
+    [self.streamViewModes setObject:@(viewMode) forKey:streamID];
     
-    // 更新现有layer的videoGravity
-    if (self.pipLayer) {
-        self.pipLayer.videoGravity = [self videoGravityForViewMode:viewMode];
+    // Update Flutter Layer Gravity
+    UIView *flutterView = [self.flutterVideoViewDictionary objectForKey:streamID];
+    if (flutterView) {
+        AVSampleBufferDisplayLayer *layer = [self getLayerOfView:flutterView];
+        if (layer) {
+            NSString *gravity = [self videoGravityForViewMode:viewMode];
+            if (![layer.videoGravity isEqualToString:gravity]) {
+                layer.videoGravity = gravity;
+                NSLog(@"[PIPManager] updateViewMode, update flutter layer gravity to %@", gravity);
+            }
+        }
     }
     
-    // 更新所有flutter layer的videoGravity
-    for (UIView *videoView in self.flutterVideoViewDictionary.allValues) {
-        AVSampleBufferDisplayLayer *layer = [self getLayerOfView:videoView];
-        if (layer) {
-            layer.videoGravity = [self videoGravityForViewMode:viewMode];
-        }
+    // Update PIP Layer Gravity if applicable
+    if (self.pipLayer && [self.pipStreamID isEqualToString:streamID]) {
+         NSString *gravity = [self videoGravityForViewMode:viewMode];
+         if (![self.pipLayer.videoGravity isEqualToString:gravity]) {
+             self.pipLayer.videoGravity = gravity;
+             NSLog(@"[PIPManager] updateViewMode, update pip layer gravity to %@", gravity);
+         }
     }
 }
 
