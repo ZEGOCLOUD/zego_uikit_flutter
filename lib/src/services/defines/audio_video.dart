@@ -432,6 +432,12 @@ class ZegoUIKitPublishStreamQuality {
   /// Number of video bytes sent
   double videoSendBytes;
 
+  /// Audio traffic control ratio, in percentage, 0 ~ 100. A value of -1 indicates failed streaming. Higher values indicate greater traffic control impact.
+  int audioTrafficControlRate;
+
+  /// Video traffic control ratio, in percentage, 0 ~ 100. A value of -1 indicates failed streaming. Higher values indicate greater traffic control impact.
+  int videoTrafficControlRate;
+
   ZegoUIKitPublishStreamQuality(
     this.videoCaptureFPS,
     this.videoEncodeFPS,
@@ -448,6 +454,8 @@ class ZegoUIKitPublishStreamQuality {
     this.totalSendBytes,
     this.audioSendBytes,
     this.videoSendBytes,
+    this.audioTrafficControlRate,
+    this.videoTrafficControlRate,
   );
 }
 
