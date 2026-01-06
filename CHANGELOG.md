@@ -1,3 +1,7 @@
+## 2.28.39
+
+- Update dependency
+
 ## 2.28.37/2.28.38
 
 - Bugs
