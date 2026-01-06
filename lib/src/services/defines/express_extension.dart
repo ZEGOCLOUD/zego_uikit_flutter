@@ -1,6 +1,5 @@
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/services/defines/express.dart';
 
@@ -42,21 +41,23 @@ extension ZegoMixerOutputnExtension on ZegoMixerOutput {
 extension ZegoPublishStreamQualityExtension on ZegoPublishStreamQuality {
   String toStringX() {
     return 'ZegoPublishStreamQualityExtension{'
-        'videoCaptureFPS:$videoCaptureFPS'
-        'videoEncodeFPS:$videoEncodeFPS'
-        'videoSendFPS:$videoSendFPS'
-        'videoKBPS:$videoKBPS'
-        'audioCaptureFPS:$audioCaptureFPS'
-        'audioSendFPS:$audioSendFPS'
-        'audioKBPS:$audioKBPS'
-        'rtt:$rtt'
-        'packetLostRate:$packetLostRate'
-        'level:$level'
-        'isHardwareEncode:$isHardwareEncode'
-        'videoCodecID:$videoCodecID'
-        'totalSendBytes:$totalSendBytes'
-        'audioSendBytes:$audioSendBytes'
-        'videoSendByte:$videoSendBytes'
+        'videoCaptureFPS:$videoCaptureFPS, '
+        'videoEncodeFPS:$videoEncodeFPS, '
+        'videoSendFPS:$videoSendFPS, '
+        'videoKBPS:$videoKBPS, '
+        'audioCaptureFPS:$audioCaptureFPS, '
+        'audioSendFPS:$audioSendFPS, '
+        'audioKBPS:$audioKBPS, '
+        'rtt:$rtt, '
+        'packetLostRate:$packetLostRate, '
+        'level:$level, '
+        'isHardwareEncode:$isHardwareEncode, '
+        'videoCodecID:$videoCodecID, '
+        'totalSendBytes:$totalSendBytes, '
+        'audioSendBytes:$audioSendBytes, '
+        'videoSendByte:$videoSendBytes, '
+        'audioTrafficControlRate:$audioTrafficControlRate, '
+        'videoTrafficControlRate:$videoTrafficControlRate, '
         '}';
   }
 
@@ -77,6 +78,8 @@ extension ZegoPublishStreamQualityExtension on ZegoPublishStreamQuality {
       0.0,
       0.0,
       0.0,
+      -1,
+      -1,
     );
   }
 }
