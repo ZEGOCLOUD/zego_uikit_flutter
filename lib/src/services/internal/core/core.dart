@@ -417,6 +417,8 @@ class ZegoUIKitCore
         tag: 'uikit-room',
         subTag: 'join room',
       );
+
+      clear();
     }
 
     return joinRoomResult;
