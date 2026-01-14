@@ -74,6 +74,8 @@ class ZegoUIKitCoreData
       subTag: 'core data',
     );
 
+    uninitNetworkTimestamp();
+
     customCommandReceivedStreamCtrl?.close();
     customCommandReceivedStreamCtrl = null;
 

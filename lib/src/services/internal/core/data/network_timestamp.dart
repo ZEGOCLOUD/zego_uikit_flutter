@@ -31,6 +31,7 @@ mixin ZegoUIKitCoreDataNetworkTimestamp {
   }
 
   void uninitNetworkTimestamp() {
+    _networkTimeInfoFixerTimer?.cancel();
     _durationTimer?.cancel();
   }
 

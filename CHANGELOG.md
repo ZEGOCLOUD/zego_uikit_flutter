@@ -1,3 +1,7 @@
+## 2.28.40
+
+- Clean up residual data when joining room fails
+
 ## 2.28.39
 
 - Update dependency
