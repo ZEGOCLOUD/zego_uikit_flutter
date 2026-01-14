@@ -1031,23 +1031,31 @@ class ZegoUIKitCore with ZegoUIKitCoreMessage, ZegoUIKitCoreEventHandler {
       subTag: 'switch microphone',
     );
 
-    coreData.user.localUser.microphone.value = isOn;
+    /// update state first, microphoneMuteMode->microphone
     if (isOn) {
-      await ZegoExpressEngine.instance.muteMicrophone(false);
-      await ZegoExpressEngine.instance.mutePublishStreamAudio(false);
       coreData.user.localUser.microphoneMuteMode.value = false;
     } else {
       if (muteMode) {
-        await ZegoExpressEngine.instance.muteMicrophone(false);
-        await ZegoExpressEngine.instance.mutePublishStreamAudio(true);
         coreData.user.localUser.microphoneMuteMode.value = true;
 
         /// local sound level should be mute too
         coreData.user.localUser.mainChannel.soundLevelStream?.add(0.0);
       } else {
+        coreData.user.localUser.microphoneMuteMode.value = false;
+      }
+    }
+    coreData.user.localUser.microphone.value = isOn;
+
+    if (isOn) {
+      await ZegoExpressEngine.instance.muteMicrophone(false);
+      await ZegoExpressEngine.instance.mutePublishStreamAudio(false);
+    } else {
+      if (muteMode) {
+        await ZegoExpressEngine.instance.muteMicrophone(false);
+        await ZegoExpressEngine.instance.mutePublishStreamAudio(true);
+      } else {
         await ZegoExpressEngine.instance.muteMicrophone(true);
         await ZegoExpressEngine.instance.mutePublishStreamAudio(false);
-        coreData.user.localUser.microphoneMuteMode.value = false;
       }
     }
 
