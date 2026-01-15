@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/audio_video_view.dart';
 import 'package:zego_uikit/src/components/audio_video/defines.dart';
@@ -11,6 +10,7 @@ import 'package:zego_uikit/src/components/audio_video_container/picture_in_pictu
 import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+//
 /// layout config of picture in picture
 class ZegoLayoutPictureInPictureConfig extends ZegoLayout {
   /// small video view is draggable if set true in one-on-one mode

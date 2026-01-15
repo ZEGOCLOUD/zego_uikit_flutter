@@ -2,7 +2,6 @@
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/audio_video/audio_video_view.dart';
 import 'package:zego_uikit/src/components/audio_video/defines.dart';
@@ -11,6 +10,7 @@ import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+//
 class ZegoLayoutPIPSmallItemList extends StatefulWidget {
   const ZegoLayoutPIPSmallItemList({
     super.key,

@@ -18,6 +18,7 @@ import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+//
 /// display user audio and video information,
 /// and z order of widget(from bottom to top) is:
 /// 1. background view
@@ -498,22 +499,24 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     if (widget.foregroundBuilder != null) {
       return LayoutBuilder(
         builder: (context, constraints) {
-          return Stack(children: [
-            ValueListenableBuilder(
-              valueListenable: ZegoUIKitUserPropertiesNotifier(
-                roomID: widget.roomID,
-                widget.user ?? ZegoUIKitUser.empty(),
+          return Stack(
+            children: [
+              ValueListenableBuilder(
+                valueListenable: ZegoUIKitUserPropertiesNotifier(
+                  roomID: widget.roomID,
+                  widget.user ?? ZegoUIKitUser.empty(),
+                ),
+                builder: (context, _, __) {
+                  return widget.foregroundBuilder!.call(
+                    context,
+                    Size(constraints.maxWidth, constraints.maxHeight),
+                    widget.user,
+                    widget.extraInfo ?? {},
+                  );
+                },
               ),
-              builder: (context, _, __) {
-                return widget.foregroundBuilder!.call(
-                  context,
-                  Size(constraints.maxWidth, constraints.maxHeight),
-                  widget.user,
-                  widget.extraInfo ?? {},
-                );
-              },
-            ),
-          ]);
+            ],
+          );
         },
       );
     }

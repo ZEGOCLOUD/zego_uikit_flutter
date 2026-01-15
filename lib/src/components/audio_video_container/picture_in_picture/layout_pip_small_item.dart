@@ -87,31 +87,18 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
       child: makeDraggable(
         child: calculateSize(
           user: widget.targetUser,
-          child: Stack(
-            children: [
-              ZegoAudioVideoView(
-                // Use a key based on user.id to ensure Flutter properly rebuilds the widget
-                // when the user changes. Without this key, especially on iOS, the platform view
-                // may not update correctly when switching between users.
-                key: ValueKey('small_view_${widget.targetUser?.id ?? ''}'),
-                roomID: widget.roomID,
-                user: widget.targetUser,
-                borderRadius: widget.borderRadius ?? 18.0.zR,
-                backgroundBuilder: widget.backgroundBuilder,
-                onTap: widget.onTap,
-                foregroundBuilder: widget.foregroundBuilder,
-                avatarConfig: widget.avatarConfig,
-              ),
-              Positioned.fill(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () {
-                    widget.onTap(widget.targetUser);
-                  },
-                  child: Container(color: Colors.transparent),
-                ),
-              ),
-            ],
+          child: ZegoAudioVideoView(
+            // Use a key based on user.id to ensure Flutter properly rebuilds the widget
+            // when the user changes. Without this key, especially on iOS, the platform view
+            // may not update correctly when switching between users.
+            key: ValueKey('small_view_${widget.targetUser?.id ?? ''}'),
+            roomID: widget.roomID,
+            user: widget.targetUser,
+            borderRadius: widget.borderRadius ?? 18.0.zR,
+            backgroundBuilder: widget.backgroundBuilder,
+            onTap: widget.onTap,
+            foregroundBuilder: widget.foregroundBuilder,
+            avatarConfig: widget.avatarConfig,
           ),
         ),
       ),
