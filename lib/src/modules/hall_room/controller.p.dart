@@ -468,6 +468,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
         streamUser.roomID,
         streamUser.user.id,
         anotherUserName: streamUser.user.name,
+        streamType: streamUser.streamType,
 
         /// Will copy to respective rooms later after entering
         playOnAnotherRoom: false,
@@ -478,6 +479,7 @@ class ZegoUIKitHallRoomListControllerPrivate {
       await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
         targetRoomID: roomID,
         streamUser.user.id,
+        streamType: streamUser.streamType,
       );
 
       removeFromStreams(streamUser);

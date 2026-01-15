@@ -4,6 +4,7 @@ mixin ZegoMixerService {
   Future<void> startPlayAnotherRoomAudioVideo(
     String anotherRoomID,
     String anotherUserID, {
+    ZegoStreamType streamType = ZegoStreamType.main,
     String anotherUserName = '',
     required String targetRoomID,
     required bool playOnAnotherRoom,
@@ -13,6 +14,7 @@ mixin ZegoMixerService {
       anotherRoomID,
       anotherUserID,
       anotherUserName,
+      streamType: streamType,
       targetRoomID: targetRoomID,
       playOnAnotherRoom: playOnAnotherRoom,
     );
@@ -21,10 +23,12 @@ mixin ZegoMixerService {
   Future<void> stopPlayAnotherRoomAudioVideo(
     String userID, {
     required String targetRoomID,
+    ZegoStreamType streamType = ZegoStreamType.main,
   }) async {
     return ZegoUIKitCore.shared.stopPlayingAnotherRoomStream(
       userID,
       targetRoomID: targetRoomID,
+      streamType: streamType,
     );
   }
 

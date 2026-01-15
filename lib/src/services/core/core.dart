@@ -1600,6 +1600,7 @@ extension ZegoUIKitCoreAudioVideo on ZegoUIKitCore {
 
     /// Whether to transfer (cut) user/stream to the target room, current room does not retain data
     required bool playOnAnotherRoom,
+    ZegoStreamType streamType = ZegoStreamType.main,
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     return coreData.stream.roomStreams
@@ -1608,6 +1609,7 @@ extension ZegoUIKitCoreAudioVideo on ZegoUIKitCore {
           anotherRoomID,
           anotherUserID,
           anotherUserName,
+          streamType: streamType,
           onPlayerStateUpdated: onPlayerStateUpdated,
         );
   }
@@ -1615,11 +1617,13 @@ extension ZegoUIKitCoreAudioVideo on ZegoUIKitCore {
   Future<void> stopPlayingAnotherRoomStream(
     String userID, {
     required String targetRoomID,
+    ZegoStreamType streamType = ZegoStreamType.main,
   }) async {
     return coreData.stream.roomStreams
         .getRoom(targetRoomID)
         .stopPlayingAnotherRoomStream(
           userID,
+          streamType: streamType,
         );
   }
 }

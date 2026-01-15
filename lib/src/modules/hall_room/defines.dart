@@ -19,7 +19,8 @@ class ZegoUIKitHallRoomListStreamUser {
   ZegoUIKitHallRoomListStreamUser({
     required this.user,
     required this.roomID,
-  });
+    ZegoStreamType? streamType,
+  }) : streamType = streamType ?? ZegoStreamType.main;
 
   void updateStreamType(ZegoStreamType streamType) {
     if (this.streamType == streamType) {

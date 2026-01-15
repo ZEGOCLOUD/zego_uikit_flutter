@@ -3,11 +3,9 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:loop_page_view/loop_page_view.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/components.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
@@ -15,6 +13,7 @@ import 'package:zego_uikit/src/modules/hall_room/config.dart';
 import 'package:zego_uikit/src/modules/hall_room/controller.dart';
 import 'package:zego_uikit/src/modules/hall_room/style.dart';
 import 'package:zego_uikit/src/services/services.dart';
+
 import 'defines.dart';
 import 'model.dart';
 
@@ -557,6 +556,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
             .getAudioVideoList(
               targetRoomID: widget.controller.roomID,
               onlyTargetRoom: false,
+              streamType: stream.streamType,
             )
             .indexWhere((e) => e.id == stream.user.id);
         if (-1 == queryIndex) {
@@ -602,13 +602,15 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
           return Container();
         }
 
-        return SizedBox.expand(
+        return Container(
+          decoration: BoxDecoration(color: Colors.black),
           child: LayoutBuilder(
             builder: (context, constraints) {
               return ValueListenableBuilder<Widget?>(
                 valueListenable: ZegoUIKit().getAudioVideoViewNotifier(
-                  targetRoomID: widget.controller.roomID,
                   stream.user.id,
+                  targetRoomID: widget.controller.roomID,
+                  streamType: stream.streamType,
                 ),
                 builder: (context, userView, _) {
                   if (userView == null) {
@@ -634,30 +636,82 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
                     subTag: 'uikit.hall-room-view',
                   );
 
-                  return StreamBuilder(
-                    stream: NativeDeviceOrientationCommunicator()
-                        .onOrientationChanged(),
-                    builder: (context,
-                        AsyncSnapshot<NativeDeviceOrientation> asyncResult) {
-                      if (asyncResult.hasData) {
-                        /// Do not update ui when ui is building !!!
-                        /// use postFrameCallback to update videoSize
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          ///  notify sdk to update video render orientation
-                          ZegoUIKit().updateAppOrientation(
-                            deviceOrientationMap(asyncResult.data!),
-                          );
-                        });
-                      }
-
-                      return userView;
-                    },
+                  return videoViewWithAspectRatio(
+                    stream: stream,
+                    constraints: constraints,
+                    child: deviceOrientationListenerBuilder(
+                      child: userView,
+                    ),
                   );
                 },
               );
             },
           ),
         );
+      },
+    );
+  }
+
+  Widget videoViewWithAspectRatio({
+    required ZegoUIKitHallRoomListStreamUser stream,
+    required BoxConstraints constraints,
+    required Widget child,
+  }) {
+    final videoSizeNotifier = ZegoUIKit().getVideoSizeNotifier(
+      stream.user.id,
+      targetRoomID: widget.controller.roomID,
+      streamType: stream.streamType,
+    );
+
+    return ValueListenableBuilder<Size>(
+      valueListenable: videoSizeNotifier,
+      builder: (context, videoSize, _) {
+        var videoWidth = videoSize.width;
+        var videoHeight = videoSize.height;
+        if (videoWidth <= 0 || videoHeight <= 0) {
+          videoWidth = constraints.maxWidth;
+          videoHeight = constraints.maxHeight;
+        }
+
+        final videoRatio = videoWidth / videoHeight;
+
+        var displayWidth = constraints.maxWidth;
+        var displayHeight = displayWidth / videoRatio;
+
+        if (displayHeight > constraints.maxHeight) {
+          displayHeight = constraints.maxHeight;
+          displayWidth = displayHeight * videoRatio;
+        }
+
+        return Center(
+          child: SizedBox(
+            width: displayWidth,
+            height: displayHeight,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget deviceOrientationListenerBuilder({
+    required Widget child,
+  }) {
+    return StreamBuilder(
+      stream: NativeDeviceOrientationCommunicator().onOrientationChanged(),
+      builder: (context, AsyncSnapshot<NativeDeviceOrientation> asyncResult) {
+        if (asyncResult.hasData) {
+          /// Do not update ui when ui is building !!!
+          /// use postFrameCallback to update videoSize
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ///  notify sdk to update video render orientation
+            ZegoUIKit().updateAppOrientation(
+              deviceOrientationMap(asyncResult.data!),
+            );
+          });
+        }
+
+        return child;
       },
     );
   }
@@ -727,6 +781,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
         .getAudioVideoList(
           targetRoomID: widget.controller.roomID,
           onlyTargetRoom: false,
+          streamType: stream.streamType,
         )
         .indexWhere((e) => e.id == stream.user.id);
     if (-1 == queryIndex) {

@@ -558,12 +558,16 @@ mixin ZegoAudioVideoService {
   List<ZegoUIKitUser> getAudioVideoList({
     required String targetRoomID,
     bool onlyTargetRoom = true,
+    ZegoStreamType streamType = ZegoStreamType.main,
   }) {
     final list = ZegoUIKitCore.shared.coreData.stream.roomStreams
         .getRoom(
           targetRoomID,
         )
-        .getAudioVideoList(onlyCurrentRoom: onlyTargetRoom);
+        .getAudioVideoList(
+          streamType: streamType,
+          onlyCurrentRoom: onlyTargetRoom,
+        );
     return list.map((e) => e.toZegoUikitUser()).toList();
   }
 
@@ -647,27 +651,41 @@ mixin ZegoAudioVideoService {
   ValueNotifier<Size> getVideoSizeNotifier(
     String userID, {
     required String targetRoomID,
+    ZegoStreamType streamType = ZegoStreamType.main,
   }) {
-    return ZegoUIKitCore.shared.coreData.user
-        .getUser(
-          userID,
-          targetRoomID: targetRoomID,
-        )
-        .mainChannel
-        .viewSizeNotifier;
+    final targetUser = ZegoUIKitCore.shared.coreData.user.getUser(
+      userID ?? '',
+      targetRoomID: targetRoomID,
+    );
+
+    switch (streamType) {
+      case ZegoStreamType.main:
+        return targetUser.mainChannel.viewSizeNotifier;
+      case ZegoStreamType.media:
+      case ZegoStreamType.screenSharing:
+      case ZegoStreamType.mix:
+        return targetUser.auxChannel.viewSizeNotifier;
+    }
   }
 
   ValueNotifier<ZegoUIKitPlayerState> getStreamPlayerStateNotifier(
     String userID, {
     required String targetRoomID,
+    ZegoStreamType streamType = ZegoStreamType.main,
   }) {
-    return ZegoUIKitCore.shared.coreData.user
-        .getUser(
-          userID,
-          targetRoomID: targetRoomID,
-        )
-        .mainChannel
-        .playerStateNotifier;
+    final targetUser = ZegoUIKitCore.shared.coreData.user.getUser(
+      userID ?? '',
+      targetRoomID: targetRoomID,
+    );
+
+    switch (streamType) {
+      case ZegoStreamType.main:
+        return targetUser.mainChannel.playerStateNotifier;
+      case ZegoStreamType.media:
+      case ZegoStreamType.screenSharing:
+      case ZegoStreamType.mix:
+        return targetUser.auxChannel.playerStateNotifier;
+    }
   }
 
   /// update texture render orientation
