@@ -77,7 +77,7 @@ class _ZegoScreenSharingToggleButtonState
   }
 
   Future<void> onPressed() async {
-    if(! (widget.canStart?.call() ?? true)) {
+    if (!(widget.canStart?.call() ?? true)) {
       ZegoLoggerService.logInfo(
         "can not start by outside, ",
         tag: 'uikit.component',

@@ -10,6 +10,10 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'user.dart';
 
+/// Mixer stream data holder used inside UIKit core.
+///
+/// Stores stream ID, view information, load state, sound levels and user list
+/// for a mixed audio & video stream.
 class ZegoUIKitCoreMixerStream {
   final String streamID;
   int viewID = -1;
@@ -33,9 +37,14 @@ class ZegoUIKitCoreMixerStream {
     userListStreamCtrl?.add(usersNotifier.value);
   }
 
-  /// userid, sound id
+  /// Map of user ID to sound ID (sound channel ID).
   Map<String, int> userSoundIDs = {};
 
+  /// Create a mixer stream description for UIKit core.
+  ///
+  /// [streamID] The ID of the mixed stream.
+  /// [userSoundIDs] Map of user ID to sound ID (sound channel ID).
+  /// [users] Initial user list contained in this mixed stream.
   ZegoUIKitCoreMixerStream(
     this.streamID,
     this.userSoundIDs,
