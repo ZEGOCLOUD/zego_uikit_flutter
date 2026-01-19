@@ -1252,12 +1252,31 @@ class ZegoUIKitCore
     }
   }
 
+  Future<void> setAudioConfig(
+    ZegoUIKitAudioConfig config, {
+    ZegoStreamType streamType = ZegoStreamType.main,
+  }) async {
+    ZegoLoggerService.logInfo(
+      'config:${config.toStringX()}, '
+      'streamType:$streamType, ',
+      tag: 'uikit-stream',
+      subTag: 'set audio config',
+    );
+
+    await ZegoExpressEngine.instance.setAudioConfig(
+      config,
+      channel: streamType.channel,
+    );
+    coreData.channelAudioConfig[streamType] = config;
+  }
+
   Future<void> setVideoConfig(
     ZegoUIKitVideoConfig config,
     ZegoStreamType streamType,
   ) async {
     ZegoLoggerService.logInfo(
-      'config:$config',
+      'config:$config, '
+      'streamType:$streamType, ',
       tag: 'uikit-stream',
       subTag: 'set video config',
     );

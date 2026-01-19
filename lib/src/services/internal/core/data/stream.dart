@@ -42,6 +42,7 @@ mixin ZegoUIKitCoreDataStream {
   bool isEnableCustomVideoRender = false;
   bool isUsingFrontCameraRequesting = false;
   bool isSyncDeviceStatusBySEI = true;
+  Map<ZegoStreamType, ZegoUIKitAudioConfig> channelAudioConfig = {};
 
   Map<String, List<PlayerStateUpdateCallback>> playerStateUpdateCallbackList =
       {};
@@ -317,6 +318,7 @@ mixin ZegoUIKitCoreDataStream {
       );
       return;
     }
+
     final localTargetStreamViewID =
         getLocalStreamChannel(streamType).viewIDNotifier.value ?? -1;
     ZegoLoggerService.logInfo(
@@ -325,6 +327,21 @@ mixin ZegoUIKitCoreDataStream {
       tag: 'uikit-stream',
       subTag: 'start publish stream',
     );
+
+    final audioConfig = channelAudioConfig[streamType];
+    if (null != audioConfig) {
+      ZegoLoggerService.logInfo(
+        'setAudioConfig, '
+        'audioConfig:$audioConfig, ',
+        tag: 'uikit-stream',
+        subTag: 'start publish stream',
+      );
+
+      await ZegoExpressEngine.instance.setAudioConfig(
+        audioConfig,
+        channel: streamType.channel,
+      );
+    }
 
     /// advance config
     switch (streamType) {

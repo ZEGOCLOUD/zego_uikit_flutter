@@ -142,3 +142,13 @@ extension ZegoMixerStartResultExtesion on ZegoMixerStartResult {
         '}';
   }
 }
+
+extension ZegoUIKitAudioConfigExtesion on ZegoUIKitAudioConfig {
+  String toStringX() {
+    return 'ZegoUIKitAudioConfig{'
+        'bitrate:$bitrate, '
+        'channel:$channel, '
+        'codecID:$codecID, '
+        '}';
+  }
+}

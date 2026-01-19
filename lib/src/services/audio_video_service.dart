@@ -47,6 +47,13 @@ mixin ZegoAudioVideoService {
     ZegoUIKitCore.shared.setAudioRouteToSpeaker(isSpeaker);
   }
 
+  Future<void> setAudioConfig(
+    ZegoUIKitAudioConfig config, {
+    ZegoStreamType streamType = ZegoStreamType.main,
+  }) async {
+    await ZegoUIKitCore.shared.setAudioConfig(config, streamType: streamType);
+  }
+
   /// update video config
   Future<void> setVideoConfig(
     ZegoUIKitVideoConfig config, {
