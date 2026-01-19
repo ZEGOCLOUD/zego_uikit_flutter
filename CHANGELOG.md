@@ -1,3 +1,7 @@
+## 2.28.41
+
+- Support set audio config
+
 ## 2.28.40
 
 - Clean up residual data when joining room fails
