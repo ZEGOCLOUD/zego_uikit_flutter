@@ -1426,6 +1426,25 @@ class ZegoUIKitCoreDataRoomStream {
 
     final currentRoomUserInfo = _userCommonData.roomUsers.getRoom(roomID);
     for (var fromStreamID in fromStreamIDs) {
+      if (mixerStreamDic.containsKey(fromStreamID)) {
+        final fromMixerStream = mixerStreamDic[fromStreamID]!;
+        final toRoomStream = _streamCommonData.roomStreams.getRoom(toRoomID);
+
+        if (isMove) {
+          toRoomStream.mixerStreamDic[fromStreamID] = fromMixerStream;
+          mixerStreamDic.remove(fromStreamID);
+        } else {
+          final copiedMixerStream = ZegoUIKitCoreMixerStream(
+            fromMixerStream.streamID,
+            fromMixerStream.userSoundIDs,
+            fromMixerStream.usersNotifier.value,
+          );
+          copiedMixerStream.copyFrom(fromMixerStream);
+          toRoomStream.mixerStreamDic[fromStreamID] = copiedMixerStream;
+        }
+        continue;
+      }
+
       final fromStreamData = streamDicNotifier.value[fromStreamID];
       if (null == fromStreamData) {
         ZegoLoggerService.logInfo(
@@ -1662,9 +1681,9 @@ class ZegoUIKitCoreDataRoomStream {
   }
 
   Future<void> startPlayMixAudioVideo(
-    String mixerStreamID,
-    List<ZegoUIKitCoreUser> users,
-    Map<String, int> userSoundIDs, {
+    String mixerStreamID, {
+    List<ZegoUIKitCoreUser> users = const [],
+    Map<String, int> userSoundIDs = const {},
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     ZegoLoggerService.logInfo(
@@ -1676,7 +1695,8 @@ class ZegoUIKitCoreDataRoomStream {
       subTag: 'start play mix audio video',
     );
 
-    if (mixerStreamDic.containsKey(mixerStreamID)) {
+    final isExist = mixerStreamDic.containsKey(mixerStreamID);
+    if (isExist) {
       for (ZegoUIKitCoreUser user in users) {
         if (-1 ==
             mixerStreamDic[mixerStreamID]!
@@ -1686,7 +1706,11 @@ class ZegoUIKitCoreDataRoomStream {
           mixerStreamDic[mixerStreamID]!.addUser(user);
         }
       }
-      mixerStreamDic[mixerStreamID]!.userSoundIDs.addAll(userSoundIDs);
+
+      /// todo 这里是否需要考虑重复？不过好像是map不需要？
+      if (userSoundIDs.isNotEmpty) {
+        mixerStreamDic[mixerStreamID]!.userSoundIDs.addAll(userSoundIDs);
+      }
     } else {
       mixerStreamDic[mixerStreamID] = ZegoUIKitCoreMixerStream(
         mixerStreamID,
@@ -1762,9 +1786,9 @@ class ZegoUIKitCoreDataRoomStream {
     }
 
     final targetMixerStream = mixerStreamDic.values.first;
-    soundLevels.forEach((fromSoundLevelID, soundLevel) {
-      targetMixerStream.userSoundIDs.forEach((userID, soundLevelID) {
-        if (soundLevelID != fromSoundLevelID) {
+    soundLevels.forEach((soundLevelID, soundLevelValue) {
+      targetMixerStream.userSoundIDs.forEach((userID, userSoundLevelID) {
+        if (userSoundLevelID != soundLevelID) {
           return;
         }
 
@@ -1778,7 +1802,7 @@ class ZegoUIKitCoreDataRoomStream {
             .elementAt(index)
             .mainChannel
             .soundLevelStream
-            ?.add(soundLevel);
+            ?.add(soundLevelValue);
       });
     });
 

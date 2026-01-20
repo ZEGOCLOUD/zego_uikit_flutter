@@ -1071,28 +1071,41 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       final targetUserIndex = targetRemoteUserList.indexWhere((user) =>
           (roomStream.streamDicNotifier.value[streamID]?.userID ?? '') ==
           user.id);
-      if (-1 == targetUserIndex) {
+      if (-1 != targetUserIndex) {
+        final targetUser = targetRemoteUserList[targetUserIndex];
+        ZegoLoggerService.logInfo(
+          'streamID: $streamID width: $width height: '
+              '$height',
+          tag: 'uikit.service.event-handler',
+          subTag: 'onPlayerVideoSizeChanged',
+        );
+        final size = Size(width.toDouble(), height.toDouble());
+        final targetUserStreamChannel =
+        ZegoUIKitStreamHelper.getUserStreamChannel(
+            targetUser, ZegoUIKitStreamHelper.getStreamTypeByID(streamID));
+        if (targetUserStreamChannel.viewSizeNotifier.value != size) {
+          targetUserStreamChannel.viewSizeNotifier.value = size;
+        }
+      } else {
         ZegoLoggerService.logInfo(
           'stream user $streamID is not exist in $roomID ',
           tag: 'uikit.service.event-handler',
           subTag: 'onPlayerVideoSizeChanged',
         );
-        return;
       }
 
-      final targetUser = targetRemoteUserList[targetUserIndex];
-      ZegoLoggerService.logInfo(
-        'streamID: $streamID width: $width height: '
-        '$height',
-        tag: 'uikit.service.event-handler',
-        subTag: 'onPlayerVideoSizeChanged',
-      );
-      final size = Size(width.toDouble(), height.toDouble());
-      final targetUserStreamChannel =
-          ZegoUIKitStreamHelper.getUserStreamChannel(
-              targetUser, ZegoUIKitStreamHelper.getStreamTypeByID(streamID));
-      if (targetUserStreamChannel.viewSizeNotifier.value != size) {
-        targetUserStreamChannel.viewSizeNotifier.value = size;
+      if (roomStream.mixerStreamDic.containsKey(streamID)) {
+        ZegoLoggerService.logInfo(
+          'mixer streamID: $streamID width: $width height: $height',
+          tag: 'uikit.service.event-handler',
+          subTag: 'onPlayerVideoSizeChanged',
+        );
+
+        final size = Size(width.toDouble(), height.toDouble());
+        final mixerStream = roomStream.mixerStreamDic[streamID]!;
+        if (mixerStream.viewSizeNotifier.value != size) {
+          mixerStream.viewSizeNotifier.value = size;
+        }
       }
     });
   }

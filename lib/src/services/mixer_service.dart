@@ -68,18 +68,20 @@ mixin ZegoMixerService {
   /// [targetRoomID] The room ID in which the mixed stream will be played.
   /// [onPlayerStateUpdated] Callback for player state updates.
   Future<void> startPlayMixAudioVideo(
-    String mixerStreamID,
-    List<ZegoUIKitUser> users,
-    Map<String, int> userSoundIDs, {
+    String mixerStreamID, {
     required String targetRoomID,
+    List<ZegoUIKitUser> users = const [],
+
+    /// {user id, sound level id}
+    Map<String, int> userSoundIDs = const {},
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
     return ZegoUIKitCore.shared.startPlayMixAudioVideo(
       mixerStreamID,
-      users
+      users: users
           .map((e) => ZegoUIKitCoreUser(e.id, e.name, targetRoomID, false))
           .toList(),
-      userSoundIDs,
+      userSoundIDs: userSoundIDs,
       targetRoomID: targetRoomID,
     );
   }
@@ -98,6 +100,79 @@ mixin ZegoMixerService {
     );
   }
 
+  /// Mute or unmute both audio and video for a mixed stream.
+  ///
+  /// [mixerStreamID] The ID of the mixed stream to be muted or unmuted.
+  /// [mute] Whether to mute (true) or unmute (false) the mixed stream.
+  /// [targetRoomID] The room ID where the mixed stream is being played.
+  Future<void> muteMixStreamAudioVideo(
+    String mixerStreamID,
+    bool mute, {
+    required String targetRoomID,
+  }) async {
+    final mixerStream = ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .mixerStreamDic[mixerStreamID];
+    if (mixerStream == null) {
+      return;
+    }
+
+    await ZegoExpressEngine.instance.mutePlayStreamAudio(
+      mixerStream.streamID,
+      mute,
+    );
+    await ZegoExpressEngine.instance.mutePlayStreamVideo(
+      mixerStream.streamID,
+      mute,
+    );
+  }
+
+  /// Mute or unmute audio for a mixed stream.
+  ///
+  /// [mixerStreamID] The ID of the mixed stream whose audio will be muted or unmuted.
+  /// [mute] Whether to mute (true) or unmute (false) the audio.
+  /// [targetRoomID] The room ID where the mixed stream is being played.
+  Future<void> muteMixStreamAudio(
+    String mixerStreamID,
+    bool mute, {
+    required String targetRoomID,
+  }) async {
+    final mixerStream = ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .mixerStreamDic[mixerStreamID];
+    if (mixerStream == null) {
+      return;
+    }
+
+    await ZegoExpressEngine.instance.mutePlayStreamAudio(
+      mixerStream.streamID,
+      mute,
+    );
+  }
+
+  /// Mute or unmute video for a mixed stream.
+  ///
+  /// [mixerStreamID] The ID of the mixed stream whose video will be muted or unmuted.
+  /// [mute] Whether to mute (true) or unmute (false) the video.
+  /// [targetRoomID] The room ID where the mixed stream is being played.
+  Future<void> muteMixStreamVideo(
+    String mixerStreamID,
+    bool mute, {
+    required String targetRoomID,
+  }) async {
+    final mixerStream = ZegoUIKitCore.shared.coreData.stream.roomStreams
+        .getRoom(targetRoomID)
+        .mixerStreamDic[mixerStreamID];
+    if (mixerStream == null) {
+      return;
+    }
+
+    await ZegoExpressEngine.instance.mutePlayStreamVideo(
+      mixerStream.streamID,
+      mute,
+    );
+  }
+
   /// Get the view notifier for a mixed audio & video stream.
   ///
   /// [mixerID] The mixed stream ID.
@@ -111,6 +186,21 @@ mixin ZegoMixerService {
             .mixerStreamDic[mixerID]
             ?.view ??
         ValueNotifier(null);
+  }
+
+  /// Get the video size notifier for a mixed audio & video stream.
+  ///
+  /// [mixerID] The mixed stream ID.
+  /// [targetRoomID] The room ID where the mixed stream exists.
+  ValueNotifier<Size> getMixAudioVideoSizeNotifier(
+    String mixerID, {
+    required String targetRoomID,
+  }) {
+    return ZegoUIKitCore.shared.coreData.stream.roomStreams
+            .getRoom(targetRoomID)
+            .mixerStreamDic[mixerID]
+            ?.viewSizeNotifier ??
+        ValueNotifier(const Size(360, 640));
   }
 
   /// Get the camera state notifier of a specific user in a mixed stream.

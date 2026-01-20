@@ -463,24 +463,39 @@ class ZegoUIKitHallRoomListControllerPrivate {
     /// Will be updated later in ZegoUIKitHallRoomExpressEvent
     streamUser.isPlaying = toPlay;
     if (toPlay) {
-      await ZegoUIKit().startPlayAnotherRoomAudioVideo(
-        targetRoomID: roomID,
-        streamUser.roomID,
-        streamUser.user.id,
-        anotherUserName: streamUser.user.name,
-        streamType: streamUser.streamType,
+      if (ZegoStreamType.mix == streamUser.streamType) {
+        /// play mix stream, not bind room
+        await ZegoUIKit().startPlayMixAudioVideo(
+          streamUser.streamID,
+          targetRoomID: roomID,
+        );
+      } else {
+        await ZegoUIKit().startPlayAnotherRoomAudioVideo(
+          targetRoomID: roomID,
+          streamUser.roomID,
+          streamUser.user.id,
+          anotherUserName: streamUser.user.name,
+          streamType: streamUser.streamType,
 
-        /// Will copy to respective rooms later after entering
-        playOnAnotherRoom: false,
-      );
+          /// Will copy to respective rooms later after entering
+          playOnAnotherRoom: false,
+        );
+      }
 
       addToStreams(streamUser);
     } else {
-      await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
-        targetRoomID: roomID,
-        streamUser.user.id,
-        streamType: streamUser.streamType,
-      );
+      if (ZegoStreamType.mix == streamUser.streamType) {
+        await ZegoUIKit().stopPlayMixAudioVideo(
+          streamUser.streamID,
+          targetRoomID: roomID,
+        );
+      } else {
+        await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
+          targetRoomID: roomID,
+          streamUser.user.id,
+          streamType: streamUser.streamType,
+        );
+      }
 
       removeFromStreams(streamUser);
     }

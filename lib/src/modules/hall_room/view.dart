@@ -548,6 +548,84 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
   }
 
   Widget videoView(ZegoUIKitHallRoomListStreamUser stream) {
+    return ZegoStreamType.mix == stream.streamType
+        ? mixStreamVideoView(stream)
+        : mainStreamVideoView(stream);
+  }
+
+  Widget mixStreamVideoView(ZegoUIKitHallRoomListStreamUser stream) {
+    return ValueListenableBuilder(
+      valueListenable: ZegoUIKit().getMixAudioVideoViewNotifier(
+        stream.streamID,
+        targetRoomID: widget.controller.roomID,
+      ),
+      builder: (context, Widget? mixView, _) {
+        if (null == mixView) {
+          return loading(stream);
+        }
+
+        return mixVideoViewWithAspectRatio(
+          stream: stream,
+          child: mixView,
+        );
+      },
+    );
+  }
+
+  Widget mixVideoViewWithAspectRatio({
+    required ZegoUIKitHallRoomListStreamUser stream,
+    required Widget child,
+  }) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return ValueListenableBuilder<Size>(
+          valueListenable: ZegoUIKit().getMixAudioVideoSizeNotifier(
+            stream.streamID,
+            targetRoomID: widget.controller.roomID,
+          ),
+          builder: (context, videoSize, _) {
+            var videoWidth = videoSize.width;
+            var videoHeight = videoSize.height;
+            if (videoWidth <= 0 || videoHeight <= 0) {
+              videoWidth = constraints.maxWidth;
+              videoHeight = constraints.maxHeight;
+            }
+
+            final videoRatio = videoWidth / videoHeight;
+
+            var displayWidth = constraints.maxWidth;
+            var displayHeight = displayWidth / videoRatio;
+
+            if (displayHeight > constraints.maxHeight) {
+              displayHeight = constraints.maxHeight;
+              displayWidth = displayHeight * videoRatio;
+            }
+
+            return Center(
+              child: SizedBox(
+                width: displayWidth,
+                height: displayHeight,
+                child: child,
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget loading(ZegoUIKitHallRoomListStreamUser stream) {
+    return Center(
+      child: widget.style.item.loadingBuilder?.call(
+            context,
+            stream.user,
+            stream.roomID,
+          ) ??
+          const CircularProgressIndicator(color: Colors.pink),
+    );
+  }
+
+  Widget mainStreamVideoView(ZegoUIKitHallRoomListStreamUser stream) {
     return StreamBuilder<List<ZegoUIKitUser>>(
       stream: ZegoUIKit().getAudioVideoListStream(
         targetRoomID: widget.controller.roomID,
@@ -570,23 +648,12 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
         );
         return streamUser.isEmpty()
             ? loading(stream)
-            : cameraUserStreamWidget(stream);
+            : mainCameraUserStreamWidget(stream);
       },
     );
   }
 
-  Widget loading(ZegoUIKitHallRoomListStreamUser stream) {
-    return Center(
-      child: widget.style.item.loadingBuilder?.call(
-            context,
-            stream.user,
-            stream.roomID,
-          ) ??
-          const CircularProgressIndicator(),
-    );
-  }
-
-  Widget cameraUserStreamWidget(ZegoUIKitHallRoomListStreamUser stream) {
+  Widget mainCameraUserStreamWidget(ZegoUIKitHallRoomListStreamUser stream) {
     return ValueListenableBuilder<bool>(
       valueListenable: ZegoUIKit().getCameraStateNotifier(
         targetRoomID: widget.controller.roomID,
@@ -637,7 +704,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
                     subTag: 'uikit.hall-room-view',
                   );
 
-                  return videoViewWithAspectRatio(
+                  return mainVideoViewWithAspectRatio(
                     stream: stream,
                     constraints: constraints,
                     child: deviceOrientationListenerBuilder(
@@ -653,7 +720,7 @@ class _ZegoUIKitHallRoomListState extends State<ZegoUIKitHallRoomList> {
     );
   }
 
-  Widget videoViewWithAspectRatio({
+  Widget mainVideoViewWithAspectRatio({
     required ZegoUIKitHallRoomListStreamUser stream,
     required BoxConstraints constraints,
     required Widget child,
