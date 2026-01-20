@@ -19,7 +19,7 @@ class ZegoUIKitCoreMixerStream {
   int viewID = -1;
   final view = ValueNotifier<Widget?>(null);
   ValueNotifier<Size> viewSizeNotifier =
-      ValueNotifier<Size>(const Size(360, 640));
+      ValueNotifier<Size>(const Size(810, 720));
   final loaded = ValueNotifier<bool>(false); // first frame
   StreamController<Map<int, double>>? soundLevels;
 

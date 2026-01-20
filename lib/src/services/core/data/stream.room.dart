@@ -1425,10 +1425,10 @@ class ZegoUIKitCoreDataRoomStream {
     );
 
     final currentRoomUserInfo = _userCommonData.roomUsers.getRoom(roomID);
+    final toRoomStream = _streamCommonData.roomStreams.getRoom(toRoomID);
     for (var fromStreamID in fromStreamIDs) {
       if (mixerStreamDic.containsKey(fromStreamID)) {
         final fromMixerStream = mixerStreamDic[fromStreamID]!;
-        final toRoomStream = _streamCommonData.roomStreams.getRoom(toRoomID);
 
         if (isMove) {
           toRoomStream.mixerStreamDic[fromStreamID] = fromMixerStream;
@@ -1457,14 +1457,12 @@ class ZegoUIKitCoreDataRoomStream {
       }
 
       final currentRoomUser = currentRoomUserInfo.query(fromStreamData.userID);
-      _streamCommonData.roomStreams
-          .getRoom(toRoomID)
-          .addPlayingStreamDataInDict(
-            /// copy object
-            streamData: fromStreamData,
-            streamUser: currentRoomUser,
-            isFromAnotherRoom: isFromAnotherRoom,
-          );
+      toRoomStream.addPlayingStreamDataInDict(
+        /// copy object
+        streamData: fromStreamData,
+        streamUser: currentRoomUser,
+        isFromAnotherRoom: isFromAnotherRoom,
+      );
       if (isMove) {
         fromStreamData.roomID = toRoomID;
         currentRoomUser.roomID = toRoomID;
@@ -1475,7 +1473,14 @@ class ZegoUIKitCoreDataRoomStream {
     }
     ZegoLoggerService.logInfo(
       'done, '
-      'after dict:${streamDicNotifier.value}, ',
+      'room($roomID):{'
+      'streamDic:${streamDicNotifier.value}, '
+      'mixerStreamDic:$mixerStreamDic, '
+      '}, '
+      'toRoom($toRoomID):{'
+      'streamDic:${toRoomStream.streamDicNotifier.value}, '
+      'mixerStreamDic:${toRoomStream.mixerStreamDic}, '
+      '}',
       tag: 'uikit.streams.room(hash:$hashCode, room id:$roomID)',
       subTag: 'transfer to another room',
     );

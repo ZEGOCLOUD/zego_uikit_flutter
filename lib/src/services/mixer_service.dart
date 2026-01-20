@@ -200,7 +200,7 @@ mixin ZegoMixerService {
             .getRoom(targetRoomID)
             .mixerStreamDic[mixerID]
             ?.viewSizeNotifier ??
-        ValueNotifier(const Size(360, 640));
+        ValueNotifier(const Size(810, 720));
   }
 
   /// Get the camera state notifier of a specific user in a mixed stream.
