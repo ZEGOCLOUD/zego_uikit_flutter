@@ -19,7 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) enableHardwareDecoder: (BOOL)isEnabled;
 - (void) enableCustomVideoRender: (BOOL)isEnabled;
 
-- (void) startPlayingStream:(NSString *)streamID;
+- (void) startPlayingStream:(NSString *)streamID
+               resourceMode:(nullable NSNumber *)resourceMode
+                     roomID:(nullable NSString *)roomID
+                  cdnConfig:(nullable NSDictionary *)cdnConfig
+               videoCodecID:(nullable NSNumber *)videoCodecID;
 - (void) updatePlayingStreamView:(NSString *)streamID videoView:(UIView *)videoView  viewMode:(NSNumber *)viewMode;
 - (void) stopPlayingStream:(NSString *)streamID;
 

@@ -469,7 +469,13 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
   /// only support iOS
   @override
-  Future<void> startPlayingStreamInPIP(String streamID) async {
+  Future<void> startPlayingStreamInPIP(
+    String streamID, {
+    int? resourceMode,
+    String? roomID,
+    Map<String, dynamic>? cdnConfig,
+    int? videoCodecID,
+  }) async {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'not support in Android',
@@ -481,15 +487,29 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     }
 
     ZegoLoggerService.logInfo(
-      'streamID:$streamID, ',
-      tag: 'uikit-channel',
+      'streamID:$streamID, resourceMode:$resourceMode, roomID:$roomID, cdnConfig:$cdnConfig, videoCodecID:$videoCodecID',
+      tag: 'uikit.channel',
       subTag: 'startPlayingStreamInPIP',
     );
 
     try {
-      await methodChannel.invokeMethod('startPlayingStreamInPIP', {
+      final arguments = <String, dynamic>{
         'stream_id': streamID,
-      });
+      };
+      if (resourceMode != null) {
+        arguments['resourceMode'] = resourceMode;
+      }
+      if (roomID != null) {
+        arguments['roomID'] = roomID;
+      }
+      if (cdnConfig != null) {
+        arguments['cdnConfig'] = cdnConfig;
+      }
+      if (videoCodecID != null) {
+        arguments['videoCodecID'] = videoCodecID;
+      }
+
+      await methodChannel.invokeMethod('startPlayingStreamInPIP', arguments);
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',

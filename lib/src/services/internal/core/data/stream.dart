@@ -1133,8 +1133,33 @@ mixin ZegoUIKitCoreDataStream {
       subTag: 'start play stream',
     );
     if (startPlayingStreamInIOSPIP) {
+      Map<String, dynamic>? cdnConfigMap;
+      if (config?.cdnConfig != null) {
+        cdnConfigMap = {
+          'url': config!.cdnConfig!.url,
+          if (config.cdnConfig!.authParam != null)
+            'authParam': config.cdnConfig!.authParam,
+          if (config.cdnConfig!.protocol != null)
+            'protocol': config.cdnConfig!.protocol,
+          if (config.cdnConfig!.quicVersion != null)
+            'quicVersion': config.cdnConfig!.quicVersion,
+          if (config.cdnConfig!.httpdns != null)
+            'httpdns': config.cdnConfig!.httpdns,
+          if (config.cdnConfig!.quicConnectMode != null)
+            'quicConnectMode': config.cdnConfig!.quicConnectMode,
+          if (config.cdnConfig!.customParams != null)
+            'customParams': config.cdnConfig!.customParams,
+        };
+      }
+
       ZegoUIKitPluginPlatform.instance
-          .startPlayingStreamInPIP(streamID)
+          .startPlayingStreamInPIP(
+        streamID,
+        resourceMode: config?.resourceMode.index,
+        roomID: config?.roomID,
+        cdnConfig: cdnConfigMap,
+        videoCodecID: config?.videoCodecID?.index,
+      )
           .then((_) {
         isPlayingStream = true;
 
