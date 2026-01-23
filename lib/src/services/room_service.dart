@@ -22,7 +22,7 @@ mixin ZegoRoomService {
     bool isSimulated = false,
   }) async {
     if (ZegoUIKitCore.shared.hasLoginSameRoom(roomID)) {
-      return ZegoRoomLoginResult(0, {});
+      return ZegoRoomLoginResult(ZegoUIKitErrorCode.success, {});
     }
 
     final joinBeginTime = DateTime.now().millisecondsSinceEpoch;

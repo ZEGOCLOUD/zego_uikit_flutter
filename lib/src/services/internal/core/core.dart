@@ -338,7 +338,7 @@ class ZegoUIKitCore
         subTag: 'join room',
       );
 
-      return ZegoRoomLoginResult(0, {});
+      return ZegoRoomLoginResult(ZegoUIKitErrorCode.success, {});
     }
 
     ZegoLoggerService.logInfo(
@@ -368,7 +368,7 @@ class ZegoUIKitCore
     );
 
     final joinRoomResult = isSimulated
-        ? ZegoRoomLoginResult(0, {})
+        ? ZegoRoomLoginResult(ZegoUIKitErrorCode.success, {})
         : await ZegoExpressEngine.instance.loginRoom(
             roomID,
             coreData.localUser.toZegoUser(),

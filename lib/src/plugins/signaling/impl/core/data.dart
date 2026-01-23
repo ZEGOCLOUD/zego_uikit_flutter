@@ -232,7 +232,9 @@ class ZegoSignalingPluginCoreData
   Future<void> logout() async {
     if (ZegoPluginAdapter().signalingPlugin == null) return;
     ZegoLoggerService.logInfo(
-      'user logout',
+      'user logout, '
+      'currentUserID:$currentUserID, '
+      'currentUserName:$currentUserName, ',
       tag: 'uikit-plugin-signaling',
       subTag: 'core data',
     );
@@ -259,7 +261,7 @@ class ZegoSignalingPluginCoreData
 
     clear();
     ZegoLoggerService.logInfo(
-      'logout.',
+      'logout done.',
       tag: 'uikit-plugin-signaling',
       subTag: 'core data',
     );
@@ -311,6 +313,7 @@ class ZegoSignalingPluginCoreData
         error: PlatformException(code: '-1', message: 'zim is not created.'),
       );
     }
+
     if (ZegoPluginAdapter().signalingPlugin == null) {
       return ZegoSignalingPluginJoinRoomResult(
         error: PlatformException(code: '-2', message: 'signaling is null'),
@@ -320,7 +323,8 @@ class ZegoSignalingPluginCoreData
     if (currentRoomID != null) {
       if (currentRoomID == roomID) {
         ZegoLoggerService.logInfo(
-          'same room has login.',
+          'same room has login, '
+          'room id:$roomID, ',
           tag: 'uikit-plugin-signaling',
           subTag: 'core data',
         );
@@ -328,7 +332,9 @@ class ZegoSignalingPluginCoreData
       }
 
       ZegoLoggerService.logInfo(
-        'has login different room.',
+        'has login different room, '
+        'old room id:$currentRoomID, '
+        'target room id:$roomID, ',
         tag: 'uikit-plugin-signaling',
         subTag: 'core data',
       );
@@ -341,7 +347,9 @@ class ZegoSignalingPluginCoreData
     currentRoomName = roomName;
 
     ZegoLoggerService.logInfo(
-      'join room, room id:"$roomID", room name:$roomName',
+      'join room, '
+      'room id:"$roomID", '
+      'room name:$roomName, ',
       tag: 'uikit-plugin-signaling',
       subTag: 'core data',
     );

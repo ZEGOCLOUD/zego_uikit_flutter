@@ -164,6 +164,12 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
   }
 
   Future<bool> uninitSDK() async {
+    ZegoLoggerService.logInfo(
+      '',
+      tag: 'outside room audio video controller.p',
+      subTag: 'uninitSDK',
+    );
+
     ZegoUIKit().logout();
 
     return true;
