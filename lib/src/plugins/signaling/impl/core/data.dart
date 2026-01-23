@@ -230,7 +230,20 @@ class ZegoSignalingPluginCoreData
 
   /// logout
   Future<void> logout() async {
-    if (ZegoPluginAdapter().signalingPlugin == null) return;
+    if (ZegoPluginAdapter().signalingPlugin == null) {
+      return;
+    }
+
+    if (null == currentUserID) {
+      ZegoLoggerService.logInfo(
+        'user logout, not login before.',
+        tag: 'uikit-plugin-signaling',
+        subTag: 'core data',
+      );
+
+      return;
+    }
+
     ZegoLoggerService.logInfo(
       'user logout, '
       'currentUserID:$currentUserID, '
@@ -302,6 +315,7 @@ class ZegoSignalingPluginCoreData
   Future<ZegoSignalingPluginJoinRoomResult> joinRoom(
     String roomID,
     String roomName,
+    bool force,
   ) async {
     if (!isInit) {
       ZegoLoggerService.logInfo(
@@ -338,9 +352,19 @@ class ZegoSignalingPluginCoreData
         tag: 'uikit-plugin-signaling',
         subTag: 'core data',
       );
-      return ZegoSignalingPluginJoinRoomResult(
-        error: PlatformException(code: '-3', message: 'room has login.'),
-      );
+      if (force) {
+        ZegoLoggerService.logInfo(
+          'force quit old room',
+          tag: 'uikit-plugin-signaling',
+          subTag: 'core data',
+        );
+
+        await leaveRoom();
+      } else {
+        return ZegoSignalingPluginJoinRoomResult(
+          error: PlatformException(code: '-3', message: 'room has login.'),
+        );
+      }
     }
 
     currentRoomID = roomID;

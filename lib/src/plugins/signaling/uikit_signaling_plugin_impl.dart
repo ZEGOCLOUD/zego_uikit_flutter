@@ -88,8 +88,9 @@ class ZegoUIKitSignalingPluginImpl
   Future<ZegoSignalingPluginJoinRoomResult> joinRoom(
     String roomID, {
     String roomName = '',
+    bool force = false,
   }) async {
-    return ZegoSignalingPluginCore.shared.joinRoom(roomID, roomName);
+    return ZegoSignalingPluginCore.shared.joinRoom(roomID, roomName, force);
   }
 
   String getRoomID() {
