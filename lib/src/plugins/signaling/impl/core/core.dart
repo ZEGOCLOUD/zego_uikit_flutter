@@ -74,8 +74,9 @@ class ZegoSignalingPluginCore with ZegoSignalingPluginCoreEvent {
   Future<ZegoSignalingPluginJoinRoomResult> joinRoom(
     String roomID,
     String roomName,
+    bool force,
   ) async {
-    return coreData.joinRoom(roomID, roomName);
+    return coreData.joinRoom(roomID, roomName, force);
   }
 
   /// switch room
