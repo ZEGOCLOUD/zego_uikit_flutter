@@ -1,3 +1,8 @@
+## 2.28.42
+
+- Bugs
+    - Fixed the issue where resource mode does not take effect under iOS
+
 ## 2.28.41
 
 - Support set audio config
