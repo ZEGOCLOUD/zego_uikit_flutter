@@ -616,7 +616,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
         }
       }
 
-      final pickFilesResult = (await FilePicker.pickFiles(
+      final pickFilesResult = (await FilePicker.platform.pickFiles(
             type: null == allowedExtensions ? FileType.media : FileType.custom,
             allowMultiple: allowMultiple,
             allowedExtensions: allowedExtensions,

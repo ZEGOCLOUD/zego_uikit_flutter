@@ -22,7 +22,7 @@ dependencies:
   native_device_orientation: ^2.0.3
   wakelock_plus: ^1.2.10
   cached_network_image: ^3.4.1
-  file_picker: ^10.3.9
+  file_picker: 10.3.8
   plugin_platform_interface: ^2.1.8
   visibility_detector: ^0.4.0+2
   connectivity_plus: ^6.1.0
