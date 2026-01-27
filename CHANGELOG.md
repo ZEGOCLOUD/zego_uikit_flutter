@@ -1,3 +1,7 @@
+## 2.28.43
+
+- Update dependency
+
 ## 2.28.42
 
 - Bugs
