@@ -1,6 +1,7 @@
 #import "ZegoUikitPlugin.h"
-
+#import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
+#import "AVAudioSession+Zego.h" // 引入拦截器头文件
 
 /// flutter express
 #import <zego_express_engine/ZegoCustomVideoProcessManager.h>
@@ -13,14 +14,25 @@
 #import "pip/PipManager.h"
 
 @implementation ZegoUikitPlugin
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
+    [AVAudioSession forceLoad]; // 强制加载拦截器，确保 Swizzling 生效
+
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    
+    // 异步在下一个运行循环再次确保设置成功，防止被其他插件在注册过程中覆盖
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"[UIKit Plugin] Final audio session check/fix");
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    });
+
     FlutterMethodChannel* channel = [FlutterMethodChannel
                                      methodChannelWithName:@"zego_uikit_plugin"
                                      binaryMessenger:[registrar messenger]];
     ZegoUikitPlugin* instance = [[ZegoUikitPlugin alloc] init];
     [registrar addMethodCallDelegate:instance channel:channel];
-    
-    [[PipManager sharedInstance] setUpAudioSession];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {

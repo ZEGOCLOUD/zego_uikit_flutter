@@ -58,7 +58,8 @@ API_AVAILABLE(ios(15.0))
         NSLog(@"[PIPManager] setUpAudioSession");
         
         AVAudioSession* audioSession = [AVAudioSession sharedInstance];
-        [audioSession setCategory:AVAudioSessionModeMoviePlayback error:nil];
+        [audioSession setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+        [audioSession setMode:AVAudioSessionModeMoviePlayback error:nil];
         [audioSession setActive:YES error:nil];
     } @catch (NSException *exception) {
         NSLog(@"[PIPManager] setUpAudioSession error:%@", exception);
@@ -169,6 +170,8 @@ API_AVAILABLE(ios(15.0))
 
 - (BOOL) enablePIP: (NSString*) streamID  {
     NSLog(@"[PIPManager] enablePIP, stream id:%@", streamID);
+    
+    [self setUpAudioSession];
     
     [self updatePIPStreamID: streamID];
     
