@@ -1,3 +1,8 @@
+## 2.28.44
+
+- Bugs
+    - Fixed the issue where third-party music being played would be interrupted during startup
+
 ## 2.28.43
 
 - Update dependency
