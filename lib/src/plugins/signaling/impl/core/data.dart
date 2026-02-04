@@ -3,10 +3,8 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/services.dart';
-
 // Package imports:
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/plugins/signaling/impl/core/advance_invitation_data.dart';
 import 'package:zego_uikit/src/plugins/signaling/impl/core/event.dart';
@@ -419,7 +417,7 @@ class ZegoSignalingPluginCoreData
         tag: 'uikit.plugin.signaling-coredata',
         subTag: 'switch room',
       );
-      return joinRoom(roomID, roomName);
+      return joinRoom(roomID, roomName, true);
     }
 
     final String fromRoomID = currentRoomID!;
