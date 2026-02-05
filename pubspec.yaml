@@ -31,6 +31,7 @@ dependencies:
   path_provider: ^2.1.5
   synchronized: ^3.4.0
   loop_page_view: ^1.2.5
+  loading_indicator: ^3.1.1
 
 dev_dependencies:
   flutter_test:

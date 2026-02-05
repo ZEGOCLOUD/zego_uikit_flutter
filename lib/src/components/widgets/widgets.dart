@@ -7,3 +7,4 @@ export 'text_icon_button.dart';
 export 'value_notifier_icon.dart';
 export 'value_notifier_slider_visibility.dart';
 export 'network_loading.dart';
+export 'zego_loading_indicator.dart';
