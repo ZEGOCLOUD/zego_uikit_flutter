@@ -1075,14 +1075,14 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         final targetUser = targetRemoteUserList[targetUserIndex];
         ZegoLoggerService.logInfo(
           'streamID: $streamID width: $width height: '
-              '$height',
+          '$height',
           tag: 'uikit.service.event-handler',
           subTag: 'onPlayerVideoSizeChanged',
         );
         final size = Size(width.toDouble(), height.toDouble());
         final targetUserStreamChannel =
-        ZegoUIKitStreamHelper.getUserStreamChannel(
-            targetUser, ZegoUIKitStreamHelper.getStreamTypeByID(streamID));
+            ZegoUIKitStreamHelper.getUserStreamChannel(
+                targetUser, ZegoUIKitStreamHelper.getStreamTypeByID(streamID));
         if (targetUserStreamChannel.viewSizeNotifier.value != size) {
           targetUserStreamChannel.viewSizeNotifier.value = size;
         }
