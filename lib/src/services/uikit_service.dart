@@ -74,6 +74,8 @@ class ZegoUIKit
     return ZegoUIKitCore.shared.getZegoUIKitVersion();
   }
 
+  bool get isInit => ZegoUIKitCore.shared.isInit;
+
   /// init
   ///
   /// Called before enter room/push or pull stream
