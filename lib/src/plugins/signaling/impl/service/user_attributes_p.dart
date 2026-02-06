@@ -4,6 +4,9 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
+// Package imports:
+import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
+
 // Project imports:
 import 'package:zego_uikit/zego_uikit.dart';
 

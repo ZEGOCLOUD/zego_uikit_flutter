@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/components/internal/internal.dart';
@@ -79,9 +78,6 @@ class _ZegoLeaveButtonState extends State<ZegoLeaveButton> {
             builder: (context, isRoomLogin, _) {
               return GestureDetector(
                 onTap: () async {
-                  final isLogin =
-                      ZegoUIKit().getRoom(targetRoomID: widget.roomID).isLogin;
-
                   if (!clickable || !isRoomLogin) {
                     ZegoLoggerService.logInfo(
                       'clickable:$clickable, '
