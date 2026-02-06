@@ -233,24 +233,23 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     if (-1 !=
         streamIDs.indexWhere(
             (streamID) => streamID.endsWith(ZegoStreamType.main.text))) {
-      targetRoomStreamInfo.audioVideoListStreamCtrl
-          ?.add(targetRoomStreamInfo.getAudioVideoList());
+      targetRoomStreamInfo.notifyStreamListControl(
+        ZegoStreamType.main,
+      );
     }
     if (-1 !=
         streamIDs.indexWhere((streamID) =>
             streamID.endsWith(ZegoStreamType.screenSharing.text))) {
-      coreData.screenSharing.screenSharingListStreamCtrl
-          ?.add(targetRoomStreamInfo.getAudioVideoList(
-        streamType: ZegoStreamType.screenSharing,
-      ));
+      targetRoomStreamInfo.notifyStreamListControl(
+        ZegoStreamType.screenSharing,
+      );
     }
     if (-1 !=
         streamIDs.indexWhere(
             (streamID) => streamID.endsWith(ZegoStreamType.media.text))) {
-      coreData.media.mediaListStreamCtrl
-          ?.add(targetRoomStreamInfo.getAudioVideoList(
-        streamType: ZegoStreamType.media,
-      ));
+      targetRoomStreamInfo.notifyStreamListControl(
+        ZegoStreamType.media,
+      );
     }
   }
 
@@ -320,6 +319,13 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
                 isAnotherRoomUser: coreData.room.currentID != roomID,
               ))
           .toList());
+
+      final targetRoomStreamInfo = coreData.stream.roomStreams.getRoom(roomID);
+      targetRoomStreamInfo.notifyStreamListControl(ZegoStreamType.main);
+      targetRoomStreamInfo.notifyStreamListControl(ZegoStreamType.media);
+      targetRoomStreamInfo.notifyStreamListControl(
+        ZegoStreamType.screenSharing,
+      );
     }
 
     final allUserList = [
