@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/channel/platform_interface.dart';
 import 'package:zego_uikit/src/services/uikit_service.dart';
@@ -108,7 +107,7 @@ class ZegoUIKitReporter {
           subTag: 'create',
         );
 
-        final uikitVersion = await ZegoUIKit().getZegoUIKitVersion();
+        final uikitVersion = await ZegoUIKit().version();
         params.addAll({
           eventKeyPlatform: 'flutter',
           eventKeyUIKitVersion: uikitVersion,
@@ -127,7 +126,7 @@ class ZegoUIKitReporter {
     hadCreated = true;
     this.appID = appID;
 
-    final uikitVersion = await ZegoUIKit().getZegoUIKitVersion();
+    final uikitVersion = await ZegoUIKit().version();
     if (params.isEmpty) {
       params = {
         eventKeyPlatform: 'flutter',

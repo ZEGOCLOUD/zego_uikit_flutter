@@ -6,12 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-
 // Package imports:
 import 'package:flutter_logs_yoer/flutter_logs_yoer.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
-
 // Project imports:
 import 'package:zego_uikit/src/channel/platform_interface.dart';
 import 'package:zego_uikit/src/modules/hall_room/helper.dart';
@@ -70,7 +68,7 @@ class ZegoUIKit
   static final ZegoUIKit instance = ZegoUIKit._internal();
 
   /// version
-  Future<String> getZegoUIKitVersion() async {
+  Future<String> version() async {
     return ZegoUIKitCore.shared.getZegoUIKitVersion();
   }
 
