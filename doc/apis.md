@@ -250,6 +250,19 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     await ZegoUIKit().muteAllRemoteAudio(targetRoomID: 'room_id');
     ```
 
+- **muteAllPlayStreamAudio**
+
+  - Function Action
+    Mute or unmute all playing streams audio.
+  - Function Prototype
+    ```dart
+    Future<void> muteAllPlayStreamAudio(bool isMuted)
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().muteAllPlayStreamAudio(true);
+    ```
+
 - **muteUserAudioVideo**
 
   - Function Action

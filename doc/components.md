@@ -25,6 +25,15 @@
   - [ZegoLayoutPIPSmallItemList](#zegolayoutpipsmallitemlist)
   - [ZegoLayoutPIPSmallItem](#zegolayoutpipsmallitem)
   - [ZegoLayoutGalleryLastItem](#zegolayoutgallerylastitem)
+- [Outside Room Audio Video](#outside-room-audio-video)
+  - [ZegoOutsideRoomAudioVideoViewStreamUser](#zegooutsideromaudiovideoviewstreamuser)
+  - [ZegoOutsideRoomAudioVideoViewStream](#zegooutsideromaudiovideoviewstream)
+  - [ZegoOutsideRoomAudioVideoViewList](#zegooutsideromaudiovideoviewlist)
+  - [ZegoOutsideRoomAudioVideoViewListConfig](#zegooutsideromaudiovideoviewlistconfig)
+  - [ZegoOutsideRoomAudioVideoViewListStyle](#zegooutsideromaudiovideoviewliststyle)
+  - [ZegoOutsideRoomAudioVideoViewListItemStyle](#zegooutsideromaudiovideoviewlistitemstyle)
+  - [ZegoOutsideRoomAudioVideoViewListController](#zegooutsideromaudiovideoviewlistcontroller)
+  - [ZegoOutsideRoomAudioVideoViewListPlayMode](#zegooutsideromaudiovideoviewlistplaymode)
 - [Hall Room](#hall-room)
   - [ZegoUIKitHallRoomList](#zegouikithallroomlist)
   - [ZegoUIKitHallRoomListConfig](#zegouikithallroomlistconfig)
@@ -442,6 +451,134 @@ The last item in the Gallery layout, usually displaying "X others".
   | borderColor | The border color. | `Color?` | `null` |
   | borderRadius | The border radius. | `double?` | `null` |
   | backgroundColor | The background color. | `Color?` | `null` |
+
+# Outside Room Audio Video
+
+## ZegoOutsideRoomAudioVideoViewStreamUser
+
+Stream information to pull for outside room audio video view.
+
+- **Parameters**
+
+  | Name | Description | Type | Default Value |
+  | :--- | :--- | :--- | :--- |
+  | user | The user to display. | `ZegoUIKitUser` | Required |
+  | roomID | The ID of the room. | `String` | Required |
+
+## ZegoOutsideRoomAudioVideoViewStream
+
+Stream information to pull for outside room audio video view with playing state.
+
+- **Parameters**
+
+  | Name | Description | Type | Default Value |
+  | :--- | :--- | :--- | :--- |
+  | user | The user to display. | `ZegoUIKitUser` | Required |
+  | roomID | The ID of the room. | `String` | Required |
+  | isPlaying | Stream is playing or not. | `bool` | `false` |
+
+## ZegoOutsideRoomAudioVideoViewList
+
+Display user audio and video information without join room, usually used for scenarios like TikTok where you need to view streams from multiple rooms.
+
+- **Parameters**
+
+  | Name | Description | Type | Default Value |
+  | :--- | :--- | :--- | :--- |
+  | appID | App ID. | `int` | Required |
+  | appSign | App Sign. | `String` | `''` |
+  | token | Token. | `String` | `''` |
+  | userID | User ID. | `String` | Required |
+  | userName | User Name. | `String` | Required |
+  | controller | Controller for the list. | `ZegoOutsideRoomAudioVideoViewListController` | Required |
+  | style | Style configuration. | `ZegoOutsideRoomAudioVideoViewListStyle?` | `null` |
+  | config | Configuration parameters. | `ZegoOutsideRoomAudioVideoViewListConfig?` | `null` |
+
+## ZegoOutsideRoomAudioVideoViewListConfig
+
+Configuration parameters for Outside Room Audio Video List.
+
+- **Parameters**
+
+  | Name | Description | Type | Default Value |
+  | :--- | :--- | :--- | :--- |
+  | playMode | Play mode for streams. | `ZegoOutsideRoomAudioVideoViewListPlayMode` | `ZegoOutsideRoomAudioVideoViewListPlayMode.autoPlay` |
+  | video | Video configuration (resolution, frame rate, etc.). | `ZegoUIKitVideoConfig?` | `null` |
+  | audioVideoResourceMode | Audio video resource mode. | `ZegoAudioVideoResourceMode?` | `ZegoAudioVideoResourceMode.onlyRTC` |
+
+## ZegoOutsideRoomAudioVideoViewListPlayMode
+
+Play mode for outside room audio video view list.
+
+| Name | Description | Value |
+| :--- | :--- | :--- |
+| autoPlay | All streams in visible area will be automatically played. | - |
+| manualPlay | Control the play timing manually via controller APIs. | - |
+
+## ZegoOutsideRoomAudioVideoViewListStyle
+
+Style configuration for Outside Room Audio Video List.
+
+- **Parameters**
+
+  | Name | Description | Type | Default Value |
+  | :--- | :--- | :--- | :--- |
+  | backgroundColor | Background color. | `Color` | `Colors.white` |
+  | backgroundColorOpacity | Background color opacity. | `double` | `0.5` |
+  | loadingBuilder | Builder for loading view. | `Widget? Function(BuildContext context)?` | `null` |
+  | scrollAxisCount | Number of scroll axis items. | `int` | `1` |
+  | itemAspectRatio | Aspect ratio for each item. | `double` | `16 / 9.0` |
+  | item | Item style. | `ZegoOutsideRoomAudioVideoViewListItemStyle` | Required |
+
+## ZegoOutsideRoomAudioVideoViewListItemStyle
+
+Style for Outside Room Audio Video List Item.
+
+- **Parameters**
+
+  | Name | Description | Type | Default Value |
+  | :--- | :--- | :--- | :--- |
+  | useVideoViewAspectFill | Whether to use aspect fill mode for video view. | `bool` | `true` |
+  | sizeAspectRatio | Aspect ratio of the size. | `double` | `16 / 9` |
+  | foregroundBuilder | Builder for foreground view. | `Widget Function(BuildContext, Size, ZegoUIKitUser?, String)?` | `null` |
+  | backgroundBuilder | Builder for background view. | `Widget Function(BuildContext, Size, ZegoUIKitUser?, String)?` | `null` |
+  | margin | Margin of the item. | `EdgeInsetsGeometry` | `EdgeInsets.all(5)` |
+  | borderRadius | Border radius. | `double` | `5` |
+  | borderColor | Border color. | `Color` | `Colors.black` |
+  | borderColorOpacity | Border color opacity. | `double` | `0.2` |
+  | loadingBuilder | Builder for loading view per item. | `Widget? Function(BuildContext, ZegoUIKitUser?, String)?` | `null` |
+  | avatar | Avatar configuration. | `ZegoAvatarConfig?` | `null` |
+
+## ZegoOutsideRoomAudioVideoViewListController
+
+Controller for the outside room audio video list.
+
+- **Constructor Parameters**
+
+  | Name | Description | Type | Default Value |
+  | :--- | :--- | :--- | :--- |
+  | streams | Stream information to pull. | `List<ZegoOutsideRoomAudioVideoViewStreamUser>` | `[]` |
+
+- **Methods**
+
+  | Method | Description | Prototype |
+  | :--- | :--- | :--- |
+  | startPlayAll | Start playing all streams. | `Future<bool> startPlayAll()` |
+  | stopPlayAll | Stop playing all streams. | `Future<bool> stopPlayAll()` |
+  | startPlayOne | Start playing a specific stream. | `Future<bool> startPlayOne(ZegoOutsideRoomAudioVideoViewStreamUser stream)` |
+  | stopPlayOne | Stop playing a specific stream. | `Future<bool> stopPlayOne(ZegoOutsideRoomAudioVideoViewStreamUser stream)` |
+  | updateStreams | Update the streams list. | `void updateStreams(List<ZegoOutsideRoomAudioVideoViewStreamUser> streams)` |
+  | addStream | Add a single stream. | `void addStream(ZegoOutsideRoomAudioVideoViewStreamUser stream)` |
+  | removeStream | Remove a stream. | `void removeStream(ZegoOutsideRoomAudioVideoViewStreamUser stream)` |
+
+- **Properties**
+
+  | Property | Description | Type |
+  | :--- | :--- | :--- |
+  | sdkInitNotifier | Notifier for SDK initialization status. | `ValueNotifier<bool>` |
+  | roomLoginNotifier | Notifier for room login status. | `ValueNotifier<bool>` |
+  | roomID | The current room ID. | `String` |
+  | localUser | The local user. | `ZegoUIKitUser` |
 
 # Hall Room
 
