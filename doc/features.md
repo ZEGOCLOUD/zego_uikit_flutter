@@ -51,6 +51,7 @@ Zego UIKit provides a rich set of pre-built UI components:
 - **ZegoAvatar**: User avatar component with support for sound wave ripples.
 - **ZegoMemberList**: Ready-to-use member list page.
 - **ZegoInRoomChatView**: Ready-to-use chat component with message history.
+- **ZegoUIKitHallRoomList**: A vertical scrolling list component for browsing live rooms (like TikTok), supporting video preview without fully joining the room.
 - **Controls**: Pre-built buttons for camera, microphone, switch camera, end call, etc.
 
 ## Advanced Features & Plugins

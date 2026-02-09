@@ -97,23 +97,24 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     await ZegoUIKit().setAdvanceConfigs({'key': 'value'});
     ```
 
+
 - **getNetworkTime**
 
   - Function Action
-    Returns a notifier for the network time.
+    Gets the network time.
   - Function Prototype
     ```dart
     ValueNotifier<DateTime?> getNetworkTime()
     ```
   - Example
     ```dart
-    var networkTime = ZegoUIKit().getNetworkTime();
+    ValueNotifier<DateTime?> networkTime = ZegoUIKit().getNetworkTime();
     ```
 
 - **getErrorStream**
 
   - Function Action
-    Returns a stream of errors occurred in the SDK.
+    Gets the stream of SDK errors.
   - Function Prototype
     ```dart
     Stream<ZegoUIKitError> getErrorStream()
@@ -128,20 +129,20 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
 - **getEngineStateNotifier**
 
   - Function Action
-    Returns a notifier for the engine state.
+    Gets the notifier for the engine state.
   - Function Prototype
     ```dart
     ValueNotifier<ZegoUIKitExpressEngineState> getEngineStateNotifier()
     ```
   - Example
     ```dart
-    var stateNotifier = ZegoUIKit().getEngineStateNotifier();
+    ValueNotifier<ZegoUIKitExpressEngineState> stateNotifier = ZegoUIKit().getEngineStateNotifier();
     ```
 
 - **getEngineStateStream**
 
   - Function Action
-    Returns a stream of engine state changes.
+    Gets the stream of the engine state.
   - Function Prototype
     ```dart
     Stream<ZegoUIKitExpressEngineState> getEngineStateStream()
@@ -156,20 +157,20 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
 - **reporter**
 
   - Function Action
-    Returns the reporter instance.
+    Gets the reporter instance for reporting issues or feedback.
   - Function Prototype
     ```dart
     ZegoUIKitReporter reporter()
     ```
   - Example
     ```dart
-    var reporter = ZegoUIKit().reporter();
+    ZegoUIKit().reporter().report(event: 'custom_event');
     ```
 
 - **useDebugMode**
 
   - Function Action
-    Gets or sets the debug mode status.
+    Gets or sets whether to use debug mode.
   - Function Prototype
     ```dart
     bool get useDebugMode
@@ -178,8 +179,22 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - Example
     ```dart
     ZegoUIKit().useDebugMode = true;
-    var isDebug = ZegoUIKit().useDebugMode;
     ```
+
+- **engineCreatedNotifier**
+
+  - Function Action
+    Gets the notifier for when the engine is created.
+  - Function Prototype
+    ```dart
+    ValueNotifier<bool> get engineCreatedNotifier
+    ```
+  - Example
+    ```dart
+    ValueNotifier<bool> createdNotifier = ZegoUIKit().engineCreatedNotifier;
+    ```
+
+
 
 ## Audio Video
 
@@ -297,6 +312,739 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - Example
     ```dart
     ZegoUIKit().setAudioOutputToSpeaker(true);
+    ```
+
+- **setVideoConfig**
+
+  - Function Action
+    Update video configuration.
+  - Function Prototype
+    ```dart
+    Future<void> setVideoConfig(
+      ZegoUIKitVideoConfig config, {
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().setVideoConfig(ZegoUIKitVideoConfig.preset1080p);
+    ```
+
+- **enableTrafficControl**
+
+  - Function Action
+    Enable traffic control to automatically adjust video quality based on network conditions.
+  - Function Prototype
+    ```dart
+    Future<void> enableTrafficControl(
+      bool enabled,
+      List<ZegoUIKitTrafficControlProperty> properties, {
+      required String targetRoomID,
+      ZegoUIKitVideoConfig? minimizeVideoConfig,
+      bool isFocusOnRemote = true,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().enableTrafficControl(true, [], targetRoomID: 'room_id');
+    ```
+
+- **startPlayingStream**
+
+  - Function Action
+    Manually start playing a stream.
+  - Function Prototype
+    ```dart
+    Future<void> startPlayingStream(
+      String streamID,
+      String streamUserID, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().startPlayingStream('stream_id', 'user_id', targetRoomID: 'room_id');
+    ```
+
+- **stopPlayingStream**
+
+  - Function Action
+    Manually stop playing a stream.
+  - Function Prototype
+    ```dart
+    Future<void> stopPlayingStream(
+      String streamID, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().stopPlayingStream('stream_id', targetRoomID: 'room_id');
+    ```
+
+- **turnCameraOn**
+
+  - Function Action
+    Turn on/off camera for local or remote user.
+  - Function Prototype
+    ```dart
+    Future<bool> turnCameraOn(
+      bool isOn, {
+      String? userID,
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().turnCameraOn(true, targetRoomID: 'room_id');
+    ```
+
+- **turnLocalCameraOnForPreview**
+
+  - Function Action
+    Turn on/off camera only for preview (not published to remote).
+  - Function Prototype
+    ```dart
+    void turnLocalCameraOnForPreview(bool isOn)
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().turnLocalCameraOnForPreview(true);
+    ```
+
+- **turnMicrophoneOn**
+
+  - Function Action
+    Turn on/off microphone for local or remote user.
+  - Function Prototype
+    ```dart
+    Future<bool> turnMicrophoneOn(
+      bool isOn, {
+      required String targetRoomID,
+      String? userID,
+      bool muteMode = false,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().turnMicrophoneOn(true, targetRoomID: 'room_id');
+    ```
+
+- **turnLocalMicrophoneOnForPreview**
+
+  - Function Action
+    Turn on/off microphone only for preview (not published to remote).
+  - Function Prototype
+    ```dart
+    void turnLocalMicrophoneOnForPreview({
+      bool isOn,
+      bool muteMode = false,
+    })
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().turnLocalMicrophoneOnForPreview(isOn: true);
+    ```
+
+- **useFrontFacingCamera**
+
+  - Function Action
+    Switch between front and back camera.
+  - Function Prototype
+    ```dart
+    Future<bool> useFrontFacingCamera(
+      bool isFrontFacing, {
+      bool ignoreCameraStatus = false,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().useFrontFacingCamera(true);
+    ```
+
+- **enableVideoMirroring**
+
+  - Function Action
+    Enable or disable video mirror mode.
+  - Function Prototype
+    ```dart
+    void enableVideoMirroring(bool isVideoMirror)
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().enableVideoMirroring(true);
+    ```
+
+- **stopPublishingAllStream**
+
+  - Function Action
+    Stop publishing all streams in the room.
+  - Function Prototype
+    ```dart
+    Future<void> stopPublishingAllStream({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().stopPublishingAllStream(targetRoomID: 'room_id');
+    ```
+
+- **stopPlayingAllStream**
+
+  - Function Action
+    Stop playing all streams in the room.
+  - Function Prototype
+    ```dart
+    Future<void> stopPlayingAllStream({
+      required String targetRoomID,
+      List<String> ignoreStreamIDs = const [],
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().stopPlayingAllStream(targetRoomID: 'room_id');
+    ```
+
+- **setPlayerResourceMode**
+
+  - Function Action
+    Set player resource mode (RTC or CDN).
+  - Function Prototype
+    ```dart
+    void setPlayerResourceMode(
+      ZegoUIKitStreamResourceMode mode, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().setPlayerResourceMode(ZegoUIKitStreamResourceMode.RTC, targetRoomID: 'room_id');
+    ```
+
+- **setPlayerCDNConfig**
+
+  - Function Action
+    Set player CDN configuration.
+  - Function Prototype
+    ```dart
+    void setPlayerCDNConfig(
+      ZegoUIKitCDNConfig? cdnConfig, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().setPlayerCDNConfig(config, targetRoomID: 'room_id');
+    ```
+
+- **enableSyncDeviceStatusBySEI**
+
+  - Function Action
+    Enable synchronization of device status through SEI.
+  - Function Prototype
+    ```dart
+    void enableSyncDeviceStatusBySEI(bool value)
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().enableSyncDeviceStatusBySEI(true);
+    ```
+
+- **sendCustomSEI**
+
+  - Function Action
+    Send custom SEI data synchronized with video stream.
+  - Function Prototype
+    ```dart
+    Future<bool> sendCustomSEI(
+      Map<String, dynamic> seiData, {
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().sendCustomSEI({'key': 'value'});
+    ```
+
+- **enableSwitchRoomNotStopPlay**
+
+  - Function Action
+    When enabled, switching room will not stop pulling streams.
+  - Function Prototype
+    ```dart
+    Future<void> enableSwitchRoomNotStopPlay(bool enabled)
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().enableSwitchRoomNotStopPlay(true);
+    ```
+
+- **getAudioVideoViewNotifier**
+
+  - Function Action
+    Get audio video view notifier for a user.
+  - Function Prototype
+    ```dart
+    ValueNotifier<Widget?> getAudioVideoViewNotifier(
+      String? userID, {
+      required String targetRoomID,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getAudioVideoViewNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getAudioVideoViewIDNotifier**
+
+  - Function Action
+    Get audio video view ID notifier for a user.
+  - Function Prototype
+    ```dart
+    ValueNotifier<int?> getAudioVideoViewIDNotifier(
+      String? userID, {
+      required String targetRoomID,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getAudioVideoViewIDNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getAudioVideoQualityNotifier**
+
+  - Function Action
+    Get audio/video quality notifier for a user.
+  - Function Prototype
+    ```dart
+    ValueNotifier<ZegoUIKitPublishStreamQuality> getAudioVideoQualityNotifier(
+      String? userID, {
+      required String targetRoomID,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getAudioVideoQualityNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getAudioVideoCapturedAudioFirstFrameNotifier**
+
+  - Function Action
+    Get notifier for first captured audio frame.
+  - Function Prototype
+    ```dart
+    ValueNotifier<bool> getAudioVideoCapturedAudioFirstFrameNotifier(
+      String? userID, {
+      required String targetRoomID,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getAudioVideoCapturedAudioFirstFrameNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getAudioVideoCapturedVideoFirstFrameNotifier**
+
+  - Function Action
+    Get notifier for first captured video frame.
+  - Function Prototype
+    ```dart
+    ValueNotifier<bool> getAudioVideoCapturedVideoFirstFrameNotifier(
+      String? userID, {
+      required String targetRoomID,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getAudioVideoCapturedVideoFirstFrameNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getAudioVideoSendAudioFirstFrameNotifier**
+
+  - Function Action
+    Get notifier for first sent audio frame.
+  - Function Prototype
+    ```dart
+    ValueNotifier<bool> getAudioVideoSendAudioFirstFrameNotifier(
+      String? userID, {
+      required String targetRoomID,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getAudioVideoSendAudioFirstFrameNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getAudioVideoSendVideoFirstFrameNotifier**
+
+  - Function Action
+    Get notifier for first sent video frame.
+  - Function Prototype
+    ```dart
+    ValueNotifier<bool> getAudioVideoSendVideoFirstFrameNotifier(
+      String? userID, {
+      required String targetRoomID,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getAudioVideoSendVideoFirstFrameNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getCameraStateNotifier**
+
+  - Function Action
+    Get camera state notifier for a user.
+  - Function Prototype
+    ```dart
+    ValueNotifier<bool> getCameraStateNotifier(
+      String userID, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getCameraStateNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getUseFrontFacingCameraStateNotifier**
+
+  - Function Action
+    Get front-facing camera switch state notifier.
+  - Function Prototype
+    ```dart
+    ValueNotifier<bool> getUseFrontFacingCameraStateNotifier(
+      String userID, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getUseFrontFacingCameraStateNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getMicrophoneStateNotifier**
+
+  - Function Action
+    Get microphone state notifier for a user.
+  - Function Prototype
+    ```dart
+    ValueNotifier<bool> getMicrophoneStateNotifier(
+      String userID, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getMicrophoneStateNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getAudioOutputDeviceNotifier**
+
+  - Function Action
+    Get audio output device notifier for a user.
+  - Function Prototype
+    ```dart
+    ValueNotifier<ZegoUIKitAudioRoute> getAudioOutputDeviceNotifier(
+      String userID, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getAudioOutputDeviceNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getScreenSharingStateNotifier**
+
+  - Function Action
+    Get screen sharing state notifier.
+  - Function Prototype
+    ```dart
+    ValueNotifier<bool> getScreenSharingStateNotifier()
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getScreenSharingStateNotifier();
+    ```
+
+- **getSoundLevelStream**
+
+  - Function Action
+    Get sound level stream for a user.
+  - Function Prototype
+    ```dart
+    Stream<double> getSoundLevelStream(
+      String userID, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getSoundLevelStream('user_id', targetRoomID: 'room_id').listen((level) {});
+    ```
+
+- **moveToAnotherRoom**
+
+  - Function Action
+    Move streams from one room to another.
+  - Function Prototype
+    ```dart
+    void moveToAnotherRoom({
+      required String fromRoomID,
+      required List<String> fromStreamIDs,
+      required String toRoomID,
+      required bool isFromAnotherRoom,
+    })
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().moveToAnotherRoom(fromRoomID: 'room_a', fromStreamIDs: ['stream'], toRoomID: 'room_b', isFromAnotherRoom: false);
+    ```
+
+- **copyToAnotherRoom**
+
+  - Function Action
+    Copy streams to another room (play on both rooms).
+  - Function Prototype
+    ```dart
+    void copyToAnotherRoom({
+      required String fromRoomID,
+      required List<String> fromStreamIDs,
+      required String toRoomID,
+      required bool isFromAnotherRoom,
+    })
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().copyToAnotherRoom(fromRoomID: 'room_a', fromStreamIDs: ['stream'], toRoomID: 'room_b', isFromAnotherRoom: false);
+    ```
+
+- **getAudioVideoListStream**
+
+  - Function Action
+    Get stream for audio/video user list updates.
+  - Function Prototype
+    ```dart
+    Stream<List<ZegoUIKitUser>> getAudioVideoListStream({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getAudioVideoListStream(targetRoomID: 'room_id').listen((users) {});
+    ```
+
+- **getAudioVideoList**
+
+  - Function Action
+    Get current audio/video user list.
+  - Function Prototype
+    ```dart
+    List<ZegoUIKitUser> getAudioVideoList({
+      required String targetRoomID,
+      bool onlyTargetRoom = true,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    var users = ZegoUIKit().getAudioVideoList(targetRoomID: 'room_id');
+    ```
+
+- **getScreenSharingListStream**
+
+  - Function Action
+    Get stream for screen sharing user list updates.
+  - Function Prototype
+    ```dart
+    Stream<List<ZegoUIKitUser>> getScreenSharingListStream({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getScreenSharingListStream(targetRoomID: 'room_id').listen((users) {});
+    ```
+
+- **getScreenSharingList**
+
+  - Function Action
+    Get current screen sharing user list.
+  - Function Prototype
+    ```dart
+    List<ZegoUIKitUser> getScreenSharingList({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    var users = ZegoUIKit().getScreenSharingList(targetRoomID: 'room_id');
+    ```
+
+- **getMediaListStream**
+
+  - Function Action
+    Get stream for media player user list updates.
+  - Function Prototype
+    ```dart
+    Stream<List<ZegoUIKitUser>> getMediaListStream({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getMediaListStream(targetRoomID: 'room_id').listen((users) {});
+    ```
+
+- **getMediaList**
+
+  - Function Action
+    Get current media player user list.
+  - Function Prototype
+    ```dart
+    List<ZegoUIKitUser> getMediaList({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    var users = ZegoUIKit().getMediaList(targetRoomID: 'room_id');
+    ```
+
+- **startSharingScreen**
+
+  - Function Action
+    Start screen sharing.
+  - Function Prototype
+    ```dart
+    Future<void> startSharingScreen({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().startSharingScreen(targetRoomID: 'room_id');
+    ```
+
+- **stopSharingScreen**
+
+  - Function Action
+    Stop screen sharing.
+  - Function Prototype
+    ```dart
+    Future<void> stopSharingScreen({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().stopSharingScreen(targetRoomID: 'room_id');
+    ```
+
+- **getVideoSizeNotifier**
+
+  - Function Action
+    Get video size notifier for a user.
+  - Function Prototype
+    ```dart
+    ValueNotifier<Size> getVideoSizeNotifier(
+      String userID, {
+      required String targetRoomID,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getVideoSizeNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **getStreamPlayerStateNotifier**
+
+  - Function Action
+    Get stream player state notifier for a user.
+  - Function Prototype
+    ```dart
+    ValueNotifier<ZegoUIKitPlayerState> getStreamPlayerStateNotifier(
+      String userID, {
+      required String targetRoomID,
+      ZegoStreamType streamType = ZegoStreamType.main,
+    })
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getStreamPlayerStateNotifier('user_id', targetRoomID: 'room_id');
+    ```
+
+- **updateTextureRendererOrientation**
+
+  - Function Action
+    Update texture render orientation.
+  - Function Prototype
+    ```dart
+    void updateTextureRendererOrientation(Orientation orientation)
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().updateTextureRendererOrientation(Orientation.portrait);
+    ```
+
+- **updateAppOrientation**
+
+  - Function Action
+    Update app orientation.
+  - Function Prototype
+    ```dart
+    void updateAppOrientation(DeviceOrientation orientation)
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().updateAppOrientation(DeviceOrientation.portraitUp);
+    ```
+
+- **updateVideoViewMode**
+
+  - Function Action
+    Update video view mode (aspect fill or fit).
+  - Function Prototype
+    ```dart
+    void updateVideoViewMode(bool useVideoViewAspectFill)
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().updateVideoViewMode(true);
+    ```
+
+- **getReceiveSEIStream**
+
+  - Function Action
+    Get stream for received SEI data.
+  - Function Prototype
+    ```dart
+    Stream<ZegoUIKitReceiveSEIEvent> getReceiveSEIStream({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getReceiveSEIStream(targetRoomID: 'room_id').listen((event) {});
+    ```
+
+- **getReceiveCustomSEIStream**
+
+  - Function Action
+    Get stream for received custom SEI data.
+  - Function Prototype
+    ```dart
+    Stream<ZegoUIKitReceiveSEIEvent> getReceiveCustomSEIStream({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getReceiveCustomSEIStream(targetRoomID: 'room_id').listen((event) {});
+    ```
+
+- **getGeneratedStreamID**
+
+  - Function Action
+    Generate stream ID for a user.
+  - Function Prototype
+    ```dart
+    String getGeneratedStreamID(String userID, String roomID, ZegoStreamType type)
+    ```
+  - Example
+    ```dart
+    var streamID = ZegoUIKit().getGeneratedStreamID('user_id', 'room_id', ZegoStreamType.main);
     ```
 
 ## Room
@@ -420,6 +1168,186 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - Example
     ```dart
     await ZegoUIKit().renewRoomToken('new_token', targetRoomID: 'room_id');
+    ```
+
+- **getRoom**
+
+  - Function Action
+    Get room object by room ID.
+  - Function Prototype
+    ```dart
+    ZegoUIKitRoom getRoom({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    var room = ZegoUIKit().getRoom(targetRoomID: 'room_id');
+    ```
+
+- **getRoomsStateStream**
+
+  - Function Action
+    Get room states notifier for all rooms.
+  - Function Prototype
+    ```dart
+    ValueNotifier<Map<String, ZegoUIKitRoomState>> getRoomsStateStream()
+    ```
+  - Example
+    ```dart
+    var stateNotifier = ZegoUIKit().getRoomsStateStream();
+    ```
+
+- **clearRoomData**
+
+  - Function Action
+    Clear room data and stop all streams.
+  - Function Prototype
+    ```dart
+    void clearRoomData({
+      required String targetRoomID,
+      bool stopPublishAllStream = true,
+      bool stopPlayAllStream = true,
+    })
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().clearRoomData(targetRoomID: 'room_id');
+    ```
+
+- **getRoomStateStream**
+
+  - Function Action
+    Get room state notifier for a specific room.
+  - Function Prototype
+    ```dart
+    ValueNotifier<ZegoUIKitRoomState> getRoomStateStream({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    var stateNotifier = ZegoUIKit().getRoomStateStream(targetRoomID: 'room_id');
+    ```
+
+- **setRoomProperty**
+
+  - Function Action
+    Update a single room property.
+  - Function Prototype
+    ```dart
+    Future<bool> setRoomProperty(
+      String key,
+      String value, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().setRoomProperty('key', 'value', targetRoomID: 'room_id');
+    ```
+
+- **updateRoomProperties**
+
+  - Function Action
+    Update multiple room properties at once.
+  - Function Prototype
+    ```dart
+    Future<bool> updateRoomProperties(
+      Map<String, String> properties, {
+      required String targetRoomID,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().updateRoomProperties({'key1': 'value1', 'key2': 'value2'}, targetRoomID: 'room_id');
+    ```
+
+- **getRoomProperties**
+
+  - Function Action
+    Get all room properties.
+  - Function Prototype
+    ```dart
+    Map<String, RoomProperty> getRoomProperties({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    var properties = ZegoUIKit().getRoomProperties(targetRoomID: 'room_id');
+    ```
+
+- **getRoomPropertyStream**
+
+  - Function Action
+    Get stream for room property changes.
+  - Function Prototype
+    ```dart
+    Stream<RoomProperty> getRoomPropertyStream({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getRoomPropertyStream(targetRoomID: 'room_id').listen((property) {});
+    ```
+
+- **getRoomPropertiesStream**
+
+  - Function Action
+    Get stream for all room properties updates.
+  - Function Prototype
+    ```dart
+    Stream<Map<String, RoomProperty>> getRoomPropertiesStream({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getRoomPropertiesStream(targetRoomID: 'room_id').listen((properties) {});
+    ```
+
+- **getRoomTokenExpiredStream**
+
+  - Function Action
+    Get stream for room token expiration warning (30 seconds before expiry).
+  - Function Prototype
+    ```dart
+    Stream<int> getRoomTokenExpiredStream({required String targetRoomID})
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getRoomTokenExpiredStream(targetRoomID: 'room_id').listen((time) {});
+    ```
+
+- **getNetworkStateNotifier**
+
+  - Function Action
+    Get network state notifier.
+  - Function Prototype
+    ```dart
+    ValueNotifier<ZegoUIKitNetworkState> getNetworkStateNotifier()
+    ```
+  - Example
+    ```dart
+    var notifier = ZegoUIKit().getNetworkStateNotifier();
+    ```
+
+- **getNetworkState**
+
+  - Function Action
+    Get current network state.
+  - Function Prototype
+    ```dart
+    ZegoUIKitNetworkState getNetworkState()
+    ```
+  - Example
+    ```dart
+    var state = ZegoUIKit().getNetworkState();
+    ```
+
+- **getNetworkModeStream**
+
+  - Function Action
+    Get stream for network mode changes.
+  - Function Prototype
+    ```dart
+    Stream<ZegoUIKitNetworkState> getNetworkModeStream()
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getNetworkModeStream().listen((state) {});
     ```
 
 ## User
@@ -833,6 +1761,39 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     ZegoUIKit().getInRoomMessageStream(targetRoomID: 'room_id').listen((message) {});
     ```
 
+- **getInRoomLocalMessageStream**
+
+  - Function Action
+    Get stream for locally sent messages.
+  - Function Prototype
+    ```dart
+    Stream<ZegoInRoomMessage> getInRoomLocalMessageStream({
+      required String targetRoomID,
+      ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
+    })
+    ```
+  - Example
+    ```dart
+    ZegoUIKit().getInRoomLocalMessageStream(targetRoomID: 'room_id').listen((message) {});
+    ```
+
+- **clearMessage**
+
+  - Function Action
+    Clear messages in the room.
+  - Function Prototype
+    ```dart
+    Future<bool> clearMessage({
+      required String targetRoomID,
+      ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
+      bool clearRemote = true,
+    })
+    ```
+  - Example
+    ```dart
+    await ZegoUIKit().clearMessage(targetRoomID: 'room_id');
+    ```
+
 ## Custom Command
 
 - **sendInRoomCommand**
@@ -932,6 +1893,19 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - Example
     ```dart
     await ZegoUIKit().setAudioDeviceMode(ZegoUIKitAudioDeviceMode.General);
+    ```
+
+- **getMobileSystemVersionX**
+
+  - Function Action
+    Get mobile system version (extended version parsing).
+  - Function Prototype
+    ```dart
+    ZegoMobileSystemVersion getMobileSystemVersionX()
+    ```
+  - Example
+    ```dart
+    var version = ZegoUIKit().getMobileSystemVersionX();
     ```
 
 ## Effect
@@ -2020,3 +2994,28 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
 
 - **Properties**
   - `bool iOSVoIPHasVideo`: Whether the iOS VoIP call has video.
+
+**ZegoUIKitHallRoomStreamMode**
+
+- **Enum Values**
+  - `preloaded`: Pre-pull streams and mute/unmute for smooth switching. More smooth experience but costs extra for two additional streams (previous/next).
+  - `economy`: Stop/start streams when switching. No extra stream costs, but may have brief video/audio rendering delays, black screen, or stuttering during switching.
+
+**ZegoUIKitHallRoomListStreamUser**
+
+- **Properties**
+  - `ZegoUIKitUser user`: The user.
+  - `String roomID`: The room ID.
+  - `ZegoStreamType streamType`: The stream type.
+
+**ZegoUIKitHallRoomListSlideContext**
+
+- **Properties**
+  - `ZegoUIKitHallRoomListStreamUser previous`: Information of the previous room.
+  - `ZegoUIKitHallRoomListStreamUser next`: Information of the next room.
+
+**ZegoUIKitHallRoomListModel**
+
+- **Properties**
+  - `ZegoUIKitHallRoomListStreamUser? activeRoom`: The currently active/selected room in the hall.
+  - `ZegoUIKitHallRoomListSlideContext? activeContext`: Adjacent room data context relative to activeRoom.
