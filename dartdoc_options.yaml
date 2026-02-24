@@ -3,10 +3,13 @@ dartdoc:
   categories:
     "APIs":
       markdown: doc/apis.md
+    "Components":
+      markdown: doc/components.md
     "Features":
       markdown: doc/features.md
   categoryOrder:
     - "APIs"
+    - "Components"
     - "Features"
   showUndocumentedCategories: true
   ignore:

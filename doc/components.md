@@ -10,6 +10,9 @@
   - [ZegoLayoutGallery](#zegolayoutgallery)
   - [ZegoLayoutPictureInPicture](#zegolayoutpictureinpicture)
   - [ZegoAvatar](#zegoavatar)
+  - [ZegoAvatarConfig](#zegoavatarconfig)
+  - [ZegoAvatarAlignment](#zegoavataralignment)
+  - [ZegoShowFullscreenModeToggleButtonRules](#zegoshowfullscreenmodetogglebuttonrules)
   - [ZegoCameraStateIcon](#zegocamerastateicon)
   - [ZegoMicrophoneStateIcon](#zegomicrophonestateicon)
   - [ZegoScreenSharingViewController](#zegoscreensharingviewcontroller)
@@ -37,8 +40,10 @@
 - [Hall Room](#hall-room)
   - [ZegoUIKitHallRoomList](#zegouikithallroomlist)
   - [ZegoUIKitHallRoomListConfig](#zegouikithallroomlistconfig)
+  - [ZegoUIKitHallRoomStreamMode](#zegouikithallroomstreammode)
   - [ZegoUIKitHallRoomListStyle](#zegouikithallroomliststyle)
   - [ZegoUIKitHallRoomListItemStyle](#zegouikithallroomlistitemstyle)
+  - [ZegoUIKitHallRoomListStreamUser](#zegouikithallroomliststreamuser)
   - [ZegoUIKitHallRoomListController](#zegouikithallroomlistcontroller)
 - [Controls](#controls)
   - [ZegoScreenSharingToggleButton](#zegoscreensharingtogglebutton)
@@ -65,6 +70,7 @@
   - [ZegoInputBoardWrapper](#zegoinputboardwrapper)
   - [ZegoSlider](#zegoslider)
   - [ZegoNetworkLoading](#zegonetworkloading)
+  - [ZegoNetworkLoadingConfig](#znetworkloadingconfig)
   - [ZegoLoadingIndicator](#zegoloadingindicator)
   - [ZegoServiceValueIcon](#zegoservicevalueicon)
   - [ValueNotifierSliderVisibility](#valuenotifierslidervisibility)
@@ -229,6 +235,41 @@ Display user avatar.
   | soundLevelColor | The color of the sound level ripple. | `Color?` | `null` |
   | avatarBuilder | Custom builder for the avatar. | `ZegoAvatarBuilder?` | `null` |
   | mixerStreamID | Stream ID for mixer. | `String?` | `null` |
+
+## ZegoAvatarConfig
+
+Configuration for the avatar in Zego UI Kit.
+
+- **Parameters**
+
+  | Name | Description | Type | Default Value |
+  | :--- | :--- | :--- | :--- |
+  | showInAudioMode | Determines whether the avatar should be shown in audio mode. | `bool?` | `null` |
+  | showSoundWavesInAudioMode | Determines whether sound waves should be shown in audio mode. | `bool?` | `null` |
+  | verticalAlignment | The vertical alignment of the avatar. | `ZegoAvatarAlignment` | `ZegoAvatarAlignment.center` |
+  | size | The size of the avatar. | `Size?` | `null` |
+  | soundWaveColor | The color of the sound waves. | `Color?` | `null` |
+  | builder | The builder function for the avatar widget. | `ZegoAvatarBuilder?` | `null` |
+
+## ZegoAvatarAlignment
+
+Specifies the alignment of an avatar.
+
+| Name | Description | Value |
+| :--- | :--- | :--- |
+| center | The avatar is centered. | - |
+| start | The avatar is aligned to the start. | - |
+| end | The avatar is aligned to the end. | - |
+
+## ZegoShowFullscreenModeToggleButtonRules
+
+Specifies the rules for showing the fullscreen mode toggle button.
+
+| Name | Description | Value |
+| :--- | :--- | :--- |
+| showWhenScreenPressed | Show fullscreen button when screen is pressed. | - |
+| alwaysShow | Always show the fullscreen button. | - |
+| alwaysHide | Always hide the fullscreen button. | - |
 
 ## ZegoCameraStateIcon
 
@@ -614,6 +655,15 @@ Configuration parameters for Hall Room List.
   | streamMode | Stream mode. | `ZegoUIKitHallRoomStreamMode` | Required |
   | audioVideoResourceMode | Audio video resource mode. | `ZegoUIKitStreamResourceMode?` | `null` |
 
+## ZegoUIKitHallRoomStreamMode
+
+Stream mode for hall room list.
+
+| Name | Description | Value |
+| :--- | :--- | :--- |
+| preloaded | Pre-pull streams and mute/unmute for smooth switching. More smooth experience but costs extra for two additional streams (previous/next). | - |
+| economy | Stop/start streams when switching. No extra stream costs, but may have brief video/audio rendering delays, black screen, or stuttering during switching. | - |
+
 ## ZegoUIKitHallRoomListStyle
 
 Style configuration for Hall Room List.
@@ -637,6 +687,20 @@ Style for Hall Room List Item.
   | backgroundBuilder | Builder for background view. | `Widget Function(BuildContext, Size, ZegoUIKitUser?, String)?` | `null` |
   | loadingBuilder | Builder for loading view per item. | `Widget? Function(BuildContext, ZegoUIKitUser?, String)?` | `null` |
   | avatar | Avatar configuration. | `ZegoAvatarConfig?` | `null` |
+
+## ZegoUIKitHallRoomListStreamUser
+
+Stream user information for hall room list.
+
+- **Parameters**
+
+  | Name | Description | Type | Default Value |
+  | :--- | :--- | :--- | :--- |
+  | user | The user information. | `ZegoUIKitUser` | Required |
+  | roomID | The room ID. | `String` | Required |
+  | streamType | The stream type. | `ZegoStreamType` | `ZegoStreamType.main` |
+  | isPlaying | Whether the stream is currently playing. | `bool` | `false` |
+  | isPlayed | Whether the stream has been played. | `bool` | `false` |
 
 ## ZegoUIKitHallRoomListController
 
@@ -1020,6 +1084,19 @@ Widget to display network loading state.
   | :--- | :--- | :--- | :--- |
   | child | The child widget. | `Widget` | Required |
   | config | Configuration for network loading. | `ZegoNetworkLoadingConfig?` | `null` |
+
+## ZegoNetworkLoadingConfig
+
+Configuration for the network loading widget.
+
+- **Parameters**
+
+  | Name | Description | Type | Default Value |
+  | :--- | :--- | :--- | :--- |
+  | enabled | Whether the network loading is enabled. | `bool` | `true` |
+  | icon | The icon to display. | `Widget?` | `null` |
+  | iconColor | The color of the icon. | `Color?` | `null` |
+  | progressColor | The color of the progress indicator. | `Color?` | `null` |
 
 ## ZegoLoadingIndicator
 

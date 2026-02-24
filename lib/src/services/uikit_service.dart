@@ -36,6 +36,7 @@ part 'room_service.dart';
 part 'user_service.dart';
 
 /// {@category APIs}
+/// {@category Components}
 /// {@category Features}
 class ZegoUIKit
     with
