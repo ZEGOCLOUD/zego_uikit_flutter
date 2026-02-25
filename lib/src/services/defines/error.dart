@@ -1,9 +1,17 @@
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
 
+/// Represents a ZegoUIKit error with code, message, and method information.
+///
+/// This class is used to encapsulate error information from ZegoUIKit operations.
 class ZegoUIKitError {
+  /// Error code. See [ZegoUIKitErrorCode] for predefined error codes.
   int code;
+
+  /// Error message describing the error details.
   String message;
+
+  /// The method name where the error occurred.
   String method;
 
   ZegoUIKitError({
@@ -58,22 +66,22 @@ class ZegoUIKitErrorCode {
   /// Execution successful.
   static const int success = 0;
 
-  ///
+  /// Invalid parameters passed to the method.
   static const int paramsInvalid = -1;
 
-  ///
+  /// Core service is not initialized. Call [ZegoUIKit.init] first.
   static const int coreNotInit = 300001001;
 
-  ///
+  /// User is not logged in to the room.
   static const int roomNotLogin = 300001002;
 
-  ///
+  /// Error occurred while logging in to the room.
   static const int roomLoginError = 300001003;
 
-  ///
+  /// Error occurred while leaving the room.
   static const int roomLeaveError = 300001004;
 
-  ///
+  /// Error occurred while sending custom command.
   static const int customCommandSendError = 300003001;
 
   /// media play error
@@ -85,10 +93,10 @@ class ZegoUIKitErrorCode {
   /// pick media file error
   static const int mediaPickFilesError = 300006003;
 
-  ///
+  /// Error occurred while sending in-room message.
   static const int messageSendError = 300007001;
 
-  ///
+  /// Error occurred while resending in-room message.
   static const int messageReSendError = 300007002;
 
   /// Unknown video capture exception type.

@@ -19,11 +19,15 @@ import 'package:zego_uikit/src/services/services.dart';
 mixin ZegoPluginInvitationServiceAdvance {
   DateTime? advanceSendInvitationStartTime;
 
-  /// send invitation to one or more specified users
-  /// [invitees] list of invitees.
-  /// [timeout] timeout of the call invitation, the unit is seconds
-  /// [type] call type
-  /// [data] extended field, through which the inviter can carry information to the invitee.
+  /// Send an advanced invitation to one or more users.
+  ///
+  /// [inviterID] The ID of the user sending the invitation.
+  /// [inviterName] The name of the user sending the invitation.
+  /// [invitees] List of user IDs to invite.
+  /// [timeout] Timeout in seconds for the invitation.
+  /// [type] Type of the call (video or voice).
+  /// [data] Custom data to send with the invitation.
+  /// [zegoNotificationConfig] Configuration for offline push notifications.
   Future<ZegoSignalingPluginSendInvitationResult> sendAdvanceInvitation({
     required String inviterID,
     required String inviterName,
@@ -140,7 +144,15 @@ mixin ZegoPluginInvitationServiceAdvance {
     });
   }
 
+  /// Add more users to an existing advanced invitation.
   ///
+  /// [inviterID] The ID of the user who sent the original invitation.
+  /// [inviterName] The name of the user who sent the original invitation.
+  /// [invitees] List of additional user IDs to add to the invitation.
+  /// [type] Type of the call (video or voice).
+  /// [data] Custom data to send with the invitation.
+  /// [invitationID] The existing invitation ID to add users to.
+  /// [zegoNotificationConfig] Configuration for offline push notifications.
   Future<ZegoSignalingPluginSendInvitationResult> addAdvanceInvitation({
     required String inviterID,
     required String inviterName,
@@ -246,7 +258,10 @@ mixin ZegoPluginInvitationServiceAdvance {
     );
   }
 
-  /// join invitation
+  /// Join an existing advanced invitation.
+  ///
+  /// [invitationID] The ID of the invitation to join.
+  /// [data] Custom data to send when joining.
   Future<ZegoSignalingPluginJoinInvitationResult> joinAdvanceInvitation({
     required String invitationID,
     String? data,
@@ -279,8 +294,11 @@ mixin ZegoPluginInvitationServiceAdvance {
   }
 
   /// cancel invitation to one or more specified users
-  /// [inviteeID] invitee's id
-  /// [data] extended field
+  /// Cancel an advanced invitation for specified users.
+  ///
+  /// [invitees] List of invitee IDs to cancel the invitation for.
+  /// [data] Extended field containing invitation data.
+  /// [invitationID] The specific invitation ID to cancel (optional).
   Future<ZegoSignalingPluginCancelInvitationResult> cancelAdvanceInvitation({
     required List<String> invitees,
     required String data,
@@ -370,8 +388,11 @@ mixin ZegoPluginInvitationServiceAdvance {
   }
 
   /// invitee reject the call invitation
-  /// [inviterID] inviter id, who send invitation
-  /// [data] extended field, you can include your reasons such as Declined
+  /// Refuse an incoming advanced invitation.
+  ///
+  /// [inviterID] The ID of the user who sent the invitation.
+  /// [data] Extended field, you can include your reasons such as Declined.
+  /// [invitationID] The specific invitation ID to refuse (optional).
   Future<ZegoSignalingPluginResponseInvitationResult> refuseAdvanceInvitation({
     required String inviterID,
     required String data,
@@ -476,8 +497,12 @@ mixin ZegoPluginInvitationServiceAdvance {
   }
 
   /// invitee accept the call invitation
-  /// [inviterID] inviter id, who send invitation
-  /// [data] extended field
+  /// Accept an incoming advanced invitation.
+  ///
+  /// [inviterID] The ID of the user who sent the invitation.
+  /// [data] Extended field containing invitation data.
+  /// [inviterName] The name of the user who sent the invitation (optional).
+  /// [invitationID] The specific invitation ID to accept (optional).
   Future<ZegoSignalingPluginResponseInvitationResult> acceptAdvanceInvitation({
     required String inviterID,
     required String data,
@@ -530,7 +555,11 @@ mixin ZegoPluginInvitationServiceAdvance {
     );
   }
 
+  /// End an advanced invitation (for the initiator).
   ///
+  /// [data] Custom data to send with the ending.
+  /// [invitationID] The specific invitation ID to end (optional).
+  /// [zegoNotificationConfig] Configuration for offline push notifications (optional).
   Future<ZegoSignalingPluginEndInvitationResult> endAdvanceInvitation({
     String? data,
     String? invitationID,
@@ -602,7 +631,11 @@ mixin ZegoPluginInvitationServiceAdvance {
     );
   }
 
+  /// Quit an advanced invitation (for a participant).
   ///
+  /// [data] Custom data to send when quitting.
+  /// [invitationID] The specific invitation ID to quit from (optional).
+  /// [zegoNotificationConfig] Configuration for offline push notifications (optional).
   Future<ZegoSignalingPluginQuitInvitationResult> quitAdvanceInvitation({
     String? data,
     String? invitationID,

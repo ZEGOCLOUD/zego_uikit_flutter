@@ -4,6 +4,7 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'package:zego_uikit/src/services/defines/express.dart';
 
+/// Extension on [ZegoUIKitVideoConfig] for additional functionality.
 extension ZegoUIKitVideoConfigExtension on ZegoUIKitVideoConfig {
   String toStringX() {
     return 'ZegoUIKitVideoConfig{'
@@ -19,6 +20,7 @@ extension ZegoUIKitVideoConfigExtension on ZegoUIKitVideoConfig {
   }
 }
 
+/// Extension on [ZegoMixerOutputVideoConfig] for additional functionality.
 extension ZegoMixerOutputVideoConfignExtension on ZegoMixerOutputVideoConfig {
   String toStringX() {
     return 'ZegoMixerTask{'
@@ -30,6 +32,7 @@ extension ZegoMixerOutputVideoConfignExtension on ZegoMixerOutputVideoConfig {
   }
 }
 
+/// Extension on [ZegoMixerOutput] for additional functionality.
 extension ZegoMixerOutputnExtension on ZegoMixerOutput {
   String toStringX() {
     return 'ZegoMixerOutput{'
@@ -39,6 +42,7 @@ extension ZegoMixerOutputnExtension on ZegoMixerOutput {
   }
 }
 
+/// Extension on [ZegoPublishStreamQuality] for additional functionality.
 extension ZegoPublishStreamQualityExtension on ZegoPublishStreamQuality {
   String toStringX() {
     return 'ZegoPublishStreamQualityExtension{'
@@ -85,6 +89,7 @@ extension ZegoPublishStreamQualityExtension on ZegoPublishStreamQuality {
   }
 }
 
+/// Extension on [ZegoStream] for additional functionality.
 extension ZegoStreamExtension on ZegoStream {
   String toStringX() {
     return 'ZegoStreamExtension{'
@@ -95,6 +100,7 @@ extension ZegoStreamExtension on ZegoStream {
   }
 }
 
+/// Extension on [ZegoMixerTask] for additional functionality.
 extension ZegoMixerTaskExtension on ZegoMixerTask {
   String toStringX() {
     return 'ZegoMixerTask{'
@@ -116,6 +122,7 @@ extension ZegoMixerTaskExtension on ZegoMixerTask {
   }
 }
 
+/// Extension on [ZegoMixerStartResult] for additional functionality.
 extension ZegoMixerStartResultExtesion on ZegoMixerStartResult {
   String toStringX() {
     return 'ZegoMixerStartResult{'
@@ -125,6 +132,7 @@ extension ZegoMixerStartResultExtesion on ZegoMixerStartResult {
   }
 }
 
+/// Extension on [ZegoCDNConfig] for additional functionality.
 extension ZegoCDNConfigExtension on ZegoCDNConfig {
   String toStringX() {
     return 'ZegoCDNConfig{'

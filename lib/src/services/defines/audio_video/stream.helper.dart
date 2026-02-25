@@ -5,7 +5,9 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+/// Helper class for stream-related operations.
 class ZegoUIKitStreamHelper {
+  /// Gets the stream channel info for a user based on stream type.
   static ZegoUIKitCoreStreamInfo getUserStreamChannel(
     ZegoUIKitCoreUser user,
     ZegoStreamType streamType,
@@ -21,6 +23,7 @@ class ZegoUIKitStreamHelper {
     }
   }
 
+  /// Gets the stream type from a Zego publish channel.
   static ZegoStreamType getStreamTypeByZegoPublishChannel(
     ZegoUIKitCoreUser user,
     ZegoPublishChannel channel,
@@ -38,6 +41,7 @@ class ZegoUIKitStreamHelper {
     return ZegoStreamType.main;
   }
 
+  /// Gets the stream type from a stream ID.
   static ZegoStreamType getStreamTypeByID(String streamID) {
     if (streamID.endsWith(ZegoStreamType.main.text)) {
       return ZegoStreamType.main;

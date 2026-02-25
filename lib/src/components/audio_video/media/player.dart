@@ -28,6 +28,7 @@ class ZegoUIKitMediaPlayer extends StatefulWidget {
   })  : style = style ?? const ZegoUIKitMediaPlayerStyle(),
         event = event ?? const ZegoUIKitMediaPlayerEvent();
 
+  /// Room ID for the media player.
   final String roomID;
 
   /// load the absolute path to the local resource or the URL of the network resource
@@ -40,8 +41,13 @@ class ZegoUIKitMediaPlayer extends StatefulWidget {
   /// top-left position display this widget on parent widget
   final Offset? initPosition;
 
+  /// Configuration for the media player.
   final ZegoUIKitMediaPlayerConfig config;
+
+  /// Style for the media player UI.
   final ZegoUIKitMediaPlayerStyle style;
+
+  /// Event callbacks for the media player.
   final ZegoUIKitMediaPlayerEvent event;
 
   @override

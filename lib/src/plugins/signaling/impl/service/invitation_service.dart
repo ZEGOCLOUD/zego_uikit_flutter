@@ -141,9 +141,10 @@ mixin ZegoPluginInvitationService {
     });
   }
 
-  /// cancel invitation to one or more specified users
-  /// [inviteeID] invitee's id
-  /// [data] extended field
+  /// Cancel a previously sent invitation to one or more specified users.
+  ///
+  /// [invitees] List of invitee IDs to cancel the invitation for.
+  /// [data] Extended field containing invitation data.
   Future<ZegoSignalingPluginCancelInvitationResult> cancelInvitation({
     required List<String> invitees,
     required String data,
@@ -228,6 +229,11 @@ mixin ZegoPluginInvitationService {
   /// invitee reject the call invitation
   /// [inviterID] inviter id, who send invitation
   /// [data] extended field, you can include your reasons such as Declined
+  /// Refuse an incoming call invitation.
+  ///
+  /// [inviterID] The ID of the user who sent the invitation.
+  /// [data] Extended field containing invitation data.
+  /// [targetInvitationID] The specific invitation ID to refuse (for advanced mode).
   Future<ZegoSignalingPluginResponseInvitationResult> refuseInvitation({
     required String inviterID,
     required String data,
@@ -324,6 +330,11 @@ mixin ZegoPluginInvitationService {
   /// invitee accept the call invitation
   /// [inviterID] inviter id, who send invitation
   /// [data] extended field
+  /// Accept an incoming call invitation.
+  ///
+  /// [inviterID] The ID of the user who sent the invitation.
+  /// [data] Extended field containing invitation data.
+  /// [targetInvitationID] The specific invitation ID to accept (for advanced mode).
   Future<ZegoSignalingPluginResponseInvitationResult> acceptInvitation({
     required String inviterID,
     required String data,

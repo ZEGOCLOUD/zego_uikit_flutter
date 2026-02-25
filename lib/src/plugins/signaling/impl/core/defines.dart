@@ -15,7 +15,10 @@ enum InvitationState {
 class InvitationUser {
   InvitationUser({required this.userID, required this.state});
 
+  /// User ID of the invitee.
   String userID;
+
+  /// Current state of the invitation.
   InvitationState state;
 
   @override
@@ -45,8 +48,13 @@ class AdvanceInvitationUser {
     this.extendedData = '',
   });
 
+  /// User ID of the invitee.
   String userID;
+
+  /// Current state of the invitation.
   AdvanceInvitationState state;
+
+  /// Extended data for the invitation.
   String extendedData;
 
   @override

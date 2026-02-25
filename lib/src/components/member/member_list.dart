@@ -27,15 +27,36 @@ typedef ZegoMemberListSorter = List<ZegoUIKitUser> Function(
   List<ZegoUIKitUser> remoteUsers,
 );
 
+/// Widget that displays a list of members in a room.
+///
+/// This widget shows all users in a room with their avatar, name,
+/// microphone and camera status.
 class ZegoMemberList extends StatefulWidget {
+  /// Room ID to display member list for.
   final String roomID;
+
+  /// Whether to show microphone state icon for each member.
   final bool showMicrophoneState;
+
+  /// Whether to show camera state icon for each member.
   final bool showCameraState;
+
+  /// Custom avatar builder function.
   final ZegoAvatarBuilder? avatarBuilder;
+
+  /// Custom item builder for list items.
   final ZegoMemberListItemBuilder? itemBuilder;
+
+  /// Custom sorter for user list ordering.
   final ZegoMemberListSorter? sortUserList;
+
+  /// List of user IDs to hide from the member list.
   final List<String> hiddenUserIDs;
+
+  /// Stream of user list updates.
   final Stream<List<ZegoUIKitUser>>? stream;
+
+  /// List of pseudo users to display (for users not in the room yet).
   final List<ZegoUIKitUser> pseudoUsers;
 
   const ZegoMemberList({

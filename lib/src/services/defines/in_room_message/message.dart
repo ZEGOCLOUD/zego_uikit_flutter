@@ -29,7 +29,7 @@ class ZegoInRoomMessage {
   /// You can format the timestamp, which is in milliseconds since epoch, using DateTime.fromMillisecondsSinceEpoch(timestamp).
   int timestamp;
 
-  ///
+  /// The current state of the message (sending, success, or failed).
   var state = ValueNotifier<ZegoInRoomMessageState>(
     ZegoInRoomMessageState.success,
   );

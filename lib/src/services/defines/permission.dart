@@ -4,6 +4,9 @@ import 'package:permission_handler/permission_handler.dart';
 // Project imports:
 import 'package:zego_uikit/src/services/uikit_service.dart';
 
+/// Requests a specific permission from the user.
+///
+/// Returns true if the permission is granted, false otherwise.
 Future<bool> requestPermission(Permission permission) async {
   PermissionStatus? status;
   try {

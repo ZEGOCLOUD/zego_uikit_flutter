@@ -37,15 +37,25 @@ typedef ZegoAudioVideoViewSorter = List<ZegoUIKitUser> Function(
 typedef ZegoAudioVideoViewFilter = List<ZegoUIKitUser> Function(
     List<ZegoUIKitUser>);
 
+/// Keys for extra information passed to audio video view builders.
+///
+/// Used to pass additional context to background and foreground builders.
 enum ZegoViewBuilderMapExtraInfoKey {
+  /// Whether the view is for screen sharing.
   isScreenSharingView,
+  /// Whether the view is in fullscreen mode.
   isFullscreen,
+  /// Whether the view is a virtual user (AI agent).
   isVirtualUser,
 }
 
+/// Mode for showing/hiding the fullscreen toggle button.
 enum ZegoShowToggleFullscreenButtonMode {
+  /// Show button when screen is pressed.
   showWhenScreenPressed,
+  /// Always show the button.
   alwaysShow,
+  /// Always hide the button.
   alwaysHide,
 }
 

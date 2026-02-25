@@ -1,9 +1,21 @@
+/// Represents a room property with key-value pair.
 class RoomProperty {
+  /// The property key.
   String key = '';
+
+  /// The property value.
   String value = '';
+
+  /// The old property value (for updates).
   String? oldValue;
+
+  /// Timestamp of the last update.
   int updateTime = 0;
+
+  /// User ID who made the update.
   String updateUserID = '';
+
+  /// Whether the property was updated from remote.
   bool updateFromRemote = false;
 
   RoomProperty(
@@ -44,9 +56,15 @@ class RoomProperty {
   }
 }
 
+/// Keys for room properties.
 enum RoomPropertyKey {
+  /// Host user property.
   host,
+
+  /// Live status property.
   liveStatus,
+
+  /// Live duration property.
   liveDuration,
 }
 

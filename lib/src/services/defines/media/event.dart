@@ -7,6 +7,7 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'state.dart';
 
+/// Event callbacks for media player.
 class ZegoUIKitMediaPlayerEvent {
   const ZegoUIKitMediaPlayerEvent({
     this.onPlayStateChanged,

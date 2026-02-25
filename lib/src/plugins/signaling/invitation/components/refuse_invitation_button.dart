@@ -4,9 +4,17 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// Result class for the refuse invitation button.
+///
+/// Contains the result of refusing a call invitation.
 class ZegoRefuseInvitationButtonResult {
+  /// The ID of the invitation.
   final String invitationID;
+
+  /// The result code of the operation.
   final String code;
+
+  /// The result message of the operation.
   final String message;
 
   ZegoRefuseInvitationButtonResult({

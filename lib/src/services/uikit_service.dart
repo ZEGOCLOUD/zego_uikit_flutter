@@ -88,14 +88,26 @@ class ZegoUIKit
   /// the platform view + custom rendering mechanism will be launched.
   /// At this time, [enablePlatformView] should be set to **true**.
   Future<void> init({
+    /// Application ID from ZEGOCLOUD Admin Console.
     required int appID,
+
+    /// Application sign for authentication.
     String appSign = '',
+
+    /// Token for authentication (alternative to appSign).
     String token = '',
+
+    /// Enable platform view for specific scenarios (iOS PIP, media playback).
     bool? enablePlatformView,
+
+    /// Whether to play stream in PIP mode on iOS.
     bool playingStreamInPIPUnderIOS = false,
+
+    /// The scenario mode for the SDK.
     ZegoUIKitScenario scenario = ZegoUIKitScenario.Default,
 
-    /// accept offline call invitation on android, will create in advance
+    /// If true, won't create the Express Engine internally.
+    /// Useful for accepting offline call invitations on Android.
     bool withoutCreateEngine = false,
   }) async {
     return ZegoUIKitCore.shared.init(
@@ -122,31 +134,41 @@ class ZegoUIKit
     await ZegoUIKitCore.shared.setAdvanceConfigs(configs);
   }
 
+  /// Gets the network time notifier.
+  ///
+  /// Returns a [ValueNotifier] that provides the current network time.
   ValueNotifier<DateTime?> getNetworkTime() {
     return ZegoUIKitCore.shared.coreData.timestamp.notifier;
   }
 
+  /// Gets the error stream for receiving error events.
   Stream<ZegoUIKitError> getErrorStream() {
     return ZegoUIKitCore.shared.coreData.error.errorStreamCtrl?.stream ??
         const Stream.empty();
   }
 
+  /// Gets the engine state notifier.
   ValueNotifier<ZegoUIKitExpressEngineState> getEngineStateNotifier() {
     return ZegoUIKitCore.shared.coreData.engine.stateNotifier;
   }
 
+  /// Gets the engine state stream.
   Stream<ZegoUIKitExpressEngineState> getEngineStateStream() {
     return ZegoUIKitCore.shared.coreData.engine.stateStreamCtrl.stream;
   }
 
+  /// Gets the reporter instance for logging events.
   ZegoUIKitReporter reporter() {
     return ZegoUIKitCore.shared.reporter;
   }
 
+  /// Whether debug mode is enabled.
   bool get useDebugMode => ZegoUIKitCore.shared.useDebugMode;
 
+  /// Sets debug mode.
   set useDebugMode(bool value) => ZegoUIKitCore.shared.useDebugMode = value;
 
+  /// Notifier for engine creation state.
   ValueNotifier<bool> get engineCreatedNotifier =>
       ZegoUIKitCore.shared.coreData.engine.createdNotifier;
 }

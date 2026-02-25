@@ -4,15 +4,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/src/channel/platform_interface.dart';
 import 'package:zego_uikit/src/services/uikit_service.dart';
 
+/// Reporter class for logging events to ZEGOCLOUD analytics.
+///
+/// This class provides methods to report user actions and events
+/// to the ZEGOCLOUD analytics service.
 class ZegoUIKitReporter {
+  /// Event name for room login.
   static String eventLoginRoom = "loginRoom";
+
+  /// Event name for room logout.
   static String eventLogoutRoom = "logoutRoom";
 
+  /// Key for room ID in event parameters.
   static String eventKeyRoomID = "room_id";
+
+  /// Key for user ID in event parameters.
   static String eventKeyUserID = "user_id";
+
+  /// Key for token in event parameters.
   static String eventKeyToken = "token";
 
+  /// Key for error message in event parameters.
   static String eventKeyErrorMsg = "msg";
+
+  /// Key for error code in event parameters.
   static String eventKeyErrorCode = "error";
 
   /// Timestamp at the start of the event, in milliseconds
@@ -29,14 +44,29 @@ class ZegoUIKitReporter {
 
   /// Name of kit, call for call, LIVE for livestreaming, voice chat for liveAudioRoom, chat for imkit
   static String eventKeyKitName = "kit_name";
+
+  /// Kit name for call.
   static String callKitName = "call";
+
+  /// Kit name for live audio room.
   static String audioRoomKitName = "liveaudioroom";
+
+  /// Kit name for live streaming.
   static String liveStreamingKitName = "livestreaming";
+
+  /// Kit name for IM kit.
   static String imKitName = "imkit";
 
+  /// Key for app state in event parameters.
   static String eventKeyAppState = "app_state";
+
+  /// Value for active app state.
   static String eventKeyAppStateActive = "active";
+
+  /// Value for background app state.
   static String eventKeyAppStateBackground = "background";
+
+  /// Value for restarted app state.
   static String eventKeyAppStateRestarted = "restarted";
 
   static String currentAppState() {

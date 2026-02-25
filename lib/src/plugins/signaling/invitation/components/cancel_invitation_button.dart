@@ -6,10 +6,20 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// Result class for the cancel invitation button.
+///
+/// Contains the result of canceling a call invitation.
 class ZegoCancelInvitationButtonResult {
+  /// The ID of the invitation.
   final String invitationID;
+
+  /// The result code of the operation.
   final String code;
+
+  /// The result message of the operation.
   final String message;
+
+  /// List of invitees that failed to receive the cancellation.
   final List<String> errorInvitees;
 
   ZegoCancelInvitationButtonResult({

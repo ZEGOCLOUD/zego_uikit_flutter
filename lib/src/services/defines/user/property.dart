@@ -9,8 +9,13 @@ import 'package:zego_uikit/src/services/core/core.dart';
 import 'package:zego_uikit/src/services/core/defines/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+/// Notifier for user properties changes in a room.
+///
+/// This class listens to user property changes (camera, microphone, attributes)
+/// and notifies listeners when updates occur.
 class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier
     implements ValueListenable<int> {
+  /// Room ID associated with this notifier.
   final String roomID;
 
   int _updateTimestamp = 0;

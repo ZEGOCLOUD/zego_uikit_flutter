@@ -13,9 +13,13 @@ import 'package:zego_uikit/src/components/audio_video_container/layout_picture_i
 import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+/// Fullscreen mode for audio video views.
 enum AudioVideoViewFullScreeMode {
+  /// Not in fullscreen mode.
   none,
+  /// Normal fullscreen mode.
   normal,
+  /// Auto orientation fullscreen mode.
   autoOrientation,
 }
 
@@ -50,7 +54,10 @@ class ZegoAudioVideoContainer extends StatefulWidget {
     this.onUserListUpdated,
   });
 
+  /// Room ID to display audio video container for.
   final String roomID;
+
+  /// Layout configuration for arranging views.
   final ZegoLayout layout;
 
   /// foreground builder of audio video view
@@ -68,12 +75,16 @@ class ZegoAudioVideoContainer extends StatefulWidget {
   /// avatar etc.
   final ZegoAvatarConfig? avatarConfig;
 
+  /// Controller for screen sharing view.
   final ZegoScreenSharingViewController? screenSharingViewController;
 
+  /// List of sources to display in the container.
   final List<ZegoAudioVideoContainerSource> sources;
 
+  /// Notifier for virtual users list.
   final ValueNotifier<List<ZegoUIKitUser>>? virtualUsersNotifier;
 
+  /// Callback when user list is updated.
   final void Function(List<ZegoUIKitUser> userList)? onUserListUpdated;
 
   @override

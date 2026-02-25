@@ -17,10 +17,21 @@ extension ZegoUIKitUserList on List<ZegoUIKitUser> {
   String get ids => map((e) => e.id).toString();
 }
 
+/// User information class representing a user in a Zego room.
+///
+/// This class contains user identity, room association, and device states
+/// such as camera, microphone, and audio route status.
 class ZegoUIKitUser {
+  /// User ID, uniquely identifies the user in a room.
   String id = '';
+
+  /// User name, displayed name for the user.
   String name = '';
+
+  /// Room ID that the user belongs to.
   String roomID = '';
+
+  /// Whether the user is from another room (used in multi-room scenarios).
   bool isAnotherRoomUser = false;
 
   Map<String, dynamic> toJson() => {

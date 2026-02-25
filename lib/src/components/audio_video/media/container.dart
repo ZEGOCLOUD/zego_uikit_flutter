@@ -18,6 +18,7 @@ class ZegoUIKitMediaContainer extends StatefulWidget {
     this.backgroundBuilder,
   });
 
+  /// Room ID for the media container.
   final String roomID;
 
   /// foreground builder of audio video view

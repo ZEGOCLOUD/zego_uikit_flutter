@@ -4,10 +4,18 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// Result class for the start invitation button.
 class ZegoStartInvitationButtonResult {
+  /// The ID of the sent invitation.
   final String invitationID;
+
+  /// The result code of the operation.
   final String code;
+
+  /// The result message of the operation.
   final String message;
+
+  /// List of invitees that failed to receive the invitation.
   final List<String> errorInvitees;
 
   ZegoStartInvitationButtonResult({
