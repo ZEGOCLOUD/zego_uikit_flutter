@@ -265,8 +265,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     | appID | Parameter appID | `int` | `Required` |
     | appSign | Parameter appSign | `String` | `` |
     | token | Parameter token | `String` | `` |
-    | enablePlatformView | Parameter enablePlatformView | `bool?` | `Optional` |
-    | playingStreamInPIPUnderIOS | Parameter playingStreamInPIPUnderIOS | `bool` | `false` |
+    | enablePlatformView | should be set to **true**. | `bool?` | `Optional` |
+    | playingStreamInPIPUnderIOS | , | `bool` | `false` |
     | scenario | Parameter scenario | `ZegoUIKitScenario` | `ZegoUIKitScenario.Default` |
     | withoutCreateEngine | Parameter withoutCreateEngine | `bool` | `false` |
   - example
@@ -340,7 +340,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | configs | Parameter configs | `String>` | `Optional` |
+    | configs | Unknown | `String>` | `Optional` |
   - example
 
     ```dart
@@ -452,7 +452,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | value | Parameter value | `bool` | `Optional` |
+    | value | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -494,7 +494,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -515,7 +515,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -536,7 +536,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -557,7 +557,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -578,7 +578,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | isMuted | Parameter isMuted | `bool` | `Optional` |
+    | isMuted | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -604,7 +604,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
     | userID | Parameter userID | `String` | `Optional` |
-    | mute | Parameter mute | `bool` | `Optional` |
+    | mute | is set to true, it means that the device is not actually turned off, but muted. | `bool` | `Optional` |
     | targetRoomID | Parameter targetRoomID | `String` | `Required` |
   - example
 
@@ -631,7 +631,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
     | userID | Parameter userID | `String` | `Optional` |
-    | mute | Parameter mute | `bool` | `Optional` |
+    | mute | is set to true, it means that the device is not actually turned off, but muted. | `bool` | `Optional` |
     | targetRoomID | Parameter targetRoomID | `String` | `Required` |
   - example
 
@@ -658,7 +658,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
     | userID | Parameter userID | `String` | `Optional` |
-    | mute | Parameter mute | `bool` | `Optional` |
+    | mute | is set to true, it means that the device is not actually turned off, but muted. | `bool` | `Optional` |
     | targetRoomID | Parameter targetRoomID | `String` | `Required` |
   - example
 
@@ -680,7 +680,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | isSpeaker | Parameter isSpeaker | `bool` | `Optional` |
+    | isSpeaker | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -704,8 +704,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | config | Parameter config | `ZegoUIKitVideoConfig` | `Optional` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | config | Unknown | `ZegoUIKitVideoConfig` | `Optional` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -733,12 +733,12 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | enabled | Parameter enabled | `bool` | `Optional` |
-    | properties | Parameter properties | `List<ZegoUIKitTrafficControlProperty>` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | minimizeVideoConfig | Parameter minimizeVideoConfig | `ZegoUIKitVideoConfig?` | `Optional` |
-    | isFocusOnRemote | Parameter isFocusOnRemote | `bool` | `true` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | enabled | Unknown | `bool` | `Optional` |
+    | properties | Unknown | `List<ZegoUIKitTrafficControlProperty>` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | minimizeVideoConfig | Unknown | `ZegoUIKitVideoConfig?` | `Optional` |
+    | isFocusOnRemote | Unknown | `bool` | `true` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -763,9 +763,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | streamID | Parameter streamID | `String` | `Optional` |
-    | streamUserID | Parameter streamUserID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | streamID | Unknown | `String` | `Optional` |
+    | streamUserID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -789,8 +789,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | streamID | Parameter streamID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | streamID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -815,9 +815,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | isOn | Parameter isOn | `bool` | `Optional` |
-    | userID | Parameter userID | `String?` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | isOn | Unknown | `bool` | `Optional` |
+    | userID | Unknown | `String?` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -838,7 +838,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | isOn | Parameter isOn | `bool` | `Optional` |
+    | isOn | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -867,7 +867,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     | isOn | Parameter isOn | `bool` | `Optional` |
     | targetRoomID | Parameter targetRoomID | `String` | `Required` |
     | userID | Parameter userID | `String?` | `Optional` |
-    | muteMode | Parameter muteMode | `bool` | `false` |
+    | muteMode | is set to true, it means that the device is not actually turned off, but muted. | `bool` | `false` |
   - example
 
     ```dart
@@ -892,7 +892,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
     | isOn | Parameter isOn | `bool` | `Optional` |
-    | muteMode | Parameter muteMode | `bool` | `false` |
+    | muteMode | is set to true, it means that the device is not actually turned off, but muted. | `bool` | `false` |
   - example
 
     ```dart
@@ -916,8 +916,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | isFrontFacing | Parameter isFrontFacing | `bool` | `Optional` |
-    | ignoreCameraStatus | Parameter ignoreCameraStatus | `bool` | `false` |
+    | isFrontFacing | Unknown | `bool` | `Optional` |
+    | ignoreCameraStatus | Unknown | `bool` | `false` |
   - example
 
     ```dart
@@ -938,7 +938,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | isVideoMirror | Parameter isVideoMirror | `bool` | `Optional` |
+    | isVideoMirror | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -959,7 +959,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -983,8 +983,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | ignoreStreamIDs | Parameter ignoreStreamIDs | `List<String>` | `const []` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | ignoreStreamIDs | Unknown | `List<String>` | `const []` |
   - example
 
     ```dart
@@ -1008,8 +1008,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mode | Parameter mode | `ZegoUIKitStreamResourceMode` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mode | Unknown | `ZegoUIKitStreamResourceMode` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1033,8 +1033,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | cdnConfig | Parameter cdnConfig | `ZegoUIKitCDNConfig?` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | cdnConfig | Unknown | `ZegoUIKitCDNConfig?` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1055,7 +1055,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | value | Parameter value | `bool` | `Optional` |
+    | value | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -1079,8 +1079,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | seiData | Parameter seiData | `dynamic>` | `Optional` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | seiData | Unknown | `dynamic>` | `Optional` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1101,7 +1101,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | enabled | Parameter enabled | `bool` | `Optional` |
+    | enabled | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -1126,9 +1126,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String?` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | userID | Unknown | `String?` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1153,9 +1153,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String?` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | userID | Unknown | `String?` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1180,9 +1180,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String?` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | userID | Unknown | `String?` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1207,9 +1207,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String?` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | userID | Unknown | `String?` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1234,9 +1234,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String?` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | userID | Unknown | `String?` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1261,9 +1261,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String?` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | userID | Unknown | `String?` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1288,9 +1288,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String?` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | userID | Unknown | `String?` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1314,8 +1314,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | userID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1339,8 +1339,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | userID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1364,8 +1364,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | userID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1389,8 +1389,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | userID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1431,8 +1431,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | userID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1458,10 +1458,10 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | fromRoomID | Parameter fromRoomID | `String` | `Required` |
-    | fromStreamIDs | Parameter fromStreamIDs | `List<String>` | `Required` |
-    | toRoomID | Parameter toRoomID | `String` | `Required` |
-    | isFromAnotherRoom | Parameter isFromAnotherRoom | `bool` | `Required` |
+    | fromRoomID | Unknown | `String` | `Required` |
+    | fromStreamIDs | Unknown | `List<String>` | `Required` |
+    | toRoomID | Unknown | `String` | `Required` |
+    | isFromAnotherRoom | Unknown | `bool` | `Required` |
   - example
 
     ```dart
@@ -1487,10 +1487,10 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | fromRoomID | Parameter fromRoomID | `String` | `Required` |
-    | fromStreamIDs | Parameter fromStreamIDs | `List<String>` | `Required` |
-    | toRoomID | Parameter toRoomID | `String` | `Required` |
-    | isFromAnotherRoom | Parameter isFromAnotherRoom | `bool` | `Required` |
+    | fromRoomID | Unknown | `String` | `Required` |
+    | fromStreamIDs | Unknown | `List<String>` | `Required` |
+    | toRoomID | Unknown | `String` | `Required` |
+    | isFromAnotherRoom | Unknown | `bool` | `Required` |
   - example
 
     ```dart
@@ -1511,7 +1511,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1536,9 +1536,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | onlyTargetRoom | Parameter onlyTargetRoom | `bool` | `true` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | onlyTargetRoom | Unknown | `bool` | `true` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1559,7 +1559,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1580,7 +1580,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1601,7 +1601,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1622,7 +1622,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1643,7 +1643,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1664,7 +1664,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1689,9 +1689,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | userID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1716,9 +1716,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | userID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | streamType | Unknown | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -1739,7 +1739,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | orientation | Parameter orientation | `Orientation` | `Optional` |
+    | orientation | Unknown | `Orientation` | `Optional` |
   - example
 
     ```dart
@@ -1760,7 +1760,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | orientation | Parameter orientation | `DeviceOrientation` | `Optional` |
+    | orientation | Unknown | `DeviceOrientation` | `Optional` |
   - example
 
     ```dart
@@ -1781,7 +1781,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | useVideoViewAspectFill | Parameter useVideoViewAspectFill | `bool` | `Optional` |
+    | useVideoViewAspectFill | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -1802,7 +1802,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1823,7 +1823,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -1844,9 +1844,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | roomID | Parameter roomID | `String` | `Optional` |
-    | type | Parameter type | `ZegoStreamType` | `Optional` |
+    | userID | Unknown | `String` | `Optional` |
+    | roomID | Unknown | `String` | `Optional` |
+    | type | Unknown | `ZegoStreamType` | `Optional` |
   - example
 
     ```dart
@@ -1869,7 +1869,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | skipHallRoom | Parameter skipHallRoom | `bool` | `false` |
+    | skipHallRoom | Unknown | `bool` | `false` |
   - example
 
     ```dart
@@ -1890,7 +1890,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | skipHallRoom | Parameter skipHallRoom | `bool` | `false` |
+    | skipHallRoom | Unknown | `bool` | `false` |
   - example
 
     ```dart
@@ -1928,7 +1928,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | skipHallRoom | Parameter skipHallRoom | `bool` | `false` |
+    | skipHallRoom | Unknown | `bool` | `false` |
   - example
 
     ```dart
@@ -1956,7 +1956,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
     | roomID | Parameter roomID | `String` | `Optional` |
-    | token | Parameter token | `String` | `` |
+    | token | /// The token issued by the developer's business server is used to ensure security. | `String` | `` |
     | markAsLargeRoom | Parameter markAsLargeRoom | `bool` | `false` |
     | keepWakeScreen | Parameter keepWakeScreen | `bool` | `true` |
     | isSimulated | Parameter isSimulated | `bool` | `false` |
@@ -1980,7 +1980,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2008,12 +2008,12 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | toRoomID | Parameter toRoomID | `String` | `Required` |
-    | stopPublishAllStream | Parameter stopPublishAllStream | `bool` | `Required` |
-    | stopPlayAllStream | Parameter stopPlayAllStream | `bool` | `Required` |
+    | toRoomID | Unknown | `String` | `Required` |
+    | stopPublishAllStream | Unknown | `bool` | `Required` |
+    | stopPlayAllStream | Unknown | `bool` | `Required` |
     | token | Parameter token | `String` | `` |
-    | clearStreamData | Parameter clearStreamData | `bool` | `true` |
-    | clearUserData | Parameter clearUserData | `bool` | `true` |
+    | clearStreamData | Unknown | `bool` | `true` |
+    | clearUserData | Unknown | `bool` | `true` |
   - example
 
     ```dart
@@ -2038,8 +2038,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | token | Parameter token | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | token | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2060,7 +2060,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2102,9 +2102,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | stopPublishAllStream | Parameter stopPublishAllStream | `bool` | `true` |
-    | stopPlayAllStream | Parameter stopPlayAllStream | `bool` | `true` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | stopPublishAllStream | Unknown | `bool` | `true` |
+    | stopPlayAllStream | Unknown | `bool` | `true` |
   - example
 
     ```dart
@@ -2125,7 +2125,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2150,9 +2150,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | key | Parameter key | `String` | `Optional` |
-    | value | Parameter value | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | key | Unknown | `String` | `Optional` |
+    | value | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2176,8 +2176,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | properties | Parameter properties | `String>` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | properties | Unknown | `String>` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2198,7 +2198,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2219,7 +2219,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2240,7 +2240,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2261,7 +2261,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2335,8 +2335,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | id | Parameter id | `String` | `Optional` |
-    | name | Parameter name | `String` | `Optional` |
+    | id | Unknown | `String` | `Optional` |
+    | name | Unknown | `String` | `Optional` |
   - example
 
     ```dart
@@ -2408,7 +2408,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2429,7 +2429,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2450,8 +2450,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | userID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2475,8 +2475,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | userID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2497,7 +2497,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2518,7 +2518,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2539,7 +2539,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2560,8 +2560,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userIDs | Parameter userIDs | `List<String>` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | userIDs | Unknown | `List<String>` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2582,7 +2582,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -2605,7 +2605,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | nonRoot | Parameter nonRoot | `bool` | `false` |
+    | nonRoot | Unknown | `bool` | `false` |
   - example
 
     ```dart
@@ -2715,9 +2715,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | streamID | Parameter streamID | `String` | `Optional` |
-    | aspectWidth | Parameter aspectWidth | `int` | `9` |
-    | aspectHeight | Parameter aspectHeight | `int` | `16` |
+    | streamID | Unknown | `String` | `Optional` |
+    | aspectWidth | Unknown | `int` | `9` |
+    | aspectHeight | Unknown | `int` | `16` |
   - example
 
     ```dart
@@ -2738,7 +2738,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | streamID | Parameter streamID | `String` | `Optional` |
+    | streamID | Unknown | `String` | `Optional` |
   - example
 
     ```dart
@@ -2763,9 +2763,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | isEnabled | Parameter isEnabled | `bool` | `Optional` |
-    | aspectWidth | Parameter aspectWidth | `int` | `9` |
-    | aspectHeight | Parameter aspectHeight | `int` | `16` |
+    | isEnabled | Unknown | `bool` | `Optional` |
+    | aspectWidth | Unknown | `int` | `9` |
+    | aspectHeight | Unknown | `int` | `16` |
   - example
 
     ```dart
@@ -2786,7 +2786,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | isEnabled | Parameter isEnabled | `bool` | `Optional` |
+    | isEnabled | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -2807,7 +2807,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | isEnabled | Parameter isEnabled | `bool` | `Optional` |
+    | isEnabled | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -2845,7 +2845,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | streamID | Parameter streamID | `String` | `Optional` |
+    | streamID | Unknown | `String` | `Optional` |
   - example
 
     ```dart
@@ -2866,7 +2866,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | streamID | Parameter streamID | `String` | `Optional` |
+    | streamID | Unknown | `String` | `Optional` |
   - example
 
     ```dart
@@ -2904,7 +2904,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | context | Parameter context | `BuildContext` | `Optional` |
+    | context | Unknown | `BuildContext` | `Optional` |
   - example
 
     ```dart
@@ -2931,9 +2931,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | message | Parameter message | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | type | Parameter type | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+    | message | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
   - example
 
     ```dart
@@ -2958,9 +2958,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | message | Parameter message | `ZegoInRoomMessage` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | type | Parameter type | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+    | message | Unknown | `ZegoInRoomMessage` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
   - example
 
     ```dart
@@ -2984,8 +2984,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | type | Parameter type | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
   - example
 
     ```dart
@@ -3009,8 +3009,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | type | Parameter type | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
   - example
 
     ```dart
@@ -3034,8 +3034,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | type | Parameter type | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
   - example
 
     ```dart
@@ -3059,8 +3059,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | type | Parameter type | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
   - example
 
     ```dart
@@ -3085,9 +3085,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | type | Parameter type | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
-    | clearRemote | Parameter clearRemote | `bool` | `true` |
+    | targetRoomID | Unknown | `String` | `Required` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+    | clearRemote | Unknown | `bool` | `true` |
   - example
 
     ```dart
@@ -3115,7 +3115,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
     | command | Parameter command | `String` | `Optional` |
-    | toUserIDs | Parameter toUserIDs | `List<String>` | `Optional` |
+    | toUserIDs | send to everyone if empty | `List<String>` | `Optional` |
     | targetRoomID | Parameter targetRoomID | `String` | `Required` |
   - example
 
@@ -3156,7 +3156,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -3179,7 +3179,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -3200,7 +3200,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | enable | Parameter enable | `bool` | `Optional` |
+    | enable | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -3238,7 +3238,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | deviceMode | Parameter deviceMode | `ZegoUIKitAudioDeviceMode` | `Optional` |
+    | deviceMode | Unknown | `ZegoUIKitAudioDeviceMode` | `Optional` |
   - example
 
     ```dart
@@ -3278,7 +3278,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | isOn | Parameter isOn | `bool` | `Optional` |
+    | isOn | Unknown | `bool` | `Optional` |
   - example
 
     ```dart
@@ -3333,8 +3333,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | value | Parameter value | `int` | `Optional` |
-    | type | Parameter type | `BeautyEffectType` | `Optional` |
+    | value | Unknown | `int` | `Optional` |
+    | type | Unknown | `BeautyEffectType` | `Optional` |
   - example
 
     ```dart
@@ -3372,7 +3372,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | voicePreset | Parameter voicePreset | `ZegoVoiceChangerPreset` | `Optional` |
+    | voicePreset | Unknown | `ZegoVoiceChangerPreset` | `Optional` |
   - example
 
     ```dart
@@ -3393,7 +3393,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | reverbPreset | Parameter reverbPreset | `ZegoReverbPreset` | `Optional` |
+    | reverbPreset | Unknown | `ZegoReverbPreset` | `Optional` |
   - example
 
     ```dart
@@ -3467,7 +3467,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | plugins | Parameter plugins | `List<IZegoUIKitPlugin>` | `Optional` |
+    | plugins | Unknown | `List<IZegoUIKitPlugin>` | `Optional` |
   - example
 
     ```dart
@@ -3488,7 +3488,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | plugins | Parameter plugins | `List<IZegoUIKitPlugin>` | `Optional` |
+    | plugins | Unknown | `List<IZegoUIKitPlugin>` | `Optional` |
   - example
 
     ```dart
@@ -3526,7 +3526,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | type | Parameter type | `ZegoUIKitPluginType` | `Optional` |
+    | type | Unknown | `ZegoUIKitPluginType` | `Optional` |
   - example
 
     ```dart
@@ -3583,7 +3583,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | event | Parameter event | `ZegoUIKitMediaEventInterface` | `Optional` |
+    | event | Unknown | `ZegoUIKitMediaEventInterface` | `Optional` |
   - example
 
     ```dart
@@ -3604,7 +3604,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | event | Parameter event | `ZegoUIKitMediaEventInterface` | `Optional` |
+    | event | Unknown | `ZegoUIKitMediaEventInterface` | `Optional` |
   - example
 
     ```dart
@@ -3629,9 +3629,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | filePathOrURL | Parameter filePathOrURL | `String` | `Required` |
-    | enableRepeat | Parameter enableRepeat | `bool` | `false` |
-    | autoStart | Parameter autoStart | `bool` | `true` |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
   - example
 
     ```dart
@@ -3737,7 +3737,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | millisecond | Parameter millisecond | `int` | `Optional` |
+    | millisecond | Point in time of specified playback progress | `int` | `Optional` |
   - example
 
     ```dart
@@ -3758,8 +3758,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | volume | Parameter volume | `int` | `Optional` |
-    | isSyncToRemote | Parameter isSyncToRemote | `bool` | `false` |
+    | volume | The range is 0 ~ 100. The default is 30. | `int` | `Optional` |
+    | isSyncToRemote | is false, that will only adjust the | `bool` | `false` |
   - example
 
     ```dart
@@ -3990,7 +3990,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | allowedExtensions | Parameter allowedExtensions | `List<String>?` | `Optional` |
+    | allowedExtensions | . | `List<String>?` | `Optional` |
   - example
 
     ```dart
@@ -4038,13 +4038,13 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | anotherRoomID | Parameter anotherRoomID | `String` | `Optional` |
-    | anotherUserID | Parameter anotherUserID | `String` | `Optional` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
-    | anotherUserName | Parameter anotherUserName | `String` | `` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | playOnAnotherRoom | Parameter playOnAnotherRoom | `bool` | `Required` |
-    | onPlayerStateUpdated | Parameter onPlayerStateUpdated | `PlayerStateUpdateCallback?` | `Optional` |
+    | anotherRoomID | The ID of the remote room where the stream is published. | `String` | `Optional` |
+    | anotherUserID | The user ID in the remote room whose stream will be played. | `String` | `Optional` |
+    | streamType | The type of stream to play, main stream by default. | `ZegoStreamType` | `ZegoStreamType.main` |
+    | anotherUserName | The user name in the remote room, used for identification only. | `String` | `` |
+    | targetRoomID | The local room ID in which the stream will be played. | `String` | `Required` |
+    | playOnAnotherRoom | Whether to play as a stream from another room. | `bool` | `Required` |
+    | onPlayerStateUpdated | Callback for player state updates. | `PlayerStateUpdateCallback?` | `Optional` |
   - example
 
     ```dart
@@ -4069,9 +4069,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | streamType | Parameter streamType | `ZegoStreamType` | `ZegoStreamType.main` |
+    | userID | The user ID whose stream will be stopped. | `String` | `Optional` |
+    | targetRoomID | The local room ID where the stream is being played. | `String` | `Required` |
+    | streamType | The type of stream to stop, main stream by default. | `ZegoStreamType` | `ZegoStreamType.main` |
   - example
 
     ```dart
@@ -4092,7 +4092,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | task | Parameter task | `ZegoMixerTask` | `Optional` |
+    | task | Mixer task configuration, including inputs, outputs and layout. | `ZegoMixerTask` | `Optional` |
   - example
 
     ```dart
@@ -4113,7 +4113,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | task | Parameter task | `ZegoMixerTask` | `Optional` |
+    | task | Mixer task configuration to be stopped. | `ZegoMixerTask` | `Optional` |
   - example
 
     ```dart
@@ -4140,11 +4140,11 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerStreamID | Parameter mixerStreamID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
-    | users | Parameter users | `List<ZegoUIKitUser>` | `const []` |
-    | userSoundIDs | Parameter userSoundIDs | `int>` | `const {}` |
-    | onPlayerStateUpdated | Parameter onPlayerStateUpdated | `PlayerStateUpdateCallback?` | `Optional` |
+    | mixerStreamID | The ID of the mixed stream to be played. | `String` | `Optional` |
+    | targetRoomID | The room ID in which the mixed stream will be played. | `String` | `Required` |
+    | users | The user list that participates in this mixed stream. | `List<ZegoUIKitUser>` | `const []` |
+    | userSoundIDs | Map of user ID to sound ID (sound channel ID). | `int>` | `const {}` |
+    | onPlayerStateUpdated | Callback for player state updates. | `PlayerStateUpdateCallback?` | `Optional` |
   - example
 
     ```dart
@@ -4165,8 +4165,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerStreamID | Parameter mixerStreamID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerStreamID | The ID of the mixed stream to stop. | `String` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream is being played. | `String` | `Required` |
   - example
 
     ```dart
@@ -4191,9 +4191,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerStreamID | Parameter mixerStreamID | `String` | `Optional` |
-    | mute | Parameter mute | `bool` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerStreamID | The ID of the mixed stream to be muted or unmuted. | `String` | `Optional` |
+    | mute | Whether to mute (true) or unmute (false) the mixed stream. | `bool` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream is being played. | `String` | `Required` |
   - example
 
     ```dart
@@ -4218,9 +4218,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerStreamID | Parameter mixerStreamID | `String` | `Optional` |
-    | mute | Parameter mute | `bool` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerStreamID | The ID of the mixed stream whose audio will be muted or unmuted. | `String` | `Optional` |
+    | mute | Whether to mute (true) or unmute (false) the audio. | `bool` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream is being played. | `String` | `Required` |
   - example
 
     ```dart
@@ -4245,9 +4245,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerStreamID | Parameter mixerStreamID | `String` | `Optional` |
-    | mute | Parameter mute | `bool` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerStreamID | The ID of the mixed stream whose video will be muted or unmuted. | `String` | `Optional` |
+    | mute | Whether to mute (true) or unmute (false) the video. | `bool` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream is being played. | `String` | `Required` |
   - example
 
     ```dart
@@ -4271,8 +4271,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerID | Parameter mixerID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerID | The mixed stream ID. | `String` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream exists. | `String` | `Required` |
   - example
 
     ```dart
@@ -4296,8 +4296,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerID | Parameter mixerID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerID | The mixed stream ID. | `String` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream exists. | `String` | `Required` |
   - example
 
     ```dart
@@ -4322,9 +4322,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerID | Parameter mixerID | `String` | `Optional` |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerID | The mixed stream ID. | `String` | `Optional` |
+    | userID | The user ID whose camera state will be observed. | `String` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream exists. | `String` | `Required` |
   - example
 
     ```dart
@@ -4349,9 +4349,9 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerID | Parameter mixerID | `String` | `Optional` |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerID | The mixed stream ID. | `String` | `Optional` |
+    | userID | The user ID whose microphone state will be observed. | `String` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream exists. | `String` | `Required` |
   - example
 
     ```dart
@@ -4375,8 +4375,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerID | Parameter mixerID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerID | The mixed stream ID. | `String` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream exists. | `String` | `Required` |
   - example
 
     ```dart
@@ -4399,7 +4399,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | targetRoomID | The room ID where the mixed stream exists. | `String` | `Required` |
   - example
 
     ```dart
@@ -4423,8 +4423,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | userID | Unknown | `String` | `Optional` |
+    | targetRoomID | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -4448,8 +4448,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | userID | Parameter userID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | userID | The user ID to be queried. | `String` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream exists. | `String` | `Required` |
   - example
 
     ```dart
@@ -4473,8 +4473,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerStreamID | Parameter mixerStreamID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerStreamID | The mixed stream ID. | `String` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream exists. | `String` | `Required` |
   - example
 
     ```dart
@@ -4498,8 +4498,8 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | mixerStreamID | Parameter mixerStreamID | `String` | `Optional` |
-    | targetRoomID | Parameter targetRoomID | `String` | `Required` |
+    | mixerStreamID | The mixed stream ID. | `String` | `Optional` |
+    | targetRoomID | The room ID where the mixed stream exists. | `String` | `Required` |
   - example
 
     ```dart
@@ -4522,7 +4522,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | event | Parameter event | `ZegoUIKitExpressEventInterface` | `Optional` |
+    | event | Unknown | `ZegoUIKitExpressEventInterface` | `Optional` |
   - example
 
     ```dart
@@ -4543,7 +4543,7 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | event | Parameter event | `ZegoUIKitExpressEventInterface` | `Optional` |
+    | event | Unknown | `ZegoUIKitExpressEventInterface` | `Optional` |
   - example
 
     ```dart
@@ -4617,11 +4617,11 @@ The `ZegoUIKit` class is a singleton that provides the main entry point for the 
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | title | Parameter title | `String?` | `Optional` |
-    | content | Parameter content | `String?` | `Optional` |
-    | fileName | Parameter fileName | `String?` | `Optional` |
-    | fileTypes | Parameter fileTypes | `List<ZegoLogExporterFileType>` | `const [` |
-    | directories | Parameter directories | `List<ZegoLogExporterDirectoryType>` | `const [` |
+    | title | export title, defaults to current timestamp | `String?` | `Optional` |
+    | content | export content description | `String?` | `Optional` |
+    | fileName | Zip file name (without extension), defaults to current timestamp | `String?` | `Optional` |
+    | fileTypes | List of file types to collect, defaults to all types | `List<ZegoLogExporterFileType>` | `const [` |
+    | directories | List of directory types to collect, defaults to 5 log directories | `List<ZegoLogExporterDirectoryType>` | `const [` |
     | Function | Parameter Function | `void` | `Optional` |
   - example
 
@@ -4771,7 +4771,7 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | forceDestroy | Parameter forceDestroy | `bool` | `false` |
+    | forceDestroy | Unknown | `bool` | `false` |
   - example
 
     ```dart
@@ -4796,8 +4796,8 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | id | Parameter id | `String` | `Required` |
-    | name | Parameter name | `String` | `Required` |
+    | id | Unknown | `String` | `Required` |
+    | name | Unknown | `String` | `Required` |
     | token | Parameter token | `String` | `` |
   - example
 
@@ -4866,7 +4866,7 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | roomID | Parameter roomID | `String` | `Optional` |
+    | roomID | Unknown | `String` | `Optional` |
     | roomName | Parameter roomName | `String` | `` |
   - example
 
@@ -4888,7 +4888,7 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | token | Parameter token | `String` | `Optional` |
+    | token | Unknown | `String` | `Optional` |
   - example
 
     ```dart
@@ -4920,14 +4920,14 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | inviterID | Parameter inviterID | `String` | `Required` |
-    | inviterName | Parameter inviterName | `String` | `Required` |
-    | invitees | Parameter invitees | `List<String>` | `Required` |
-    | timeout | Parameter timeout | `int` | `Required` |
-    | type | Parameter type | `int` | `Required` |
-    | data | Parameter data | `String` | `Required` |
-    | isAdvancedMode | Parameter isAdvancedMode | `bool` | `false` |
-    | zegoNotificationConfig | Parameter zegoNotificationConfig | `ZegoNotificationConfig?` | `Optional` |
+    | inviterID | Unknown | `String` | `Required` |
+    | inviterName | Unknown | `String` | `Required` |
+    | invitees | Unknown | `List<String>` | `Required` |
+    | timeout | Unknown | `int` | `Required` |
+    | type | Unknown | `int` | `Required` |
+    | data | Unknown | `String` | `Required` |
+    | isAdvancedMode | Unknown | `bool` | `false` |
+    | zegoNotificationConfig | Unknown | `ZegoNotificationConfig?` | `Optional` |
   - example
 
     ```dart
@@ -4965,13 +4965,13 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | inviterID | Parameter inviterID | `String` | `Required` |
-    | inviterName | Parameter inviterName | `String` | `Required` |
-    | invitees | Parameter invitees | `List<String>` | `Required` |
-    | timeout | Parameter timeout | `int` | `Required` |
-    | type | Parameter type | `int` | `Required` |
-    | data | Parameter data | `String` | `Required` |
-    | zegoNotificationConfig | Parameter zegoNotificationConfig | `ZegoNotificationConfig?` | `Optional` |
+    | inviterID | Unknown | `String` | `Required` |
+    | inviterName | Unknown | `String` | `Required` |
+    | invitees | Unknown | `List<String>` | `Required` |
+    | timeout | Unknown | `int` | `Required` |
+    | type | Unknown | `int` | `Required` |
+    | data | Unknown | `String` | `Required` |
+    | zegoNotificationConfig | Unknown | `ZegoNotificationConfig?` | `Optional` |
   - example
 
     ```dart
@@ -5010,10 +5010,10 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | enabled | Parameter enabled | `bool` | `Optional` |
-    | isIOSSandboxEnvironment | Parameter isIOSSandboxEnvironment | `bool?` | `Optional` |
-    | enableIOSVoIP | Parameter enableIOSVoIP | `bool` | `true` |
-    | certificateIndex | Parameter certificateIndex | `int` | `1` |
+    | enabled | Unknown | `bool` | `Optional` |
+    | isIOSSandboxEnvironment | Unknown | `bool?` | `Optional` |
+    | enableIOSVoIP | Unknown | `bool` | `true` |
+    | certificateIndex | Unknown | `int` | `1` |
     | appName | Parameter appName | `String` | `` |
     | androidChannelID | Parameter androidChannelID | `String` | `` |
     | androidChannelName | Parameter androidChannelName | `String` | `` |
@@ -5043,8 +5043,8 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | roomID | Parameter roomID | `String` | `Required` |
-    | message | Parameter message | `String` | `Required` |
+    | roomID | Unknown | `String` | `Required` |
+    | message | Unknown | `String` | `Required` |
   - example
 
     ```dart
@@ -5071,8 +5071,8 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | roomID | Parameter roomID | `String` | `Required` |
-    | message | Parameter message | `Uint8List` | `Required` |
+    | roomID | Unknown | `String` | `Required` |
+    | message | Unknown | `Uint8List` | `Required` |
   - example
 
     ```dart
@@ -5105,12 +5105,12 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | roomID | Parameter roomID | `String` | `Required` |
-    | key | Parameter key | `String` | `Required` |
-    | value | Parameter value | `String` | `Required` |
-    | isForce | Parameter isForce | `bool` | `false` |
-    | isDeleteAfterOwnerLeft | Parameter isDeleteAfterOwnerLeft | `bool` | `false` |
-    | isUpdateOwner | Parameter isUpdateOwner | `bool` | `false` |
+    | roomID | Unknown | `String` | `Required` |
+    | key | Unknown | `String` | `Required` |
+    | value | Unknown | `String` | `Required` |
+    | isForce | Unknown | `bool` | `false` |
+    | isDeleteAfterOwnerLeft | Unknown | `bool` | `false` |
+    | isUpdateOwner | Unknown | `bool` | `false` |
   - example
 
     ```dart
@@ -5140,10 +5140,10 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | roomID | Parameter roomID | `String` | `Required` |
-    | keys | Parameter keys | `List<String>` | `Required` |
-    | isForce | Parameter isForce | `bool` | `false` |
-    | showErrorLog | Parameter showErrorLog | `bool` | `true` |
+    | roomID | Unknown | `String` | `Required` |
+    | keys | Unknown | `List<String>` | `Required` |
+    | isForce | Unknown | `bool` | `false` |
+    | showErrorLog | Unknown | `bool` | `true` |
   - example
 
     ```dart
@@ -5174,10 +5174,10 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | roomID | Parameter roomID | `String` | `Required` |
-    | key | Parameter key | `String` | `Required` |
-    | value | Parameter value | `String` | `Required` |
-    | userIDs | Parameter userIDs | `List<String>` | `Required` |
+    | roomID | Unknown | `String` | `Required` |
+    | key | Unknown | `String` | `Required` |
+    | value | Unknown | `String` | `Required` |
+    | userIDs | Unknown | `List<String>` | `Required` |
   - example
 
     ```dart
@@ -5207,9 +5207,9 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | roomID | Parameter roomID | `String` | `Required` |
+    | roomID | Unknown | `String` | `Required` |
     | nextFlag | Parameter nextFlag | `String` | `` |
-    | count | Parameter count | `int` | `100` |
+    | count | Unknown | `int` | `100` |
   - example
 
     ```dart
@@ -5237,8 +5237,8 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | handler | Parameter handler | `ZegoSignalingPluginZPNsBackgroundMessageHandler` | `Optional` |
-    | key | Parameter key | `String` | `default` |
+    | handler | Unknown | `ZegoSignalingPluginZPNsBackgroundMessageHandler` | `Optional` |
+    | key | Unknown | `String` | `default` |
   - example
 
     ```dart
@@ -5262,7 +5262,7 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | handler | Parameter handler | `ZegoSignalingIncomingPushReceivedHandler` | `Optional` |
+    | handler | Unknown | `ZegoSignalingIncomingPushReceivedHandler` | `Optional` |
   - example
 
     ```dart
@@ -5285,7 +5285,7 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | configuration | Parameter configuration | `ZegoSignalingPluginProviderConfiguration` | `Optional` |
+    | configuration | Unknown | `ZegoSignalingPluginProviderConfiguration` | `Optional` |
   - example
 
     ```dart
@@ -5334,30 +5334,30 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | key | Parameter key | `Key?` | `Optional` |
-    | invitationType | Parameter invitationType | `int` | `Required` |
-    | invitees | Parameter invitees | `List<String>` | `Required` |
-    | data | Parameter data | `String` | `Required` |
-    | isAdvancedMode | Parameter isAdvancedMode | `bool` | `false` |
-    | notificationConfig | Parameter notificationConfig | `ZegoNotificationConfig?` | `Optional` |
-    | timeoutSeconds | Parameter timeoutSeconds | `int` | `60` |
-    | text | Parameter text | `String?` | `Optional` |
-    | textStyle | Parameter textStyle | `TextStyle?` | `Optional` |
-    | icon | Parameter icon | `ButtonIcon?` | `Optional` |
-    | iconSize | Parameter iconSize | `Size?` | `Optional` |
-    | iconTextSpacing | Parameter iconTextSpacing | `double?` | `Optional` |
-    | verticalLayout | Parameter verticalLayout | `bool` | `true` |
-    | buttonSize | Parameter buttonSize | `Size?` | `Optional` |
-    | borderRadius | Parameter borderRadius | `double?` | `Optional` |
-    | margin | Parameter margin | `EdgeInsetsGeometry?` | `Optional` |
-    | padding | Parameter padding | `EdgeInsetsGeometry?` | `Optional` |
-    | Function | Parameter Function | `Future<bool>` | `Optional` |
-    | Function | Parameter Function | `void` | `Optional` |
-    | networkLoadingConfig | Parameter networkLoadingConfig | `ZegoNetworkLoadingConfig?` | `Optional` |
-    | clickableTextColor | Parameter clickableTextColor | `Color?` | `Optional` |
-    | unclickableTextColor | Parameter unclickableTextColor | `Color?` | `Optional` |
-    | clickableBackgroundColor | Parameter clickableBackgroundColor | `Color?` | `Optional` |
-    | unclickableBackgroundColor | Parameter unclickableBackgroundColor | `Color?` | `Optional` |
+    | key | Unknown | `Key?` | `Optional` |
+    | invitationType | Unknown | `int` | `Required` |
+    | invitees | Unknown | `List<String>` | `Required` |
+    | data | Unknown | `String` | `Required` |
+    | isAdvancedMode | Unknown | `bool` | `false` |
+    | notificationConfig | Unknown | `ZegoNotificationConfig?` | `Optional` |
+    | timeoutSeconds | Unknown | `int` | `60` |
+    | text | Unknown | `String?` | `Optional` |
+    | textStyle | Unknown | `TextStyle?` | `Optional` |
+    | icon | Unknown | `ButtonIcon?` | `Optional` |
+    | iconSize | Unknown | `Size?` | `Optional` |
+    | iconTextSpacing | Unknown | `double?` | `Optional` |
+    | verticalLayout | Unknown | `bool` | `true` |
+    | buttonSize | Unknown | `Size?` | `Optional` |
+    | borderRadius | Unknown | `double?` | `Optional` |
+    | margin | Unknown | `EdgeInsetsGeometry?` | `Optional` |
+    | padding | Unknown | `EdgeInsetsGeometry?` | `Optional` |
+    | Function | Unknown | `Future<bool>` | `Optional` |
+    | Function | Unknown | `void` | `Optional` |
+    | networkLoadingConfig | Unknown | `ZegoNetworkLoadingConfig?` | `Optional` |
+    | clickableTextColor | Unknown | `Color?` | `Optional` |
+    | unclickableTextColor | Unknown | `Color?` | `Optional` |
+    | clickableBackgroundColor | Unknown | `Color?` | `Optional` |
+    | unclickableBackgroundColor | Unknown | `Color?` | `Optional` |
   - example
 
     ```dart
@@ -5403,25 +5403,25 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | key | Parameter key | `Key?` | `Optional` |
-    | inviterID | Parameter inviterID | `String` | `Required` |
-    | isAdvancedMode | Parameter isAdvancedMode | `bool` | `false` |
+    | key | Unknown | `Key?` | `Optional` |
+    | inviterID | Unknown | `String` | `Required` |
+    | isAdvancedMode | Unknown | `bool` | `false` |
     | customData | Parameter customData | `String` | `` |
-    | targetInvitationID | Parameter targetInvitationID | `String?` | `Optional` |
-    | text | Parameter text | `String?` | `Optional` |
-    | textStyle | Parameter textStyle | `TextStyle?` | `Optional` |
-    | icon | Parameter icon | `ButtonIcon?` | `Optional` |
-    | iconSize | Parameter iconSize | `Size?` | `Optional` |
-    | buttonSize | Parameter buttonSize | `Size?` | `Optional` |
-    | iconTextSpacing | Parameter iconTextSpacing | `double?` | `Optional` |
-    | verticalLayout | Parameter verticalLayout | `bool` | `true` |
-    | Function | Parameter Function | `void` | `Optional` |
-    | Function | Parameter Function | `void` | `Optional` |
-    | networkLoadingConfig | Parameter networkLoadingConfig | `ZegoNetworkLoadingConfig?` | `Optional` |
-    | clickableTextColor | Parameter clickableTextColor | `Color?` | `Optional` |
-    | unclickableTextColor | Parameter unclickableTextColor | `Color?` | `Optional` |
-    | clickableBackgroundColor | Parameter clickableBackgroundColor | `Color?` | `Optional` |
-    | unclickableBackgroundColor | Parameter unclickableBackgroundColor | `Color?` | `Optional` |
+    | targetInvitationID | Unknown | `String?` | `Optional` |
+    | text | Unknown | `String?` | `Optional` |
+    | textStyle | Unknown | `TextStyle?` | `Optional` |
+    | icon | Unknown | `ButtonIcon?` | `Optional` |
+    | iconSize | Unknown | `Size?` | `Optional` |
+    | buttonSize | Unknown | `Size?` | `Optional` |
+    | iconTextSpacing | Unknown | `double?` | `Optional` |
+    | verticalLayout | Unknown | `bool` | `true` |
+    | Function | Unknown | `void` | `Optional` |
+    | Function | Unknown | `void` | `Optional` |
+    | networkLoadingConfig | Unknown | `ZegoNetworkLoadingConfig?` | `Optional` |
+    | clickableTextColor | Unknown | `Color?` | `Optional` |
+    | unclickableTextColor | Unknown | `Color?` | `Optional` |
+    | clickableBackgroundColor | Unknown | `Color?` | `Optional` |
+    | unclickableBackgroundColor | Unknown | `Color?` | `Optional` |
   - example
 
     ```dart
@@ -5463,25 +5463,25 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | key | Parameter key | `Key?` | `Optional` |
-    | inviterID | Parameter inviterID | `String` | `Required` |
+    | key | Unknown | `Key?` | `Optional` |
+    | inviterID | Unknown | `String` | `Required` |
     | data | Parameter data | `String` | `` |
-    | isAdvancedMode | Parameter isAdvancedMode | `bool` | `false` |
-    | targetInvitationID | Parameter targetInvitationID | `String?` | `Optional` |
-    | text | Parameter text | `String?` | `Optional` |
-    | textStyle | Parameter textStyle | `TextStyle?` | `Optional` |
-    | icon | Parameter icon | `ButtonIcon?` | `Optional` |
-    | iconSize | Parameter iconSize | `Size?` | `Optional` |
-    | buttonSize | Parameter buttonSize | `Size?` | `Optional` |
-    | iconTextSpacing | Parameter iconTextSpacing | `double?` | `Optional` |
-    | verticalLayout | Parameter verticalLayout | `bool` | `true` |
-    | Function | Parameter Function | `void` | `Optional` |
-    | Function | Parameter Function | `void` | `Optional` |
-    | networkLoadingConfig | Parameter networkLoadingConfig | `ZegoNetworkLoadingConfig?` | `Optional` |
-    | clickableTextColor | Parameter clickableTextColor | `Color?` | `Optional` |
-    | unclickableTextColor | Parameter unclickableTextColor | `Color?` | `Optional` |
-    | clickableBackgroundColor | Parameter clickableBackgroundColor | `Color?` | `Optional` |
-    | unclickableBackgroundColor | Parameter unclickableBackgroundColor | `Color?` | `Optional` |
+    | isAdvancedMode | Unknown | `bool` | `false` |
+    | targetInvitationID | Unknown | `String?` | `Optional` |
+    | text | Unknown | `String?` | `Optional` |
+    | textStyle | Unknown | `TextStyle?` | `Optional` |
+    | icon | Unknown | `ButtonIcon?` | `Optional` |
+    | iconSize | Unknown | `Size?` | `Optional` |
+    | buttonSize | Unknown | `Size?` | `Optional` |
+    | iconTextSpacing | Unknown | `double?` | `Optional` |
+    | verticalLayout | Unknown | `bool` | `true` |
+    | Function | Unknown | `void` | `Optional` |
+    | Function | Unknown | `void` | `Optional` |
+    | networkLoadingConfig | Unknown | `ZegoNetworkLoadingConfig?` | `Optional` |
+    | clickableTextColor | Unknown | `Color?` | `Optional` |
+    | unclickableTextColor | Unknown | `Color?` | `Optional` |
+    | clickableBackgroundColor | Unknown | `Color?` | `Optional` |
+    | unclickableBackgroundColor | Unknown | `Color?` | `Optional` |
   - example
 
     ```dart
@@ -5523,25 +5523,25 @@ The signaling plugin implementation. Access it via `ZegoUIKitSignalingPluginImpl
   - parameters
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
-    | key | Parameter key | `Key?` | `Optional` |
-    | invitees | Parameter invitees | `List<String>` | `Required` |
+    | key | Unknown | `Key?` | `Optional` |
+    | invitees | Unknown | `List<String>` | `Required` |
     | data | Parameter data | `String` | `` |
-    | isAdvancedMode | Parameter isAdvancedMode | `bool` | `false` |
-    | targetInvitationID | Parameter targetInvitationID | `String?` | `Optional` |
-    | text | Parameter text | `String?` | `Optional` |
-    | textStyle | Parameter textStyle | `TextStyle?` | `Optional` |
-    | icon | Parameter icon | `ButtonIcon?` | `Optional` |
-    | iconSize | Parameter iconSize | `Size?` | `Optional` |
-    | buttonSize | Parameter buttonSize | `Size?` | `Optional` |
-    | iconTextSpacing | Parameter iconTextSpacing | `double?` | `Optional` |
-    | verticalLayout | Parameter verticalLayout | `bool` | `true` |
-    | Function | Parameter Function | `void` | `Optional` |
-    | Function | Parameter Function | `void` | `Optional` |
-    | networkLoadingConfig | Parameter networkLoadingConfig | `ZegoNetworkLoadingConfig?` | `Optional` |
-    | clickableTextColor | Parameter clickableTextColor | `Color?` | `Optional` |
-    | unclickableTextColor | Parameter unclickableTextColor | `Color?` | `Optional` |
-    | clickableBackgroundColor | Parameter clickableBackgroundColor | `Color?` | `Optional` |
-    | unclickableBackgroundColor | Parameter unclickableBackgroundColor | `Color?` | `Optional` |
+    | isAdvancedMode | Unknown | `bool` | `false` |
+    | targetInvitationID | Unknown | `String?` | `Optional` |
+    | text | Unknown | `String?` | `Optional` |
+    | textStyle | Unknown | `TextStyle?` | `Optional` |
+    | icon | Unknown | `ButtonIcon?` | `Optional` |
+    | iconSize | Unknown | `Size?` | `Optional` |
+    | buttonSize | Unknown | `Size?` | `Optional` |
+    | iconTextSpacing | Unknown | `double?` | `Optional` |
+    | verticalLayout | Unknown | `bool` | `true` |
+    | Function | Unknown | `void` | `Optional` |
+    | Function | Unknown | `void` | `Optional` |
+    | networkLoadingConfig | Unknown | `ZegoNetworkLoadingConfig?` | `Optional` |
+    | clickableTextColor | Unknown | `Color?` | `Optional` |
+    | unclickableTextColor | Unknown | `Color?` | `Optional` |
+    | clickableBackgroundColor | Unknown | `Color?` | `Optional` |
+    | unclickableBackgroundColor | Unknown | `Color?` | `Optional` |
   - example
 
     ```dart

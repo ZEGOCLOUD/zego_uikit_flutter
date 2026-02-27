@@ -43,8 +43,10 @@ typedef ZegoAudioVideoViewFilter = List<ZegoUIKitUser> Function(
 enum ZegoViewBuilderMapExtraInfoKey {
   /// Whether the view is for screen sharing.
   isScreenSharingView,
+
   /// Whether the view is in fullscreen mode.
   isFullscreen,
+
   /// Whether the view is a virtual user (AI agent).
   isVirtualUser,
 }
@@ -53,8 +55,10 @@ enum ZegoViewBuilderMapExtraInfoKey {
 enum ZegoShowToggleFullscreenButtonMode {
   /// Show button when screen is pressed.
   showWhenScreenPressed,
+
   /// Always show the button.
   alwaysShow,
+
   /// Always hide the button.
   alwaysHide,
 }

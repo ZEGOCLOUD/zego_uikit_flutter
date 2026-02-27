@@ -231,7 +231,7 @@ class ZegoUIKitHallRoomListModelDelegate {
   /// Represents the room that is currently being viewed or focused on in the hall list,
   /// serving as the anchor point for sliding interactions.
   ///
-  /// The active host information of the initial state, which is '0' in [0,1,2,...]
+  /// The active host information of the initial state, which is `0` in `0,1,2,...`
   final ZegoUIKitHallRoomListStreamUser activeRoom;
 
   /// Adjacent room data context relative to [activeRoom]
@@ -240,7 +240,7 @@ class ZegoUIKitHallRoomListModelDelegate {
   /// supporting sliding switching functionality in the hall list.
   ///
   /// The **next** host information and the **previous** host information of the [activeRoom],
-  /// which **next** is '9' and **previous** is '2' in [0,1,2,...,9] and '0' is [activeRoom]
+  /// which **next** is `9` and **previous** is `2` in `0,1,2,...,9` and `0` is [activeRoom]
   final ZegoUIKitHallRoomListSlideContext activeContext;
 
   ///  When the sliding page is updated, the **next** and **previous** host information of the current page will be obtained through this

@@ -14,6 +14,16 @@ class ZegoUIKitHallRoomListStreamUser {
   /// stream is playing or not
   bool isPlaying = false;
 
+  /// stream type, main or aux
+  /// if stream user is in PK, please set it to aux
+  ///
+  /// [ZegoStreamType.main] uses the Main channel (ZegoPublishChannel.Main),
+  ///
+  /// while [ZegoStreamType.media], [ZegoStreamType.screenSharing], and [ZegoStreamType.mix]
+  /// use the Aux channel (ZegoPublishChannel.Aux).
+  ///
+  /// In PK scenarios, set this to a non-main type
+  /// to pull the auxiliary stream from the opposing room.
   ZegoStreamType streamType = ZegoStreamType.main;
 
   ZegoUIKitHallRoomListStreamUser({

@@ -17,8 +17,10 @@ import 'package:zego_uikit/src/services/services.dart';
 enum AudioVideoViewFullScreeMode {
   /// Not in fullscreen mode.
   none,
+
   /// Normal fullscreen mode.
   normal,
+
   /// Auto orientation fullscreen mode.
   autoOrientation,
 }

@@ -12,7 +12,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 ///
 /// You can directly specify the file to be played using [filePathOrURL].
 ///
-/// If you want to specify the allowed formats, you can set them using [allowedExtensions].
+/// If you want to specify the allowed formats, you can set them using `ZegoUIKitMediaPlayerConfig.allowedExtensions`.
 /// Currently, for video, we support "avi", "flv", "mkv", "mov", "mp4", "mpeg", "webm", "wmv".
 /// For audio, we support "aac", "midi", "mp3", "ogg", "wav".
 class ZegoUIKitMediaPlayer extends StatefulWidget {

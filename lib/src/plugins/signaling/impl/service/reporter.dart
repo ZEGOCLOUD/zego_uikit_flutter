@@ -4,7 +4,7 @@ class ZegoUIKitSignalingReporter {
 
   static String eventKeyInviter = "inviter";
 
-  ///  List of invited multi-user IDs, array in JSON format, for example ['user1', 'user2', 'user3']
+  ///  List of invited multi-user IDs, array in JSON format, for example `['user1', 'user2', 'user3']`
   static String eventKeyInvitees = "invitees";
   static String eventKeyInviteesCount = "count";
 

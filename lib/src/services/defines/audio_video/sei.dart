@@ -5,8 +5,10 @@ import 'stream_type.dart';
 enum ZegoUIKitInnerSEIType {
   /// Mixer device state.
   mixerDeviceState,
+
   /// Media sync information.
   mediaSyncInfo,
+
   /// Custom SEI data.
   custom,
 }
