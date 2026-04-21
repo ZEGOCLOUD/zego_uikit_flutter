@@ -10,6 +10,9 @@ mixin ZegoUIKitCoreDataUser {
 
   final List<ZegoUIKitCoreUser> remoteUsersList = [];
 
+  /// 缓存已从房间中删除的用户，用于在用户重新加入时进行识别和清理
+  final List<ZegoUIKitCoreUser> leaveUsersList = [];
+
   StreamController<List<ZegoUIKitCoreUser>>? get userJoinStreamCtrl {
     _userJoinStreamCtrl ??=
         StreamController<List<ZegoUIKitCoreUser>>.broadcast();

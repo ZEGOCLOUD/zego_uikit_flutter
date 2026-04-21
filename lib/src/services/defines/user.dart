@@ -98,6 +98,13 @@ class ZegoUIKitUser {
         '}';
   }
 
+  String toShortString() {
+    return '{'
+        'id:$id, '
+        'name:$name, '
+        '}';
+  }
+
   String toMoreString() {
     return '{'
         'id:$id, '

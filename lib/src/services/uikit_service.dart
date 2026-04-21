@@ -20,6 +20,7 @@ import 'package:zego_uikit/src/plugins/signaling/impl/core/core.dart';
 import 'package:zego_uikit/src/services/defines/defines.dart';
 import 'package:zego_uikit/src/services/internal/internal.dart';
 import 'package:zego_uikit/src/services/internal/log_exporter/logs_share_manager.dart';
+import 'package:zego_uikit/src/services/user_cache.dart';
 
 part 'audio_video_service.dart';
 

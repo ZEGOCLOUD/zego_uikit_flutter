@@ -89,7 +89,7 @@ class ZegoUIKitCore
     if (isInit) {
       ZegoLoggerService.logWarn(
         'had init',
-        tag: 'uikit-service-core',
+        tag: 'uikit-service-core($hashCode)',
         subTag: 'init',
       );
 
@@ -101,7 +101,7 @@ class ZegoUIKitCore
           'had init now, just update next params: '
           'playingStreamInPIPUnderIOS:$playingStreamInPIPUnderIOS, '
           'enablePlatformView:$enablePlatformView, ',
-          tag: 'uikit-service-core',
+          tag: 'uikit-service-core($hashCode)',
           subTag: 'init',
         );
       }
@@ -117,7 +117,7 @@ class ZegoUIKitCore
       'playingStreamInPIPUnderIOS:$playingStreamInPIPUnderIOS, '
       'enablePlatformView:$enablePlatformView, '
       'scenario:$scenario, ',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'init',
     );
 
@@ -144,7 +144,7 @@ class ZegoUIKitCore
     ZegoLoggerService.logInfo(
       'create engine with profile,'
       'withoutCreateEngine:$withoutCreateEngine, ',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'init',
     );
     if (withoutCreateEngine) {
@@ -162,7 +162,7 @@ class ZegoUIKitCore
         ).then((value) {
           ZegoLoggerService.logInfo(
             'engine created',
-            tag: 'uikit-service-core',
+            tag: 'uikit-service-core($hashCode)',
             subTag: 'init',
           );
         });
@@ -173,7 +173,7 @@ class ZegoUIKitCore
         ZegoLoggerService.logInfo(
           'engine error:$e, '
           'app sign:$appSign, ',
-          tag: 'uikit-service-core',
+          tag: 'uikit-service-core($hashCode)',
           subTag: 'init',
         );
 
@@ -200,7 +200,7 @@ class ZegoUIKitCore
 
     ZegoLoggerService.logInfo(
       'get network time info',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'init',
     );
     await ZegoExpressEngine.instance.getNetworkTimeInfo().then((timeInfo) {
@@ -208,7 +208,7 @@ class ZegoUIKitCore
 
       ZegoLoggerService.logInfo(
         'network time info is init, timestamp:${timeInfo.timestamp}, max deviation:${timeInfo.maxDeviation}',
-        tag: 'uikit-service-core',
+        tag: 'uikit-service-core($hashCode)',
         subTag: 'init',
       );
     });
@@ -227,7 +227,7 @@ class ZegoUIKitCore
     if (!isInit) {
       ZegoLoggerService.logWarn(
         'is not init',
-        tag: 'uikit-service-core',
+        tag: 'uikit-service-core($hashCode)',
         subTag: 'uninit',
       );
       return;
@@ -237,7 +237,7 @@ class ZegoUIKitCore
 
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'uninit',
     );
 
@@ -262,7 +262,7 @@ class ZegoUIKitCore
   Future<void> setAdvanceConfigs(Map<String, String> configs) async {
     ZegoLoggerService.logInfo(
       'configs:$configs',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'set advance configs',
     );
 
@@ -279,7 +279,7 @@ class ZegoUIKitCore
   void initEventHandle() {
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'init event handle',
     );
 
@@ -293,7 +293,7 @@ class ZegoUIKitCore
   void uninitEventHandle() {
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'uninit event handle',
     );
 
@@ -870,7 +870,7 @@ class ZegoUIKitCore
 
     ZegoLoggerService.logInfo(
       'mode: $mode',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'set audio video resource mode',
     );
   }
@@ -880,7 +880,7 @@ class ZegoUIKitCore
 
     ZegoLoggerService.logInfo(
       'value: $value',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'enableSyncDeviceStatusByStreamExtraInfo',
     );
   }
@@ -932,7 +932,7 @@ class ZegoUIKitCore
     if (!isInit) {
       ZegoLoggerService.logError(
         'core had not init',
-        tag: 'uikit-service-core',
+        tag: 'uikit-service-core($hashCode)',
         subTag: 'set audio route to speaker:$useSpeaker',
       );
 
@@ -951,7 +951,7 @@ class ZegoUIKitCore
       if (ZegoUIKitAudioRoute.speaker == coreData.localUser.audioRoute.value) {
         ZegoLoggerService.logInfo(
           'already ${useSpeaker ? 'use' : 'not use'}',
-          tag: 'uikit-service-core',
+          tag: 'uikit-service-core($hashCode)',
           subTag: 'set audio route to speaker:$useSpeaker',
         );
 
@@ -962,7 +962,7 @@ class ZegoUIKitCore
           coreData.localUser.audioRoute.value) {
         ZegoLoggerService.logWarn(
           'Currently using headphone, cannot be set as speaker.',
-          tag: 'uikit-service-core',
+          tag: 'uikit-service-core($hashCode)',
           subTag: 'set audio route to speaker:$useSpeaker',
         );
 
@@ -973,7 +973,7 @@ class ZegoUIKitCore
     ZegoLoggerService.logInfo(
       'target is speaker:$useSpeaker, '
       'current audio route is:${coreData.localUser.audioRoute.value}, ',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'set audio route to speaker:$useSpeaker',
     );
     ZegoExpressEngine.instance.setAudioRouteToSpeaker(useSpeaker);
@@ -989,7 +989,7 @@ class ZegoUIKitCore
     }
     ZegoLoggerService.logInfo(
       'now audio route is:${coreData.localUser.audioRoute.value}',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'set audio route to speaker:$useSpeaker',
     );
 
@@ -1368,7 +1368,7 @@ class ZegoUIKitCore
     } else {
       ZegoLoggerService.logInfo(
         'orientation:$orientation',
-        tag: 'uikit-service-core',
+        tag: 'uikit-service-core($hashCode)',
         subTag: 'update app orientation',
       );
 
@@ -1423,7 +1423,7 @@ class ZegoUIKitCore
   ) {
     ZegoLoggerService.logInfo(
       'on map custom command received, from user:${commandData.fromUser}, command:${commandData.command}',
-      tag: 'uikit-service-core',
+      tag: 'uikit-service-core($hashCode)',
       subTag: 'custom command',
     );
 
@@ -1433,7 +1433,7 @@ class ZegoUIKitCore
     } catch (e) {
       ZegoLoggerService.logInfo(
         'custom command is not a json, $e',
-        tag: 'uikit-service-core',
+        tag: 'uikit-service-core($hashCode)',
         subTag: 'custom command',
       );
     }
@@ -1441,7 +1441,7 @@ class ZegoUIKitCore
     if (commandJson is! Map<String, dynamic>) {
       ZegoLoggerService.logInfo(
         'custom command is not a map',
-        tag: 'uikit-service-core',
+        tag: 'uikit-service-core($hashCode)',
         subTag: 'custom command',
       );
       return;
@@ -1463,7 +1463,7 @@ class ZegoUIKitCore
       if (selfKickedOut) {
         ZegoLoggerService.logInfo(
           'local user had been remove by ${commandData.fromUser.id}, auto leave room',
-          tag: 'uikit-service-core',
+          tag: 'uikit-service-core($hashCode)',
           subTag: 'custom command',
         );
         leaveRoom();
@@ -1475,7 +1475,7 @@ class ZegoUIKitCore
             coreData.localUser.id) {
       ZegoLoggerService.logInfo(
         'local camera request turn on by ${commandData.fromUser}',
-        tag: 'uikit-service-core',
+        tag: 'uikit-service-core($hashCode)',
         subTag: 'custom command',
       );
       coreData.turnOnYourCameraRequestStreamCtrl?.add(commandData.fromUser.id);
@@ -1484,7 +1484,7 @@ class ZegoUIKitCore
             coreData.localUser.id) {
       ZegoLoggerService.logInfo(
         'local camera request turn off by ${commandData.fromUser}',
-        tag: 'uikit-service-core',
+        tag: 'uikit-service-core($hashCode)',
         subTag: 'custom command',
       );
       turnCameraOn(coreData.localUser.id, false);
@@ -1497,7 +1497,7 @@ class ZegoUIKitCore
       if (userID == coreData.localUser.id) {
         ZegoLoggerService.logInfo(
           'local microphone request turn on by ${commandData.fromUser}',
-          tag: 'uikit-service-core',
+          tag: 'uikit-service-core($hashCode)',
           subTag: 'custom command',
         );
 
@@ -1525,7 +1525,7 @@ class ZegoUIKitCore
       if (userID == coreData.localUser.id) {
         ZegoLoggerService.logInfo(
           'local microphone request turn off by ${commandData.fromUser}',
-          tag: 'uikit-service-core',
+          tag: 'uikit-service-core($hashCode)',
           subTag: 'custom command',
         );
         turnMicrophoneOn(coreData.localUser.id, false, muteMode: muteMode);
@@ -1538,7 +1538,7 @@ class ZegoUIKitCore
 
         ZegoLoggerService.logInfo(
           'clear local message(type:$messageType) by ${commandData.fromUser}',
-          tag: 'uikit-service-core',
+          tag: 'uikit-service-core($hashCode)',
           subTag: 'custom command',
         );
 

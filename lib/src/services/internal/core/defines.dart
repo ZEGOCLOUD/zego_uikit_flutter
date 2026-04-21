@@ -296,6 +296,25 @@ class ZegoUIKitCoreUser {
 
   ZegoUser toZegoUser() => ZegoUser(id, name);
 
+  /// 将用户信息序列化为 Map
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'isAnotherRoomUser': isAnotherRoomUser,
+    };
+  }
+
+  /// 从 Map 反序列化为用户对象
+  factory ZegoUIKitCoreUser.fromJson(Map<String, dynamic> json) {
+    final user = ZegoUIKitCoreUser(
+      json['id'] as String? ?? '',
+      json['name'] as String? ?? '',
+    );
+    user.isAnotherRoomUser = json['isAnotherRoomUser'] as bool? ?? false;
+    return user;
+  }
+
   @override
   String toString() {
     return 'id:$id, name:$name';

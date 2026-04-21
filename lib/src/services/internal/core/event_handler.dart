@@ -15,6 +15,7 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/internal/core/data/stream.dart';
 import 'package:zego_uikit/src/services/internal/internal.dart';
 import 'package:zego_uikit/src/services/services.dart';
+import 'package:zego_uikit/src/services/user_cache.dart';
 
 /// @nodoc
 mixin ZegoUIKitCoreEventHandler {
@@ -199,7 +200,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     String roomID,
     ZegoUpdateType updateType,
     List<ZegoUser> userList,
-  ) {
+  ) async {
     ZegoLoggerService.logInfo(
       'onRoomUserUpdate, room id:"$roomID", update type:$updateType'
       "user list:${userList.map((user) => '"${user.userID}":${user.userName}, ')}",
@@ -208,7 +209,46 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     );
 
     if (updateType == ZegoUpdateType.Add) {
+      // 如果 leaveUsersList 为空，尝试从缓存加载
+      if (coreData.leaveUsersList.isEmpty) {
+        final cachedUserIDs =
+            await ZegoUIKitUserCache().getLeaveUsers(roomID);
+        if (cachedUserIDs.isNotEmpty) {
+          for (final userID in cachedUserIDs) {
+            final user = userList.firstWhere(
+              (u) => u.userID == userID,
+              orElse: () => ZegoUser(userID, ''),
+            );
+            coreData.leaveUsersList.add(
+              ZegoUIKitCoreUser.fromZego(user),
+            );
+          }
+          ZegoLoggerService.logInfo(
+            'loaded ${cachedUserIDs.length} leave users from cache',
+            tag: 'uikit-service-core',
+            subTag: 'event',
+          );
+        }
+      }
+
       for (final user in userList) {
+        // 先从 leaveUsersList 中移除该用户（如果存在）
+        final deletedUserIndex =
+            coreData.leaveUsersList.indexWhere((e) => user.userID == e.id);
+        if (-1 != deletedUserIndex) {
+          coreData.leaveUsersList.removeAt(deletedUserIndex);
+          ZegoLoggerService.logInfo(
+            'user ${user.userID} removed from leaveUsersList, may have re-joined',
+            tag: 'uikit-service-core',
+            subTag: 'event',
+          );
+          // 同步保存到缓存
+          await ZegoUIKitUserCache().setLeaveUsers(
+            roomID,
+            coreData.leaveUsersList.map((e) => e.id).toList(),
+          );
+        }
+
         final targetUserIndex =
             coreData.remoteUsersList.indexWhere((e) => user.userID == e.id);
         if (-1 != targetUserIndex) {
@@ -233,6 +273,21 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       );
     } else {
       for (final user in userList) {
+        // 将被删除的用户添加到 leaveUsersList 缓存中
+        final deletedUser = ZegoUIKitCoreUser.fromZego(user);
+        coreData.leaveUsersList.add(deletedUser);
+        ZegoLoggerService.logInfo(
+          'user ${user.userID} added to leaveUsersList',
+          tag: 'uikit-service-core',
+          subTag: 'event',
+        );
+
+        // 同步保存到缓存
+        await ZegoUIKitUserCache().setLeaveUsers(
+          roomID,
+          coreData.leaveUsersList.map((e) => e.id).toList(),
+        );
+
         coreData.removeUser(user.userID);
       }
 
