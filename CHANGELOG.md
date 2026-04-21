@@ -1,3 +1,8 @@
+## 2.28.45
+
+- Features
+    - Add support for room leaving user cache
+
 ## 2.28.44
 
 - Bugs
