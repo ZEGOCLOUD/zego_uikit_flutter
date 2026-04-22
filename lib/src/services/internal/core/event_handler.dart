@@ -120,7 +120,38 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     );
 
     if (updateType == ZegoUpdateType.Add) {
+      // 如果缓存中有删除的流ID，说明该流之前被删除了，现在重新出现
+      final deletedStreamIDs =
+          await ZegoUIKitCache().getDeletedStreamIDs(roomID);
+      // 获取删除流所属的用户ID列表
+      final deletedStreamUserIDs =
+          await ZegoUIKitCache().getDeletedStreamUserIDs(roomID);
+
       for (final stream in streamList) {
+        // 检查该流是否之前被删除过
+        if (deletedStreamIDs.contains(stream.streamID)) {
+          ZegoLoggerService.logInfo(
+            'stream ${stream.streamID} was previously deleted, removing from deleted list',
+            tag: 'uikit-service-core',
+            subTag: 'event',
+          );
+          deletedStreamIDs.remove(stream.streamID);
+          // 同步更新缓存
+          await ZegoUIKitCache().setDeletedStreamIDs(roomID, deletedStreamIDs);
+        }
+
+        // 检查该流所属用户是否之前被删除过
+        if (deletedStreamUserIDs.contains(stream.user.userID)) {
+          ZegoLoggerService.logInfo(
+            'stream user ${stream.user.userID} was previously deleted, removing from deleted list',
+            tag: 'uikit-service-core',
+            subTag: 'event',
+          );
+          deletedStreamUserIDs.remove(stream.user.userID);
+          // 同步更新缓存
+          await ZegoUIKitCache().setDeletedStreamUserIDs(roomID, deletedStreamUserIDs);
+        }
+
         coreData.streamDic[stream.streamID] = ZegoUIKitCoreDataStreamData(
           userID: stream.user.userID,
           playerState: ZegoPlayerState.NoPlay,
@@ -170,9 +201,32 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
       onRoomStreamExtraInfoUpdate(roomID, streamList);
     } else {
+      // 将删除的流ID和流所属用户ID保存到缓存
+      final deletedStreamIDs =
+          await ZegoUIKitCache().getDeletedStreamIDs(roomID);
+      final deletedStreamUserIDs =
+          await ZegoUIKitCache().getDeletedStreamUserIDs(roomID);
       for (final stream in streamList) {
+        if (!deletedStreamIDs.contains(stream.streamID)) {
+          deletedStreamIDs.add(stream.streamID);
+          ZegoLoggerService.logInfo(
+            'stream ${stream.streamID} added to deleted streams cache',
+            tag: 'uikit-service-core',
+            subTag: 'event',
+          );
+        }
+        if (!deletedStreamUserIDs.contains(stream.user.userID)) {
+          deletedStreamUserIDs.add(stream.user.userID);
+          ZegoLoggerService.logInfo(
+            'stream user ${stream.user.userID} added to deleted stream users cache',
+            tag: 'uikit-service-core',
+            subTag: 'event',
+          );
+        }
         coreData.stopPlayingStream(stream.streamID);
       }
+      await ZegoUIKitCache().setDeletedStreamIDs(roomID, deletedStreamIDs);
+      await ZegoUIKitCache().setDeletedStreamUserIDs(roomID, deletedStreamUserIDs);
     }
 
     final streamIDs = streamList.map((e) => e.streamID).toList();
@@ -212,7 +266,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
       // 如果 leaveUsersList 为空，尝试从缓存加载
       if (coreData.leaveUsersList.isEmpty) {
         final cachedUserIDs =
-            await ZegoUIKitUserCache().getLeaveUsers(roomID);
+            await ZegoUIKitCache().getLeaveUsers(roomID);
         if (cachedUserIDs.isNotEmpty) {
           for (final userID in cachedUserIDs) {
             final user = userList.firstWhere(
@@ -243,7 +297,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
             subTag: 'event',
           );
           // 同步保存到缓存
-          await ZegoUIKitUserCache().setLeaveUsers(
+          await ZegoUIKitCache().setLeaveUsers(
             roomID,
             coreData.leaveUsersList.map((e) => e.id).toList(),
           );
@@ -283,7 +337,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         );
 
         // 同步保存到缓存
-        await ZegoUIKitUserCache().setLeaveUsers(
+        await ZegoUIKitCache().setLeaveUsers(
           roomID,
           coreData.leaveUsersList.map((e) => e.id).toList(),
         );

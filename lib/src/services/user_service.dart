@@ -49,13 +49,24 @@ mixin ZegoUserService {
 
   /// get leave users cache for the specified room
   Future<List<ZegoUIKitUser>> getLeaveUsersCache(String roomID) async {
-    final userIDs = await ZegoUIKitUserCache().getLeaveUsers(roomID);
+    final userIDs = await ZegoUIKitCache().getLeaveUsers(roomID);
     return userIDs.map((id) => ZegoUIKitUser(id: id, name: '')).toList();
   }
 
   /// clear leave users cache for the specified room
   Future<void> clearLeaveUsersCache(String roomID) async {
-    await ZegoUIKitUserCache().clearLeaveUsers(roomID);
+    await ZegoUIKitCache().clearLeaveUsers(roomID);
+  }
+
+  /// get deleted stream user IDs cache for the specified room
+  Future<List<ZegoUIKitUser>> getDeletedStreamUserIDs(String roomID) async {
+    final userIDs = await ZegoUIKitCache().getDeletedStreamUserIDs(roomID);
+    return userIDs.map((id) => ZegoUIKitUser(id: id, name: '')).toList();
+  }
+
+  /// clear deleted stream user IDs cache for the specified room
+  Future<void> clearDeletedStreamUserIDs(String roomID) async {
+    await ZegoUIKitCache().clearDeletedStreamUserIDs(roomID);
   }
 
   /// get user by user id
