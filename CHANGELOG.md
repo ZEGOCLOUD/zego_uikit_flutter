@@ -1,7 +1,12 @@
+## 2.29.1
+
+- Bugs
+    - Fixed the issue where dragging the small view in Picture-in-Picture (1-on-1) layout with two fingers produced two small windows simultaneously. The underlying `Draggable` widget is replaced with a single-pointer `Listener`-based implementation that only tracks the first pointer and ignores additional pointers.
+
 ## 2.29.0
 
 - Features
-    - Add audio 3A configuration APIs 
+    - Add audio 3A configuration APIs
         - enableAEC
         - enableHeadphoneAEC
         - setAECMode

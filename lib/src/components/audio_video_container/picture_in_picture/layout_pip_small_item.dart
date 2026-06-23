@@ -173,19 +173,22 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
       return child;
     }
 
-    return Draggable(
+    return _ZegoSinglePointerDraggable(
       feedback: child,
-      childWhenDragging: Container(),
-      onDraggableCanceled: (Velocity velocity, Offset offset) {
-        /// drag finished, update current position
+      childWhenDragging: const SizedBox.shrink(),
+      onDragEnd: (Offset globalPosition) {
+        /// drag finished, update current position based on final pointer pos
         final size = MediaQuery.of(context).size;
         late ZegoViewPosition targetPosition;
         final centerPos = Offset(size.width / 2, size.height / 2);
-        if (offset.dx < centerPos.dx && offset.dy < centerPos.dy) {
+        if (globalPosition.dx < centerPos.dx &&
+            globalPosition.dy < centerPos.dy) {
           targetPosition = ZegoViewPosition.topLeft;
-        } else if (offset.dx >= centerPos.dx && offset.dy < centerPos.dy) {
+        } else if (globalPosition.dx >= centerPos.dx &&
+            globalPosition.dy < centerPos.dy) {
           targetPosition = ZegoViewPosition.topRight;
-        } else if (offset.dx < centerPos.dx && offset.dy >= centerPos.dy) {
+        } else if (globalPosition.dx < centerPos.dx &&
+            globalPosition.dy >= centerPos.dy) {
           targetPosition = ZegoViewPosition.bottomLeft;
         } else {
           targetPosition = ZegoViewPosition.bottomRight;
@@ -198,6 +201,114 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
         }
       },
       child: child,
+    );
+  }
+}
+
+/// A `Draggable`-like widget that only tracks the FIRST pointer down and
+/// ignores any additional pointers. This avoids the multi-touch bug where
+/// dragging with two fingers on a small view produces two feedback widgets
+/// (one per pointer).
+///
+/// `feedback` is rendered in an [Overlay] anchored so the originally-grabbed
+/// point stays under the pointer as the user drags, matching the standard
+/// `Draggable` UX.
+class _ZegoSinglePointerDraggable extends StatefulWidget {
+  const _ZegoSinglePointerDraggable({
+    required this.child,
+    required this.feedback,
+    required this.childWhenDragging,
+    required this.onDragEnd,
+  });
+
+  final Widget child;
+  final Widget feedback;
+  final Widget childWhenDragging;
+
+  /// Called when the active pointer is released. `globalPosition` is the
+  /// final position of the pointer in screen coordinates.
+  final void Function(Offset globalPosition) onDragEnd;
+
+  @override
+  State<_ZegoSinglePointerDraggable> createState() =>
+      _ZegoSinglePointerDraggableState();
+}
+
+class _ZegoSinglePointerDraggableState
+    extends State<_ZegoSinglePointerDraggable> {
+  int? _activePointer;
+
+  /// Offset of the grab point within [widget.feedback], in local coordinates.
+  Offset _grabLocalOffset = Offset.zero;
+
+  /// Latest global pointer position while dragging.
+  Offset _currentGlobalPos = Offset.zero;
+
+  OverlayEntry? _overlayEntry;
+
+  void _handlePointerDown(PointerDownEvent event) {
+    // Ignore additional pointers: only the first pointer starts a drag.
+    if (_activePointer != null) {
+      return;
+    }
+
+    _activePointer = event.pointer;
+    _grabLocalOffset = event.localPosition;
+    _currentGlobalPos = event.position;
+
+    _overlayEntry = OverlayEntry(builder: (_) {
+      return Positioned(
+        left: _currentGlobalPos.dx - _grabLocalOffset.dx,
+        top: _currentGlobalPos.dy - _grabLocalOffset.dy,
+        child: IgnorePointer(
+          ignoring: true,
+          child: widget.feedback,
+        ),
+      );
+    });
+    Overlay.of(context).insert(_overlayEntry!);
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _handlePointerMove(PointerMoveEvent event) {
+    if (event.pointer != _activePointer) {
+      return;
+    }
+    _currentGlobalPos = event.position;
+    _overlayEntry?.markNeedsBuild();
+  }
+
+  void _handlePointerEnd(PointerEvent event) {
+    if (event.pointer != _activePointer) {
+      return;
+    }
+    final endPosition = event.position;
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    _activePointer = null;
+    if (mounted) {
+      setState(() {});
+      widget.onDragEnd(endPosition);
+    }
+  }
+
+  @override
+  void dispose() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: _handlePointerDown,
+      onPointerMove: _handlePointerMove,
+      onPointerUp: _handlePointerEnd,
+      onPointerCancel: _handlePointerEnd,
+      child: _activePointer == null ? widget.child : widget.childWhenDragging,
     );
   }
 }
