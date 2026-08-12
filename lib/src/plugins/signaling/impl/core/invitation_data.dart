@@ -461,7 +461,16 @@ mixin ZegoSignalingPluginCoreInvitationData {
       subTag: 'invitation data',
     );
 
-    final extendedMap = jsonDecode(event.extendedData) as Map<String, dynamic>;
+    var extendedMap = {};
+    try {
+       extendedMap = jsonDecode(event.extendedData) as Map<String, dynamic>;
+    } catch (e) {
+      ZegoLoggerService.logError(
+        'extendedData \"${event.extendedData}\" is not valid',
+        tag: 'signal',
+        subTag: 'invitation data',
+      );
+    }
 
     final invitees = <InvitationUser>[];
     try {
@@ -477,8 +486,8 @@ mixin ZegoSignalingPluginCoreInvitationData {
         invitees.add(user);
       }
     } catch (e) {
-      ZegoLoggerService.logInfo(
-        'data ${extendedMap['data']} is not a json',
+      ZegoLoggerService.logError(
+        'extendedData\'data \"${extendedMap['data']}\" is not valid',
         tag: 'signal',
         subTag: 'invitation data',
       );
