@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
@@ -1233,6 +1234,20 @@ mixin ZegoUIKitCoreDataStream {
     ZegoStreamType? streamType,
     ZegoCanvas? canvas,
   }) async {
+    // Guard: 防止 viewID 不可信（widget 已 unmount 但 Dart 侧 viewIDNotifier 仍残留）。
+    // 历史上 widget dispose() 不通知 Core 销毁 TextureRenderer，
+    // 使得 onRoomStreamUpdate 再次触发时会复用过期 viewID，
+    // Native 侧 PlatformView 已释放将抛 UPDATEPLAYINGCANVAS_NO_TEXTURERENDERER 并 crash。
+    if (viewID == -1) {
+      ZegoLoggerService.logWarn(
+        'viewID is invalid ($viewID), skip updatePlayingCanvas to avoid fatal exception. '
+        'stream id:$streamID',
+        tag: 'uikit-stream',
+        subTag: 'start play stream',
+      );
+      return;
+    }
+
     final viewMode = ZegoStreamType.main == streamType
         ? (useVideoViewAspectFill
             ? ZegoViewMode.AspectFill
@@ -1266,29 +1281,244 @@ mixin ZegoUIKitCoreDataStream {
     );
 
     if (startPlayingStreamInIOSPIP) {
-      ZegoUIKitPluginPlatform.instance
-          .updatePlayingStreamViewInPIP(viewID, streamID, viewMode.index)
-          .then((_) {
-        ZegoLoggerService.logInfo(
-          'finish update stream view/canvas in ios with pip, '
-          'stream id:$streamID, '
-          'view id:$viewID, ',
+      try {
+        await ZegoUIKitPluginPlatform.instance
+            .updatePlayingStreamViewInPIP(viewID, streamID, viewMode.index)
+            .then((_) {
+          ZegoLoggerService.logInfo(
+            'finish update stream view/canvas in ios with pip, '
+            'stream id:$streamID, '
+            'view id:$viewID, ',
+            tag: 'uikit-stream',
+            subTag: 'start play stream',
+          );
+        });
+      } on PlatformException catch (e, st) {
+        ZegoLoggerService.logError(
+          'PlatformException swallowed in updatePlayStreamViewOnViewCreated '
+          '(iOS PIP): $e\n$st. '
+          'stream id:$streamID, viewID:$viewID',
           tag: 'uikit-stream',
           subTag: 'start play stream',
         );
-      });
+        // 不 rethrow，避免升级为 fatal。
+        // 标记 viewID 失效以防下次再走相同路径。
+        _invalidateStaleViewIDForStream(streamID, streamType);
+      } catch (e, st) {
+        ZegoLoggerService.logError(
+          'Unexpected error in updatePlayStreamViewOnViewCreated '
+          '(iOS PIP): $e\n$st. '
+          'stream id:$streamID, viewID:$viewID',
+          tag: 'uikit-stream',
+          subTag: 'start play stream',
+        );
+      }
     } else {
-      await ZegoExpressEngine.instance
-          .updatePlayingCanvas(streamID, canvas)
-          .then((value) {
-        ZegoLoggerService.logInfo(
-          'finish update stream view/canvas, '
-          'stream id: $streamID, '
-          'canvas:$canvas, ',
+      try {
+        await ZegoExpressEngine.instance
+            .updatePlayingCanvas(streamID, canvas)
+            .then((value) {
+          ZegoLoggerService.logInfo(
+            'finish update stream view/canvas, '
+            'stream id: $streamID, '
+            'canvas:$canvas, ',
+            tag: 'uikit-stream',
+            subTag: 'start play stream',
+          );
+        });
+      } on PlatformException catch (e, st) {
+        ZegoLoggerService.logError(
+          'PlatformException swallowed in updatePlayStreamViewOnViewCreated: '
+          '$e\n$st. '
+          'stream id:$streamID, viewID:$viewID',
           tag: 'uikit-stream',
           subTag: 'start play stream',
         );
-      });
+        // 不 rethrow，避免升级为 fatal。
+        // 标记 viewID 失效以防下次再走相同路径。
+        _invalidateStaleViewIDForStream(streamID, streamType);
+      } catch (e, st) {
+        ZegoLoggerService.logError(
+          'Unexpected error in updatePlayStreamViewOnViewCreated: '
+          '$e\n$st. '
+          'stream id:$streamID, viewID:$viewID',
+          tag: 'uikit-stream',
+          subTag: 'start play stream',
+        );
+      }
+    }
+  }
+
+  /// 当 [updatePlayStreamViewOnViewCreated] 在 native 抛 PlatformException
+  /// 时被调用：将对应 channel 的 viewIDNotifier 重置为 -1，viewNotifier 置 null，
+  /// 并调用 destroyTextureRenderer 释放 native 资源（含幂等防护）。
+  ///
+  /// 保护目的：避免 onRoomStreamUpdate 再次触发时再次复用已失效的 viewID，
+  /// 防止 [UPDATEPLAYINGCANVAS_NO_TEXTURERENDERER] 升级为 fatal crash。
+  Future<void> _invalidateStaleViewIDForStream(
+    String streamID,
+    ZegoStreamType? streamType,
+  ) async {
+    try {
+      final streamData = streamDic[streamID];
+      final streamUserID = streamData?.userID;
+      if (streamUserID == null || streamUserID.isEmpty) {
+        ZegoLoggerService.logWarn(
+          '_invalidateStaleViewIDForStream: streamData not found for '
+          'stream id:$streamID, skip',
+          tag: 'uikit-stream',
+          subTag: 'start play stream',
+        );
+        return;
+      }
+
+      final resolvedStreamType = streamType ?? getStreamTypeByID(streamID);
+      ZegoUIKitCoreUser? targetUser;
+      if (streamUserID == ZegoUIKitCore.shared.coreData.localUser.id) {
+        targetUser = ZegoUIKitCore.shared.coreData.localUser;
+      } else {
+        final targetUserIndex = ZegoUIKitCore.shared.coreData.remoteUsersList
+            .indexWhere((user) => streamUserID == user.id);
+        if (targetUserIndex != -1) {
+          targetUser =
+              ZegoUIKitCore.shared.coreData.remoteUsersList[targetUserIndex];
+        }
+      }
+
+      if (targetUser == null) {
+        ZegoLoggerService.logWarn(
+          '_invalidateStaleViewIDForStream: target user '
+          '($streamUserID) not found, skip',
+          tag: 'uikit-stream',
+          subTag: 'start play stream',
+        );
+        return;
+      }
+
+      final channel = getUserStreamChannel(targetUser, resolvedStreamType);
+      final currentViewID = channel.viewIDNotifier.value;
+      ZegoLoggerService.logWarn(
+        '_invalidateStaleViewIDForStream: invalidating stale viewID, '
+        'stream id:$streamID, user id:$streamUserID, '
+        'viewID:$currentViewID, streamType:$resolvedStreamType',
+        tag: 'uikit-stream',
+        subTag: 'start play stream',
+      );
+
+      // 直接重置 channel 状态 + 调用 destroyTextureRenderer（已自带幂等/异常吞噬）。
+      channel.viewIDNotifier.value = -1;
+      channel.viewNotifier.value = null;
+
+      try {
+        await targetUser.destroyTextureRenderer(streamType: resolvedStreamType);
+      } catch (e, st) {
+        ZegoLoggerService.logError(
+          '_invalidateStaleViewIDForStream: destroyTextureRenderer '
+          'unexpected error: $e\n$st',
+          tag: 'uikit-stream',
+          subTag: 'start play stream',
+        );
+      }
+    } catch (e, st) {
+      ZegoLoggerService.logError(
+        '_invalidateStaleViewIDForStream unexpected error: $e\n$st. '
+        'stream id:$streamID',
+        tag: 'uikit-stream',
+        subTag: 'start play stream',
+      );
+    }
+  }
+
+  /// [ZegoAudioVideoView] / [ZegoAvatar] widget 卸载时调用，通知 Core 释放
+  /// 对应用户的 native TextureRenderer 资源，避免 [onRoomStreamUpdate] 后续触发
+  /// 时复用已失效的 viewID 导致
+  /// `PlatformException(UPDATEPLAYINGCANVAS_NO_TEXTURERENDERER)` 升级为 fatal。
+  ///
+  /// 行为约束：
+  /// - 仅在 `viewIDNotifier.value != -1` 时才走销毁路径，避免与 stream leave 路径双销毁。
+  /// - 任何异常都被吞掉并打 error 日志，绝不允许从 dispose 路径向上抛。
+  /// - main / aux channel 都会被检查，确保本地预览与屏幕共享资源均释放。
+  Future<void> onAvatarOrAudioVideoViewDisposed(String userID) async {
+    if (userID.isEmpty) {
+      return;
+    }
+
+    try {
+      ZegoUIKitCoreUser? targetUser;
+      if (userID == ZegoUIKitCore.shared.coreData.localUser.id) {
+        targetUser = ZegoUIKitCore.shared.coreData.localUser;
+      } else {
+        final targetUserIndex = ZegoUIKitCore.shared.coreData.remoteUsersList
+            .indexWhere((user) => userID == user.id);
+        if (targetUserIndex != -1) {
+          targetUser =
+              ZegoUIKitCore.shared.coreData.remoteUsersList[targetUserIndex];
+        }
+      }
+
+      if (targetUser == null) {
+        ZegoLoggerService.logInfo(
+          'onAvatarOrAudioVideoViewDisposed: user ($userID) not found, skip',
+          tag: 'uikit-stream',
+          subTag: 'audio video view',
+        );
+        return;
+      }
+
+      // main channel
+      if (targetUser.mainChannel.viewIDNotifier.value != -1) {
+        ZegoLoggerService.logInfo(
+          'onAvatarOrAudioVideoViewDisposed: releasing main channel '
+          'texture renderer for user id:$userID, '
+          'previous viewID:${targetUser.mainChannel.viewIDNotifier.value}',
+          tag: 'uikit-stream',
+          subTag: 'audio video view',
+        );
+        try {
+          await targetUser.destroyTextureRenderer(
+              streamType: ZegoStreamType.main);
+        } catch (e, st) {
+          ZegoLoggerService.logError(
+            'onAvatarOrAudioVideoViewDisposed: main channel '
+            'destroyTextureRenderer error: $e\n$st',
+            tag: 'uikit-stream',
+            subTag: 'audio video view',
+          );
+        }
+        targetUser.mainChannel.viewIDNotifier.value = -1;
+        targetUser.mainChannel.viewNotifier.value = null;
+      }
+
+      // aux channel (screen sharing / media)
+      if (targetUser.auxChannel.viewIDNotifier.value != -1) {
+        ZegoLoggerService.logInfo(
+          'onAvatarOrAudioVideoViewDisposed: releasing aux channel '
+          'texture renderer for user id:$userID, '
+          'previous viewID:${targetUser.auxChannel.viewIDNotifier.value}',
+          tag: 'uikit-stream',
+          subTag: 'audio video view',
+        );
+        try {
+          await targetUser.destroyTextureRenderer(
+              streamType: ZegoStreamType.screenSharing);
+        } catch (e, st) {
+          ZegoLoggerService.logError(
+            'onAvatarOrAudioVideoViewDisposed: aux channel '
+            'destroyTextureRenderer error: $e\n$st',
+            tag: 'uikit-stream',
+            subTag: 'audio video view',
+          );
+        }
+        targetUser.auxChannel.viewIDNotifier.value = -1;
+        targetUser.auxChannel.viewNotifier.value = null;
+      }
+    } catch (e, st) {
+      ZegoLoggerService.logError(
+        'onAvatarOrAudioVideoViewDisposed unexpected error for '
+        'user id:$userID: $e\n$st',
+        tag: 'uikit-stream',
+        subTag: 'audio video view',
+      );
     }
   }
 

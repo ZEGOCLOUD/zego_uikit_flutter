@@ -80,11 +80,39 @@ class ZegoUIKitCoreMixerStream {
 
   void destroyTextureRenderer({bool isMainStream = true}) {
     if (viewID != -1) {
-      ZegoExpressEngine.instance.destroyCanvasView(viewID);
+      try {
+        ZegoExpressEngine.instance.destroyCanvasView(viewID);
+      } on PlatformException catch (e, st) {
+        ZegoLoggerService.logError(
+          'destroyCanvasView PlatformException swallowed in '
+          'ZegoUIKitCoreMixerStream.destroyTextureRenderer: $e\n$st. '
+          'viewID:$viewID, streamID:$streamID',
+          tag: 'uikit-service-core',
+          subTag: 'core room',
+        );
+      } catch (e, st) {
+        ZegoLoggerService.logError(
+          'destroyCanvasView unexpected error in '
+          'ZegoUIKitCoreMixerStream.destroyTextureRenderer: $e\n$st. '
+          'viewID:$viewID, streamID:$streamID',
+          tag: 'uikit-service-core',
+          subTag: 'core room',
+        );
+      }
+    }
+    if (viewID != -1 || view.value != null) {
+      ZegoLoggerService.logWarn(
+        'ZegoUIKitCoreMixerStream destroyTextureRenderer resetting, '
+        'previous viewID:$viewID, '
+        'streamID:$streamID',
+        tag: 'uikit-service-core',
+        subTag: 'core room',
+      );
     }
     viewID = -1;
     view.value = null;
     soundLevels?.close();
+    soundLevels = null;
 
     userListStreamCtrl?.close();
     userListStreamCtrl = null;
@@ -272,22 +300,70 @@ class ZegoUIKitCoreUser {
     switch (streamType) {
       case ZegoStreamType.main:
         if (mainChannel.viewIDNotifier.value != -1) {
-          await ZegoExpressEngine.instance.destroyCanvasView(
-            mainChannel.viewIDNotifier.value ?? -1,
-          );
+          try {
+            await ZegoExpressEngine.instance.destroyCanvasView(
+              mainChannel.viewIDNotifier.value ?? -1,
+            );
+          } on PlatformException catch (e, st) {
+            ZegoLoggerService.logError(
+              'destroyCanvasView PlatformException swallowed in '
+              'ZegoUIKitCoreUser.destroyTextureRenderer(main): $e\n$st. '
+              'viewID:${mainChannel.viewIDNotifier.value}, userID:$id',
+              tag: 'uikit-service-core',
+              subTag: 'core room',
+            );
+          } catch (e, st) {
+            ZegoLoggerService.logError(
+              'destroyCanvasView unexpected error in '
+              'ZegoUIKitCoreUser.destroyTextureRenderer(main): $e\n$st. '
+              'viewID:${mainChannel.viewIDNotifier.value}, userID:$id',
+              tag: 'uikit-service-core',
+              subTag: 'core room',
+            );
+          }
         }
 
         mainChannel.clearViewInfo();
+        ZegoLoggerService.logWarn(
+          'ZegoUIKitCoreUser.destroyTextureRenderer reset main channel '
+          'view for user id:$id',
+          tag: 'uikit-service-core',
+          subTag: 'core room',
+        );
         break;
       case ZegoStreamType.media:
       case ZegoStreamType.screenSharing:
       case ZegoStreamType.mix:
         if (auxChannel.viewIDNotifier.value != -1) {
-          await ZegoExpressEngine.instance
-              .destroyCanvasView(auxChannel.viewIDNotifier.value ?? -1);
+          try {
+            await ZegoExpressEngine.instance
+                .destroyCanvasView(auxChannel.viewIDNotifier.value ?? -1);
+          } on PlatformException catch (e, st) {
+            ZegoLoggerService.logError(
+              'destroyCanvasView PlatformException swallowed in '
+              'ZegoUIKitCoreUser.destroyTextureRenderer(aux): $e\n$st. '
+              'viewID:${auxChannel.viewIDNotifier.value}, userID:$id',
+              tag: 'uikit-service-core',
+              subTag: 'core room',
+            );
+          } catch (e, st) {
+            ZegoLoggerService.logError(
+              'destroyCanvasView unexpected error in '
+              'ZegoUIKitCoreUser.destroyTextureRenderer(aux): $e\n$st. '
+              'viewID:${auxChannel.viewIDNotifier.value}, userID:$id',
+              tag: 'uikit-service-core',
+              subTag: 'core room',
+            );
+          }
         }
 
         auxChannel.clearViewInfo();
+        ZegoLoggerService.logWarn(
+          'ZegoUIKitCoreUser.destroyTextureRenderer reset aux channel '
+          'view for user id:$id',
+          tag: 'uikit-service-core',
+          subTag: 'core room',
+        );
         break;
     }
   }
