@@ -101,6 +101,27 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       subscription?.cancel();
     }
 
+    // notify Core that this widget is being unmounted so the underlying
+    // TextureRenderer / native view can be released before the platform view
+    // is GC'd. Without this, a subsequent `onRoomStreamUpdate` for the same
+    // stream can re-use a stale `viewIDNotifier` value, causing
+    // `PlatformException(UPDATEPLAYINGCANVAS_NO_TEXTURERENDERER)` to escalate
+    // to a fatal crash on the native side. All errors are swallowed inside
+    // Core to avoid breaking the widget tree teardown.
+    try {
+      final userID = widget.user?.id;
+      if (userID != null && userID.isNotEmpty) {
+        ZegoUIKitCore.shared.coreData.onAvatarOrAudioVideoViewDisposed(userID);
+      }
+    } catch (e, st) {
+      ZegoLoggerService.logError(
+        'dispose: onAvatarOrAudioVideoViewDisposed threw for user id:'
+        '${widget.user?.id}: $e\n$st',
+        tag: 'uikit-component',
+        subTag: 'audio video view',
+      );
+    }
+
     super.dispose();
   }
 
