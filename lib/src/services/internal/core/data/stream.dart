@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
@@ -34,6 +35,9 @@ class ZegoUIKitCoreDataStreamData {
 }
 
 mixin ZegoUIKitCoreDataStream {
+  static const _updatePlayingCanvasNoTextureRenderer =
+      'UPDATEPLAYINGCANVAS_NO_TEXTURERENDERER';
+
   bool isEnablePlatformView = false;
   final canvasViewCreateQueue = ZegoStreamCanvasViewCreateQueue();
   bool isPlayingStream = false;
@@ -1018,8 +1022,10 @@ mixin ZegoUIKitCoreDataStream {
         getUserStreamChannel(targetUser, streamType);
     ZegoLoggerService.logInfo(
       'current stream channel, '
+      'stream id:$streamID, user id:$streamUserID, stream type:$streamType, '
       'view id:${targetUserStreamChannel.viewIDNotifier.value},'
-      'view:${targetUserStreamChannel.viewNotifier}',
+      'view:${targetUserStreamChannel.viewNotifier}, '
+      'view creating:${targetUserStreamChannel.viewCreatingNotifier.value}',
       tag: 'uikit-stream',
       subTag: 'start play stream',
     );
@@ -1056,6 +1062,7 @@ mixin ZegoUIKitCoreDataStream {
       getUserStreamChannel(targetUser, streamType).viewCreatingNotifier.value =
           true;
 
+      var createdViewID = -1;
       await createCanvasViewByExpressWithCompleter(
         (viewID) async {
           ZegoLoggerService.logInfo(
@@ -1067,6 +1074,7 @@ mixin ZegoUIKitCoreDataStream {
             subTag: 'start play stream',
           );
 
+          createdViewID = viewID;
           getUserStreamChannel(targetUser, streamType)
               .viewCreatingNotifier
               .value = false;
@@ -1092,8 +1100,19 @@ mixin ZegoUIKitCoreDataStream {
           subTag: 'start play stream',
         );
 
-        getUserStreamChannel(targetUser, streamType).viewNotifier.value =
-            widget;
+        final streamChannel = getUserStreamChannel(targetUser, streamType);
+        if (streamChannel.viewIDNotifier.value == createdViewID) {
+          streamChannel.viewNotifier.value = widget;
+        } else {
+          ZegoLoggerService.logInfo(
+            'ignore stale canvas widget, '
+            'created viewID:$createdViewID, '
+            'current viewID:${streamChannel.viewIDNotifier.value}, '
+            'user id:$streamUserID, stream id:$streamID',
+            tag: 'uikit-stream',
+            subTag: 'start play stream',
+          );
+        }
 
         notifyStreamListControl(streamType);
       });
@@ -1260,6 +1279,7 @@ mixin ZegoUIKitCoreDataStream {
     ZegoLoggerService.logInfo(
       'ready start, '
       'stream id: $streamID, '
+      'view id:$viewID, stream type:$streamType, '
       'view mode:$viewMode(${viewMode.index}), ',
       tag: 'uikit-stream',
       subTag: 'start play stream',
@@ -1278,9 +1298,8 @@ mixin ZegoUIKitCoreDataStream {
         );
       });
     } else {
-      await ZegoExpressEngine.instance
-          .updatePlayingCanvas(streamID, canvas)
-          .then((value) {
+      try {
+        await ZegoExpressEngine.instance.updatePlayingCanvas(streamID, canvas);
         ZegoLoggerService.logInfo(
           'finish update stream view/canvas, '
           'stream id: $streamID, '
@@ -1288,8 +1307,95 @@ mixin ZegoUIKitCoreDataStream {
           tag: 'uikit-stream',
           subTag: 'start play stream',
         );
-      });
+      } on PlatformException catch (error) {
+        ZegoLoggerService.logError(
+          'updatePlayingCanvas failed, '
+          'stream id:$streamID, viewID:$viewID, stream type:$streamType, '
+          'error code:${error.code}, error message:${error.message}, '
+          'error details:${error.details}',
+          tag: 'uikit-stream',
+          subTag: 'update playing canvas',
+        );
+
+        if (error.code != _updatePlayingCanvasNoTextureRenderer) {
+          rethrow;
+        }
+
+        await _recoverStalePlayingCanvas(
+          streamID: streamID,
+          viewID: viewID,
+          error: error,
+        );
+      }
     }
+  }
+
+  /// A canvas can be destroyed by a leaving/rebuilding view after Dart has
+  /// checked its ID but before updatePlayingCanvas reaches the platform.
+  /// Reset only the matching stale channel, then let the regular create path
+  /// allocate a fresh TextureRenderer.  Do nothing when the stream has already
+  /// been removed or a newer canvas has replaced this one.
+  Future<void> _recoverStalePlayingCanvas({
+    required String streamID,
+    required int viewID,
+    required PlatformException error,
+  }) async {
+    final streamData = streamDic[streamID];
+    if (streamData == null) {
+      ZegoLoggerService.logWarn(
+        'stale TextureRenderer recovery skipped: stream was removed, '
+        'stream id:$streamID, viewID:$viewID',
+        tag: 'uikit-stream',
+        subTag: 'update playing canvas',
+      );
+      return;
+    }
+
+    final targetUserIndex = ZegoUIKitCore.shared.coreData.remoteUsersList
+        .indexWhere((user) => user.id == streamData.userID);
+    if (targetUserIndex == -1) {
+      ZegoLoggerService.logWarn(
+        'stale TextureRenderer recovery skipped: user was removed, '
+        'stream id:$streamID, viewID:$viewID, user id:${streamData.userID}',
+        tag: 'uikit-stream',
+        subTag: 'update playing canvas',
+      );
+      return;
+    }
+
+    final streamType = getStreamTypeByID(streamID);
+    final streamChannel = getUserStreamChannel(
+      ZegoUIKitCore.shared.coreData.remoteUsersList[targetUserIndex],
+      streamType,
+    );
+    if (streamChannel.streamID != streamID ||
+        streamChannel.viewIDNotifier.value != viewID) {
+      ZegoLoggerService.logWarn(
+        'stale TextureRenderer recovery skipped: channel has changed, '
+        'stream id:$streamID, requested viewID:$viewID, '
+        'current stream id:${streamChannel.streamID}, '
+        'current viewID:${streamChannel.viewIDNotifier.value}',
+        tag: 'uikit-stream',
+        subTag: 'update playing canvas',
+      );
+      return;
+    }
+
+    ZegoLoggerService.logWarn(
+      'stale TextureRenderer while updating canvas; recreate it, '
+      'stream id:$streamID, viewID:$viewID, error:$error',
+      tag: 'uikit-stream',
+      subTag: 'update playing canvas',
+    );
+
+    streamChannel.clearViewInfo();
+    ZegoLoggerService.logInfo(
+      'stale TextureRenderer state cleared; restart canvas creation, '
+      'stream id:$streamID, old viewID:$viewID, user id:${streamData.userID}',
+      tag: 'uikit-stream',
+      subTag: 'update playing canvas',
+    );
+    await startPlayingStreamQueue(streamID, streamData.userID);
   }
 
   Future<void> playStreamOnViewWillCreated({

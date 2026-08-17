@@ -271,23 +271,50 @@ class ZegoUIKitCoreUser {
       {required ZegoStreamType streamType}) async {
     switch (streamType) {
       case ZegoStreamType.main:
-        if (mainChannel.viewIDNotifier.value != -1) {
-          await ZegoExpressEngine.instance.destroyCanvasView(
-            mainChannel.viewIDNotifier.value ?? -1,
-          );
-        }
+        final viewID = mainChannel.viewIDNotifier.value ?? -1;
 
+        // Invalidate the Dart-side view before awaiting the platform call.
+        // Otherwise a concurrent stream update can reuse this ID after its
+        // TextureRenderer has been destroyed natively.
+        ZegoLoggerService.logInfo(
+          'destroy canvas requested, user id:$id, stream type:$streamType, '
+          'stream id:${mainChannel.streamID}, viewID:$viewID',
+          tag: 'uikit-stream',
+          subTag: 'destroy canvas',
+        );
         mainChannel.clearViewInfo();
+        if (viewID != -1) {
+          await ZegoExpressEngine.instance.destroyCanvasView(viewID);
+        }
+        ZegoLoggerService.logInfo(
+          'destroy canvas completed, user id:$id, stream type:$streamType, '
+          'viewID:$viewID',
+          tag: 'uikit-stream',
+          subTag: 'destroy canvas',
+        );
         break;
       case ZegoStreamType.media:
       case ZegoStreamType.screenSharing:
       case ZegoStreamType.mix:
-        if (auxChannel.viewIDNotifier.value != -1) {
-          await ZegoExpressEngine.instance
-              .destroyCanvasView(auxChannel.viewIDNotifier.value ?? -1);
-        }
+        final viewID = auxChannel.viewIDNotifier.value ?? -1;
 
+        // See the main-channel branch above.
+        ZegoLoggerService.logInfo(
+          'destroy canvas requested, user id:$id, stream type:$streamType, '
+          'stream id:${auxChannel.streamID}, viewID:$viewID',
+          tag: 'uikit-stream',
+          subTag: 'destroy canvas',
+        );
         auxChannel.clearViewInfo();
+        if (viewID != -1) {
+          await ZegoExpressEngine.instance.destroyCanvasView(viewID);
+        }
+        ZegoLoggerService.logInfo(
+          'destroy canvas completed, user id:$id, stream type:$streamType, '
+          'viewID:$viewID',
+          tag: 'uikit-stream',
+          subTag: 'destroy canvas',
+        );
         break;
     }
   }
