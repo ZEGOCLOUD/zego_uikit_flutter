@@ -1,3 +1,8 @@
+## 2.29.2
+
+- Bugs
+    - Optimized the canvas destruction logic, and added logs to track destruction requests and completion statuses
+
 ## 2.29.1
 
 - Bugs
