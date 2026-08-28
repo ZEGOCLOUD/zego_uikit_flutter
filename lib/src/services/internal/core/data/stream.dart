@@ -441,6 +441,15 @@ mixin ZegoUIKitCoreDataStream {
     )
         .then((_) {
       isPublishingStream = true;
+      ZegoLoggerService.logInfo(
+        'publisher start API completed, '
+        'streamID:${getLocalStreamID(streamType)}, '
+        'roomID:${ZegoUIKitCore.shared.coreData.room.id}, '
+        'microphone:${ZegoUIKitCore.shared.coreData.localUser.microphone.value}, '
+        'capturedAudioFirstFrame:${ZegoUIKitCore.shared.coreData.localUser.mainChannel.isCapturedAudioFirstFrameNotifier.value}',
+        tag: 'uikit-stream',
+        subTag: 'start publish stream',
+      );
     });
 
     notifyStreamListControl(streamType);

@@ -1154,7 +1154,12 @@ class ZegoUIKitCore
     }
 
     ZegoLoggerService.logInfo(
-      "turn ${isOn ? "on" : "off"} local microphone, muteMode:$muteMode",
+      "turn ${isOn ? "on" : "off"} local microphone, "
+      "muteMode:$muteMode, "
+      "roomID:${coreData.room.id}, "
+      "engineState:${coreData.engineStateNotifier.value}, "
+      "isPublishing:${coreData.isPublishingStream}, "
+      "previousMicrophone:${coreData.localUser.microphone.value}",
       tag: 'uikit-microphone',
       subTag: 'switch microphone',
     );
@@ -1179,6 +1184,14 @@ class ZegoUIKitCore
     }
 
     coreData.localUser.microphone.value = isOn;
+    ZegoLoggerService.logInfo(
+      'local microphone engine operations completed, '
+      'microphone:${coreData.localUser.microphone.value}, '
+      'muteMode:${coreData.localUser.microphoneMuteMode.value}, '
+      'isPublishing:${coreData.isPublishingStream}',
+      tag: 'uikit-microphone',
+      subTag: 'switch microphone',
+    );
     await coreData.startPublishOrNot();
 
     await syncDeviceStatusByStreamExtraInfo(streamType: ZegoStreamType.main);

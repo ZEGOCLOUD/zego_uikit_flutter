@@ -149,7 +149,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
           );
           deletedStreamUserIDs.remove(stream.user.userID);
           // 同步更新缓存
-          await ZegoUIKitCache().setDeletedStreamUserIDs(roomID, deletedStreamUserIDs);
+          await ZegoUIKitCache()
+              .setDeletedStreamUserIDs(roomID, deletedStreamUserIDs);
         }
 
         coreData.streamDic[stream.streamID] = ZegoUIKitCoreDataStreamData(
@@ -226,7 +227,8 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
         coreData.stopPlayingStream(stream.streamID);
       }
       await ZegoUIKitCache().setDeletedStreamIDs(roomID, deletedStreamIDs);
-      await ZegoUIKitCache().setDeletedStreamUserIDs(roomID, deletedStreamUserIDs);
+      await ZegoUIKitCache()
+          .setDeletedStreamUserIDs(roomID, deletedStreamUserIDs);
     }
 
     final streamIDs = streamList.map((e) => e.streamID).toList();
@@ -265,8 +267,7 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     if (updateType == ZegoUpdateType.Add) {
       // 如果 leaveUsersList 为空，尝试从缓存加载
       if (coreData.leaveUsersList.isEmpty) {
-        final cachedUserIDs =
-            await ZegoUIKitCache().getLeaveUsers(roomID);
+        final cachedUserIDs = await ZegoUIKitCache().getLeaveUsers(roomID);
         if (cachedUserIDs.isNotEmpty) {
           for (final userID in cachedUserIDs) {
             final user = userList.firstWhere(
@@ -407,6 +408,26 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
     String streamID,
     ZegoPublishStreamQuality quality,
   ) {
+    final localUser = coreData.localUser;
+    if (streamID == localUser.mainChannel.streamID) {
+      ZegoLoggerService.logInfo(
+        'publisher audio quality, '
+        'streamID:$streamID, '
+        'microphone:${localUser.microphone.value}, '
+        'microphoneMuteMode:${localUser.microphoneMuteMode.value}, '
+        'capturedAudioFirstFrame:${localUser.mainChannel.isCapturedAudioFirstFrameNotifier.value}, '
+        'audioCaptureFPS:${quality.audioCaptureFPS}, '
+        'audioSendFPS:${quality.audioSendFPS}, '
+        'audioKBPS:${quality.audioKBPS}, '
+        'audioSendBytes:${quality.audioSendBytes}, '
+        'audioTrafficControlRate:${quality.audioTrafficControlRate}, '
+        'rtt:${quality.rtt}, '
+        'packetLostRate:${quality.packetLostRate}',
+        tag: 'uikit-microphone',
+        subTag: 'publisher audio quality',
+      );
+    }
+
     coreData
         .getUserStreamChannel(
           ZegoUIKitCore.shared.coreData.localUser,
@@ -418,6 +439,15 @@ class ZegoUIKitCoreEventHandlerImpl extends ZegoUIKitExpressEventInterface {
 
   @override
   void onPublisherCapturedAudioFirstFrame() {
+    ZegoLoggerService.logInfo(
+      'publisher captured audio first frame, '
+      'roomID:${coreData.room.id}, '
+      'streamID:${coreData.localUser.mainChannel.streamID}, '
+      'microphone:${coreData.localUser.microphone.value}, '
+      'microphoneMuteMode:${coreData.localUser.microphoneMuteMode.value}',
+      tag: 'uikit-microphone',
+      subTag: 'publisher audio first frame',
+    );
     coreData
         .getUserStreamChannel(
           ZegoUIKitCore.shared.coreData.localUser,
