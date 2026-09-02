@@ -4,6 +4,7 @@ import 'dart:core';
 import 'dart:io' show Platform;
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -58,6 +59,7 @@ class ZegoAudioVideoView extends StatefulWidget {
 class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   Timer? viewIDGuardTimer;
   final isLocalUserFlippedNotifier = ValueNotifier<bool>(false);
+  int lastLoggedViewHashCode = 0;
 
   int get userViewID =>
       ZegoUIKit().getAudioVideoViewIDNotifier(widget.user?.id ?? '').value ??
@@ -319,6 +321,30 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
           /// hide video view when use not found
           return Container(color: Colors.transparent);
+        }
+
+        final currentViewID = userViewID;
+        if (lastLoggedViewHashCode != userView.hashCode) {
+          lastLoggedViewHashCode = userView.hashCode;
+          ZegoLoggerService.logInfo(
+            'video widget enters audio video view, '
+            'user:${widget.user?.id}, '
+            'widgetHash:${userView.hashCode}, viewID:$currentViewID, '
+            'camera:${ZegoUIKit().getCameraStateNotifier(widget.user?.id ?? '').value}, '
+            'platformView:${ZegoUIKitCore.shared.coreData.isEnablePlatformView}',
+            tag: 'uikit-component',
+            subTag: 'audio video view',
+          );
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ZegoLoggerService.logInfo(
+              'video widget frame committed, '
+              'user:${widget.user?.id}, widgetHash:${userView.hashCode}, '
+              'viewID:${userViewID}',
+              tag: 'uikit-component',
+              subTag: 'audio video view',
+            );
+          });
         }
 
         if (logEnabled) {

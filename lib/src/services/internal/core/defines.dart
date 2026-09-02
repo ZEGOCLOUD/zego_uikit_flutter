@@ -130,6 +130,11 @@ class ZegoUIKitCoreStreamInfo {
   ValueNotifier<GlobalKey> globalAuxStreamChannelKeyNotifier =
       ValueNotifier<GlobalKey>(GlobalKey());
 
+  /// Incremented for every canvas creation attempt.  iOS PlatformView may
+  /// return the UiKitView before onPlatformViewCreated is delivered.  This
+  /// lets us ignore a late callback belonging to an attempt that was retried.
+  int viewCreationGeneration = 0;
+
   ZegoUIKitCoreStreamInfo.empty() {
     soundLevelStream ??= StreamController<double>.broadcast();
 
@@ -142,6 +147,7 @@ class ZegoUIKitCoreStreamInfo {
   }
 
   void clearViewInfo() {
+    viewCreationGeneration++;
     viewIDNotifier.value = -1;
     viewNotifier.value = null;
     viewSizeNotifier.value = const Size(360, 640);

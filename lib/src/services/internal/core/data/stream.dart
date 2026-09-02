@@ -259,6 +259,7 @@ mixin ZegoUIKitCoreDataStream {
           ? ZegoViewMode.AspectFill
           : ZegoViewMode.AspectFit,
     );
+    final previewViewID = previewCanvas.view;
 
     ZegoLoggerService.logInfo(
       'call express startPreview, for trace enableCustomVideoRender, '
@@ -266,11 +267,25 @@ mixin ZegoUIKitCoreDataStream {
       tag: 'uikit-stream',
       subTag: 'onViewCreatedByStartPreview',
     );
-    ZegoExpressEngine.instance
-      ..enableCamera(ZegoUIKitCore.shared.coreData.localUser.camera.value)
-      ..startPreview(canvas: previewCanvas).then((_) {
-        isPreviewing = true;
-      });
+    await ZegoExpressEngine.instance
+        .enableCamera(ZegoUIKitCore.shared.coreData.localUser.camera.value);
+    try {
+      await ZegoExpressEngine.instance.startPreview(canvas: previewCanvas);
+      isPreviewing = true;
+      ZegoLoggerService.logInfo(
+        'startPreview completed, viewID:$previewViewID, '
+        'isPreviewing:$isPreviewing, '
+        'camera:${ZegoUIKitCore.shared.coreData.localUser.camera.value}',
+        tag: 'uikit-stream',
+        subTag: 'onViewCreatedByStartPreview',
+      );
+    } catch (error) {
+      ZegoLoggerService.logError(
+        'startPreview failed, viewID:$previewViewID, error:$error',
+        tag: 'uikit-stream',
+        subTag: 'onViewCreatedByStartPreview',
+      );
+    }
   }
 
   Future<void> stopPreview() async {
@@ -427,6 +442,24 @@ mixin ZegoUIKitCoreDataStream {
       tag: 'uikit-stream',
       subTag: 'start publish stream',
     );
+
+    if (Platform.isIOS) {
+      /// A UiKitView only receives its platform view ID after it is mounted
+      /// in Flutter's render tree.  The widget can already have been created
+      /// while that callback is still pending, so notify the list once more
+      /// to force the video view to be inserted before waiting for the ID.
+      final localStreamChannel = getLocalStreamChannel(streamType);
+      if (localStreamChannel.viewIDNotifier.value == -1 &&
+          localStreamChannel.viewNotifier.value != null) {
+        ZegoLoggerService.logInfo(
+          'force update view to get view id before start publishing, '
+          'streamType:$streamType, ',
+          tag: 'uikit-stream',
+          subTag: 'start publish stream',
+        );
+        notifyStreamListControl(streamType);
+      }
+    }
 
     ZegoLoggerService.logInfo(
       'call express startPublishingStream, for trace enableCustomVideoRender, '
@@ -789,10 +822,23 @@ mixin ZegoUIKitCoreDataStream {
 
       onViewCreated(streamType);
     } else {
+      final creationGeneration = ++localStreamChannel.viewCreationGeneration;
       localStreamChannel.viewCreatingNotifier.value = true;
 
       await createCanvasViewByExpressWithCompleter(
         (viewID) async {
+          if (creationGeneration != localStreamChannel.viewCreationGeneration) {
+            ZegoLoggerService.logWarn(
+              'ignore stale local canvas callback, '
+              'streamType:$streamType, viewID:$viewID, '
+              'generation:$creationGeneration, '
+              'currentGeneration:${localStreamChannel.viewCreationGeneration}',
+              tag: 'uikit-stream',
+              subTag: 'create local user video view',
+            );
+            return;
+          }
+
           ZegoLoggerService.logInfo(
             'view id done, '
             'streamType:$streamType, '
@@ -811,6 +857,17 @@ mixin ZegoUIKitCoreDataStream {
             ? localStreamChannel.globalMainStreamChannelKeyNotifier.value
             : localStreamChannel.globalAuxStreamChannelKeyNotifier.value,
       ).then((widget) {
+        if (creationGeneration != localStreamChannel.viewCreationGeneration) {
+          ZegoLoggerService.logWarn(
+            'ignore stale local canvas widget, '
+            'streamType:$streamType, generation:$creationGeneration, '
+            'currentGeneration:${localStreamChannel.viewCreationGeneration}',
+            tag: 'uikit-stream',
+            subTag: 'create local user video view',
+          );
+          return;
+        }
+
         ZegoLoggerService.logInfo(
           'widget done, '
           'streamType:$streamType, '
