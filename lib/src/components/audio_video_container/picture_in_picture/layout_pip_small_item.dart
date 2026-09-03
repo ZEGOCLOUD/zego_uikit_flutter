@@ -90,6 +90,9 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
             child: calculateSize(
               user: widget.targetUser,
               child: ZegoAudioVideoView(
+                key: ValueKey<String>(
+                  'zego-audio-video-${widget.targetUser?.id ?? ''}',
+                ),
                 user: widget.targetUser,
                 borderRadius: widget.borderRadius ?? 18.0.zR,
                 backgroundBuilder: widget.backgroundBuilder,

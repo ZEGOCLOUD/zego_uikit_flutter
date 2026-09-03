@@ -129,6 +129,7 @@ class _ZegoLayoutPictureInPictureState
         else
           LayoutBuilder(builder: (context, constraints) {
             return ZegoAudioVideoView(
+              key: ValueKey<String>('zego-audio-video-${largeViewUser!.id}'),
               user: largeViewUser,
               backgroundBuilder: widget.backgroundBuilder,
               foregroundBuilder: widget.foregroundBuilder,
@@ -186,6 +187,7 @@ class _ZegoLayoutPictureInPictureState
       children: [
         LayoutBuilder(builder: (context, constraints) {
           return ZegoAudioVideoView(
+            key: ValueKey<String>('zego-audio-video-${largeViewUser.id}'),
             user: largeViewUser,
             backgroundBuilder: widget.backgroundBuilder,
             foregroundBuilder: widget.foregroundBuilder,

@@ -158,6 +158,7 @@ class _ZegoLayoutGalleryState extends State<ZegoLayoutGallery> {
           !widget.layoutConfig.showOnlyOnAudioVideo) {
         final audioVideoView = LayoutBuilder(builder: (context, constraints) {
           return ZegoAudioVideoView(
+            key: ValueKey<String>('zego-audio-video-${layoutUser.id}'),
             user: layoutUser,
             backgroundBuilder: widget.backgroundBuilder,
             foregroundBuilder: widget.foregroundBuilder,

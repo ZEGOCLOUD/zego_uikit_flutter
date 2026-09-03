@@ -44,6 +44,7 @@ mixin ZegoUIKitCoreDataStream {
   bool isPublishingStream = false;
   bool isPreviewing = false;
   bool isEnableCustomVideoRender = false;
+  final Set<ZegoStreamType> startingPublishingStreamTypes = {};
   bool isUsingFrontCameraRequesting = false;
   bool isSyncDeviceStatusBySEI = true;
   Map<ZegoStreamType, ZegoUIKitAudioConfig> channelAudioConfig = {};
@@ -125,6 +126,7 @@ mixin ZegoUIKitCoreDataStream {
     isPreviewing = false;
     isPublishingStream = false;
     isPlayingStream = false;
+    startingPublishingStreamTypes.clear();
   }
 
   String getLocalStreamID(ZegoStreamType streamType) {
@@ -338,6 +340,17 @@ mixin ZegoUIKitCoreDataStream {
       return;
     }
 
+    if (startingPublishingStreamTypes.contains(streamType)) {
+      ZegoLoggerService.logWarn(
+        'start publishing is already running, ignore duplicate request, '
+        'streamType:$streamType',
+        tag: 'uikit-stream',
+        subTag: 'start publish stream',
+      );
+      return;
+    }
+    startingPublishingStreamTypes.add(streamType);
+
     final localTargetStreamViewID =
         getLocalStreamChannel(streamType).viewIDNotifier.value ?? -1;
     ZegoLoggerService.logInfo(
@@ -444,10 +457,11 @@ mixin ZegoUIKitCoreDataStream {
     );
 
     if (Platform.isIOS) {
-      /// A UiKitView only receives its platform view ID after it is mounted
-      /// in Flutter's render tree.  The widget can already have been created
-      /// while that callback is still pending, so notify the list once more
-      /// to force the video view to be inserted before waiting for the ID.
+      // The preview canvas may have been returned before Flutter has mounted
+      // its UiKitView. Re-emit the same widget so the existing platform-view
+      // instance gets a chance to complete its ID callback. Do not clear or
+      // recreate it here: doing so can leave two native views pending and
+      // drop both callbacks on iOS.
       final localStreamChannel = getLocalStreamChannel(streamType);
       if (localStreamChannel.viewIDNotifier.value == -1 &&
           localStreamChannel.viewNotifier.value != null) {
@@ -467,23 +481,27 @@ mixin ZegoUIKitCoreDataStream {
       tag: 'uikit-stream',
       subTag: 'start publish stream',
     );
-    await ZegoExpressEngine.instance
-        .startPublishingStream(
-      getLocalStreamID(streamType),
-      channel: streamType.channel,
-    )
-        .then((_) {
-      isPublishingStream = true;
-      ZegoLoggerService.logInfo(
-        'publisher start API completed, '
-        'streamID:${getLocalStreamID(streamType)}, '
-        'roomID:${ZegoUIKitCore.shared.coreData.room.id}, '
-        'microphone:${ZegoUIKitCore.shared.coreData.localUser.microphone.value}, '
-        'capturedAudioFirstFrame:${ZegoUIKitCore.shared.coreData.localUser.mainChannel.isCapturedAudioFirstFrameNotifier.value}',
-        tag: 'uikit-stream',
-        subTag: 'start publish stream',
-      );
-    });
+    try {
+      await ZegoExpressEngine.instance
+          .startPublishingStream(
+        getLocalStreamID(streamType),
+        channel: streamType.channel,
+      )
+          .then((_) {
+        isPublishingStream = true;
+        ZegoLoggerService.logInfo(
+          'publisher start API completed, '
+          'streamID:${getLocalStreamID(streamType)}, '
+          'roomID:${ZegoUIKitCore.shared.coreData.room.id}, '
+          'microphone:${ZegoUIKitCore.shared.coreData.localUser.microphone.value}, '
+          'capturedAudioFirstFrame:${ZegoUIKitCore.shared.coreData.localUser.mainChannel.isCapturedAudioFirstFrameNotifier.value}',
+          tag: 'uikit-stream',
+          subTag: 'start publish stream',
+        );
+      });
+    } finally {
+      startingPublishingStreamTypes.remove(streamType);
+    }
 
     notifyStreamListControl(streamType);
   }
@@ -707,8 +725,13 @@ mixin ZegoUIKitCoreDataStream {
     Key? canvasViewKey;
     if (Platform.isIOS && isEnablePlatformView) {
       /// iOS & platform view, express view id not callback sometimes, or call random
-      /// This will trigger the issue of duplicate keys, and there is no problem after removing it for testing
-      // canvasViewKey = key;
+      /// Preserve the canvas identity without forwarding a GlobalKey. The
+      /// same canvas can be temporarily present in more than one PIP/layout
+      /// subtree, and a duplicate GlobalKey makes Flutter detach the
+      /// UiKitView before its callback is delivered.
+      if (key != null) {
+        canvasViewKey = ValueKey<int>(identityHashCode(key));
+      }
     }
 
     ZegoLoggerService.logInfo(
@@ -728,12 +751,20 @@ mixin ZegoUIKitCoreDataStream {
 
         if (isCanvasViewCreateByQueue) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            onViewCreated.call(viewID);
-
-            canvasViewCreateQueue.completeCurrentTask();
+            () async {
+              try {
+                // Keep the queue locked until the consumer has received the
+                // ID and attached the native canvas.  Starting the next
+                // UiKitView before this callback chain finishes can make iOS
+                // lose the callback for the first platform view.
+                await onViewCreated.call(viewID);
+              } finally {
+                canvasViewCreateQueue.completeCurrentTask();
+              }
+            }();
           });
         } else {
-          onViewCreated.call(viewID);
+          await onViewCreated.call(viewID);
         }
       },
       key: canvasViewKey,

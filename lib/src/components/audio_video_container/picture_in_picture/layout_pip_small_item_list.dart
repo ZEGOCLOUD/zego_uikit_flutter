@@ -185,6 +185,7 @@ class _ZegoLayoutPIPSmallItemListState
                 child: calculateSize(
                   user: targetUser,
                   child: ZegoAudioVideoView(
+                    key: ValueKey<String>('zego-audio-video-${targetUser.id}'),
                     user: targetUser,
                     borderRadius: widget.borderRadius ?? 18.0.zW,
                     backgroundBuilder: widget.backgroundBuilder,
