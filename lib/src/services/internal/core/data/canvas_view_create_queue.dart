@@ -10,6 +10,7 @@ import 'package:zego_uikit/src/services/uikit_service.dart';
 class ZegoStreamCanvasViewCreateQueue {
   Completer? _completer;
 
+  int _queueGeneration = 0;
   bool _isTaskRunning = false;
   List<TaskItem> _taskList = [];
 
@@ -18,11 +19,14 @@ class ZegoStreamCanvasViewCreateQueue {
   String? get currentTaskKey => _taskList.isNotEmpty ? _taskList[0].key : null;
 
   void clear() {
+    _queueGeneration++;
     _isTaskRunning = false;
     _taskList = [];
 
-    if (!(_completer?.isCompleted ?? true)) {
-      _completer?.complete();
+    final taskCompleter = _completer;
+    _completer = null;
+    if (!(taskCompleter?.isCompleted ?? true)) {
+      taskCompleter?.complete();
     }
   }
 
@@ -61,24 +65,12 @@ class ZegoStreamCanvasViewCreateQueue {
     required String uniqueKey,
     required Future Function() task,
   }) async {
-    TaskItem taskItem = TaskItem(
+    late final TaskItem taskItem;
+    final taskGeneration = _queueGeneration;
+    taskItem = TaskItem(
       uniqueKey,
       task,
-      () {
-        ZegoLoggerService.logInfo(
-          'task($uniqueKey) run finished, task queue size:${_taskList.length}, '
-          'keys:${_taskList.map((e) => '${e.key},')}, '
-          'run next task',
-          tag: 'uikit-stream',
-          subTag: 'queue',
-        );
-
-        if (_taskList.isNotEmpty) {
-          _taskList.removeAt(0);
-          _isTaskRunning = false;
-          _doTask();
-        }
-      },
+      () => _finishTask(taskItem, taskGeneration),
     );
 
     _taskList.add(taskItem);
@@ -119,8 +111,9 @@ class ZegoStreamCanvasViewCreateQueue {
       subTag: 'queue',
     );
 
-    _completer = Completer<void>();
-    TaskItem task = _taskList[0];
+    final taskCompleter = Completer<void>();
+    _completer = taskCompleter;
+    final task = _taskList[0];
     _isTaskRunning = true;
 
     ZegoLoggerService.logInfo(
@@ -131,7 +124,7 @@ class ZegoStreamCanvasViewCreateQueue {
     try {
       await task.runner.call();
 
-      await _completer?.future;
+      await taskCompleter.future;
 
       task.next();
     } catch (e) {
@@ -143,6 +136,34 @@ class ZegoStreamCanvasViewCreateQueue {
 
       task.next();
     }
+  }
+
+  void _finishTask(TaskItem task, int taskGeneration) {
+    if (taskGeneration != _queueGeneration ||
+        _taskList.isEmpty ||
+        !identical(_taskList.first, task)) {
+      ZegoLoggerService.logInfo(
+        'ignore stale task(${task.key}) completion, '
+        'task generation:$taskGeneration, current generation:$_queueGeneration, '
+        'current task:$currentTaskKey',
+        tag: 'uikit-stream',
+        subTag: 'queue',
+      );
+      return;
+    }
+
+    ZegoLoggerService.logInfo(
+      'task(${task.key}) run finished, task queue size:${_taskList.length}, '
+      'keys:${_taskList.map((e) => '${e.key},')}, '
+      'run next task',
+      tag: 'uikit-stream',
+      subTag: 'queue',
+    );
+
+    _taskList.removeAt(0);
+    _completer = null;
+    _isTaskRunning = false;
+    _doTask();
   }
 }
 
