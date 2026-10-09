@@ -9,6 +9,7 @@
 .history
 .svn/
 /test/*
+!/test/canvas_view_create_queue_test.dart
 example/test/*
 dgph
 pubspec_overrides.yaml

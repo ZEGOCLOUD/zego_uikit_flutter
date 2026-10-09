@@ -123,6 +123,10 @@
 
         NSLog(@"[UIKit Plugin] startPlayingStreamInPIP, streamID: %@, resourceMode: %@, roomID: %@, cdnConfig: %@, videoCodecID: %@",
               streamID, resourceMode, roomID, cdnConfig, videoCodecID);
+        NSLog(@"[UIKit Plugin][PIPTrace] received startPlayingStreamInPIP, "
+              "appState=%ld, pipActive=%d",
+              (long)[UIApplication sharedApplication].applicationState,
+              [[PipManager sharedInstance] isInPIP]);
         [self startPlayingStreamInPIP:streamID
                          resourceMode:resourceMode
                                roomID:roomID
@@ -137,7 +141,8 @@
         NSString *streamID = arguments[@"stream_id"];
         NSNumber *viewMode = arguments[@"view_mode"];
         
-        NSLog(@"[UIKit Plugin] updatePlayingStreamViewInPIP, viewID: %@, streamID: %@", viewID, streamID, viewMode);
+        NSLog(@"[UIKit Plugin] updatePlayingStreamViewInPIP, viewID: %@, streamID: %@, viewMode: %@",
+              viewID, streamID, viewMode);
         [self updatePlayingStreamViewInPIP:viewID streamID:streamID viewMode:viewMode];
         
         result(nil);
@@ -146,6 +151,10 @@
         NSString *streamID = arguments[@"stream_id"];
         
         NSLog(@"[UIKit Plugin] stopPlayingStreamInPIP, streamID: %@", streamID);
+        NSLog(@"[UIKit Plugin][PIPTrace] received stopPlayingStreamInPIP, "
+              "appState=%ld, pipActive=%d",
+              (long)[UIApplication sharedApplication].applicationState,
+              [[PipManager sharedInstance] isInPIP]);
         [self stopPlayingStreamInPIP:streamID];
         
         result(nil);
@@ -203,7 +212,15 @@
                          roomID:(nullable NSString *)roomID
                       cdnConfig:(nullable NSDictionary *)cdnConfig
                    videoCodecID:(nullable NSNumber *)videoCodecID {
+    NSLog(@"[UIKit Plugin][PIPTrace] schedule native startPlayingStream, "
+          "streamID=%@, appState=%ld",
+          streamID,
+          (long)[UIApplication sharedApplication].applicationState);
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"[UIKit Plugin][PIPTrace] execute native startPlayingStream, "
+              "streamID=%@, appState=%ld",
+              streamID,
+              (long)[UIApplication sharedApplication].applicationState);
         [[PipManager sharedInstance] startPlayingStream:streamID
                                            resourceMode:resourceMode
                                                  roomID:roomID
@@ -213,20 +230,56 @@
 }
 
 - (void)updatePlayingStreamViewInPIP:(NSNumber *)viewID streamID:(NSString *)streamID viewMode:(NSNumber *)viewMode  {
-    ZegoPlatformView *platformView = [[ZegoPlatformViewFactory sharedInstance]getPlatformView:viewID];
+    NSLog(@"[UIKit Plugin][PIPTrace] resolve native view, viewID=%@, "
+          "streamID=%@, viewMode=%@, pipActive=%d",
+          viewID,
+          streamID,
+          viewMode,
+          [[PipManager sharedInstance] isInPIP]);
+    ZegoPlatformView *platformView = [[ZegoPlatformViewFactory sharedInstance] getPlatformView:viewID];
     if(platformView == nil) {
-        NSLog(@"[UIKit Plugin] platformView is nil");
+        NSLog(@"[UIKit Plugin][PIPTrace] platformView lookup failed, "
+              "viewID=%@, streamID=%@", viewID, streamID);
         
         return;
     }
+
+    UIView *nativeView = platformView.view;
+    NSLog(@"[UIKit Plugin][PIPTrace] resolved native view, viewID=%@, "
+          "streamID=%@, view=%p, class=%@, frame=%@, bounds=%@, "
+          "window=%p, superview=%p, hidden=%d, alpha=%.3f",
+          viewID,
+          streamID,
+          nativeView,
+          nativeView ? NSStringFromClass(nativeView.class) : @"(nil)",
+          NSStringFromCGRect(nativeView.frame),
+          NSStringFromCGRect(nativeView.bounds),
+          nativeView.window,
+          nativeView.superview,
+          nativeView.hidden,
+          nativeView.alpha);
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[PipManager sharedInstance] updatePlayingStreamView:streamID videoView:platformView.view viewMode:viewMode];
+        NSLog(@"[UIKit Plugin][PIPTrace] execute native updatePlayingStreamView, "
+              "viewID=%@, streamID=%@, view=%p, pipActive=%d",
+              viewID,
+              streamID,
+              nativeView,
+              [[PipManager sharedInstance] isInPIP]);
+        [[PipManager sharedInstance] updatePlayingStreamView:streamID videoView:nativeView viewMode:viewMode];
     });
 }
 
 - (void)stopPlayingStreamInPIP:(NSString *)streamID  {
+    NSLog(@"[UIKit Plugin][PIPTrace] schedule native stopPlayingStream, "
+          "streamID=%@, appState=%ld",
+          streamID,
+          (long)[UIApplication sharedApplication].applicationState);
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"[UIKit Plugin][PIPTrace] execute native stopPlayingStream, "
+              "streamID=%@, appState=%ld",
+              streamID,
+              (long)[UIApplication sharedApplication].applicationState);
         [[PipManager sharedInstance] stopPlayingStream:streamID];
     });
 }

@@ -93,6 +93,10 @@ class ZegoUIKit
   /// Not recommended for use. Current usage scenarios include:
   /// 1. displaying PIP on iOS,
   /// 2. playing MP4 on media.
+  /// On iOS, when calling init again, null keeps the current UIKit setting.
+  /// A non-null value updates UIKit's internal view path only; it does not
+  /// recreate or reconfigure the existing Express Engine. Keep it consistent
+  /// with the value used for the first init.
   /// * [playingStreamInPIPUnderIOS],
   /// If you want to display PIP iOS, you need to set it to true, and then
   /// the platform view + custom rendering mechanism will be launched.

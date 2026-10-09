@@ -51,6 +51,14 @@ class ZegoUIKitCore
 
   static final ZegoUIKitCore shared = ZegoUIKitCore._internal();
 
+  @visibleForTesting
+  static bool resolvePlatformViewEnabledForReinit({
+    required bool? requestedValue,
+    required bool currentValue,
+  }) {
+    return requestedValue ?? currentValue;
+  }
+
   final ZegoUIKitReporter reporter = ZegoUIKitReporter();
   final ZegoUIKitCoreData coreData = ZegoUIKitCoreData();
   var event = ZegoUIKitEvent();
@@ -61,6 +69,11 @@ class ZegoUIKitCore
   final expressEngineCreatedNotifier = ValueNotifier<bool>(false);
   List<StreamSubscription<dynamic>?> subscriptions = [];
   String? version;
+
+  String _initCallerTrace() {
+    final frames = StackTrace.current.toString().split('\n');
+    return frames.skip(2).take(5).join(' <- ');
+  }
 
   Future<String> getZegoUIKitVersion() async {
     if (null == version) {
@@ -93,13 +106,28 @@ class ZegoUIKitCore
       );
 
       if (Platform.isIOS) {
+        final previousPIPSetting = this.playingStreamInPIPUnderIOS;
+        final previousPlatformViewSetting = coreData.isEnablePlatformView;
+        final previousCustomRenderSetting = coreData.isEnableCustomVideoRender;
         this.playingStreamInPIPUnderIOS = playingStreamInPIPUnderIOS;
-        coreData.isEnablePlatformView = enablePlatformView ?? false;
+        coreData.isEnablePlatformView = resolvePlatformViewEnabledForReinit(
+          requestedValue: enablePlatformView,
+          currentValue: coreData.isEnablePlatformView,
+        );
 
         ZegoLoggerService.logInfo(
-          'had init now, just update next params: '
-          'playingStreamInPIPUnderIOS:$playingStreamInPIPUnderIOS, '
-          'enablePlatformView:$enablePlatformView, ',
+          'reinit config applied, '
+          'PIPUnderIOS:$previousPIPSetting->$playingStreamInPIPUnderIOS, '
+          'PlatformView requested:$enablePlatformView, '
+          'effective:$previousPlatformViewSetting->'
+          '${coreData.isEnablePlatformView}, '
+          'customRender:$previousCustomRenderSetting, '
+          'engineCreated:${expressEngineCreatedNotifier.value}, '
+          'previewing:${coreData.isPreviewing}, '
+          'publishing:${coreData.isPublishingStream}, '
+          'playing:${coreData.isPlayingStream}, camera:'
+          '${coreData.localUser.camera.value}, '
+          'caller:${_initCallerTrace()}',
           tag: 'uikit-service-core($hashCode)',
           subTag: 'init',
         );
@@ -115,6 +143,9 @@ class ZegoUIKitCore
       'has appSign:${appSign.isNotEmpty}, '
       'playingStreamInPIPUnderIOS:$playingStreamInPIPUnderIOS, '
       'enablePlatformView:$enablePlatformView, '
+      'effectivePlatformView:${enablePlatformView ?? false}, '
+      'engineAlreadyCreated:${expressEngineCreatedNotifier.value}, '
+      'caller:${Platform.isIOS ? _initCallerTrace() : '(not iOS)'}, '
       'scenario:$scenario, ',
       tag: 'uikit-service-core($hashCode)',
       subTag: 'init',

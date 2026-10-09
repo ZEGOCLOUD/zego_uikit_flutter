@@ -60,6 +60,17 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   Timer? viewIDGuardTimer;
   final isLocalUserFlippedNotifier = ValueNotifier<bool>(false);
   int lastLoggedViewHashCode = 0;
+  BoxConstraints? lastLoggedPlatformViewConstraints;
+  String? lastLoggedPlatformViewUserID;
+  int? lastLoggedPlatformViewID;
+  int? lastLoggedPlatformViewWidgetHashCode;
+  bool? lastLoggedPlatformViewCameraState;
+  Timer? platformViewConstraintsLogTimer;
+  BoxConstraints? pendingPlatformViewConstraints;
+  String? pendingPlatformViewUserID;
+  int? pendingPlatformViewID;
+  int? pendingPlatformViewWidgetHashCode;
+  bool? pendingPlatformViewCameraState;
 
   int get userViewID =>
       ZegoUIKit().getAudioVideoViewIDNotifier(widget.user?.id ?? '').value ??
@@ -84,9 +95,41 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
   bool get logEnabled => false;
 
+  String renderObjectChain(BuildContext context) {
+    if (!context.mounted) {
+      return '(Element unmounted)';
+    }
+
+    final chain = <String>[];
+    RenderObject? renderObject = context.findRenderObject();
+    while (renderObject != null && chain.length < 12) {
+      final size = renderObject is RenderBox
+          ? (renderObject.hasSize ? '${renderObject.size}' : 'no-size')
+          : 'n/a';
+      final globalOrigin = renderObject is RenderBox && renderObject.hasSize
+          ? renderObject.localToGlobal(Offset.zero)
+          : 'n/a';
+      chain.add(
+        '${renderObject.runtimeType}(attached:${renderObject.attached}, '
+        'size:$size, globalOrigin:$globalOrigin)',
+      );
+      renderObject = renderObject.parent;
+    }
+    return chain.isEmpty ? '(no RenderObject)' : chain.join(' <- ');
+  }
+
   @override
   void initState() {
     super.initState();
+
+    ZegoLoggerService.logInfo(
+      'audio video view State init, state:${identityHashCode(this)}, '
+      'user:${widget.user?.id}, viewID:$userViewID, '
+      'platformView:${ZegoUIKitCore.shared.coreData.isEnablePlatformView}, '
+      'camera:${ZegoUIKit().getCameraStateNotifier(widget.user?.id ?? '').value}',
+      tag: 'uikit-component',
+      subTag: 'audio video view',
+    );
 
     subscriptions
       ..add(ZegoUIKit().getUserListStream().listen(onUserListUpdated))
@@ -96,14 +139,129 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   }
 
   @override
+  void didUpdateWidget(covariant ZegoAudioVideoView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final oldUserID = oldWidget.user?.id ?? '';
+    final oldViewID =
+        ZegoUIKit().getAudioVideoViewIDNotifier(oldUserID).value ?? -1;
+    ZegoLoggerService.logInfo(
+      'audio video view Widget update, state:${identityHashCode(this)}, '
+      'oldUser:$oldUserID, oldViewID:$oldViewID, '
+      'newUser:${widget.user?.id}, newViewID:$userViewID, '
+      'oldKey:${oldWidget.key}, newKey:${widget.key}, '
+      'platformView:${ZegoUIKitCore.shared.coreData.isEnablePlatformView}',
+      tag: 'uikit-component',
+      subTag: 'audio video view',
+    );
+  }
+
+  @override
   void dispose() {
+    final userID = widget.user?.id ?? '';
+    ZegoLoggerService.logInfo(
+      'audio video view State dispose, state:${identityHashCode(this)}, '
+      'user:$userID, viewID:$userViewID, '
+      'videoWidgetHash:${ZegoUIKit().getAudioVideoViewNotifier(userID).value?.hashCode}, '
+      'platformView:${ZegoUIKitCore.shared.coreData.isEnablePlatformView}, '
+      'renderObjects:${renderObjectChain(context)}',
+      tag: 'uikit-component',
+      subTag: 'audio video view',
+    );
     viewIDGuardTimer?.cancel();
+    cancelPlatformViewConstraintsLog();
 
     for (final subscription in subscriptions) {
       subscription?.cancel();
     }
 
     super.dispose();
+  }
+
+  void logPlatformViewConstraints({
+    required BuildContext context,
+    required String userID,
+    required int viewID,
+    required BoxConstraints constraints,
+    required bool cameraOn,
+    required int widgetHashCode,
+  }) {
+    lastLoggedPlatformViewConstraints = constraints;
+    lastLoggedPlatformViewUserID = userID;
+    lastLoggedPlatformViewID = viewID;
+    lastLoggedPlatformViewWidgetHashCode = widgetHashCode;
+    lastLoggedPlatformViewCameraState = cameraOn;
+    ZegoLoggerService.logInfo(
+      'PlatformView layout, user:$userID, viewID:$viewID, '
+      'constraints:{minWidth:${constraints.minWidth}, '
+      'maxWidth:${constraints.maxWidth}, '
+      'minHeight:${constraints.minHeight}, '
+      'maxHeight:${constraints.maxHeight}, '
+      'hasBoundedWidth:${constraints.hasBoundedWidth}, '
+      'hasBoundedHeight:${constraints.hasBoundedHeight}}, '
+      'camera:$cameraOn, widgetHash:$widgetHashCode, '
+      'layoutRenderObjects:${renderObjectChain(context)}',
+      tag: 'uikit-component',
+      subTag: 'audio video view',
+    );
+  }
+
+  void schedulePlatformViewConstraintsLog({
+    required BuildContext context,
+    required String userID,
+    required int viewID,
+    required BoxConstraints constraints,
+    required bool cameraOn,
+    required int widgetHashCode,
+  }) {
+    final isSamePendingLog = pendingPlatformViewConstraints == constraints &&
+        pendingPlatformViewUserID == userID &&
+        pendingPlatformViewID == viewID &&
+        pendingPlatformViewWidgetHashCode == widgetHashCode &&
+        pendingPlatformViewCameraState == cameraOn;
+    if (isSamePendingLog && platformViewConstraintsLogTimer?.isActive == true) {
+      return;
+    }
+
+    platformViewConstraintsLogTimer?.cancel();
+    pendingPlatformViewConstraints = constraints;
+    pendingPlatformViewUserID = userID;
+    pendingPlatformViewID = viewID;
+    pendingPlatformViewWidgetHashCode = widgetHashCode;
+    pendingPlatformViewCameraState = cameraOn;
+    platformViewConstraintsLogTimer = Timer(
+      const Duration(milliseconds: 500),
+      () {
+        platformViewConstraintsLogTimer = null;
+        clearPendingPlatformViewConstraintsLog();
+        if (!mounted ||
+            !Platform.isIOS ||
+            !ZegoUIKitCore.shared.coreData.isEnablePlatformView) {
+          return;
+        }
+        logPlatformViewConstraints(
+          context: context,
+          userID: userID,
+          viewID: viewID,
+          constraints: constraints,
+          cameraOn: cameraOn,
+          widgetHashCode: widgetHashCode,
+        );
+      },
+    );
+  }
+
+  void cancelPlatformViewConstraintsLog() {
+    platformViewConstraintsLogTimer?.cancel();
+    platformViewConstraintsLogTimer = null;
+    clearPendingPlatformViewConstraintsLog();
+  }
+
+  void clearPendingPlatformViewConstraintsLog() {
+    pendingPlatformViewConstraints = null;
+    pendingPlatformViewUserID = null;
+    pendingPlatformViewID = null;
+    pendingPlatformViewWidgetHashCode = null;
+    pendingPlatformViewCameraState = null;
   }
 
   void onUserListUpdated(List<ZegoUIKitUser> users) {
@@ -117,6 +275,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   @override
   Widget build(BuildContext context) {
     if (ZegoUIKit().getUser(widget.user?.id ?? '').isEmpty()) {
+      cancelPlatformViewConstraintsLog();
       ZegoLoggerService.logInfo(
         'use id:(${widget.user?.id}) is null',
         tag: 'uikit-component',
@@ -205,6 +364,14 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
   Widget localCameraFlipAnimation(Widget child) {
     /// local user, camera switch animation
+    // iOS PlatformViews cannot be reliably composited below a Flutter 3D
+    // Transform. When PIP is enabled, the video is rendered by the native
+    // UIView, so Matrix4.rotationY can make it invisible while native frames
+    // continue to render. The native preview handles camera orientation.
+    if (Platform.isIOS && ZegoUIKitCore.shared.coreData.isEnablePlatformView) {
+      return child;
+    }
+
     return ValueListenableBuilder<bool>(
       valueListenable: localUserData.isFrontFacing,
       builder: (context, isReadyFrontFacing, _) {
@@ -276,30 +443,96 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
           runViewIDTimeGuard();
         }
 
-        return ZegoUIKit().getUser(widget.user!.id).isEmpty()
-            ? Container()
-            : LayoutBuilder(
-                builder: (context, constraints) {
-                  if (logEnabled) {
-                    ZegoLoggerService.logInfo(
-                      '${widget.user?.id}\'s constraints changed,'
-                      'width:${constraints.maxWidth}, '
-                      'height:${constraints.maxHeight}, '
-                      'isCameraOn:$isCameraOn, ',
-                      tag: 'uikit-component',
-                      subTag: 'audio video view',
-                    );
-                  }
+        if (ZegoUIKit().getUser(widget.user!.id).isEmpty()) {
+          cancelPlatformViewConstraintsLog();
+          return Container();
+        }
 
-                  return SizedBox(
-                    width: constraints.maxWidth,
-                    height: constraints.maxHeight,
-                    child: isCameraOn
-                        ? audioVideoView
-                        : Container(color: Colors.transparent),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            if (Platform.isIOS &&
+                ZegoUIKitCore.shared.coreData.isEnablePlatformView) {
+              final currentUserID = widget.user?.id ?? '';
+              final currentViewID = userViewID;
+              final currentWidgetHashCode = audioVideoView.hashCode;
+              final previousConstraints = lastLoggedPlatformViewConstraints;
+              final constraintsChanged = previousConstraints != constraints;
+              final widthHasZeroExtent = constraints.maxWidth <= 0;
+              final heightHasZeroExtent = constraints.maxHeight <= 0;
+              final widthHadZeroExtent = previousConstraints != null &&
+                  previousConstraints.maxWidth <= 0;
+              final heightHadZeroExtent = previousConstraints != null &&
+                  previousConstraints.maxHeight <= 0;
+              final zeroExtentBoundaryChanged = previousConstraints != null &&
+                  (widthHasZeroExtent != widthHadZeroExtent ||
+                      heightHasZeroExtent != heightHadZeroExtent);
+              final identityChanged =
+                  lastLoggedPlatformViewUserID != currentUserID ||
+                      lastLoggedPlatformViewID != currentViewID ||
+                      lastLoggedPlatformViewWidgetHashCode !=
+                          currentWidgetHashCode ||
+                      lastLoggedPlatformViewCameraState != isCameraOn;
+              final shouldLogFrameState = previousConstraints == null ||
+                  identityChanged ||
+                  zeroExtentBoundaryChanged;
+              if (shouldLogFrameState) {
+                cancelPlatformViewConstraintsLog();
+                logPlatformViewConstraints(
+                  context: context,
+                  userID: currentUserID,
+                  viewID: currentViewID,
+                  constraints: constraints,
+                  cameraOn: isCameraOn,
+                  widgetHashCode: currentWidgetHashCode,
+                );
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  final isContextMounted = context.mounted;
+                  ZegoLoggerService.logInfo(
+                    'audio video layout frame committed, '
+                    'user:$currentUserID, viewID:$currentViewID, '
+                    'widgetHash:$currentWidgetHashCode, camera:$isCameraOn, '
+                    'stateMounted:$mounted, contextMounted:$isContextMounted, '
+                    'renderObjects:${renderObjectChain(context)}',
+                    tag: 'uikit-component',
+                    subTag: 'audio video view',
                   );
-                },
+                });
+              } else if (constraintsChanged) {
+                schedulePlatformViewConstraintsLog(
+                  context: context,
+                  userID: currentUserID,
+                  viewID: currentViewID,
+                  constraints: constraints,
+                  cameraOn: isCameraOn,
+                  widgetHashCode: currentWidgetHashCode,
+                );
+              } else {
+                cancelPlatformViewConstraintsLog();
+              }
+            } else {
+              cancelPlatformViewConstraintsLog();
+            }
+
+            if (logEnabled) {
+              ZegoLoggerService.logInfo(
+                '${widget.user?.id}\'s constraints changed,'
+                'width:${constraints.maxWidth}, '
+                'height:${constraints.maxHeight}, '
+                'isCameraOn:$isCameraOn, ',
+                tag: 'uikit-component',
+                subTag: 'audio video view',
               );
+            }
+
+            return SizedBox(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              child: isCameraOn
+                  ? audioVideoView
+                  : Container(color: Colors.transparent),
+            );
+          },
+        );
       },
     );
   }
@@ -313,6 +546,16 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       valueListenable: ZegoUIKit().getAudioVideoViewNotifier(widget.user!.id),
       builder: (context, userView, _) {
         if (userView == null) {
+          cancelPlatformViewConstraintsLog();
+          ZegoLoggerService.logInfo(
+            'PlatformView widget is absent from audio video view, '
+            'user:${widget.user?.id}, viewID:$userViewID, '
+            'state:${identityHashCode(this)}, '
+            'platformView:${ZegoUIKitCore.shared.coreData.isEnablePlatformView}, '
+            'renderObjects:${renderObjectChain(context)}',
+            tag: 'uikit-component',
+            subTag: 'audio video view',
+          );
           ZegoLoggerService.logError(
             '${widget.user?.id}\'s view is null',
             tag: 'uikit-component',
@@ -326,25 +569,17 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
         final currentViewID = userViewID;
         if (lastLoggedViewHashCode != userView.hashCode) {
           lastLoggedViewHashCode = userView.hashCode;
+          final stateHashAtBuild = identityHashCode(this);
           ZegoLoggerService.logInfo(
             'video widget enters audio video view, '
             'user:${widget.user?.id}, '
             'widgetHash:${userView.hashCode}, viewID:$currentViewID, '
+            'state:$stateHashAtBuild, '
             'camera:${ZegoUIKit().getCameraStateNotifier(widget.user?.id ?? '').value}, '
             'platformView:${ZegoUIKitCore.shared.coreData.isEnablePlatformView}',
             tag: 'uikit-component',
             subTag: 'audio video view',
           );
-
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ZegoLoggerService.logInfo(
-              'video widget frame committed, '
-              'user:${widget.user?.id}, widgetHash:${userView.hashCode}, '
-              'viewID:${userViewID}',
-              tag: 'uikit-component',
-              subTag: 'audio video view',
-            );
-          });
         }
 
         if (logEnabled) {

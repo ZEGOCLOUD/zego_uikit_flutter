@@ -33,6 +33,60 @@ API_AVAILABLE(ios(15.0))
 
 @implementation PipManager
 
+- (NSString *)viewHierarchyDescription:(UIView *)view {
+    NSMutableArray<NSString *> *components = [NSMutableArray array];
+    UIView *currentView = view;
+    while (currentView != nil && components.count < 24) {
+        [components addObject:[NSString stringWithFormat:
+            @"{%@ view=%p window=%p superview=%p frame=%@ bounds=%@ hidden=%d alpha=%.3f}",
+            NSStringFromClass(currentView.class),
+            currentView,
+            currentView.window,
+            currentView.superview,
+            NSStringFromCGRect(currentView.frame),
+            NSStringFromCGRect(currentView.bounds),
+            currentView.hidden,
+            currentView.alpha]];
+        currentView = currentView.superview;
+    }
+    return components.count == 0
+        ? @"(view nil)"
+        : [components componentsJoinedByString:@" <- "];
+}
+
+- (void)logPIPTrace:(NSString *)stage
+           streamID:(NSString *)streamID
+               view:(UIView *)view {
+    NSMutableArray<NSString *> *layers = [NSMutableArray array];
+    for (CALayer *layer in view.layer.sublayers) {
+        [layers addObject:[NSString stringWithFormat:
+            @"{%@ layer=%p frame=%@ hidden=%d opacity=%.3f}",
+            layer.name ?: @"(unnamed)",
+            layer,
+            NSStringFromCGRect(layer.frame),
+            layer.hidden,
+            layer.opacity]];
+    }
+    NSLog(@"[PIPManager][PIPTrace] stage=%@ streamID=%@ appState=%ld "
+          "pipController=%p pipActive=%d pipStreamID=%@ "
+          "view=%p viewClass=%@ frame=%@ bounds=%@ window=%p superview=%p "
+          "displayLayers=%@ hierarchy=%@",
+          stage,
+          streamID ?: @"(null)",
+          (long)[UIApplication sharedApplication].applicationState,
+          self.pipController,
+          self.pipController.isPictureInPictureActive,
+          self.pipStreamID ?: @"(null)",
+          view,
+          view ? NSStringFromClass(view.class) : @"(nil)",
+          NSStringFromCGRect(view.frame),
+          NSStringFromCGRect(view.bounds),
+          view.window,
+          view.superview,
+          layers,
+          [self viewHierarchyDescription:view]);
+}
+
 + (instancetype)sharedInstance {
     dispatch_once(&onceToken, ^{
         _instance = [[self alloc] init];
@@ -68,7 +122,13 @@ API_AVAILABLE(ios(15.0))
 
 - (BOOL) startPIP : (NSString* ) streamID {
     NSLog(@"[PIPManager] startPIP, stream id:%@", streamID);
-    
+    NSLog(@"[PIPManager][PIPTrace] startPIP requested, supported=%d, "
+          "controller=%p, active=%d, appState=%ld",
+          [AVPictureInPictureController isPictureInPictureSupported],
+          self.pipController,
+          self.pipController.isPictureInPictureActive,
+          (long)[UIApplication sharedApplication].applicationState);
+
     [self updatePIPSource:streamID];
     
     if (@available(iOS 15.0, *)) {
@@ -79,6 +139,10 @@ API_AVAILABLE(ios(15.0))
                 if(! self.pipController.isPictureInPictureActive) {
                     NSLog(@"[PIPManager] startPIP run");
                     [self.pipController startPictureInPicture];
+                    NSLog(@"[PIPManager][PIPTrace] startPictureInPicture invoked, "
+                          "controller=%p activeImmediately=%d",
+                          self.pipController,
+                          self.pipController.isPictureInPictureActive);
                 }
             } else {
                 NSLog(@"[PIPManager] startPIP, pip controller is nil");
@@ -143,8 +207,19 @@ API_AVAILABLE(ios(15.0))
     
     if (@available(iOS 17.4, *)) {
         UIView* flutterVideoView = [self.flutterVideoViewDictionary objectForKey:streamID];
+        [self logPIPTrace:@"updatePIPSource-selected-view"
+                  streamID:streamID
+                      view:flutterVideoView];
         if(nil != flutterVideoView) {
             AVSampleBufferDisplayLayer* flutterDisplayLayer =[self getLayerOfView:flutterVideoView];
+            NSLog(@"[PIPManager][PIPTrace] updatePIPSource layer state, "
+                  "streamID=%@, layer=%p, readyForDisplay=%d, "
+                  "pipController=%p, active=%d",
+                  streamID,
+                  flutterDisplayLayer,
+                  flutterDisplayLayer.isReadyForDisplay,
+                  self.pipController,
+                  self.pipController.isPictureInPictureActive);
             if(! flutterDisplayLayer.isReadyForDisplay) {
                 NSLog(@"[PIPManager] updatePIPSource, view is not ready for display, reject update");
                 
@@ -153,6 +228,10 @@ API_AVAILABLE(ios(15.0))
             
             AVPictureInPictureControllerContentSource *contentSource = [[AVPictureInPictureControllerContentSource alloc] initWithActiveVideoCallSourceView:flutterVideoView contentViewController:self.pipCallVC];
             self.pipController.contentSource = contentSource;
+
+            [self logPIPTrace:@"updatePIPSource-contentSource-updated"
+                      streamID:streamID
+                          view:flutterVideoView];
             
             NSLog(@"[PIPManager] updatePIPSource, update %@'s view to pip controller, view:%@, layer:%@", streamID, flutterVideoView, flutterDisplayLayer);
         } else {
@@ -193,10 +272,19 @@ API_AVAILABLE(ios(15.0))
             self.pipCallVC.preferredContentSize = CGSizeMake(self.aspectWidth, self.aspectHeight);
             
             UIView* flutterVideoView = [self.flutterVideoViewDictionary objectForKey:streamID];
+            [self logPIPTrace:@"enablePIP-source-view"
+                      streamID:streamID
+                          view:flutterVideoView];
             AVPictureInPictureControllerContentSource *contentSource = [[AVPictureInPictureControllerContentSource alloc] initWithActiveVideoCallSourceView:flutterVideoView contentViewController:self.pipCallVC];
             
             self.pipController = [[AVPictureInPictureController alloc] initWithContentSource:contentSource];
             self.pipController.delegate = self;
+            NSLog(@"[PIPManager][PIPTrace] enablePIP controller created, "
+                  "streamID=%@, controller=%p, sourceView=%p, active=%d",
+                  streamID,
+                  self.pipController,
+                  flutterVideoView,
+                  self.pipController.isPictureInPictureActive);
             
             self.pipVideoView = [[KitRemoteView alloc] initWithFrame:CGRectZero];
             if(nil != self.pipCallVC) {
@@ -311,10 +399,16 @@ API_AVAILABLE(ios(15.0))
 
 - (void)updatePlayingStreamView:(NSString *)streamID videoView:(UIView *)videoView viewMode:(NSNumber *)viewMode{
     NSLog(@"[PIPManager] updatePlayingStreamView, stream id:%@, video view:%@, view mode:%@", streamID, videoView, viewMode);
+    [self logPIPTrace:@"updatePlayingStreamView-before-layer-change"
+              streamID:streamID
+                  view:videoView];
     
     // add a layer for custom rendering to the video view, if not found, add one
     [self addFlutterLayerWithView:streamID :videoView];
     [self setViewMode:(ZegoViewMode)[viewMode integerValue]];
+    [self logPIPTrace:@"updatePlayingStreamView-after-layer-change"
+              streamID:streamID
+                  view:videoView];
     
     if(self.pipController != nil && self.pipController.isPictureInPictureActive) {
         [self updatePIPStreamID: streamID];
@@ -327,10 +421,16 @@ API_AVAILABLE(ios(15.0))
     NSLog(@"[PIPManager] stopPlayingStream, stream id:%@", streamID);
     
     UIView* flutterVideoView = [self.flutterVideoViewDictionary objectForKey:streamID];
+    [self logPIPTrace:@"stopPlayingStream-before-remove"
+              streamID:streamID
+                  view:flutterVideoView];
     [flutterVideoView removeObserver:self forKeyPath:@"bounds"];
     [self.flutterVideoViewDictionary removeObjectForKey:streamID];
     
     [[ZegoExpressEngine sharedEngine] stopPlayingStream:streamID];
+    [self logPIPTrace:@"stopPlayingStream-after-remove"
+              streamID:streamID
+                  view:flutterVideoView];
 }
 
 - (AVSampleBufferDisplayLayer *)createAVSampleBufferDisplayLayer
@@ -535,6 +635,9 @@ API_AVAILABLE(ios(15.0))
 
 - (void)addFlutterLayerWithView:(NSString *)streamID  :(UIView *)videoView  {
     NSLog(@"[PIPManager] addFlutterLayerWithView, video view:%@", videoView);
+    [self logPIPTrace:@"addFlutterLayerWithView-input"
+              streamID:streamID
+                  view:videoView];
     
     UIView* flutterVideoView = [self.flutterVideoViewDictionary objectForKey:streamID];
     if (flutterVideoView != videoView) {
@@ -557,8 +660,19 @@ API_AVAILABLE(ios(15.0))
         
         NSLog(@"[PIPManager] addFlutterLayerWithView, layer not found, add layer:%@ in videoView:%@", displayLayer, videoView);
     }
-    
+
     [videoView addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionNew context:nil];
+    NSLog(@"[PIPManager][PIPTrace] custom display layer ready, "
+          "streamID=%@, view=%p, viewWindow=%p, viewSuperview=%p, "
+          "layer=%p, layerSuperview=%p, layerFrame=%@, readyForDisplay=%d",
+          streamID,
+          videoView,
+          videoView.window,
+          videoView.superview,
+          displayLayer,
+          displayLayer.superlayer,
+          NSStringFromCGRect(displayLayer.frame),
+          displayLayer.isReadyForDisplay);
 }
 
 - (void)rebuildFlutterLayer:(NSString* )streamID {

@@ -302,6 +302,12 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
         'aspect_width': aspectWidth,
         'aspect_height': aspectHeight,
       });
+      ZegoLoggerService.logInfo(
+        'native PiP enable call completed, streamID:$streamID, '
+        'aspect:${aspectWidth}x$aspectHeight',
+        tag: 'uikit-channel',
+        subTag: 'enableIOSPIP',
+      );
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
@@ -345,6 +351,11 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       await methodChannel.invokeMethod('updatePIPSource', {
         'stream_id': streamID,
       });
+      ZegoLoggerService.logInfo(
+        'native PiP source update call completed, streamID:$streamID',
+        tag: 'uikit-channel',
+        subTag: 'updateIOSPIPSource',
+      );
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',
@@ -510,9 +521,16 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       }
 
       await methodChannel.invokeMethod('startPlayingStreamInPIP', arguments);
+      ZegoLoggerService.logInfo(
+        'native method returned, streamID:$streamID, '
+        'resourceMode:$resourceMode, roomID:$roomID',
+        tag: 'uikit-channel',
+        subTag: 'startPlayingStreamInPIP',
+      );
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
-        'Failed to request: $e.',
+        'native method failed, code:${e.code}, message:${e.message}, '
+        'details:${e.details}, streamID:$streamID',
         tag: 'uikit-channel',
         subTag: 'startPlayingStreamInPIP',
       );
@@ -550,9 +568,17 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
         'stream_id': streamID,
         'view_mode': viewMode,
       });
+      ZegoLoggerService.logInfo(
+        'native method returned, viewID:$viewID, streamID:$streamID, '
+        'viewMode:$viewMode',
+        tag: 'uikit-channel',
+        subTag: 'updatePlayingStreamViewInPIP',
+      );
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
-        'Failed to request: $e.',
+        'native method failed, code:${e.code}, message:${e.message}, '
+        'details:${e.details}, viewID:$viewID, streamID:$streamID, '
+        'viewMode:$viewMode',
         tag: 'uikit-channel',
         subTag: 'updatePlayingStreamViewInPIP',
       );
@@ -582,9 +608,15 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       await methodChannel.invokeMethod('stopPlayingStreamInPIP', {
         'stream_id': streamID,
       });
+      ZegoLoggerService.logInfo(
+        'native method returned, streamID:$streamID',
+        tag: 'uikit-channel',
+        subTag: 'stopPlayingStreamInPIP',
+      );
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
-        'Failed to request: $e.',
+        'native method failed, code:${e.code}, message:${e.message}, '
+        'details:${e.details}, streamID:$streamID',
         tag: 'uikit-channel',
         subTag: 'stopPlayingStreamInPIP',
       );
