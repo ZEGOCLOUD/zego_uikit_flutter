@@ -329,6 +329,53 @@ void main() {
     expect(queue.isTaskRunning, isFalse);
   });
 
+  test('停止预览使用入队时的本地 key 取消旧任务并继续远端画布', () async {
+    final queue = ZegoStreamCanvasViewCreateQueue();
+    final localTaskStarted = Completer<void>();
+    final remoteTaskStarted = Completer<void>();
+    final duplicateLocalTaskStarted = Completer<void>();
+    final localTasks = ZegoStreamCanvasViewCreateQueueTaskTracker();
+    var roomID = '';
+    final localTaskKey = generateStreamID(
+      'local-user',
+      roomID,
+      ZegoStreamType.main,
+    );
+    localTasks.track(localTaskKey);
+
+    unawaited(
+      queue.addTask(
+        uniqueKey: localTaskKey,
+        task: () async => localTaskStarted.complete(),
+      ),
+    );
+    await localTaskStarted.future;
+    unawaited(
+      queue.addTask(
+        uniqueKey: localTaskKey,
+        task: () async => duplicateLocalTaskStarted.complete(),
+      ),
+    );
+    unawaited(
+      queue.addTask(
+        uniqueKey: 'remote-stream',
+        task: () async => remoteTaskStarted.complete(),
+      ),
+    );
+
+    roomID = 'active-call';
+    expect(
+      generateStreamID('local-user', roomID, ZegoStreamType.main),
+      isNot(localTaskKey),
+    );
+    expect(localTasks.cancelAll(queue), isTrue);
+    await remoteTaskStarted.future;
+
+    expect(duplicateLocalTaskStarted.isCompleted, isFalse);
+    expect(queue.currentTaskKey, 'remote-stream');
+    queue.completeCurrentTask();
+  });
+
   test('已有画布仅在队列流、代数和远端用户对象匹配时释放任务', () async {
     final queue = ZegoStreamCanvasViewCreateQueue();
     final taskStarted = Completer<void>();

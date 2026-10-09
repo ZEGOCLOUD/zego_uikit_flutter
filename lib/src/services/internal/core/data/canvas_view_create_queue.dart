@@ -61,6 +61,38 @@ class ZegoStreamCanvasViewCreateQueue {
     }
   }
 
+  bool cancelTasksByKey(String uniqueKey) {
+    if (_taskList.isEmpty) {
+      return false;
+    }
+
+    final currentTask = _isTaskRunning ? _taskList.first : null;
+    final hasMatchingTask = _taskList.any((task) => task.key == uniqueKey);
+    if (!hasMatchingTask) {
+      return false;
+    }
+
+    _taskList.removeWhere(
+      (task) => task.key == uniqueKey && !identical(task, currentTask),
+    );
+
+    ZegoLoggerService.logInfo(
+      'cancel queued tasks($uniqueKey), current task:$currentTaskKey',
+      tag: 'uikit-stream',
+      subTag: 'queue',
+    );
+
+    // Keep the running item at the head until its waiter is released; its
+    // completion callback validates that it is still the current queue item.
+    if (currentTask?.key == uniqueKey) {
+      completeCurrentTask();
+    } else if (!_isTaskRunning) {
+      _doTask();
+    }
+
+    return true;
+  }
+
   Future<void> addTask({
     required String uniqueKey,
     required Future Function() task,
@@ -165,6 +197,27 @@ class ZegoStreamCanvasViewCreateQueue {
     _isTaskRunning = false;
     _doTask();
   }
+}
+
+class ZegoStreamCanvasViewCreateQueueTaskTracker {
+  // A local preview task can be queued before joining, so its room-based key
+  // may differ from the room ID observed later by stopPreview.
+  final Set<String> _taskKeys = {};
+
+  void track(String uniqueKey) => _taskKeys.add(uniqueKey);
+
+  bool cancelAll(ZegoStreamCanvasViewCreateQueue queue) {
+    var didCancelTasks = false;
+    // Cancel every key captured at enqueue time, including duplicate pending
+    // tasks, rather than rebuilding a key from the current room state.
+    for (final taskKey in _taskKeys) {
+      didCancelTasks = queue.cancelTasksByKey(taskKey) || didCancelTasks;
+    }
+    _taskKeys.clear();
+    return didCancelTasks;
+  }
+
+  void clear() => _taskKeys.clear();
 }
 
 class TaskItem {

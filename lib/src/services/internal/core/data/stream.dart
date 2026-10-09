@@ -196,6 +196,10 @@ mixin ZegoUIKitCoreDataStream {
   bool isPreviewing = false;
   int? _previewCanvasViewID;
   final Map<int, Future<void>> _startingPreviewCanvasBindings = {};
+  // Retain enqueue-time keys so stopPreview can cancel local tasks even if
+  // the room ID changes while a canvas view is being created.
+  final _localMainCanvasQueueTaskTracker =
+      ZegoStreamCanvasViewCreateQueueTaskTracker();
   bool isEnableCustomVideoRender = false;
   final Set<ZegoStreamType> startingPublishingStreamTypes = {};
   bool isUsingFrontCameraRequesting = false;
@@ -300,6 +304,7 @@ mixin ZegoUIKitCoreDataStream {
 
     isEnablePlatformView = false;
     canvasViewCreateQueue.clear();
+    _localMainCanvasQueueTaskTracker.clear();
     _streamStartRequests.clear();
     for (final user in [
       ZegoUIKitCore.shared.coreData.localUser,
@@ -555,20 +560,12 @@ mixin ZegoUIKitCoreDataStream {
 
     /// It is necessary to cancel the queue waiting in startpreview and the corresponding state that may exist,
     /// otherwise it may not render next time
-    final queueKey = generateStreamID(
-      ZegoUIKitCore.shared.coreData.localUser.id,
-      ZegoUIKitCore.shared.coreData.room.id,
-      ZegoStreamType.main,
-    );
-    if (canvasViewCreateQueue.currentTaskKey == queueKey) {
+    if (_localMainCanvasQueueTaskTracker.cancelAll(canvasViewCreateQueue)) {
       ZegoLoggerService.logInfo(
         'stopped canvas view queue',
         tag: 'uikit-stream',
         subTag: 'publish stream',
       );
-
-      canvasViewCreateQueue.completeCurrentTask();
-
       getLocalStreamChannel(
         ZegoStreamType.main,
       ).viewCreatingNotifier.value = false;
@@ -1076,6 +1073,12 @@ mixin ZegoUIKitCoreDataStream {
           tag: 'uikit-stream',
           subTag: 'create local user video view',
         );
+
+        if (streamType == ZegoStreamType.main) {
+          // Keep the exact key used below; joining can change the room ID
+          // before this queued task is released or stopPreview is called.
+          _localMainCanvasQueueTaskTracker.track(queueTaskKey);
+        }
 
         canvasViewCreateQueue.addTask(
           uniqueKey: queueTaskKey,
