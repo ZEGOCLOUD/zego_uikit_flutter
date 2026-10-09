@@ -85,22 +85,19 @@ class ZegoUIKit
     return ZegoUIKitCore.shared.getZegoUIKitVersion();
   }
 
-  /// init
+  /// Initializes UIKit.
   ///
-  /// Called before enter room/push or pull stream
+  /// Call before entering a room, publishing, or playing a stream.
   ///
   /// * [enablePlatformView],
-  /// Not recommended for use. Current usage scenarios include:
-  /// 1. displaying PIP on iOS,
-  /// 2. playing MP4 on media.
-  /// On iOS, when calling init again, null keeps the current UIKit setting.
-  /// A non-null value updates UIKit's internal view path only; it does not
-  /// recreate or reconfigure the existing Express Engine. Keep it consistent
-  /// with the value used for the first init.
+  /// Not recommended unless needed. Current use cases include iOS system PiP
+  /// and media-file playback. On iOS, passing null on a later init call keeps
+  /// the current UIKit setting. A non-null value updates UIKit's internal view
+  /// path only; it does not recreate or reconfigure the existing Express Engine.
+  /// Keep it consistent with the value used on the first init call.
   /// * [playingStreamInPIPUnderIOS],
-  /// If you want to display PIP iOS, you need to set it to true, and then
-  /// the platform view + custom rendering mechanism will be launched.
-  /// At this time, [enablePlatformView] should be set to **true**.
+  /// Set to true to use iOS system PiP. This enables PlatformView and custom
+  /// rendering; [enablePlatformView] should also be true.
   Future<void> init({
     required int appID,
     String appSign = '',

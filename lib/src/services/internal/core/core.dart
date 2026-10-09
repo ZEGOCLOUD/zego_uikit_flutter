@@ -51,6 +51,9 @@ class ZegoUIKitCore
 
   static final ZegoUIKitCore shared = ZegoUIKitCore._internal();
 
+  /// UIKit does not recreate the Express Engine after initialization. If a later
+  /// init call omits this option, retain the current rendering configuration
+  /// instead of treating the missing value as disabling PlatformView.
   @visibleForTesting
   static bool resolvePlatformViewEnabledForReinit({
     required bool? requestedValue,

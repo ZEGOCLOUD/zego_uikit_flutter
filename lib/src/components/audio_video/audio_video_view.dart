@@ -177,6 +177,9 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     super.dispose();
   }
 
+  // This checks only Flutter Element/RenderObject attachment and size. It does
+  // not prove that the native UIKit UIView is in a window or has video frames;
+  // use Express lifecycle logs to inspect the native view hierarchy.
   void logPlatformViewConstraints({
     required BuildContext context,
     required String userID,
@@ -363,11 +366,11 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   }
 
   Widget localCameraFlipAnimation(Widget child) {
-    /// local user, camera switch animation
-    // iOS PlatformViews cannot be reliably composited below a Flutter 3D
-    // Transform. When PIP is enabled, the video is rendered by the native
-    // UIView, so Matrix4.rotationY can make it invisible while native frames
-    // continue to render. The native preview handles camera orientation.
+    /// Camera-switch flip animation for the local user.
+    // iOS PlatformViews are composited as native UIViews and may not remain
+    // visible beneath a Flutter 3D Transform. Skip this flip in PiP to avoid
+    // hiding the view while native frames continue rendering; native preview
+    // handles camera orientation.
     if (Platform.isIOS && ZegoUIKitCore.shared.coreData.isEnablePlatformView) {
       return child;
     }

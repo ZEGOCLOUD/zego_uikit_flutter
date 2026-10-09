@@ -15,7 +15,10 @@ import 'package:zego_uikit/src/services/internal/core/data/canvas_view_create_qu
 import 'package:zego_uikit/src/services/internal/internal.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
-/// 等待画布创建后的异步绑定完成，再释放创建队列。
+/// Release the queue only after asynchronous binding in the canvas-created
+/// callback completes, so the next creation cannot interleave with this one.
+/// The queue orders Flutter-side creation and binding; it does not mean the
+/// native UIView has been attached to a window.
 Future<void> completeCanvasViewCreationCallback(
   FutureOr<void> Function() callback, {
   required void Function() onCompleted,
@@ -323,6 +326,9 @@ mixin ZegoUIKitCoreDataStream {
   }
 
   Future<void> _startPreviewOnView(int previewViewID) async {
+    // isPreviewing does not guarantee that preview is still bound to the current
+    // UIView. PiP or a page rebuild can produce a new ViewID, so rebind preview
+    // when the ID changes and skip only when it is already bound to this ID.
     if (isPreviewing && _previewCanvasViewID == previewViewID) {
       ZegoLoggerService.logInfo(
         'skip duplicate startPreview, already bound viewID:$previewViewID',
@@ -842,11 +848,10 @@ mixin ZegoUIKitCoreDataStream {
   }) async {
     Key? canvasViewKey;
     if (Platform.isIOS && isEnablePlatformView) {
-      /// iOS & platform view, express view id not callback sometimes, or call random
-      /// Preserve the canvas identity without forwarding a GlobalKey. The
-      /// same canvas can be temporarily present in more than one PIP/layout
-      /// subtree, and a duplicate GlobalKey makes Flutter detach the
-      /// UiKitView before its callback is delivered.
+      // During PiP/layout transitions, one canvas can briefly appear in multiple
+      // subtrees. Forwarding a GlobalKey can make Flutter detach the native view
+      // due to a duplicate key; use a ValueKey to preserve canvas identity
+      // without reusing a GlobalKey across subtrees.
       if (key != null) {
         canvasViewKey = ValueKey<int>(identityHashCode(key));
       }
@@ -868,6 +873,9 @@ mixin ZegoUIKitCoreDataStream {
         );
 
         if (isCanvasViewCreateByQueue) {
+          // Wait for the current Flutter frame before binding the UIKit ViewID,
+          // and release the next creation only after that asynchronous binding
+          // completes. A completed frame does not mean the native UIView is in a window.
           WidgetsBinding.instance.addPostFrameCallback((_) {
             unawaited(
               completeCanvasViewCreationCallback(
@@ -975,6 +983,9 @@ mixin ZegoUIKitCoreDataStream {
         await onViewCreated(streamType);
       }
     } else {
+      // Increment the generation for each local canvas recreation. A delayed
+      // callback or Widget result from an older UiKitView must not overwrite
+      // the state of the current canvas.
       final creationGeneration = ++localStreamChannel.viewCreationGeneration;
       localStreamChannel.viewCreatingNotifier.value = true;
 
@@ -1635,11 +1646,10 @@ mixin ZegoUIKitCoreDataStream {
     }
   }
 
-  /// A canvas can be destroyed by a leaving/rebuilding view after Dart has
-  /// checked its ID but before updatePlayingCanvas reaches the platform.
-  /// Reset only the matching stale channel, then let the regular create path
-  /// allocate a fresh TextureRenderer.  Do nothing when the stream has already
-  /// been removed or a newer canvas has replaced this one.
+  /// A view leaving or rebuilding can destroy a canvas after Dart checks its ID
+  /// but before updatePlayingCanvas reaches the native side. Reset only the
+  /// matching stale channel and let the regular path create a fresh
+  /// TextureRenderer; do nothing if the stream was removed or a newer canvas exists.
   Future<void> _recoverStalePlayingCanvas({
     required String streamID,
     required int viewID,
