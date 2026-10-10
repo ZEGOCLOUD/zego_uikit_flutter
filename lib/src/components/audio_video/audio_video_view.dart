@@ -679,6 +679,13 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       return child;
     }
 
+    // Rounded clipping can place an iOS platform view above Flutter overlays.
+    // Keep native video square-cornered so PIP controls remain visible.
+    final clipBehavior =
+        Platform.isIOS && ZegoUIKitCore.shared.coreData.isEnablePlatformView
+            ? Clip.none
+            : Clip.antiAlias;
+
     final decoration = BoxDecoration(
       border: Border.all(
           color: widget.borderColor ?? const Color(0xffA4A4A4), width: 1),
@@ -690,7 +697,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       child: PhysicalModel(
         color: widget.borderColor ?? const Color(0xffA4A4A4),
         borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius!)),
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: clipBehavior,
         elevation: 6.0,
         shadowColor: (widget.borderColor ?? const Color(0xffA4A4A4))
             .withValues(alpha: 0.3),
