@@ -1,3 +1,13 @@
+## 2.29.3
+
+- Bugs
+    - Fixed missing remote audio when answering an offline call on iOS.
+    - Fixed iOS camera and video rendering issues in Picture-in-Picture layouts.
+    - Fixed local canvas creation queue races that could start remote playback before the view was ready or accept stale callbacks.
+    - Fixed gray backing in square iOS video tiles, kept Picture-in-Picture controls above native video, and limited the square-corner workaround to Flutter 3.47.x.
+- Update dependency
+    - Use `zego_express_engine_for_uikit` for UIKit-specific engine integration.
+
 ## 2.29.2
 
 - Bugs
