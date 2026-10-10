@@ -15,8 +15,7 @@ dependencies:
 
   # Local patched Express package: iOS PlatformView sends a fallback View ID
   # over a dedicated MethodChannel when Flutter drops onPlatformViewCreated.
-  zego_express_engine:
-    path: ../../zego_uikits_master/temp/zego_express_engine_3.25.0_for-uikit
+  zego_express_engine_for_uikit: ^3.25.0
 
   device_info_plus: ^11.5.0
   encrypt: ^5.0.3
