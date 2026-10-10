@@ -20,6 +20,10 @@ import 'package:zego_uikit/src/components/widgets/flip_animation.dart';
 import 'package:zego_uikit/src/services/internal/core/core.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
+bool get _isFlutter347 =>
+    const bool.hasEnvironment('FLUTTER_VERSION') &&
+    const String.fromEnvironment('FLUTTER_VERSION').startsWith('3.47.');
+
 /// display user audio and video information,
 /// and z order of widget(from bottom to top) is:
 /// 1. background view
@@ -680,12 +684,15 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     }
 
     // Flutter 3.47.x has an iOS non-rectangular platform-view composition
-    // regression: rounded UiKitView clips can cover Flutter overlays.
+    // regression: rounded UiKitView clips can cover Flutter overlays. Limit
+    // the square-corner workaround to that SDK range.
     // https://github.com/flutter/flutter/issues/191771
     // https://github.com/flutter/flutter/issues/192245
     // Keep the video and border square, and its backing surface transparent.
     final isIOSPlatformView =
-        Platform.isIOS && ZegoUIKitCore.shared.coreData.isEnablePlatformView;
+        Platform.isIOS &&
+        _isFlutter347 &&
+        ZegoUIKitCore.shared.coreData.isEnablePlatformView;
     final borderColor = widget.borderColor ?? const Color(0xffA4A4A4);
     final borderRadius = isIOSPlatformView
         ? BorderRadius.zero
