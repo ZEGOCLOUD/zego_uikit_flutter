@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
-import 'package:zego_express_engine/zego_express_engine.dart';
+import 'package:zego_express_engine_for_uikit/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/modules/outside_room_audio_video/config.dart';

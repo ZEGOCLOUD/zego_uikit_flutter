@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 
 // Package imports:
 import 'package:flutter_logs_yoer/flutter_logs_yoer.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
+import 'package:zego_express_engine_for_uikit/zego_express_engine.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 
 // Project imports:

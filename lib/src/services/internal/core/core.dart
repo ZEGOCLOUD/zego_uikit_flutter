@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
+import 'package:zego_express_engine_for_uikit/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';

@@ -16,7 +16,7 @@ A new Flutter project.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'zego_express_engine'
+  s.dependency 'zego_express_engine_for_uikit'
   s.dependency 'ZegoUIKitReport', '0.2.10'
   s.dependency 'Masonry'
   s.static_framework = true

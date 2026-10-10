@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:file_picker/file_picker.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
+import 'package:zego_express_engine_for_uikit/zego_express_engine.dart';
 
 typedef ZegoUIKitPlatformFile = PlatformFile;
 

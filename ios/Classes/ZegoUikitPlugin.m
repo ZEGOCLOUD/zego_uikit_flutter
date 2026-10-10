@@ -4,11 +4,11 @@
 #import "AVAudioSession+Zego.h" // 引入拦截器头文件
 
 /// flutter express
-#import <zego_express_engine/ZegoCustomVideoProcessManager.h>
-#import <zego_express_engine/ZegoCustomVideoCaptureManager.h>
-#import <zego_express_engine/ZegoExpressEngineMethodHandler.h>
-#import <zego_express_engine/ZegoPlatformViewFactory.h>
-#import <zego_express_engine/ZegoPlatformView.h>
+#import <zego_express_engine_for_uikit/ZegoCustomVideoProcessManager.h>
+#import <zego_express_engine_for_uikit/ZegoCustomVideoCaptureManager.h>
+#import <zego_express_engine_for_uikit/ZegoExpressEngineMethodHandler.h>
+#import <zego_express_engine_for_uikit/ZegoPlatformViewFactory.h>
+#import <zego_express_engine_for_uikit/ZegoPlatformView.h>
 #import <ZegoUIKitReport/ZegoUIKitReport.h>
 
 #import "pip/PipManager.h"

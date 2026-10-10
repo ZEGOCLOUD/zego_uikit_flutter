@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
+import 'package:zego_express_engine_for_uikit/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_uikit/src/services/internal/internal.dart';
