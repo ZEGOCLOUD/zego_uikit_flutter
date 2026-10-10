@@ -679,7 +679,10 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       return child;
     }
 
-    // Rounded clipping can place an iOS platform view above Flutter overlays.
+    // Flutter 3.47.x has an iOS non-rectangular platform-view composition
+    // regression: rounded UiKitView clips can cover Flutter overlays.
+    // https://github.com/flutter/flutter/issues/191771
+    // https://github.com/flutter/flutter/issues/192245
     // Keep the video and border square, and its backing surface transparent.
     final isIOSPlatformView =
         Platform.isIOS && ZegoUIKitCore.shared.coreData.isEnablePlatformView;
