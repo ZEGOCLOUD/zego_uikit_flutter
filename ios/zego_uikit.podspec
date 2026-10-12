@@ -18,7 +18,6 @@ A new Flutter project.
   s.dependency 'Flutter'
   s.dependency 'zego_express_engine_for_uikit'
   s.dependency 'ZegoUIKitReport', '0.2.10'
-  s.dependency 'Masonry'
   s.static_framework = true
   s.platform = :ios, '13.0'
 
