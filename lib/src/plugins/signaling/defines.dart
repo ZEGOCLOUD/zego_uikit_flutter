@@ -8,11 +8,7 @@ export 'package:zego_plugin_adapter/zego_plugin_adapter.dart'
 extension ZegoSignalingPluginNotificationConfigToMap
     on ZegoSignalingPluginPushConfig {
   Map<String, dynamic> toMap() {
-    return {
-      'resourceID': resourceID,
-      'title': title,
-      'message': message,
-    };
+    return {'resourceID': resourceID, 'title': title, 'message': message};
   }
 }
 
@@ -42,14 +38,13 @@ class ZegoNotificationConfig {
 
 /// @nodoc
 class ZegoNotificationVoIPConfig {
-  ZegoNotificationVoIPConfig({
-    this.iOSVoIPHasVideo = false,
-  });
+  ZegoNotificationVoIPConfig({this.iOSVoIPHasVideo = false});
 
   bool iOSVoIPHasVideo;
 
   @override
-  String toString() => '{'
+  String toString() =>
+      '{'
       'iOSVoIPHasVideo: $iOSVoIPHasVideo, '
       '}';
 }

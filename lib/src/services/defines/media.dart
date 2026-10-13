@@ -90,30 +90,21 @@ class ZegoUIKitMediaPlayerStyle {
 }
 
 class ZegoUIKitMediaPlayerEvent {
-  const ZegoUIKitMediaPlayerEvent({
-    this.onPlayStateChanged,
-  });
+  const ZegoUIKitMediaPlayerEvent({this.onPlayStateChanged});
 
   /// play state callback
   final void Function(ZegoUIKitMediaPlayState)? onPlayStateChanged;
 }
 
 /// media type
-enum ZegoUIKitMediaType {
-  pureAudio,
-  video,
-  unknown,
-}
+enum ZegoUIKitMediaType { pureAudio, video, unknown }
 
 /// media play result
 class ZegoUIKitMediaPlayResult {
   int errorCode;
   String message;
 
-  ZegoUIKitMediaPlayResult({
-    required this.errorCode,
-    this.message = '',
-  });
+  ZegoUIKitMediaPlayResult({required this.errorCode, this.message = ''});
 }
 
 /// seek result of media
@@ -121,10 +112,7 @@ class ZegoUIKitMediaSeekToResult {
   int errorCode;
   String message;
 
-  ZegoUIKitMediaSeekToResult({
-    required this.errorCode,
-    this.message = '',
-  });
+  ZegoUIKitMediaSeekToResult({required this.errorCode, this.message = ''});
 }
 
 /// media play state
@@ -143,12 +131,13 @@ enum ZegoUIKitMediaPlayState {
   pausing,
 
   /// End of play
-  playEnded
+  playEnded,
 }
 
 extension ZegoUIKitMediaPlayStateExtension on ZegoUIKitMediaPlayState {
   static ZegoUIKitMediaPlayState fromZego(
-      ZegoMediaPlayerState zegoMediaPlayerState) {
+    ZegoMediaPlayerState zegoMediaPlayerState,
+  ) {
     switch (zegoMediaPlayerState) {
       case ZegoMediaPlayerState.NoPlay:
         return ZegoUIKitMediaPlayState.noPlay;
@@ -182,17 +171,14 @@ class ZegoUIKitMediaInfo {
   });
 
   /// Constructs a media player information object by default.
-  ZegoUIKitMediaInfo.defaultInfo()
-      : width = 0,
-        height = 0,
-        frameRate = 0;
+  ZegoUIKitMediaInfo.defaultInfo() : width = 0, height = 0, frameRate = 0;
 
   ZegoUIKitMediaInfo.fromZego(ZegoMediaPlayerMediaInfo? zegoMediaInfo)
-      : this(
-          width: zegoMediaInfo?.width ?? 0,
-          height: zegoMediaInfo?.height ?? 0,
-          frameRate: zegoMediaInfo?.frameRate ?? 0,
-        );
+    : this(
+        width: zegoMediaInfo?.width ?? 0,
+        height: zegoMediaInfo?.height ?? 0,
+        frameRate: zegoMediaInfo?.frameRate ?? 0,
+      );
 }
 
 @Deprecated('Since 2.17.0, please use ZegoUIKitMediaInfo instead')

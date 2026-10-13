@@ -29,7 +29,7 @@ class ZegoStartInvitationButtonResult {
 /// @nodoc
 class ZegoStartInvitationButton extends StatefulWidget {
   const ZegoStartInvitationButton({
-    Key? key,
+    super.key,
     required this.invitationType,
     required this.invitees,
     required this.data,
@@ -53,7 +53,7 @@ class ZegoStartInvitationButton extends StatefulWidget {
     this.unclickableTextColor = Colors.black,
     this.clickableBackgroundColor = Colors.transparent,
     this.unclickableBackgroundColor = Colors.transparent,
-  }) : super(key: key);
+  });
   final bool isAdvancedMode;
 
   final int invitationType;
@@ -131,35 +131,33 @@ class _ZegoStartInvitationButtonState extends State<ZegoStartInvitationButton> {
 
     final sendResult = widget.isAdvancedMode
         ? ZegoUIKit().getSignalingPlugin().sendAdvanceInvitation(
-              inviterID: ZegoUIKit().getLocalUser().id,
-              inviterName: ZegoUIKit().getLocalUser().name,
-              invitees: widget.invitees,
-              timeout: widget.timeoutSeconds,
-              type: widget.invitationType,
-              data: widget.data,
-              zegoNotificationConfig: widget.notificationConfig,
-            )
+            inviterID: ZegoUIKit().getLocalUser().id,
+            inviterName: ZegoUIKit().getLocalUser().name,
+            invitees: widget.invitees,
+            timeout: widget.timeoutSeconds,
+            type: widget.invitationType,
+            data: widget.data,
+            zegoNotificationConfig: widget.notificationConfig,
+          )
         : ZegoUIKit().getSignalingPlugin().sendInvitation(
-              inviterID: ZegoUIKit().getLocalUser().id,
-              inviterName: ZegoUIKit().getLocalUser().name,
-              invitees: widget.invitees,
-              timeout: widget.timeoutSeconds,
-              type: widget.invitationType,
-              data: widget.data,
-              isAdvancedMode: widget.isAdvancedMode,
-              zegoNotificationConfig: widget.notificationConfig,
-            );
-    return sendResult.then(
-      (result) {
-        widget.onPressed?.call(
-          ZegoStartInvitationButtonResult(
-            code: result.error?.code ?? '',
-            message: result.error?.message ?? '',
-            invitationID: result.invitationID,
-            errorInvitees: result.errorInvitees.keys.toList(),
-          ),
-        );
-      },
-    );
+            inviterID: ZegoUIKit().getLocalUser().id,
+            inviterName: ZegoUIKit().getLocalUser().name,
+            invitees: widget.invitees,
+            timeout: widget.timeoutSeconds,
+            type: widget.invitationType,
+            data: widget.data,
+            isAdvancedMode: widget.isAdvancedMode,
+            zegoNotificationConfig: widget.notificationConfig,
+          );
+    return sendResult.then((result) {
+      widget.onPressed?.call(
+        ZegoStartInvitationButtonResult(
+          code: result.error?.code ?? '',
+          message: result.error?.message ?? '',
+          invitationID: result.invitationID,
+          errorInvitees: result.errorInvitees.keys.toList(),
+        ),
+      );
+    });
   }
 }

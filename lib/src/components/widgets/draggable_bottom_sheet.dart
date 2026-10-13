@@ -34,7 +34,7 @@ class ZegoDraggableBottomSheet extends StatefulWidget {
   final Axis scrollDirection;
 
   const ZegoDraggableBottomSheet({
-    Key? key,
+    super.key,
     this.alignment = Alignment.bottomLeft,
     this.backgroundWidget,
     this.blurBackground = true,
@@ -44,7 +44,7 @@ class ZegoDraggableBottomSheet extends StatefulWidget {
     this.minExtent = 10,
     this.previewChild,
     this.scrollDirection = Axis.vertical,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoDraggableBottomSheet> createState() =>
@@ -70,15 +70,16 @@ class _ZegoDraggableBottomSheetState extends State<ZegoDraggableBottomSheet> {
           const SizedBox()
         else
           Positioned.fill(
-              child: GestureDetector(
-            onTap: () => setState(() => currentHeight = widget.minExtent),
-            child: Container(
-              color: Colors.black.withValues(alpha: 0.5),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+            child: GestureDetector(
+              onTap: () => setState(() => currentHeight = widget.minExtent),
+              child: Container(
+                color: Colors.black.withValues(alpha: 0.5),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                ),
               ),
             ),
-          )),
+          ),
         Align(
           alignment: widget.alignment,
           child: GestureDetector(
@@ -116,14 +117,10 @@ class _ZegoDraggableBottomSheetState extends State<ZegoDraggableBottomSheet> {
                 ),
                 child:
                     (currentHeight - widget.minExtent < widget.expansionExtent)
-                        ? ((widget.previewChild) ??
-                            Container(
-                              color: Theme.of(context).primaryColor,
-                            ))
-                        : ((widget.expandedChild) ??
-                            Container(
-                              color: Theme.of(context).primaryColor,
-                            )),
+                    ? ((widget.previewChild) ??
+                          Container(color: Theme.of(context).primaryColor))
+                    : ((widget.expandedChild) ??
+                          Container(color: Theme.of(context).primaryColor)),
               ),
             ),
           ),

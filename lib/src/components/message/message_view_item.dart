@@ -9,13 +9,12 @@ import 'package:zego_uikit/src/components/message/defines.dart';
 import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
-typedef ZegoInRoomMessageViewItemPressEvent = void Function(
-  ZegoInRoomMessage message,
-);
+typedef ZegoInRoomMessageViewItemPressEvent =
+    void Function(ZegoInRoomMessage message);
 
 class ZegoInRoomMessageViewItem extends StatefulWidget {
   const ZegoInRoomMessageViewItem({
-    Key? key,
+    super.key,
     required this.message,
     this.avatarLeadingBuilder,
     this.avatarTailingBuilder,
@@ -38,7 +37,7 @@ class ZegoInRoomMessageViewItem extends StatefulWidget {
     this.messageTextStyle,
     this.onItemClick,
     this.onItemLongPress,
-  }) : super(key: key);
+  });
 
   final String? namePrefix;
   final ZegoInRoomMessage message;
@@ -117,8 +116,9 @@ class _ZegoInRoomLiveMessageViewItemState
   }
 
   Widget item() {
-    final defaultBackgroundColor =
-        const Color(0xff2a2a2a).withValues(alpha: widget.opacity ?? 0.5);
+    final defaultBackgroundColor = const Color(
+      0xff2a2a2a,
+    ).withValues(alpha: widget.opacity ?? 0.5);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,16 +130,13 @@ class _ZegoInRoomLiveMessageViewItemState
                 widget.borderRadius ?? BorderRadius.all(Radius.circular(26.zR)),
           ),
           child: Padding(
-            padding: widget.paddings ??
+            padding:
+                widget.paddings ??
                 EdgeInsets.fromLTRB(20.zR, 10.zR, 20.zR, 10.zR),
             child: Stack(
               children: [
                 message(),
-                Positioned(
-                  top: 1.zR,
-                  right: 1.zR,
-                  child: state(),
-                ),
+                Positioned(top: 1.zR, right: 1.zR, child: state()),
               ],
             ),
           ),
@@ -153,8 +150,9 @@ class _ZegoInRoomLiveMessageViewItemState
         widget.paddings ?? EdgeInsets.fromLTRB(20.zR, 10.zR, 20.zR, 10.zR);
     return RichText(
       maxLines: widget.maxLines,
-      overflow:
-          null == widget.maxLines ? TextOverflow.clip : TextOverflow.ellipsis,
+      overflow: null == widget.maxLines
+          ? TextOverflow.clip
+          : TextOverflow.ellipsis,
       text: TextSpan(
         children: [
           ...messageAvatar(padding: padding),
@@ -170,7 +168,8 @@ class _ZegoInRoomLiveMessageViewItemState
         ? [
             if (null != widget.avatarLeadingBuilder) ...[
               WidgetSpan(
-                child: widget.avatarLeadingBuilder?.call(
+                child:
+                    widget.avatarLeadingBuilder?.call(
                       context,
                       widget.message,
                       {},
@@ -194,16 +193,17 @@ class _ZegoInRoomLiveMessageViewItemState
             if (null != widget.avatarTailingBuilder) ...[
               space,
               WidgetSpan(
-                child: widget.avatarTailingBuilder?.call(
+                child:
+                    widget.avatarTailingBuilder?.call(
                       context,
                       widget.message,
                       {},
                     ) ??
                     const SizedBox.shrink(),
-              )
+              ),
             ] else
               ...[],
-            WidgetSpan(child: SizedBox(width: 2.zR))
+            WidgetSpan(child: SizedBox(width: 2.zR)),
           ]
         : [];
   }
@@ -216,7 +216,8 @@ class _ZegoInRoomLiveMessageViewItemState
             if (widget.namePrefix != null) prefix(),
             if (null != widget.nameLeadingBuilder) ...[
               WidgetSpan(
-                child: widget.nameLeadingBuilder?.call(
+                child:
+                    widget.nameLeadingBuilder?.call(
                       context,
                       widget.message,
                       {},
@@ -228,7 +229,8 @@ class _ZegoInRoomLiveMessageViewItemState
               ...[],
             TextSpan(
               text: widget.message.user.name,
-              style: widget.nameTextStyle ??
+              style:
+                  widget.nameTextStyle ??
                   TextStyle(
                     fontSize: 26.zR,
                     fontWeight: FontWeight.w500,
@@ -238,13 +240,14 @@ class _ZegoInRoomLiveMessageViewItemState
             if (null != widget.nameTailingBuilder) ...[
               space,
               WidgetSpan(
-                child: widget.nameTailingBuilder?.call(
+                child:
+                    widget.nameTailingBuilder?.call(
                       context,
                       widget.message,
                       {},
                     ) ??
                     const SizedBox.shrink(),
-              )
+              ),
             ] else
               ...[],
             space,
@@ -256,11 +259,8 @@ class _ZegoInRoomLiveMessageViewItemState
     return [
       if (null != widget.textLeadingBuilder) ...[
         WidgetSpan(
-          child: widget.textLeadingBuilder?.call(
-                context,
-                widget.message,
-                {},
-              ) ??
+          child:
+              widget.textLeadingBuilder?.call(context, widget.message, {}) ??
               const SizedBox.shrink(),
         ),
         space,
@@ -270,7 +270,8 @@ class _ZegoInRoomLiveMessageViewItemState
         text: widget.isHorizontal
             ? widget.message.message
             : '\n${widget.message.message}',
-        style: widget.messageTextStyle ??
+        style:
+            widget.messageTextStyle ??
             TextStyle(
               fontSize: 26.zR,
               fontWeight: FontWeight.w400,
@@ -280,15 +281,12 @@ class _ZegoInRoomLiveMessageViewItemState
       if (null != widget.textTailingBuilder) ...[
         space,
         WidgetSpan(
-          child: widget.textTailingBuilder?.call(
-                context,
-                widget.message,
-                {},
-              ) ??
+          child:
+              widget.textTailingBuilder?.call(context, widget.message, {}) ??
               const SizedBox.shrink(),
-        )
+        ),
       ] else
-        ...[]
+        ...[],
     ];
   }
 
@@ -317,10 +315,7 @@ class _ZegoInRoomLiveMessageViewItemState
                   child: Center(
                     child: Text(
                       widget.namePrefix!,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.zR,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 20.zR),
                     ),
                   ),
                 ),
@@ -366,11 +361,7 @@ class _ZegoInRoomLiveMessageViewItemState
             }
           },
           child: null != widget.resendIcon
-              ? SizedBox(
-                  width: 30.zR,
-                  height: 30.zR,
-                  child: widget.resendIcon,
-                )
+              ? SizedBox(width: 30.zR, height: 30.zR, child: widget.resendIcon)
               : Container(
                   width: 30.zR,
                   height: 30.zR,

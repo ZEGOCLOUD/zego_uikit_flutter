@@ -12,10 +12,7 @@ class ZegoBeautyPluginCoreData {
   bool isInit = false;
 
   /// create engine
-  Future<void> create({
-    required int appID,
-    required String appSign,
-  }) async {
+  Future<void> create({required int appID, required String appSign}) async {
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) == null) {
       return;
     }
@@ -30,10 +27,7 @@ class ZegoBeautyPluginCoreData {
       return;
     }
 
-    ZegoPluginAdapter().beautyPlugin!.init(
-          appID: appID,
-          appSign: appSign,
-        );
+    ZegoPluginAdapter().beautyPlugin!.init(appID: appID, appSign: appSign);
     isInit = true;
 
     ZegoLoggerService.logInfo(

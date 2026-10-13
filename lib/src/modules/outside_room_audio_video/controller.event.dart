@@ -13,7 +13,7 @@ class ZegoOutsideRoomAudioVideoViewExpressEvent
   ValueNotifier<List<ZegoOutsideRoomAudioVideoViewStream>>? _streamsNotifier;
   void init({
     required ValueNotifier<List<ZegoOutsideRoomAudioVideoViewStream>>
-        streamsNotifier,
+    streamsNotifier,
   }) {
     _streamsNotifier = streamsNotifier;
   }
@@ -27,8 +27,9 @@ class ZegoOutsideRoomAudioVideoViewExpressEvent
     int errorCode,
     Map<String, dynamic> extendedData,
   ) {
-    final queryIndex = (_streamsNotifier?.value ?? [])
-        .indexWhere((streamInfo) => streamInfo.targetStreamID == streamID);
+    final queryIndex = (_streamsNotifier?.value ?? []).indexWhere(
+      (streamInfo) => streamInfo.targetStreamID == streamID,
+    );
     if (-1 == queryIndex) {
       return;
     }

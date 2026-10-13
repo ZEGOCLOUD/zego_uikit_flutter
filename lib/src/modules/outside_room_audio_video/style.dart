@@ -71,7 +71,8 @@ class ZegoOutsideRoomAudioVideoViewListItemStyle {
     Size size,
     ZegoUIKitUser? user,
     String roomID,
-  )? foregroundBuilder;
+  )?
+  foregroundBuilder;
 
   /// background builder, you can display something when user close camera
   final Widget Function(
@@ -79,7 +80,8 @@ class ZegoOutsideRoomAudioVideoViewListItemStyle {
     Size size,
     ZegoUIKitUser? user,
     String roomID,
-  )? backgroundBuilder;
+  )?
+  backgroundBuilder;
 
   /// margin
   final EdgeInsetsGeometry margin;
@@ -98,7 +100,8 @@ class ZegoOutsideRoomAudioVideoViewListItemStyle {
     BuildContext context,
     ZegoUIKitUser? user,
     String roomID,
-  )? loadingBuilder;
+  )?
+  loadingBuilder;
 
   /// custom avatar
   final ZegoAvatarConfig? avatar;

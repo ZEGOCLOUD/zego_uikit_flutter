@@ -26,26 +26,28 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
       await coreData
           .startPublishingStream(streamType: ZegoStreamType.media)
           .then((value) async {
-        /// sync media type via stream extra info
-        final streamExtraInfo = <String, dynamic>{
-          ZegoUIKitSEIDefines.keyMediaType:
-              coreData.media.typeNotifier.value.index,
-        };
+            /// sync media type via stream extra info
+            final streamExtraInfo = <String, dynamic>{
+              ZegoUIKitSEIDefines.keyMediaType:
+                  coreData.media.typeNotifier.value.index,
+            };
 
-        final extraInfo = jsonEncode(streamExtraInfo);
-        ZegoExpressEngine.instance.setStreamExtraInfo(
-          extraInfo,
-          channel: ZegoStreamType.media.channel,
-        );
+            final extraInfo = jsonEncode(streamExtraInfo);
+            ZegoExpressEngine.instance.setStreamExtraInfo(
+              extraInfo,
+              channel: ZegoStreamType.media.channel,
+            );
 
-        /// render
-        await coreData.createLocalUserVideoViewQueue(
-          streamType: ZegoStreamType.media,
-          onViewCreated: (ZegoStreamType streamType) {
-            coreData.onViewCreatedByStartPublishingStream(ZegoStreamType.media);
-          },
-        );
-      });
+            /// render
+            await coreData.createLocalUserVideoViewQueue(
+              streamType: ZegoStreamType.media,
+              onViewCreated: (ZegoStreamType streamType) {
+                coreData.onViewCreatedByStartPublishingStream(
+                  ZegoStreamType.media,
+                );
+              },
+            );
+          });
     }
 
     return playResult;
@@ -79,10 +81,7 @@ extension ZegoUIKitCoreBaseMedia on ZegoUIKitCore {
     return coreData.media.seekTo(millisecond);
   }
 
-  Future<void> setMediaVolume(
-    int volume, {
-    bool isSyncToRemote = false,
-  }) async {
+  Future<void> setMediaVolume(int volume, {bool isSyncToRemote = false}) async {
     return coreData.media.setVolume(volume, isSyncToRemote);
   }
 

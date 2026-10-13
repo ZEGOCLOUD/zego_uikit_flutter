@@ -42,11 +42,7 @@ mixin ZegoUIKitCoreDataUser {
   StreamController<String>? _meRemovedFromRoomStreamCtrl;
 
   void initUser() {
-    ZegoLoggerService.logInfo(
-      'init user',
-      tag: 'uikit-user',
-      subTag: 'init',
-    );
+    ZegoLoggerService.logInfo('init user', tag: 'uikit-user', subTag: 'init');
 
     _userJoinStreamCtrl ??=
         StreamController<List<ZegoUIKitCoreUser>>.broadcast();
@@ -123,11 +119,7 @@ mixin ZegoUIKitCoreDataUser {
       logout();
     }
 
-    ZegoLoggerService.logInfo(
-      'login done',
-      tag: 'uikit-user',
-      subTag: 'login',
-    );
+    ZegoLoggerService.logInfo('login done', tag: 'uikit-user', subTag: 'login');
 
     localUser
       ..id = id
@@ -140,11 +132,7 @@ mixin ZegoUIKitCoreDataUser {
   }
 
   void logout() {
-    ZegoLoggerService.logInfo(
-      'logout',
-      tag: 'uikit-user',
-      subTag: 'logout',
-    );
+    ZegoLoggerService.logInfo('logout', tag: 'uikit-user', subTag: 'logout');
 
     localUser.clear();
 
@@ -162,16 +150,19 @@ mixin ZegoUIKitCoreDataUser {
 
     final targetUser = remoteUsersList.removeAt(targetIndex);
     if (targetUser.mainChannel.streamID.isNotEmpty) {
-      ZegoUIKitCore.shared.coreData
-          .stopPlayingStream(targetUser.mainChannel.streamID);
+      ZegoUIKitCore.shared.coreData.stopPlayingStream(
+        targetUser.mainChannel.streamID,
+      );
     }
     if (targetUser.auxChannel.streamID.isNotEmpty) {
-      ZegoUIKitCore.shared.coreData
-          .stopPlayingStream(targetUser.auxChannel.streamID);
+      ZegoUIKitCore.shared.coreData.stopPlayingStream(
+        targetUser.auxChannel.streamID,
+      );
     }
     if (targetUser.thirdChannel.streamID.isNotEmpty) {
-      ZegoUIKitCore.shared.coreData
-          .stopPlayingStream(targetUser.thirdChannel.streamID);
+      ZegoUIKitCore.shared.coreData.stopPlayingStream(
+        targetUser.thirdChannel.streamID,
+      );
     }
 
     if (ZegoUIKitCore.shared.coreData.media.ownerID == uid) {
@@ -196,8 +187,10 @@ mixin ZegoUIKitCoreDataUser {
 
   List<ZegoUIKitCoreUser> getMixerStreamUsers() {
     final users = <ZegoUIKitCoreUser>[];
-    ZegoUIKitCore.shared.coreData.mixerStreamDic
-        .forEach((key, mixerStreamInfo) {
+    ZegoUIKitCore.shared.coreData.mixerStreamDic.forEach((
+      key,
+      mixerStreamInfo,
+    ) {
       users.addAll(mixerStreamInfo.usersNotifier.value);
     });
 

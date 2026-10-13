@@ -20,10 +20,7 @@ class ZegoUIKitBeautyPluginImpl {
 
   /// init
   Future<void> init(int appID, String appSign) async {
-    return ZegoBeautyPluginCore.shared.init(
-      appID: appID,
-      appSign: appSign,
-    );
+    return ZegoBeautyPluginCore.shared.init(appID: appID, appSign: appSign);
   }
 
   /// uninit

@@ -20,11 +20,7 @@ class ZegoNetworkLoadingConfig {
 }
 
 class ZegoNetworkLoading extends StatefulWidget {
-  const ZegoNetworkLoading({
-    Key? key,
-    required this.child,
-    this.config,
-  }) : super(key: key);
+  const ZegoNetworkLoading({super.key, required this.child, this.config});
 
   final Widget child;
   final ZegoNetworkLoadingConfig? config;
@@ -71,8 +67,9 @@ class _ZegoNetworkLoadingState extends State<ZegoNetworkLoading> {
                 children: [
                   CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      (widget.config?.progressColor ?? Colors.black)
-                          .withValues(alpha: 0.2),
+                      (widget.config?.progressColor ?? Colors.black).withValues(
+                        alpha: 0.2,
+                      ),
                     ),
                   ),
                   widget.config?.icon ??

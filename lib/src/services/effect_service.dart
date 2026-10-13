@@ -51,8 +51,9 @@ mixin ZegoEffectService {
       subTag: 'effect service',
     );
 
-    ZegoExpressEngine.instance
-        .setEffectsBeautyParam(ZegoUIKitCore.shared.coreData.beautyParam);
+    ZegoExpressEngine.instance.setEffectsBeautyParam(
+      ZegoUIKitCore.shared.coreData.beautyParam,
+    );
   }
 
   /// get beauty value
@@ -93,15 +94,17 @@ mixin ZegoEffectService {
   /// reset sound effect
   Future<void> resetSoundEffect() async {
     await ZegoExpressEngine.instance.setReverbPreset(ZegoReverbPreset.None);
-    await ZegoExpressEngine.instance
-        .setVoiceChangerPreset(ZegoVoiceChangerPreset.None);
+    await ZegoExpressEngine.instance.setVoiceChangerPreset(
+      ZegoVoiceChangerPreset.None,
+    );
   }
 
   /// reset beauty effect
   Future<void> resetBeautyEffect() async {
     ZegoUIKitCore.shared.coreData.beautyParam =
         ZegoEffectsBeautyParam.defaultParam();
-    await ZegoExpressEngine.instance
-        .setEffectsBeautyParam(ZegoEffectsBeautyParam.defaultParam());
+    await ZegoExpressEngine.instance.setEffectsBeautyParam(
+      ZegoEffectsBeautyParam.defaultParam(),
+    );
   }
 }

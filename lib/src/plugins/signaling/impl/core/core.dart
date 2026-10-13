@@ -49,16 +49,8 @@ class ZegoSignalingPluginCore with ZegoSignalingPluginCoreEvent {
   }
 
   /// login
-  Future<bool> login(
-    String id,
-    String name, {
-    String token = '',
-  }) async {
-    return coreData.login(
-      id,
-      name,
-      token: token,
-    );
+  Future<bool> login(String id, String name, {String token = ''}) async {
+    return coreData.login(id, name, token: token);
   }
 
   /// logout

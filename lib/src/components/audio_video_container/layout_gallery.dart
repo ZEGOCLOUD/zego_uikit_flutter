@@ -30,7 +30,7 @@ class ZegoLayoutGalleryConfig extends ZegoLayout {
 
   ///
   ZegoShowFullscreenModeToggleButtonRules
-      showScreenSharingFullscreenModeToggleButtonRules;
+  showScreenSharingFullscreenModeToggleButtonRules;
 
   ZegoLayoutGalleryConfig({
     this.showOnlyOnAudioVideo = false,
@@ -45,7 +45,7 @@ class ZegoLayoutGalleryConfig extends ZegoLayout {
 /// picture in picture layout
 class ZegoLayoutGallery extends StatefulWidget {
   const ZegoLayoutGallery({
-    Key? key,
+    super.key,
     required this.maxItemCount,
     required this.userList,
     required this.layoutConfig,
@@ -54,7 +54,7 @@ class ZegoLayoutGallery extends StatefulWidget {
     this.backgroundBuilder,
     this.avatarConfig,
     this.screenSharingViewController,
-  }) : super(key: key);
+  });
 
   final int maxItemCount;
   final List<ZegoUIKitUser> userList;
@@ -99,37 +99,42 @@ class _ZegoLayoutGalleryState extends State<ZegoLayoutGallery> {
       children: itemsConfig.layoutItems,
     );
 
-    return LayoutBuilder(builder: (context, constraints) {
-      final rowCountWithScreenSharing =
-          (itemsConfig.layoutItems.length / columnCount).ceil() + 1;
-      return Container(
-        color: widget.backgroundColor,
-        child: itemsConfig.hasScreenSharing
-            ? Column(
-                children: [
-                  Container(
-                    width: constraints.maxWidth,
-                    height: constraints.maxHeight / rowCountWithScreenSharing,
-                    padding:
-                        widget.layoutConfig.addBorderRadiusAndSpacingBetweenView
-                            ? EdgeInsets.symmetric(
-                                horizontal: 10.0.zR,
-                                vertical: 10.0.zR,
-                              )
-                            : EdgeInsets.zero,
-                    child: itemsConfig.topScreenSharing,
-                  ),
-                  SizedBox(
-                    width: constraints.maxWidth,
-                    height: constraints.maxHeight -
-                        (constraints.maxHeight / rowCountWithScreenSharing),
-                    child: layoutItemsContainer,
-                  ),
-                ],
-              )
-            : layoutItemsContainer,
-      );
-    });
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final rowCountWithScreenSharing =
+            (itemsConfig.layoutItems.length / columnCount).ceil() + 1;
+        return Container(
+          color: widget.backgroundColor,
+          child: itemsConfig.hasScreenSharing
+              ? Column(
+                  children: [
+                    Container(
+                      width: constraints.maxWidth,
+                      height: constraints.maxHeight / rowCountWithScreenSharing,
+                      padding:
+                          widget
+                              .layoutConfig
+                              .addBorderRadiusAndSpacingBetweenView
+                          ? EdgeInsets.symmetric(
+                              horizontal: 10.0.zR,
+                              vertical: 10.0.zR,
+                            )
+                          : EdgeInsets.zero,
+                      child: itemsConfig.topScreenSharing,
+                    ),
+                    SizedBox(
+                      width: constraints.maxWidth,
+                      height:
+                          constraints.maxHeight -
+                          (constraints.maxHeight / rowCountWithScreenSharing),
+                      child: layoutItemsContainer,
+                    ),
+                  ],
+                )
+              : layoutItemsContainer,
+        );
+      },
+    );
   }
 
   _ZegoLayoutGalleryItemsConfig getLayoutItemsConfig() {
@@ -144,71 +149,77 @@ class _ZegoLayoutGalleryState extends State<ZegoLayoutGallery> {
     var lastUsers = <ZegoUIKitUser>[];
 
     final screenSharingLayoutItems = <LayoutId>[];
-    final audioVideoListUserIDs =
-        ZegoUIKit().getAudioVideoList().map((e) => e.id).toList();
-    final screenSharingListUserIDs =
-        ZegoUIKit().getScreenSharingList().map((e) => e.id).toList();
+    final audioVideoListUserIDs = ZegoUIKit()
+        .getAudioVideoList()
+        .map((e) => e.id)
+        .toList();
+    final screenSharingListUserIDs = ZegoUIKit()
+        .getScreenSharingList()
+        .map((e) => e.id)
+        .toList();
     for (var index = 0; index < layoutUsers.length; index++) {
       final layoutUser = layoutUsers.elementAt(index);
 
       /// audio video
       if (audioVideoListUserIDs.contains(layoutUser.id) ||
-
           /// show even if user is not publish
           !widget.layoutConfig.showOnlyOnAudioVideo) {
-        final audioVideoView = LayoutBuilder(builder: (context, constraints) {
-          return ZegoAudioVideoView(
-            key: ValueKey<String>('zego-audio-video-${layoutUser.id}'),
-            user: layoutUser,
-            backgroundBuilder: widget.backgroundBuilder,
-            foregroundBuilder: widget.foregroundBuilder,
-            borderRadius:
-                widget.layoutConfig.addBorderRadiusAndSpacingBetweenView
-                    ? 18.0.zW
-                    : null,
-            borderColor: Colors.transparent,
-            avatarConfig: widget.avatarConfig,
-          );
-        });
-        itemsConfig.layoutItems.add(LayoutId(
-          id: layoutUser.id,
-          child: audioVideoView,
-        ));
+        final audioVideoView = LayoutBuilder(
+          builder: (context, constraints) {
+            return ZegoAudioVideoView(
+              key: ValueKey<String>('zego-audio-video-${layoutUser.id}'),
+              user: layoutUser,
+              backgroundBuilder: widget.backgroundBuilder,
+              foregroundBuilder: widget.foregroundBuilder,
+              borderRadius:
+                  widget.layoutConfig.addBorderRadiusAndSpacingBetweenView
+                  ? 18.0.zW
+                  : null,
+              borderColor: Colors.transparent,
+              avatarConfig: widget.avatarConfig,
+            );
+          },
+        );
+        itemsConfig.layoutItems.add(
+          LayoutId(id: layoutUser.id, child: audioVideoView),
+        );
       }
 
       /// screen sharing
       if (screenSharingListUserIDs.contains(layoutUser.id)) {
-        final audioVideoView = LayoutBuilder(builder: (context, constraints) {
-          return ZegoScreenSharingView(
-            user: layoutUser,
-            backgroundBuilder: widget.backgroundBuilder,
-            foregroundBuilder: widget.foregroundBuilder,
-            borderRadius:
-                widget.layoutConfig.addBorderRadiusAndSpacingBetweenView
-                    ? 18.0.zW
-                    : null,
-            borderColor: Colors.transparent,
-            controller: widget.screenSharingViewController,
-            showFullscreenModeToggleButtonRules: widget
-                .layoutConfig.showScreenSharingFullscreenModeToggleButtonRules,
-          );
-        });
+        final audioVideoView = LayoutBuilder(
+          builder: (context, constraints) {
+            return ZegoScreenSharingView(
+              user: layoutUser,
+              backgroundBuilder: widget.backgroundBuilder,
+              foregroundBuilder: widget.foregroundBuilder,
+              borderRadius:
+                  widget.layoutConfig.addBorderRadiusAndSpacingBetweenView
+                  ? 18.0.zW
+                  : null,
+              borderColor: Colors.transparent,
+              controller: widget.screenSharingViewController,
+              showFullscreenModeToggleButtonRules: widget
+                  .layoutConfig
+                  .showScreenSharingFullscreenModeToggleButtonRules,
+            );
+          },
+        );
 
         if (!itemsConfig.hasScreenSharing) {
           itemsConfig.topScreenSharing = audioVideoView;
         } else {
-          screenSharingLayoutItems.add(LayoutId(
-            id: layoutUser.id,
-            child: audioVideoView,
-          ));
+          screenSharingLayoutItems.add(
+            LayoutId(id: layoutUser.id, child: audioVideoView),
+          );
         }
 
         itemsConfig.hasScreenSharing = true;
       }
 
-      final currentItemsCount = itemsConfig.layoutItems.length +
+      final currentItemsCount =
+          itemsConfig.layoutItems.length +
           screenSharingLayoutItems.length +
-
           /// The top screen takes up two squares
           (itemsConfig.topScreenSharing != null ? 2 : 0);
       if (currentItemsCount >= widget.maxItemCount - 1) {
@@ -220,17 +231,20 @@ class _ZegoLayoutGalleryState extends State<ZegoLayoutGallery> {
     }
 
     if (lastUsers.isNotEmpty) {
-      itemsConfig.layoutItems.add(LayoutId(
-        id: 'sbs_last_users',
-        child: ZegoLayoutGalleryLastItem(
-          users: lastUsers,
-          backgroundColor: const Color(0xff4A4B4D),
-          borderRadius: widget.layoutConfig.addBorderRadiusAndSpacingBetweenView
-              ? 18.0.zW
-              : null,
-          borderColor: Colors.transparent,
+      itemsConfig.layoutItems.add(
+        LayoutId(
+          id: 'sbs_last_users',
+          child: ZegoLayoutGalleryLastItem(
+            users: lastUsers,
+            backgroundColor: const Color(0xff4A4B4D),
+            borderRadius:
+                widget.layoutConfig.addBorderRadiusAndSpacingBetweenView
+                ? 18.0.zW
+                : null,
+            borderColor: Colors.transparent,
+          ),
         ),
-      ));
+      );
     }
 
     if (screenSharingLayoutItems.isNotEmpty) {

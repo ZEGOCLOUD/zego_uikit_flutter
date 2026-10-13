@@ -25,12 +25,7 @@ class ZegoUIKitAdvanceInvitationSendProtocol {
   }
 
   static bool typeOf(Map<String, dynamic> json) {
-    Set<String> requiredKeys = {
-      'inviter',
-      'invitees',
-      'type',
-      'custom_data',
-    };
+    Set<String> requiredKeys = {'inviter', 'invitees', 'type', 'custom_data'};
 
     final keysValid = requiredKeys.every((key) => json.containsKey(key));
     if (keysValid) {
@@ -44,8 +39,9 @@ class ZegoUIKitAdvanceInvitationSendProtocol {
         );
 
         if (jsonInvitees is List) {
-          bool isStringList =
-              jsonInvitees.every((element) => element is String);
+          bool isStringList = jsonInvitees.every(
+            (element) => element is String,
+          );
 
           ZegoLoggerService.logInfo(
             'is a string list:$isStringList',
@@ -65,26 +61,26 @@ class ZegoUIKitAdvanceInvitationSendProtocol {
   }
 
   Map<String, dynamic> toJson() => {
-        'inviter': inviter,
-        'invitees': invitees,
-        'type': type,
-        'custom_data': customData,
+    'inviter': inviter,
+    'invitees': invitees,
+    'type': type,
+    'custom_data': customData,
 
-        /// for support web invitation protocol
-        'inviter_id': inviter.id,
-        'inviter_name': inviter.name,
-        'data': customData,
-      };
+    /// for support web invitation protocol
+    'inviter_id': inviter.id,
+    'inviter_name': inviter.name,
+    'data': customData,
+  };
 
   factory ZegoUIKitAdvanceInvitationSendProtocol.fromJson(
-      Map<String, dynamic> json) {
+    Map<String, dynamic> json,
+  ) {
     ZegoUIKitUser inviter = ZegoUIKitUser.empty();
     if (json.containsKey('inviter')) {
       inviter = ZegoUIKitUser.fromJson(
         json['inviter'] as Map<String, dynamic>? ?? {},
       );
     }
-
     /// for support web invitation protocol
     else if (json.containsKey('inviter_id') ||
         json.containsKey('inviter_name')) {
@@ -103,7 +99,6 @@ class ZegoUIKitAdvanceInvitationSendProtocol {
     if (json.containsKey('custom_data')) {
       customData = json['custom_data'] as String? ?? '';
     }
-
     /// for support web invitation protocol
     else if (json.containsKey('data')) {
       customData = json['data'] as String? ?? '';
@@ -157,12 +152,13 @@ class ZegoUIKitAdvanceInvitationAcceptProtocol {
   String customData = '';
 
   Map<String, dynamic> toJson() => {
-        'inviter': inviter,
-        'custom_data': customData,
-      };
+    'inviter': inviter,
+    'custom_data': customData,
+  };
 
   factory ZegoUIKitAdvanceInvitationAcceptProtocol.fromJson(
-      Map<String, dynamic> json) {
+    Map<String, dynamic> json,
+  ) {
     return ZegoUIKitAdvanceInvitationAcceptProtocol(
       inviter: ZegoUIKitUser.fromJson(
         json['inviter'] as Map<String, dynamic>? ?? {},

@@ -8,12 +8,12 @@ class ZegoUIKitFlipTransition extends StatefulWidget {
   final Duration duration;
 
   const ZegoUIKitFlipTransition({
-    Key? key,
+    super.key,
     required this.child,
     required this.isFlippedNotifier,
     required this.isFrontTriggerByTurnOnCamera,
     this.duration = const Duration(milliseconds: 300),
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoUIKitFlipTransition> createState() =>
@@ -28,10 +28,8 @@ class _ZegoUIKitFlipTransitionState extends State<ZegoUIKitFlipTransition>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    )..addStatusListener((status) {
+    _controller = AnimationController(duration: widget.duration, vsync: this)
+      ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           _controller.reset();
         }

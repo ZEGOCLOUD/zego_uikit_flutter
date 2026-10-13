@@ -16,15 +16,17 @@ mixin ZegoUIKitCoreDataNetworkTimestamp {
   void initNetworkTimestamp(int timestamp) {
     if (timestamp <= 0) {
       _networkTimeInfoFixerTimer?.cancel();
-      _networkTimeInfoFixerTimer =
-          Timer.periodic(const Duration(milliseconds: 100), (timer) {
-        ZegoExpressEngine.instance.getNetworkTimeInfo().then((timeInfo) {
-          if (timeInfo.timestamp > 0) {
-            _networkTimeInfoFixerTimer?.cancel();
-            _syncNetworkTimestamp(timeInfo.timestamp);
-          }
-        });
-      });
+      _networkTimeInfoFixerTimer = Timer.periodic(
+        const Duration(milliseconds: 100),
+        (timer) {
+          ZegoExpressEngine.instance.getNetworkTimeInfo().then((timeInfo) {
+            if (timeInfo.timestamp > 0) {
+              _networkTimeInfoFixerTimer?.cancel();
+              _syncNetworkTimestamp(timeInfo.timestamp);
+            }
+          });
+        },
+      );
     } else {
       _syncNetworkTimestamp(timestamp);
     }
@@ -40,8 +42,9 @@ mixin ZegoUIKitCoreDataNetworkTimestamp {
 
     _durationTimer?.cancel();
     _durationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _networkDateTime.value =
-          _beginDateTime?.add(Duration(seconds: timer.tick));
+      _networkDateTime.value = _beginDateTime?.add(
+        Duration(seconds: timer.tick),
+      );
     });
   }
 

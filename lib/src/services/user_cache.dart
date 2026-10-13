@@ -96,7 +96,10 @@ class ZegoUIKitCache {
   }
 
   /// 保存删除的流 ID 列表到缓存
-  Future<void> setDeletedStreamIDs(String roomID, List<String> streamIDs) async {
+  Future<void> setDeletedStreamIDs(
+    String roomID,
+    List<String> streamIDs,
+  ) async {
     ZegoLoggerService.logInfo(
       'set deleted streams for room:$roomID, streamIDs:$streamIDs, ',
       tag: 'uikit-user',
@@ -171,7 +174,10 @@ class ZegoUIKitCache {
   }
 
   /// 保存删除流所属的用户 ID 列表到缓存
-  Future<void> setDeletedStreamUserIDs(String roomID, List<String> userIDs) async {
+  Future<void> setDeletedStreamUserIDs(
+    String roomID,
+    List<String> userIDs,
+  ) async {
     ZegoLoggerService.logInfo(
       'set deleted stream users for room:$roomID, userIDs:$userIDs, ',
       tag: 'uikit-user',

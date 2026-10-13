@@ -8,34 +8,36 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 /// type of audio video view foreground builder
-typedef ZegoAudioVideoViewForegroundBuilder = Widget Function(
-  BuildContext context,
-  Size size,
-  ZegoUIKitUser? user,
+typedef ZegoAudioVideoViewForegroundBuilder =
+    Widget Function(
+      BuildContext context,
+      Size size,
+      ZegoUIKitUser? user,
 
-  /// {ZegoViewBuilderMapExtraInfoKey:value}
-  /// final value = extraInfo[ZegoViewBuilderMapExtraInfoKey.key.name]
-  Map<String, dynamic> extraInfo,
-);
+      /// {ZegoViewBuilderMapExtraInfoKey:value}
+      /// final value = extraInfo[ZegoViewBuilderMapExtraInfoKey.key.name]
+      Map<String, dynamic> extraInfo,
+    );
 
 /// type of audio video view background builder
-typedef ZegoAudioVideoViewBackgroundBuilder = Widget Function(
-  BuildContext context,
-  Size size,
-  ZegoUIKitUser? user,
+typedef ZegoAudioVideoViewBackgroundBuilder =
+    Widget Function(
+      BuildContext context,
+      Size size,
+      ZegoUIKitUser? user,
 
-  /// {ZegoViewBuilderMapExtraInfoKey:value}
-  /// final value = extraInfo[ZegoViewBuilderMapExtraInfoKey.key.name]
-  Map<String, dynamic> extraInfo,
-);
-
-/// sort
-typedef ZegoAudioVideoViewSorter = List<ZegoUIKitUser> Function(
-    List<ZegoUIKitUser>);
+      /// {ZegoViewBuilderMapExtraInfoKey:value}
+      /// final value = extraInfo[ZegoViewBuilderMapExtraInfoKey.key.name]
+      Map<String, dynamic> extraInfo,
+    );
 
 /// sort
-typedef ZegoAudioVideoViewFilter = List<ZegoUIKitUser> Function(
-    List<ZegoUIKitUser>);
+typedef ZegoAudioVideoViewSorter =
+    List<ZegoUIKitUser> Function(List<ZegoUIKitUser>);
+
+/// sort
+typedef ZegoAudioVideoViewFilter =
+    List<ZegoUIKitUser> Function(List<ZegoUIKitUser>);
 
 enum ZegoViewBuilderMapExtraInfoKey {
   isScreenSharingView,

@@ -164,8 +164,10 @@ class GridLayoutDelegate extends MultiChildLayoutDelegate {
         itemsPosition.add(Offset(dx, dy));
 
         dx += item.width + itemPadding.width;
-        currentRowMaxItemHeight =
-            math.max(currentRowMaxItemHeight, item.height);
+        currentRowMaxItemHeight = math.max(
+          currentRowMaxItemHeight,
+          item.height,
+        );
 
         itemIndex++;
         if (itemIndex == sizedItems.length) {
@@ -182,8 +184,8 @@ class GridLayoutDelegate extends MultiChildLayoutDelegate {
             .map((e) => e.width)
             .toList()
             .forEach((double itemWidth) {
-          itemsWidth += itemWidth;
-        });
+              itemsWidth += itemWidth;
+            });
         itemsWidth = leftItemCount * itemPadding.width + itemsWidth;
         switch (lastRowAlignment) {
           case GridLayoutAlignment.start:
@@ -211,12 +213,14 @@ class GridLayoutDelegate extends MultiChildLayoutDelegate {
       return;
     }
 
-    final itemWidth = (constraints.maxWidth -
+    final itemWidth =
+        (constraints.maxWidth -
             (columnCount - 1) * itemPadding.width -
             layoutPadding.horizontal) /
         columnCount;
     final rowCount = (autoFillItems.length / columnCount).ceil();
-    final itemHeight = (constraints.maxHeight -
+    final itemHeight =
+        (constraints.maxHeight -
             (rowCount - 1) * itemPadding.height -
             layoutPadding.vertical) /
         rowCount;
@@ -240,14 +244,13 @@ class GridLayoutSizedItem extends LayoutId {
   final double height;
 
   GridLayoutSizedItem({
-    Key? key,
-    required Object id,
-    required Widget child,
+    super.key,
+    required super.id,
+    required super.child,
     required this.width,
     required this.height,
-  })  : assert(width > 0),
-        assert(height > 0),
-        super(key: key, child: child, id: id);
+  }) : assert(width > 0),
+       assert(height > 0);
 }
 
 enum GridLayoutAlignment {

@@ -8,7 +8,7 @@ import 'package:zego_uikit/src/plugins/signaling/impl/core/core.dart';
 mixin ZegoPluginNotificationService {
   /// enable notification
   Future<ZegoSignalingPluginEnableNotifyResult>
-      enableNotifyWhenAppRunningInBackgroundOrQuit(
+  enableNotifyWhenAppRunningInBackgroundOrQuit(
     bool enabled, {
     bool? isIOSSandboxEnvironment,
     bool enableIOSVoIP = true,
@@ -20,36 +20,37 @@ mixin ZegoPluginNotificationService {
   }) {
     return ZegoSignalingPluginCore.shared.coreData
         .enableNotifyWhenAppRunningInBackgroundOrQuit(
-      enabled,
-      isIOSSandboxEnvironment: isIOSSandboxEnvironment,
-      certificateIndex: ZegoSignalingPluginIOSMultiCertificateExtension.fromID(
-        certificateIndex,
-      ),
-      enableIOSVoIP: enableIOSVoIP,
-      appName: appName,
-      androidChannelID: androidChannelID,
-      androidChannelName: androidChannelName,
-      androidSound: androidSound,
-    );
+          enabled,
+          isIOSSandboxEnvironment: isIOSSandboxEnvironment,
+          certificateIndex:
+              ZegoSignalingPluginIOSMultiCertificateExtension.fromID(
+                certificateIndex,
+              ),
+          enableIOSVoIP: enableIOSVoIP,
+          appName: appName,
+          androidChannelID: androidChannelID,
+          androidChannelName: androidChannelName,
+          androidSound: androidSound,
+        );
   }
 
   /// get notification arrived stream
   Stream<ZegoSignalingPluginNotificationArrivedEvent>
-      getNotificationArrivedStream() {
+  getNotificationArrivedStream() {
     return ZegoSignalingPluginCore.shared.coreData
         .getNotificationArrivedStream();
   }
 
   /// get notification clicked stream
   Stream<ZegoSignalingPluginNotificationClickedEvent>
-      getNotificationClickedStream() {
+  getNotificationClickedStream() {
     return ZegoSignalingPluginCore.shared.coreData
         .getNotificationClickedStream();
   }
 
   /// get notification registered stream
   Stream<ZegoSignalingPluginNotificationRegisteredEvent>
-      getNotificationRegisteredStream() {
+  getNotificationRegisteredStream() {
     return ZegoSignalingPluginCore.shared.coreData
         .getNotificationRegisteredStream();
   }

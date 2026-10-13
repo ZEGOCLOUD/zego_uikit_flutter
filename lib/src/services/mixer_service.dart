@@ -54,9 +54,15 @@ mixin ZegoMixerService {
     String userID,
   ) {
     final targetUser = ZegoUIKitCore
-        .shared.coreData.mixerStreamDic[mixerID]?.usersNotifier.value
-        .firstWhere((user) => user.id == userID,
-            orElse: ZegoUIKitCoreUser.empty);
+        .shared
+        .coreData
+        .mixerStreamDic[mixerID]
+        ?.usersNotifier
+        .value
+        .firstWhere(
+          (user) => user.id == userID,
+          orElse: ZegoUIKitCoreUser.empty,
+        );
     return targetUser?.camera ?? ValueNotifier(false);
   }
 
@@ -65,9 +71,15 @@ mixin ZegoMixerService {
     String userID,
   ) {
     return ZegoUIKitCore
-            .shared.coreData.mixerStreamDic[mixerID]?.usersNotifier.value
-            .firstWhere((user) => user.id == userID,
-                orElse: ZegoUIKitCoreUser.empty)
+            .shared
+            .coreData
+            .mixerStreamDic[mixerID]
+            ?.usersNotifier
+            .value
+            .firstWhere(
+              (user) => user.id == userID,
+              orElse: ZegoUIKitCoreUser.empty,
+            )
             .microphone ??
         ValueNotifier(false);
   }
@@ -104,7 +116,11 @@ mixin ZegoMixerService {
 
   List<ZegoUIKitUser> getMixerStreamUsers(String mixerStreamID) {
     return ZegoUIKitCore
-            .shared.coreData.mixerStreamDic[mixerStreamID]?.usersNotifier.value
+            .shared
+            .coreData
+            .mixerStreamDic[mixerStreamID]
+            ?.usersNotifier
+            .value
             .map((e) => e.toZegoUikitUser())
             .toList() ??
         [];
@@ -112,8 +128,12 @@ mixin ZegoMixerService {
 
   /// get user list notifier
   Stream<List<ZegoUIKitUser>> getMixerUserListStream(String mixerStreamID) {
-    return ZegoUIKitCore.shared.coreData.mixerStreamDic[mixerStreamID]
-            ?.userListStreamCtrl?.stream
+    return ZegoUIKitCore
+            .shared
+            .coreData
+            .mixerStreamDic[mixerStreamID]
+            ?.userListStreamCtrl
+            ?.stream
             .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
         const Stream.empty();
   }

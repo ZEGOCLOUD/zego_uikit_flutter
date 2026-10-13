@@ -83,65 +83,53 @@ extension ZegoSizeExtension on num {
 /// @nodoc
 extension ZegoEdgeInsetsExtension on EdgeInsets {
   /// Creates adapt insets using r [ZegoSizeExtension].
-  EdgeInsets get zR => copyWith(
-        top: top.zR,
-        bottom: bottom.zR,
-        right: right.zR,
-        left: left.zR,
-      );
+  EdgeInsets get zR =>
+      copyWith(top: top.zR, bottom: bottom.zR, right: right.zR, left: left.zR);
 
   EdgeInsets get dm => copyWith(
-        top: top.zDM,
-        bottom: bottom.zDM,
-        right: right.zDM,
-        left: left.zDM,
-      );
+    top: top.zDM,
+    bottom: bottom.zDM,
+    right: right.zDM,
+    left: left.zDM,
+  );
 
   EdgeInsets get dg => copyWith(
-        top: top.zDG,
-        bottom: bottom.zDG,
-        right: right.zDG,
-        left: left.zDG,
-      );
+    top: top.zDG,
+    bottom: bottom.zDG,
+    right: right.zDG,
+    left: left.zDG,
+  );
 
-  EdgeInsets get w => copyWith(
-        top: top.zW,
-        bottom: bottom.zW,
-        right: right.zW,
-        left: left.zW,
-      );
+  EdgeInsets get w =>
+      copyWith(top: top.zW, bottom: bottom.zW, right: right.zW, left: left.zW);
 
-  EdgeInsets get h => copyWith(
-        top: top.zH,
-        bottom: bottom.zH,
-        right: right.zH,
-        left: left.zH,
-      );
+  EdgeInsets get h =>
+      copyWith(top: top.zH, bottom: bottom.zH, right: right.zH, left: left.zH);
 }
 
 /// @nodoc
 extension ZegoBorderRaduisExtension on BorderRadius {
   /// Creates adapt BorderRadius using r [ZegoSizeExtension].
   BorderRadius get r => copyWith(
-        bottomLeft: bottomLeft.zR,
-        bottomRight: bottomRight.zR,
-        topLeft: topLeft.zR,
-        topRight: topRight.zR,
-      );
+    bottomLeft: bottomLeft.zR,
+    bottomRight: bottomRight.zR,
+    topLeft: topLeft.zR,
+    topRight: topRight.zR,
+  );
 
   BorderRadius get w => copyWith(
-        bottomLeft: bottomLeft.zW,
-        bottomRight: bottomRight.zW,
-        topLeft: topLeft.zW,
-        topRight: topRight.zW,
-      );
+    bottomLeft: bottomLeft.zW,
+    bottomRight: bottomRight.zW,
+    topLeft: topLeft.zW,
+    topRight: topRight.zW,
+  );
 
   BorderRadius get h => copyWith(
-        bottomLeft: bottomLeft.zH,
-        bottomRight: bottomRight.zH,
-        topLeft: topLeft.zH,
-        topRight: topRight.zH,
-      );
+    bottomLeft: bottomLeft.zH,
+    bottomRight: bottomRight.zH,
+    topLeft: topLeft.zH,
+    topRight: topRight.zH,
+  );
 }
 
 /// @nodoc
@@ -149,15 +137,9 @@ extension ZegoRaduisExtension on Radius {
   /// Creates adapt Radius using r [ZegoSizeExtension].
   Radius get zR => Radius.elliptical(x.zR, y.zR);
 
-  Radius get zDM => Radius.elliptical(
-        x.zDM,
-        y.zDM,
-      );
+  Radius get zDM => Radius.elliptical(x.zDM, y.zDM);
 
-  Radius get zDG => Radius.elliptical(
-        x.zDG,
-        y.zDG,
-      );
+  Radius get zDG => Radius.elliptical(x.zDG, y.zDG);
 
   Radius get zW => Radius.elliptical(x.zW, y.zW);
 
@@ -168,31 +150,31 @@ extension ZegoRaduisExtension on Radius {
 extension ZegoBoxConstraintsExtension on BoxConstraints {
   /// Creates adapt BoxConstraints using r [ZegoSizeExtension].
   BoxConstraints get zR => copyWith(
-        maxHeight: maxHeight.zR,
-        maxWidth: maxWidth.zR,
-        minHeight: minHeight.zR,
-        minWidth: minWidth.zR,
-      );
+    maxHeight: maxHeight.zR,
+    maxWidth: maxWidth.zR,
+    minHeight: minHeight.zR,
+    minWidth: minWidth.zR,
+  );
 
   /// Creates adapt BoxConstraints using h-w [ZegoSizeExtension].
   BoxConstraints get zHW => copyWith(
-        maxHeight: maxHeight.zH,
-        maxWidth: maxWidth.zW,
-        minHeight: minHeight.zH,
-        minWidth: minWidth.zW,
-      );
+    maxHeight: maxHeight.zH,
+    maxWidth: maxWidth.zW,
+    minHeight: minHeight.zH,
+    minWidth: minWidth.zW,
+  );
 
   BoxConstraints get zW => copyWith(
-        maxHeight: maxHeight.zW,
-        maxWidth: maxWidth.zW,
-        minHeight: minHeight.zW,
-        minWidth: minWidth.zW,
-      );
+    maxHeight: maxHeight.zW,
+    maxWidth: maxWidth.zW,
+    minHeight: minHeight.zW,
+    minWidth: minWidth.zW,
+  );
 
   BoxConstraints get zH => copyWith(
-        maxHeight: maxHeight.zH,
-        maxWidth: maxWidth.zH,
-        minHeight: minHeight.zH,
-        minWidth: minWidth.zH,
-      );
+    maxHeight: maxHeight.zH,
+    maxWidth: maxWidth.zH,
+    minHeight: minHeight.zH,
+    minWidth: minWidth.zH,
+  );
 }

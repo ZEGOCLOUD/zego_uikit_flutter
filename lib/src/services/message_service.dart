@@ -14,7 +14,8 @@ mixin ZegoMessageService {
       ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
         ZegoUIKitError(
           code: ZegoUIKitErrorCode.messageSendError,
-          message: 'send in-room message error:$resultErrorCode, '
+          message:
+              'send in-room message error:$resultErrorCode, '
               'message:$message, '
               '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
           method: 'sendInRoomCommand',
@@ -39,7 +40,8 @@ mixin ZegoMessageService {
       ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
         ZegoUIKitError(
           code: ZegoUIKitErrorCode.messageReSendError,
-          message: 'resend in-room message error:$resultErrorCode, '
+          message:
+              'resend in-room message error:$resultErrorCode, '
               'message:$message, '
               '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
           method: 'sendInRoomCommand',
@@ -64,10 +66,18 @@ mixin ZegoMessageService {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return (type == ZegoInRoomMessageType.broadcastMessage
-            ? ZegoUIKitCore.shared.coreData.broadcastMessage
-                .streamControllerMessageList?.stream
-            : ZegoUIKitCore.shared.coreData.barrageMessage
-                .streamControllerMessageList?.stream) ??
+            ? ZegoUIKitCore
+                  .shared
+                  .coreData
+                  .broadcastMessage
+                  .streamControllerMessageList
+                  ?.stream
+            : ZegoUIKitCore
+                  .shared
+                  .coreData
+                  .barrageMessage
+                  .streamControllerMessageList
+                  ?.stream) ??
         const Stream.empty();
   }
 
@@ -76,10 +86,18 @@ mixin ZegoMessageService {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return (type == ZegoInRoomMessageType.broadcastMessage
-            ? ZegoUIKitCore.shared.coreData.broadcastMessage
-                .streamControllerRemoteMessage?.stream
-            : ZegoUIKitCore.shared.coreData.barrageMessage
-                .streamControllerRemoteMessage?.stream) ??
+            ? ZegoUIKitCore
+                  .shared
+                  .coreData
+                  .broadcastMessage
+                  .streamControllerRemoteMessage
+                  ?.stream
+            : ZegoUIKitCore
+                  .shared
+                  .coreData
+                  .barrageMessage
+                  .streamControllerRemoteMessage
+                  ?.stream) ??
         const Stream.empty();
   }
 
@@ -88,10 +106,18 @@ mixin ZegoMessageService {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
     return (type == ZegoInRoomMessageType.broadcastMessage
-            ? ZegoUIKitCore.shared.coreData.broadcastMessage
-                .streamControllerLocalMessage?.stream
-            : ZegoUIKitCore.shared.coreData.barrageMessage
-                .streamControllerLocalMessage?.stream) ??
+            ? ZegoUIKitCore
+                  .shared
+                  .coreData
+                  .broadcastMessage
+                  .streamControllerLocalMessage
+                  ?.stream
+            : ZegoUIKitCore
+                  .shared
+                  .coreData
+                  .barrageMessage
+                  .streamControllerLocalMessage
+                  ?.stream) ??
         const Stream.empty();
   }
 
@@ -102,14 +128,16 @@ mixin ZegoMessageService {
     ZegoUIKitCore.shared.clearLocalMessage(type);
 
     if (clearRemote) {
-      final resultErrorCode =
-          await ZegoUIKitCore.shared.clearRemoteMessage(type);
+      final resultErrorCode = await ZegoUIKitCore.shared.clearRemoteMessage(
+        type,
+      );
 
       if (ZegoUIKitErrorCode.success != resultErrorCode) {
         ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
           ZegoUIKitError(
             code: ZegoUIKitErrorCode.customCommandSendError,
-            message: 'remove remote message error:$resultErrorCode, '
+            message:
+                'remove remote message error:$resultErrorCode, '
                 '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
             method: 'clearMessage',
           ),

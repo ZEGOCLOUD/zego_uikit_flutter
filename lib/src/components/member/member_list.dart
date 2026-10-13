@@ -14,18 +14,20 @@ import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
 /// Type definition for builder of custom member list item view.
-typedef ZegoMemberListItemBuilder = Widget Function(
-  BuildContext context,
-  Size size,
-  ZegoUIKitUser user,
-  Map<String, dynamic> extraInfo,
-);
+typedef ZegoMemberListItemBuilder =
+    Widget Function(
+      BuildContext context,
+      Size size,
+      ZegoUIKitUser user,
+      Map<String, dynamic> extraInfo,
+    );
 
 /// sort
-typedef ZegoMemberListSorter = List<ZegoUIKitUser> Function(
-  ZegoUIKitUser localUser,
-  List<ZegoUIKitUser> remoteUsers,
-);
+typedef ZegoMemberListSorter =
+    List<ZegoUIKitUser> Function(
+      ZegoUIKitUser localUser,
+      List<ZegoUIKitUser> remoteUsers,
+    );
 
 class ZegoMemberList extends StatefulWidget {
   final bool showMicrophoneState;
@@ -38,7 +40,7 @@ class ZegoMemberList extends StatefulWidget {
   final List<ZegoUIKitUser> pseudoUsers;
 
   const ZegoMemberList({
-    Key? key,
+    super.key,
     this.showMicrophoneState = true,
     this.showCameraState = true,
     this.avatarBuilder,
@@ -47,7 +49,7 @@ class ZegoMemberList extends StatefulWidget {
     this.stream,
     this.pseudoUsers = const [],
     this.hiddenUserIDs = const <String>[],
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoMemberList> createState() => _ZegoCallMemberListState();
@@ -62,9 +64,7 @@ class _ZegoCallMemberListState extends State<ZegoMemberList> {
     super.initState();
 
     usersNotifier.value = List.from(widget.pseudoUsers)
-      ..addAll(
-        ZegoUIKit().getAllUsers(),
-      );
+      ..addAll(ZegoUIKit().getAllUsers());
     userListSubscription = (widget.stream ?? ZegoUIKit().getUserListStream())
         .listen(onUserListUpdated);
   }
@@ -85,12 +85,16 @@ class _ZegoCallMemberListState extends State<ZegoMemberList> {
           ..removeWhere((user) => user.id == ZegoUIKit().getLocalUser().id);
 
         if (widget.hiddenUserIDs.isNotEmpty) {
-          remoteUsers
-              .removeWhere((user) => widget.hiddenUserIDs.contains(user.id));
+          remoteUsers.removeWhere(
+            (user) => widget.hiddenUserIDs.contains(user.id),
+          );
         }
 
-        final users = widget.sortUserList
-                ?.call(ZegoUIKit().getLocalUser(), remoteUsers) ??
+        final users =
+            widget.sortUserList?.call(
+              ZegoUIKit().getLocalUser(),
+              remoteUsers,
+            ) ??
             [ZegoUIKit().getLocalUser(), ...remoteUsers];
         final itemSize = Size(750.zW, 72.zH);
         return ListView.builder(
@@ -101,7 +105,7 @@ class _ZegoCallMemberListState extends State<ZegoMemberList> {
             final user = users[index];
             return ValueListenableBuilder(
               valueListenable: ZegoUIKitUserPropertiesNotifier(user),
-              builder: (context, _, __) {
+              builder: (context, _, _) {
                 return widget.itemBuilder?.call(context, itemSize, user, {}) ??
                     listItem(context, itemSize, user);
               },
@@ -127,12 +131,13 @@ class _ZegoCallMemberListState extends State<ZegoMemberList> {
           const Expanded(child: SizedBox()),
           if (widget.showMicrophoneState)
             ZegoMicrophoneStateIcon(
-                targetUser: user,
-                iconMicrophoneOn:
-                    UIKitImage.asset(StyleIconUrls.memberMicNormal),
-                iconMicrophoneOff: UIKitImage.asset(StyleIconUrls.memberMicOff),
-                iconMicrophoneSpeaking:
-                    UIKitImage.asset(StyleIconUrls.memberMicSpeaking))
+              targetUser: user,
+              iconMicrophoneOn: UIKitImage.asset(StyleIconUrls.memberMicNormal),
+              iconMicrophoneOff: UIKitImage.asset(StyleIconUrls.memberMicOff),
+              iconMicrophoneSpeaking: UIKitImage.asset(
+                StyleIconUrls.memberMicSpeaking,
+              ),
+            )
           else
             Container(),
           if (widget.showCameraState)
@@ -143,7 +148,7 @@ class _ZegoCallMemberListState extends State<ZegoMemberList> {
             )
           else
             Container(),
-          SizedBox(width: 34.zR)
+          SizedBox(width: 34.zR),
         ],
       ),
     );
@@ -178,12 +183,14 @@ Widget avatarItem(
   return Container(
     width: 72.zR,
     height: 72.zR,
-    decoration:
-        const BoxDecoration(color: Color(0xffDBDDE3), shape: BoxShape.circle),
+    decoration: const BoxDecoration(
+      color: Color(0xffDBDDE3),
+      shape: BoxShape.circle,
+    ),
     child: Center(
       child: ValueListenableBuilder(
         valueListenable: ZegoUIKitUserPropertiesNotifier(user),
-        builder: (context, _, __) {
+        builder: (context, _, _) {
           return builder?.call(context, Size(72.zR, 72.zR), user, {}) ??
               Text(
                 user.name.isNotEmpty ? user.name.characters.first : '',

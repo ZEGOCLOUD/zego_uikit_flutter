@@ -21,7 +21,7 @@ class ZegoInRoomNotificationView extends StatefulWidget {
   final ZegoNotificationMessageItemBuilder? itemBuilder;
 
   const ZegoInRoomNotificationView({
-    Key? key,
+    super.key,
     this.maxCount = 3,
     this.itemMaxLine = 3,
     this.itemDisappearTime = 3000,
@@ -29,7 +29,7 @@ class ZegoInRoomNotificationView extends StatefulWidget {
     this.userJoinItemBuilder,
     this.userLeaveItemBuilder,
     this.itemBuilder,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoInRoomNotificationView> createState() =>
@@ -60,15 +60,18 @@ class _ZegoInRoomNotificationViewState
     typeMessages[NotificationItemType.userLeave] = [];
     typeMessages[NotificationItemType.message] = [];
 
-    clearTimeoutTimer =
-        Timer.periodic(const Duration(seconds: 1), clearTimeoutMessage);
+    clearTimeoutTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      clearTimeoutMessage,
+    );
 
     streamSubscriptions
       ..add(ZegoUIKit().getInRoomMessageStream().listen(onInRoomMessage))
       ..add(ZegoUIKit().getUserJoinStream().listen(onUserJoin));
     if (widget.notifyUserLeave) {
-      streamSubscriptions
-          .add(ZegoUIKit().getUserLeaveStream().listen(onUserLeave));
+      streamSubscriptions.add(
+        ZegoUIKit().getUserLeaveStream().listen(onUserLeave),
+      );
     }
   }
 
@@ -97,12 +100,18 @@ class _ZegoInRoomNotificationViewState
         Widget? messageItem;
         switch (getMessageItemTypeBy(message.messageID)) {
           case NotificationItemType.userJoin:
-            messageItem =
-                widget.userJoinItemBuilder?.call(context, message.user, {});
+            messageItem = widget.userJoinItemBuilder?.call(
+              context,
+              message.user,
+              {},
+            );
             break;
           case NotificationItemType.userLeave:
-            messageItem =
-                widget.userLeaveItemBuilder?.call(context, message.user, {});
+            messageItem = widget.userLeaveItemBuilder?.call(
+              context,
+              message.user,
+              {},
+            );
             break;
           case NotificationItemType.message:
             messageItem = widget.itemBuilder?.call(context, message, {});
@@ -126,8 +135,9 @@ class _ZegoInRoomNotificationViewState
       }
 
       userMessageID = userMessageID - 1;
-      typeMessages[NotificationItemType.userJoin]!
-          .add(userMessageID.toString());
+      typeMessages[NotificationItemType.userJoin]!.add(
+        userMessageID.toString(),
+      );
       final message = ZegoInRoomMessage(
         user: user,
         message: 'entered.',
@@ -146,8 +156,9 @@ class _ZegoInRoomNotificationViewState
       }
 
       userMessageID = userMessageID - 1;
-      typeMessages[NotificationItemType.userLeave]!
-          .add(userMessageID.toString());
+      typeMessages[NotificationItemType.userLeave]!.add(
+        userMessageID.toString(),
+      );
       final message = ZegoInRoomMessage(
         user: user,
         message: 'left.',
@@ -172,9 +183,11 @@ class _ZegoInRoomNotificationViewState
     }
 
     messages.removeWhere((message) {
-      final isTimeoutMessage = DateTime.now()
+      final isTimeoutMessage =
+          DateTime.now()
               .difference(
-                  DateTime.fromMillisecondsSinceEpoch(message.timestamp))
+                DateTime.fromMillisecondsSinceEpoch(message.timestamp),
+              )
               .inMilliseconds >
           widget.itemDisappearTime;
       return isTimeoutMessage;

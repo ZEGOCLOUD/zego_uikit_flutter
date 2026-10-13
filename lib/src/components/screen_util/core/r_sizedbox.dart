@@ -7,61 +7,49 @@ import 'package:zego_uikit/src/components/screen_util/core/size_extension.dart';
 
 /// @nodoc
 class ZegoRSizedBox extends SizedBox {
-  const ZegoRSizedBox({
-    Key? key,
-    double? height,
-    double? width,
-    Widget? child,
-  })  : _square = false,
-        super(key: key, child: child, width: width, height: height);
+  const ZegoRSizedBox({super.key, super.height, super.width, super.child})
+    : _square = false;
 
-  const ZegoRSizedBox.zVertical(
-    double? height, {
-    Key? key,
-    Widget? child,
-  })  : _square = false,
-        super(key: key, child: child, height: height);
+  const ZegoRSizedBox.zVertical(double? height, {super.key, super.child})
+    : _square = false,
+      super(height: height);
 
-  const ZegoRSizedBox.zHorizontal(
-    double? width, {
-    Key? key,
-    Widget? child,
-  })  : _square = false,
-        super(key: key, child: child, width: width);
+  const ZegoRSizedBox.zHorizontal(double? width, {super.key, super.child})
+    : _square = false,
+      super(width: width);
 
   const ZegoRSizedBox.zSquare({
-    Key? key,
+    super.key,
     double? height,
-    double? dimension,
-    Widget? child,
-  })  : _square = true,
-        super.square(key: key, child: child, dimension: dimension);
+    super.dimension,
+    super.child,
+  }) : _square = true,
+       super.square();
 
-  ZegoRSizedBox.fromSize({
-    Key? key,
-    Size? size,
-    Widget? child,
-  })  : _square = false,
-        super.fromSize(key: key, child: child, size: size);
+  ZegoRSizedBox.fromSize({super.key, super.size, super.child})
+    : _square = false,
+      super.fromSize();
 
   @override
   RenderConstrainedBox createRenderObject(BuildContext context) {
-    return RenderConstrainedBox(
-      additionalConstraints: _additionalConstraints,
-    );
+    return RenderConstrainedBox(additionalConstraints: _additionalConstraints);
   }
 
   final bool _square;
 
   BoxConstraints get _additionalConstraints {
-    final boxConstraints =
-        BoxConstraints.tightFor(width: width, height: height);
+    final boxConstraints = BoxConstraints.tightFor(
+      width: width,
+      height: height,
+    );
     return _square ? boxConstraints.zR : boxConstraints.zHW;
   }
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderConstrainedBox renderObject) {
+    BuildContext context,
+    RenderConstrainedBox renderObject,
+  ) {
     renderObject.additionalConstraints = _additionalConstraints;
   }
 }

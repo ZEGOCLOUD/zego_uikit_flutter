@@ -2,14 +2,7 @@
 typedef InvitationID = String;
 
 /// invitation state
-enum InvitationState {
-  error,
-  waiting,
-  accept,
-  refuse,
-  cancel,
-  timeout,
-}
+enum InvitationState { error, waiting, accept, refuse, cancel, timeout }
 
 /// invitation user info
 class InvitationUser {

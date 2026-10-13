@@ -24,7 +24,7 @@ class ZegoAvatar extends StatelessWidget {
   final String? mixerStreamID;
 
   const ZegoAvatar({
-    Key? key,
+    super.key,
     required this.avatarSize,
     this.user,
     this.showAvatar = true,
@@ -33,7 +33,7 @@ class ZegoAvatar extends StatelessWidget {
     this.soundLevelColor,
     this.avatarBuilder,
     this.mixerStreamID,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -73,14 +73,9 @@ class ZegoAvatar extends StatelessWidget {
       valueListenable: ZegoUIKitUserPropertiesNotifier(
         user ?? ZegoUIKitUser.empty(),
       ),
-      builder: (context, _, __) {
+      builder: (context, _, _) {
         final avatarURL = user?.inRoomAttributes.value.avatarURL ?? '';
-        return avatarBuilder?.call(
-              context,
-              size,
-              user,
-              extraInfo,
-            ) ??
+        return avatarBuilder?.call(context, size, user, extraInfo) ??
             (avatarURL.isNotEmpty
                 ? CachedNetworkImage(
                     imageUrl: avatarURL,
@@ -96,7 +91,8 @@ class ZegoAvatar extends StatelessWidget {
                     progressIndicatorBuilder:
                         (context, url, downloadProgress) =>
                             CircularProgressIndicator(
-                                value: downloadProgress.progress),
+                              value: downloadProgress.progress,
+                            ),
                     errorWidget: (context, url, error) {
                       ZegoLoggerService.logError(
                         '$user avatar url($url) error:$error',

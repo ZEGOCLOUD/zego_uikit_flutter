@@ -22,7 +22,7 @@ mixin ZegoUIKitRoomAttributesPluginService {
   }
 
   Future<ZegoSignalingPluginRoomPropertiesOperationResult>
-      updateRoomProperties({
+  updateRoomProperties({
     required String roomID,
     required Map<String, String> roomProperties,
     bool isForce = false,
@@ -30,28 +30,28 @@ mixin ZegoUIKitRoomAttributesPluginService {
     bool isUpdateOwner = false,
   }) async {
     return ZegoPluginAdapter().signalingPlugin!.updateRoomProperties(
-          roomID: roomID,
-          isForce: isForce,
-          isDeleteAfterOwnerLeft: isDeleteAfterOwnerLeft,
-          isUpdateOwner: isUpdateOwner,
-          roomProperties: roomProperties,
-        );
+      roomID: roomID,
+      isForce: isForce,
+      isDeleteAfterOwnerLeft: isDeleteAfterOwnerLeft,
+      isUpdateOwner: isUpdateOwner,
+      roomProperties: roomProperties,
+    );
   }
 
   /// delete room properties
   Future<ZegoSignalingPluginRoomPropertiesOperationResult>
-      deleteRoomProperties({
+  deleteRoomProperties({
     required String roomID,
     required List<String> keys,
     bool isForce = false,
     bool showErrorLog = true,
   }) async {
     return ZegoPluginAdapter().signalingPlugin!.deleteRoomProperties(
-          roomID: roomID,
-          keys: keys,
-          isForce: isForce,
-          showErrorLog: showErrorLog,
-        );
+      roomID: roomID,
+      keys: keys,
+      isForce: isForce,
+      showErrorLog: showErrorLog,
+    );
   }
 
   /// begin room properties in batch operation
@@ -62,30 +62,28 @@ mixin ZegoUIKitRoomAttributesPluginService {
     bool isUpdateOwner = false,
   }) {
     ZegoPluginAdapter().signalingPlugin!.beginRoomPropertiesBatchOperation(
-          roomID: roomID,
-          isForce: isForce,
-          isDeleteAfterOwnerLeft: isDeleteAfterOwnerLeft,
-          isUpdateOwner: isUpdateOwner,
-        );
+      roomID: roomID,
+      isForce: isForce,
+      isDeleteAfterOwnerLeft: isDeleteAfterOwnerLeft,
+      isUpdateOwner: isUpdateOwner,
+    );
   }
 
   /// end room properties in batch operation
   Future<ZegoSignalingPluginEndRoomBatchOperationResult>
-      endRoomPropertiesBatchOperation({
-    required String roomID,
-  }) async {
-    return ZegoPluginAdapter()
-        .signalingPlugin!
-        .endRoomPropertiesBatchOperation(roomID: roomID);
+  endRoomPropertiesBatchOperation({required String roomID}) async {
+    return ZegoPluginAdapter().signalingPlugin!.endRoomPropertiesBatchOperation(
+      roomID: roomID,
+    );
   }
 
   /// query room properties
   Future<ZegoSignalingPluginQueryRoomPropertiesResult> queryRoomProperties({
     required String roomID,
   }) async {
-    return ZegoPluginAdapter()
-        .signalingPlugin!
-        .queryRoomProperties(roomID: roomID);
+    return ZegoPluginAdapter().signalingPlugin!.queryRoomProperties(
+      roomID: roomID,
+    );
   }
 
   // Future<ZegoSignalingPluginInRoomTextMessageResult> sendInRoomTextMessage({
@@ -99,17 +97,15 @@ mixin ZegoUIKitRoomAttributesPluginService {
 
   /// get room properties notifier
   Stream<ZegoSignalingPluginRoomPropertiesUpdatedEvent>
-      getRoomPropertiesStream() {
-    return ZegoPluginAdapter()
-        .signalingPlugin!
+  getRoomPropertiesStream() {
+    return ZegoPluginAdapter().signalingPlugin!
         .getRoomPropertiesUpdatedEventStream();
   }
 
   /// get room batch properties notifier
   Stream<ZegoSignalingPluginRoomPropertiesBatchUpdatedEvent>
-      getRoomBatchPropertiesStream() {
-    return ZegoPluginAdapter()
-        .signalingPlugin!
+  getRoomBatchPropertiesStream() {
+    return ZegoPluginAdapter().signalingPlugin!
         .getRoomPropertiesBatchUpdatedEventStream();
   }
 }

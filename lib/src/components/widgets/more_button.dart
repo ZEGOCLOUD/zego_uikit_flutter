@@ -9,7 +9,7 @@ import 'package:zego_uikit/src/components/screen_util/screen_util.dart';
 /// more button of menu bar
 class ZegoMoreButton extends StatefulWidget {
   const ZegoMoreButton({
-    Key? key,
+    super.key,
     required this.menuButtonListFunc,
     this.icon,
     this.menuItemSize = const Size(60.0, 60.0),
@@ -20,7 +20,7 @@ class ZegoMoreButton extends StatefulWidget {
     this.buttonSize,
     this.onSheetPopUp,
     this.onSheetPop,
-  }) : super(key: key);
+  });
 
   final ButtonIcon? icon;
 
@@ -59,13 +59,15 @@ class _ZegoMoreButtonState extends State<ZegoMoreButton> {
         width: 96.zR,
         height: 96.zR,
         decoration: BoxDecoration(
-          color: widget.icon?.backgroundColor ??
+          color:
+              widget.icon?.backgroundColor ??
               controlBarButtonCheckedBackgroundColor,
           shape: BoxShape.circle,
         ),
         child: SizedBox.fromSize(
           size: sizeBoxSize,
-          child: widget.icon?.icon ??
+          child:
+              widget.icon?.icon ??
               UIKitImage.asset(StyleIconUrls.iconS1ControlBarMore),
         ),
       ),
@@ -128,17 +130,19 @@ class _ZegoMoreButtonState extends State<ZegoMoreButton> {
         final diffCount = rowButtonList.first.length - lastShortList.length;
         for (var i = 0; i < diffCount; i++) {
           /// fill the vacant position
-          lastShortList.add(Stack(
-            fit: StackFit.passthrough,
-            children: [
-              copyWidget,
-              Container(
-                width: widget.menuItemSize.width,
-                height: widget.menuItemSize.height,
-                color: widget.menuBackgroundColor,
-              ),
-            ],
-          ));
+          lastShortList.add(
+            Stack(
+              fit: StackFit.passthrough,
+              children: [
+                copyWidget,
+                Container(
+                  width: widget.menuItemSize.width,
+                  height: widget.menuItemSize.height,
+                  color: widget.menuBackgroundColor,
+                ),
+              ],
+            ),
+          );
         }
         rowButtonList.add(lastShortList);
       }
@@ -146,24 +150,27 @@ class _ZegoMoreButtonState extends State<ZegoMoreButton> {
 
     /// scrollable
     return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ...rowButtonList.map(
-              (List<Widget> columnButtonList) => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: columnButtonList
-                    .map((Widget child) => SizedBox(
-                          width: widget.menuItemSize.width,
-                          height: widget.menuItemSize.height,
-                          child: child,
-                        ))
-                    .toList(),
-              ),
-            )
-          ],
-        ));
+      scrollDirection: Axis.vertical,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ...rowButtonList.map(
+            (List<Widget> columnButtonList) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: columnButtonList
+                  .map(
+                    (Widget child) => SizedBox(
+                      width: widget.menuItemSize.width,
+                      height: widget.menuItemSize.height,
+                      child: child,
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// split all buttons into multiple lines

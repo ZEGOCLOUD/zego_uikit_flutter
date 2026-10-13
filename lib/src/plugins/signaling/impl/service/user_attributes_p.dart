@@ -22,10 +22,12 @@ class ZegoUIKitUserInRoomAttributesPluginServicePrivate {
     debugPrint('[core] user in-room private init');
     subscriptions
       ..add(ZegoUIKit().getUserListStream().listen(_onUserListUpdated))
-      ..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getUsersInRoomAttributesStream()
-          .listen(onUsersAttributesUpdated));
+      ..add(
+        ZegoUIKit()
+            .getSignalingPlugin()
+            .getUsersInRoomAttributesStream()
+            .listen(onUsersAttributesUpdated),
+      );
   }
 
   void uninit() {
@@ -41,7 +43,8 @@ class ZegoUIKitUserInRoomAttributesPluginServicePrivate {
   }
 
   void onUsersAttributesUpdated(
-      ZegoSignalingPluginUsersInRoomAttributesUpdatedEvent event) {
+    ZegoSignalingPluginUsersInRoomAttributesUpdatedEvent event,
+  ) {
     updateUserInRoomAttributes(event.attributes);
   }
 
@@ -49,8 +52,10 @@ class ZegoUIKitUserInRoomAttributesPluginServicePrivate {
     final doneUserIDs = <String>[];
     pendingUserRoomAttributes
       ..forEach((userID, userAttributes) {
-        debugPrint('[core] exist pending user attribute, user id: $userID, '
-            'attributes: $userAttributes');
+        debugPrint(
+          '[core] exist pending user attribute, user id: $userID, '
+          'attributes: $userAttributes',
+        );
 
         final user = ZegoUIKit().getUser(userID);
         if (!user.isEmpty()) {
@@ -72,8 +77,9 @@ class ZegoUIKitUserInRoomAttributesPluginServicePrivate {
 
       updateUser.inRoomAttributes.value = updateUserAttributes;
       debugPrint(
-          '[core] user in-room attributes update, user id:$updateUserID, '
-          'attributes:$updateUserAttributes');
+        '[core] user in-room attributes update, user id:$updateUserID, '
+        'attributes:$updateUserAttributes',
+      );
     });
   }
 }

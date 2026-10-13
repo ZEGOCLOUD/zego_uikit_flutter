@@ -4,7 +4,6 @@ import 'dart:core';
 import 'dart:io' show Platform;
 
 // Flutter imports:
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -31,7 +30,7 @@ bool get _isFlutter347 =>
 /// 3. foreground view
 class ZegoAudioVideoView extends StatefulWidget {
   const ZegoAudioVideoView({
-    Key? key,
+    super.key,
     required this.user,
     this.backgroundBuilder,
     this.foregroundBuilder,
@@ -39,7 +38,7 @@ class ZegoAudioVideoView extends StatefulWidget {
     this.borderColor,
     this.extraInfo,
     this.avatarConfig,
-  }) : super(key: key);
+  });
 
   final ZegoUIKitUser? user;
 
@@ -137,9 +136,9 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
     subscriptions
       ..add(ZegoUIKit().getUserListStream().listen(onUserListUpdated))
-      ..add(ZegoUIKit()
-          .getAudioVideoListStream()
-          .listen(onAudioVideoListUpdated));
+      ..add(
+        ZegoUIKit().getAudioVideoListStream().listen(onAudioVideoListUpdated),
+      );
   }
 
   @override
@@ -220,7 +219,8 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     required bool cameraOn,
     required int widgetHashCode,
   }) {
-    final isSamePendingLog = pendingPlatformViewConstraints == constraints &&
+    final isSamePendingLog =
+        pendingPlatformViewConstraints == constraints &&
         pendingPlatformViewUserID == userID &&
         pendingPlatformViewID == viewID &&
         pendingPlatformViewWidgetHashCode == widgetHashCode &&
@@ -290,12 +290,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
       );
 
       return SizedBox.expand(
-        child: Stack(
-          children: [
-            background(),
-            foreground(),
-          ],
-        ),
+        child: Stack(children: [background(), foreground()]),
       );
     }
 
@@ -307,8 +302,9 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
     return circleBorder(
       child: ValueListenableBuilder<bool>(
-        valueListenable:
-            ZegoUIKit().getCameraStateNotifier(widget.user?.id ?? ''),
+        valueListenable: ZegoUIKit().getCameraStateNotifier(
+          widget.user?.id ?? '',
+        ),
         builder: (context, isCameraOn, _) {
           ZegoLoggerService.logInfo(
             '${widget.user?.id}\'s camera changed $isCameraOn,',
@@ -316,7 +312,8 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
             subTag: 'audio video view',
           );
 
-          final isLocalUser = null != widget.user &&
+          final isLocalUser =
+              null != widget.user &&
               ZegoUIKit().getLocalUser().id == widget.user?.id;
 
           final content = isCameraOn
@@ -382,8 +379,9 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     return ValueListenableBuilder<bool>(
       valueListenable: localUserData.isFrontFacing,
       builder: (context, isReadyFrontFacing, _) {
-        localUserData.mainChannel.isCapturedVideoFirstFrameNotifier
-            .addListener(onCapturedVideoFirstFrameAfterSwitchCamera);
+        localUserData.mainChannel.isCapturedVideoFirstFrameNotifier.addListener(
+          onCapturedVideoFirstFrameAfterSwitchCamera,
+        );
 
         return ZegoUIKitFlipTransition(
           key: ValueKey(localUserData.id),
@@ -424,7 +422,11 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
 
   void onCapturedVideoFirstFrameAfterSwitchCamera() {
     ZegoUIKitCore
-        .shared.coreData.localUser.mainChannel.isCapturedVideoFirstFrameNotifier
+        .shared
+        .coreData
+        .localUser
+        .mainChannel
+        .isCapturedVideoFirstFrameNotifier
         .removeListener(onCapturedVideoFirstFrameAfterSwitchCamera);
 
     isLocalUserFlippedNotifier.value = !isLocalUserFlippedNotifier.value;
@@ -438,9 +440,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     }
   }
 
-  Widget videoView({
-    required bool isCameraOn,
-  }) {
+  Widget videoView({required bool isCameraOn}) {
     return userViewListenerBuilder(
       childBuilder: (Widget audioVideoView) {
         if (!isCameraOn) {
@@ -466,20 +466,24 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
               final constraintsChanged = previousConstraints != constraints;
               final widthHasZeroExtent = constraints.maxWidth <= 0;
               final heightHasZeroExtent = constraints.maxHeight <= 0;
-              final widthHadZeroExtent = previousConstraints != null &&
+              final widthHadZeroExtent =
+                  previousConstraints != null &&
                   previousConstraints.maxWidth <= 0;
-              final heightHadZeroExtent = previousConstraints != null &&
+              final heightHadZeroExtent =
+                  previousConstraints != null &&
                   previousConstraints.maxHeight <= 0;
-              final zeroExtentBoundaryChanged = previousConstraints != null &&
+              final zeroExtentBoundaryChanged =
+                  previousConstraints != null &&
                   (widthHasZeroExtent != widthHadZeroExtent ||
                       heightHasZeroExtent != heightHadZeroExtent);
               final identityChanged =
                   lastLoggedPlatformViewUserID != currentUserID ||
-                      lastLoggedPlatformViewID != currentViewID ||
-                      lastLoggedPlatformViewWidgetHashCode !=
-                          currentWidgetHashCode ||
-                      lastLoggedPlatformViewCameraState != isCameraOn;
-              final shouldLogFrameState = previousConstraints == null ||
+                  lastLoggedPlatformViewID != currentViewID ||
+                  lastLoggedPlatformViewWidgetHashCode !=
+                      currentWidgetHashCode ||
+                  lastLoggedPlatformViewCameraState != isCameraOn;
+              final shouldLogFrameState =
+                  previousConstraints == null ||
                   identityChanged ||
                   zeroExtentBoundaryChanged;
               if (shouldLogFrameState) {
@@ -545,9 +549,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   }
 
   Widget userViewListenerBuilder({
-    required Widget Function(
-      Widget audioVideoView,
-    ) childBuilder,
+    required Widget Function(Widget audioVideoView) childBuilder,
   }) {
     return ValueListenableBuilder<Widget?>(
       valueListenable: ZegoUIKit().getAudioVideoViewNotifier(widget.user!.id),
@@ -597,16 +599,12 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
           );
         }
 
-        return deviceOrientationListenerBuilder(
-          child: childBuilder(userView),
-        );
+        return deviceOrientationListenerBuilder(child: childBuilder(userView));
       },
     );
   }
 
-  Widget deviceOrientationListenerBuilder({
-    required Widget child,
-  }) {
+  Widget deviceOrientationListenerBuilder({required Widget child}) {
     return StreamBuilder(
       stream: NativeDeviceOrientationCommunicator().onOrientationChanged(),
       builder: (context, AsyncSnapshot<NativeDeviceOrientation> asyncResult) {
@@ -635,7 +633,7 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
               valueListenable: ZegoUIKitUserPropertiesNotifier(
                 widget.user ?? ZegoUIKitUser.empty(),
               ),
-              builder: (context, _, __) {
+              builder: (context, _, _) {
                 return widget.backgroundBuilder?.call(
                       context,
                       Size(constraints.maxWidth, constraints.maxHeight),
@@ -656,21 +654,23 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     if (widget.foregroundBuilder != null) {
       return LayoutBuilder(
         builder: (context, constraints) {
-          return Stack(children: [
-            ValueListenableBuilder(
-              valueListenable: ZegoUIKitUserPropertiesNotifier(
-                widget.user ?? ZegoUIKitUser.empty(),
+          return Stack(
+            children: [
+              ValueListenableBuilder(
+                valueListenable: ZegoUIKitUserPropertiesNotifier(
+                  widget.user ?? ZegoUIKitUser.empty(),
+                ),
+                builder: (context, _, _) {
+                  return widget.foregroundBuilder!.call(
+                    context,
+                    Size(constraints.maxWidth, constraints.maxHeight),
+                    widget.user,
+                    widget.extraInfo ?? {},
+                  );
+                },
               ),
-              builder: (context, _, __) {
-                return widget.foregroundBuilder!.call(
-                  context,
-                  Size(constraints.maxWidth, constraints.maxHeight),
-                  widget.user,
-                  widget.extraInfo ?? {},
-                );
-              },
-            ),
-          ]);
+            ],
+          );
         },
       );
     }
@@ -719,8 +719,9 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   Widget avatar(double maxWidth, double maxHeight) {
     final screenSize = MediaQuery.of(context).size;
     final isSmallView = maxHeight < screenSize.height / 2;
-    final avatarSize =
-        isSmallView ? Size(110.zR, 110.zR) : Size(258.zR, 258.zR);
+    final avatarSize = isSmallView
+        ? Size(110.zR, 110.zR)
+        : Size(258.zR, 258.zR);
 
     var sizedWidth = widget.avatarConfig?.size?.width ?? avatarSize.width;
     var sizedHeight = widget.avatarConfig?.size?.height ?? avatarSize.width;
@@ -752,8 +753,8 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
   }
 
   double getAvatarTop(double maxWidth, double maxHeight, double avatarHeight) {
-    switch (
-        widget.avatarConfig?.verticalAlignment ?? ZegoAvatarAlignment.center) {
+    switch (widget.avatarConfig?.verticalAlignment ??
+        ZegoAvatarAlignment.center) {
       case ZegoAvatarAlignment.center:
         return (maxHeight - avatarHeight) / 2;
       case ZegoAvatarAlignment.start:
@@ -775,8 +776,9 @@ class _ZegoAudioVideoViewState extends State<ZegoAudioVideoView> {
     viewIDGuardTimer?.cancel();
     viewIDGuardTimer = null;
 
-    viewIDGuardTimer ??=
-        Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    viewIDGuardTimer ??= Timer.periodic(const Duration(milliseconds: 500), (
+      timer,
+    ) {
       if (logEnabled) {
         ZegoLoggerService.logInfo(
           'guard check, ${widget.user?.id}\'s view id is:$userViewID',

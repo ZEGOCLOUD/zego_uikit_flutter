@@ -18,19 +18,13 @@ class ZegoUIKitCoreDataErrorImpl extends ZegoUIKitExpressEventInterface {
   StreamController<ZegoUIKitError>? _errorStreamCtrl;
 
   void init() {
-    ZegoLoggerService.logInfo(
-      'init error module',
-      subTag: 'core data',
-    );
+    ZegoLoggerService.logInfo('init error module', subTag: 'core data');
 
     _errorStreamCtrl ??= StreamController<ZegoUIKitError>.broadcast();
   }
 
   void uninit() {
-    ZegoLoggerService.logInfo(
-      'uninit error module',
-      subTag: 'core data',
-    );
+    ZegoLoggerService.logInfo('uninit error module', subTag: 'core data');
 
     _errorStreamCtrl?.close();
     _errorStreamCtrl = null;
@@ -50,11 +44,7 @@ class ZegoUIKitCoreDataErrorImpl extends ZegoUIKitExpressEventInterface {
   @override
   void onFatalError(int errorCode) {
     _errorStreamCtrl?.add(
-      ZegoUIKitError(
-        code: errorCode,
-        message: '',
-        method: 'express-fatal',
-      ),
+      ZegoUIKitError(code: errorCode, message: '', method: 'express-fatal'),
     );
   }
 

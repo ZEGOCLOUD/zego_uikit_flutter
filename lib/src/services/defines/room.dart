@@ -5,10 +5,7 @@ class ZegoUIKitRoomStatusResult {
   String id;
   ZegoRoomStateChangedReason reason;
 
-  ZegoUIKitRoomStatusResult({
-    required this.id,
-    required this.reason,
-  });
+  ZegoUIKitRoomStatusResult({required this.id, required this.reason});
 }
 
 class ZegoUIKitRoom {
@@ -63,12 +60,12 @@ class RoomProperty {
   );
 
   RoomProperty.copyFrom(RoomProperty property)
-      : key = property.key,
-        value = property.value,
-        oldValue = property.oldValue,
-        updateTime = property.updateTime,
-        updateUserID = property.updateUserID,
-        updateFromRemote = property.updateFromRemote;
+    : key = property.key,
+      value = property.value,
+      oldValue = property.oldValue,
+      updateTime = property.updateTime,
+      updateUserID = property.updateUserID,
+      updateFromRemote = property.updateFromRemote;
 
   void copyFrom(RoomProperty property) {
     key = property.key;
@@ -85,11 +82,7 @@ class RoomProperty {
   }
 }
 
-enum RoomPropertyKey {
-  host,
-  liveStatus,
-  liveDuration,
-}
+enum RoomPropertyKey { host, liveStatus, liveDuration }
 
 extension RoomPropertyKeyExtension on RoomPropertyKey {
   static Map<String, RoomPropertyKey> textValues = {

@@ -69,41 +69,41 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
 
     return type == ZegoInRoomMessageType.broadcastMessage
         ? ZegoExpressEngine.instance
-            .sendBroadcastMessage(coreData.room.id, message)
-            .then((ZegoIMSendBroadcastMessageResult result) {
-            messageItem.state.value = (result.errorCode == 0)
-                ? ZegoInRoomMessageState.success
-                : ZegoInRoomMessageState.failed;
+              .sendBroadcastMessage(coreData.room.id, message)
+              .then((ZegoIMSendBroadcastMessageResult result) {
+                messageItem.state.value = (result.errorCode == 0)
+                    ? ZegoInRoomMessageState.success
+                    : ZegoInRoomMessageState.failed;
 
-            if (ZegoErrorCode.CommonSuccess == result.errorCode) {
-              messageItem.messageID = result.messageID.toString();
-            }
-            messageInfo.streamControllerLocalMessage?.add(messageItem);
+                if (ZegoErrorCode.CommonSuccess == result.errorCode) {
+                  messageItem.messageID = result.messageID.toString();
+                }
+                messageInfo.streamControllerLocalMessage?.add(messageItem);
 
-            messageInfo.streamControllerMessageList?.add(
-              List<ZegoInRoomMessage>.from(messageInfo.messageList),
-            );
+                messageInfo.streamControllerMessageList?.add(
+                  List<ZegoInRoomMessage>.from(messageInfo.messageList),
+                );
 
-            return result.errorCode;
-          })
+                return result.errorCode;
+              })
         : ZegoExpressEngine.instance
-            .sendBarrageMessage(coreData.room.id, message)
-            .then((ZegoIMSendBarrageMessageResult result) {
-            messageItem.state.value = (result.errorCode == 0)
-                ? ZegoInRoomMessageState.success
-                : ZegoInRoomMessageState.failed;
+              .sendBarrageMessage(coreData.room.id, message)
+              .then((ZegoIMSendBarrageMessageResult result) {
+                messageItem.state.value = (result.errorCode == 0)
+                    ? ZegoInRoomMessageState.success
+                    : ZegoInRoomMessageState.failed;
 
-            if (ZegoErrorCode.CommonSuccess == result.errorCode) {
-              messageItem.messageID = result.messageID;
-            }
-            messageInfo.streamControllerLocalMessage?.add(messageItem);
+                if (ZegoErrorCode.CommonSuccess == result.errorCode) {
+                  messageItem.messageID = result.messageID;
+                }
+                messageInfo.streamControllerLocalMessage?.add(messageItem);
 
-            messageInfo.streamControllerMessageList?.add(
-              List<ZegoInRoomMessage>.from(messageInfo.messageList),
-            );
+                messageInfo.streamControllerMessageList?.add(
+                  List<ZegoInRoomMessage>.from(messageInfo.messageList),
+                );
 
-            return result.errorCode;
-          });
+                return result.errorCode;
+              });
   }
 
   /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
@@ -175,8 +175,10 @@ class ZegoUIKitCoreMessageImpl extends ZegoUIKitExpressEventInterface {
       );
     }
 
-    messageInfo.streamControllerMessageList?.add(List<ZegoInRoomMessage>.from(
-      localCache ? messageInfo.messageList : messageList,
-    ));
+    messageInfo.streamControllerMessageList?.add(
+      List<ZegoInRoomMessage>.from(
+        localCache ? messageInfo.messageList : messageList,
+      ),
+    );
   }
 }

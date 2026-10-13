@@ -53,9 +53,9 @@ class ZegoSignalingPluginCoreData
     initData();
 
     await ZegoPluginAdapter().signalingPlugin!.init(
-          appID: appID,
-          appSign: appSign,
-        );
+      appID: appID,
+      appSign: appSign,
+    );
     isInit = true;
 
     ZegoLoggerService.logInfo(
@@ -143,7 +143,9 @@ class ZegoSignalingPluginCoreData
   }
 
   Future<void> reportCallEnded(
-      ZegoSignalingPluginCXCallEndedReason endedReason, String uuid) async {
+    ZegoSignalingPluginCXCallEndedReason endedReason,
+    String uuid,
+  ) async {
     ZegoLoggerService.logInfo(
       'reportCallEnded, endedReason:$endedReason, uuid:$uuid',
       tag: 'uikit-plugin-signaling',
@@ -153,11 +155,7 @@ class ZegoSignalingPluginCoreData
   }
 
   /// login
-  Future<bool> login(
-    String id,
-    String name, {
-    String token = '',
-  }) async {
+  Future<bool> login(String id, String name, {String token = ''}) async {
     if (ZegoPluginAdapter().signalingPlugin == null) {
       return false;
     }
@@ -206,10 +204,10 @@ class ZegoSignalingPluginCoreData
     );
 
     final pluginResult = await ZegoPluginAdapter().signalingPlugin!.connectUser(
-          id: id,
-          name: name,
-          token: token,
-        );
+      id: id,
+      name: name,
+      token: token,
+    );
 
     if (pluginResult.error == null) {
       ZegoLoggerService.logInfo(
@@ -255,8 +253,8 @@ class ZegoSignalingPluginCoreData
     currentUserID = null;
     currentUserName = null;
 
-    final pluginResult =
-        await ZegoPluginAdapter().signalingPlugin!.disconnectUser();
+    final pluginResult = await ZegoPluginAdapter().signalingPlugin!
+        .disconnectUser();
 
     if (pluginResult.timeout) {
       ZegoLoggerService.logInfo(
@@ -291,8 +289,9 @@ class ZegoSignalingPluginCoreData
       subTag: 'core data',
     );
 
-    final pluginResult =
-        await ZegoPluginAdapter().signalingPlugin!.renewToken(token);
+    final pluginResult = await ZegoPluginAdapter().signalingPlugin!.renewToken(
+      token,
+    );
 
     if (pluginResult.error == null) {
       ZegoLoggerService.logInfo(
@@ -378,9 +377,10 @@ class ZegoSignalingPluginCoreData
       subTag: 'core data',
     );
 
-    final pluginResult = await ZegoPluginAdapter()
-        .signalingPlugin!
-        .joinRoom(roomID: roomID, roomName: roomName);
+    final pluginResult = await ZegoPluginAdapter().signalingPlugin!.joinRoom(
+      roomID: roomID,
+      roomName: roomName,
+    );
 
     if (pluginResult.error == null) {
       ZegoLoggerService.logInfo(
@@ -429,9 +429,9 @@ class ZegoSignalingPluginCoreData
       tag: 'uikit-plugin-signaling',
       subTag: 'core data',
     );
-    final pluginResult = await ZegoPluginAdapter()
-        .signalingPlugin!
-        .leaveRoom(roomID: currentRoomID!);
+    final pluginResult = await ZegoPluginAdapter().signalingPlugin!.leaveRoom(
+      roomID: currentRoomID!,
+    );
 
     if (pluginResult.error == null) {
       ZegoLoggerService.logInfo(
@@ -483,7 +483,8 @@ class ZegoSignalingPluginCoreData
 
   /// on connection state changed
   void onConnectionStateChanged(
-      ZegoSignalingPluginConnectionStateChangedEvent event) {
+    ZegoSignalingPluginConnectionStateChangedEvent event,
+  ) {
     ZegoLoggerService.logInfo(
       'connection state changed, $event',
       tag: 'uikit-plugin-signaling',
@@ -502,7 +503,8 @@ class ZegoSignalingPluginCoreData
   }
 
   void onNotificationArrived(
-      ZegoSignalingPluginNotificationArrivedEvent event) {
+    ZegoSignalingPluginNotificationArrivedEvent event,
+  ) {
     ZegoLoggerService.logInfo(
       'notification arrived, $event',
       tag: 'uikit-plugin-signaling',
@@ -513,7 +515,8 @@ class ZegoSignalingPluginCoreData
   }
 
   void onNotificationClicked(
-      ZegoSignalingPluginNotificationClickedEvent event) {
+    ZegoSignalingPluginNotificationClickedEvent event,
+  ) {
     ZegoLoggerService.logInfo(
       'notification clicked, $event',
       tag: 'uikit-plugin-signaling',
@@ -524,7 +527,8 @@ class ZegoSignalingPluginCoreData
   }
 
   void onNotificationRegistered(
-      ZegoSignalingPluginNotificationRegisteredEvent event) {
+    ZegoSignalingPluginNotificationRegisteredEvent event,
+  ) {
     ZegoLoggerService.logInfo(
       'notification registered, $event',
       tag: 'uikit-plugin-signaling',

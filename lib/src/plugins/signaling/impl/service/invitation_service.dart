@@ -49,8 +49,9 @@ mixin ZegoPluginInvitationService {
 
     if (null != sendInvitationStartTime) {
       const maxMilliSeconds = 1000;
-      final diffMilliSeconds =
-          DateTime.now().difference(sendInvitationStartTime!).inMilliseconds;
+      final diffMilliSeconds = DateTime.now()
+          .difference(sendInvitationStartTime!)
+          .inMilliseconds;
       if (diffMilliSeconds < maxMilliSeconds) {
         ZegoLoggerService.logInfo(
           'limited frequency, '
@@ -81,7 +82,9 @@ mixin ZegoPluginInvitationService {
 
     ZegoSignalingPluginPushConfig? pluginPushConfig;
     if (ZegoSignalingPluginCore
-            .shared.coreData.notifyWhenAppIsInTheBackgroundOrQuit &&
+            .shared
+            .coreData
+            .notifyWhenAppIsInTheBackgroundOrQuit &&
         (zegoNotificationConfig?.notifyWhenAppIsInTheBackgroundOrQuit ??
             false)) {
       pluginPushConfig = ZegoSignalingPluginPushConfig(
@@ -110,31 +113,34 @@ mixin ZegoPluginInvitationService {
 
     return ZegoSignalingPluginCore.shared.coreData
         .invite(
-      invitees: invitees,
-      type: type,
-      timeout: timeout,
-      zimExtendedData: zimExtendedData,
-      kitData: data,
-      isAdvancedMode: isAdvancedMode,
-      pushConfig: pluginPushConfig,
-    )
+          invitees: invitees,
+          type: type,
+          timeout: timeout,
+          zimExtendedData: zimExtendedData,
+          kitData: data,
+          isAdvancedMode: isAdvancedMode,
+          pushConfig: pluginPushConfig,
+        )
         .then((result) {
-      ZegoUIKit().reporter().report(
-        event: ZegoUIKitSignalingReporter.eventCallInvite,
-        params: {
-          ZegoUIKitSignalingReporter.eventKeyInvitationID: result.invitationID,
-          ZegoUIKitSignalingReporter.eventKeyInvitees: invitees,
-          ZegoUIKitSignalingReporter.eventKeyInviteesCount: invitees.length,
-          ZegoUIKitSignalingReporter.eventKeyErrorUsers:
-              result.errorInvitees.keys.toList(),
-          ZegoUIKitSignalingReporter.eventKeyErrorUsersCount:
-              result.errorInvitees.keys.length,
-          ZegoUIKitSignalingReporter.eventKeyExtendedData: zimExtendedData,
-        },
-      );
+          ZegoUIKit().reporter().report(
+            event: ZegoUIKitSignalingReporter.eventCallInvite,
+            params: {
+              ZegoUIKitSignalingReporter.eventKeyInvitationID:
+                  result.invitationID,
+              ZegoUIKitSignalingReporter.eventKeyInvitees: invitees,
+              ZegoUIKitSignalingReporter.eventKeyInviteesCount: invitees.length,
+              ZegoUIKitSignalingReporter.eventKeyErrorUsers: result
+                  .errorInvitees
+                  .keys
+                  .toList(),
+              ZegoUIKitSignalingReporter.eventKeyErrorUsersCount:
+                  result.errorInvitees.keys.length,
+              ZegoUIKitSignalingReporter.eventKeyExtendedData: zimExtendedData,
+            },
+          );
 
-      return result;
-    });
+          return result;
+        });
   }
 
   /// cancel invitation to one or more specified users
@@ -290,7 +296,7 @@ mixin ZegoPluginInvitationService {
   }
 
   Future<ZegoSignalingPluginResponseInvitationResult>
-      refuseInvitationByInvitationID({
+  refuseInvitationByInvitationID({
     required String invitationID,
     required String data,
   }) async {
@@ -327,8 +333,9 @@ mixin ZegoPluginInvitationService {
   }) async {
     final invitationID = (targetInvitationID?.isNotEmpty ?? false)
         ? targetInvitationID!
-        : ZegoSignalingPluginCore.shared.coreData
-            .queryInvitationIDByInviterID(inviterID);
+        : ZegoSignalingPluginCore.shared.coreData.queryInvitationIDByInviterID(
+            inviterID,
+          );
 
     if (invitationID.isEmpty) {
       ZegoLoggerService.logError(
@@ -360,51 +367,72 @@ mixin ZegoPluginInvitationService {
   /// When to call: After the call invitation is initiated, the calling member accepts, rejects, or exits, or the response times out, the current calling inviting member receives this callback.
   /// Note: If the user is not the inviter who initiated this call invitation or is not online, the callback will not be received.
   Stream<ZegoSignalingPluginInvitationUserStateChangedEvent>
-      getInvitationUserStateChangedStream() {
+  getInvitationUserStateChangedStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlInvitationUserStateChanged?.stream ??
+            .shared
+            .coreData
+            .streamCtrlInvitationUserStateChanged
+            ?.stream ??
         const Stream.empty();
   }
 
   /// stream callback, notify invitee when call invitation received
   Stream<Map<String, dynamic>> getInvitationReceivedStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlInvitationReceived?.stream ??
+            .shared
+            .coreData
+            .streamCtrlInvitationReceived
+            ?.stream ??
         const Stream.empty();
   }
 
   /// stream callback, notify invitee if invitation timeout
   Stream<Map<String, dynamic>> getInvitationTimeoutStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlInvitationTimeout?.stream ??
+            .shared
+            .coreData
+            .streamCtrlInvitationTimeout
+            ?.stream ??
         const Stream.empty();
   }
 
   /// stream callback, When the call invitation times out, the invitee does not respond, and the inviter will receive a callback.
   Stream<Map<String, dynamic>> getInvitationResponseTimeoutStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlInvitationResponseTimeout?.stream ??
+            .shared
+            .coreData
+            .streamCtrlInvitationResponseTimeout
+            ?.stream ??
         const Stream.empty();
   }
 
   /// stream callback, notify when call invitation accepted by invitee
   Stream<Map<String, dynamic>> getInvitationAcceptedStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlInvitationAccepted?.stream ??
+            .shared
+            .coreData
+            .streamCtrlInvitationAccepted
+            ?.stream ??
         const Stream.empty();
   }
 
   /// stream callback, notify when call invitation rejected by invitee
   Stream<Map<String, dynamic>> getInvitationRefusedStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlInvitationRefused?.stream ??
+            .shared
+            .coreData
+            .streamCtrlInvitationRefused
+            ?.stream ??
         const Stream.empty();
   }
 
   /// stream callback, notify when call invitation cancelled by inviter
   Stream<Map<String, dynamic>> getInvitationCanceledStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlInvitationCanceled?.stream ??
+            .shared
+            .coreData
+            .streamCtrlInvitationCanceled
+            ?.stream ??
         const Stream.empty();
   }
 }

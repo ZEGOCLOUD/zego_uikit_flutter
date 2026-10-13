@@ -23,14 +23,14 @@ mixin ZegoSignalingPluginCoreEvent {
     final plugin = ZegoPluginAdapter().signalingPlugin!;
     streamSubscriptions.addAll([
       plugin.getConnectionStateChangedEventStream().listen(
-            ZegoSignalingPluginCore.shared.coreData.onConnectionStateChanged,
-          ),
+        ZegoSignalingPluginCore.shared.coreData.onConnectionStateChanged,
+      ),
       plugin.getRoomStateChangedEventStream().listen(
-            ZegoSignalingPluginCore.shared.coreData.onRoomStateChanged,
-          ),
+        ZegoSignalingPluginCore.shared.coreData.onRoomStateChanged,
+      ),
       plugin.getErrorEventStream().listen(
-            ZegoSignalingPluginCore.shared.coreData.onError,
-          ),
+        ZegoSignalingPluginCore.shared.coreData.onError,
+      ),
     ]);
 
     _initNotificationEvents();
@@ -41,14 +41,14 @@ mixin ZegoSignalingPluginCoreEvent {
     final plugin = ZegoPluginAdapter().signalingPlugin!;
     streamSubscriptions.addAll([
       plugin.getNotificationArrivedEventStream().listen(
-            ZegoSignalingPluginCore.shared.coreData.onNotificationArrived,
-          ),
+        ZegoSignalingPluginCore.shared.coreData.onNotificationArrived,
+      ),
       plugin.getNotificationClickedEventStream().listen(
-            ZegoSignalingPluginCore.shared.coreData.onNotificationClicked,
-          ),
+        ZegoSignalingPluginCore.shared.coreData.onNotificationClicked,
+      ),
       plugin.getNotificationRegisteredEventStream().listen(
-            ZegoSignalingPluginCore.shared.coreData.onNotificationRegistered,
-          ),
+        ZegoSignalingPluginCore.shared.coreData.onNotificationRegistered,
+      ),
     ]);
   }
 
@@ -57,13 +57,14 @@ mixin ZegoSignalingPluginCoreEvent {
     streamSubscriptions.addAll([
       /// user state events
       plugin.getInvitationUserStateChangedEventStream().listen(
-            ZegoSignalingPluginCore
-                .shared.coreData.onInvitationUserStateChanged,
-          ),
+        ZegoSignalingPluginCore.shared.coreData.onInvitationUserStateChanged,
+      ),
       plugin.getInvitationUserStateChangedEventStream().listen(
-            ZegoSignalingPluginCore
-                .shared.coreData.onAdvanceInvitationUserStateChanged,
-          ),
+        ZegoSignalingPluginCore
+            .shared
+            .coreData
+            .onAdvanceInvitationUserStateChanged,
+      ),
 
       /// received events
       plugin
@@ -71,14 +72,18 @@ mixin ZegoSignalingPluginCoreEvent {
           .where((event) => _isNormalEvent(event.mode))
           .listen(
             ZegoSignalingPluginCore
-                .shared.coreData.onIncomingInvitationReceived,
+                .shared
+                .coreData
+                .onIncomingInvitationReceived,
           ),
       plugin
           .getIncomingInvitationReceivedEventStream()
           .where((event) => _isAdvanceEvent(event.mode))
           .listen(
             ZegoSignalingPluginCore
-                .shared.coreData.onIncomingAdvanceInvitationReceived,
+                .shared
+                .coreData
+                .onIncomingAdvanceInvitationReceived,
           ),
 
       /// cancel events
@@ -87,25 +92,27 @@ mixin ZegoSignalingPluginCoreEvent {
           .where((event) => _isNormalEvent(event.mode))
           .listen(
             ZegoSignalingPluginCore
-                .shared.coreData.onIncomingInvitationCancelled,
+                .shared
+                .coreData
+                .onIncomingInvitationCancelled,
           ),
       plugin
           .getIncomingInvitationCancelledEventStream()
           .where((event) => _isAdvanceEvent(event.mode))
           .listen(
             ZegoSignalingPluginCore
-                .shared.coreData.onIncomingAdvanceInvitationCancelled,
+                .shared
+                .coreData
+                .onIncomingAdvanceInvitationCancelled,
           ),
 
       /// only normal event
       plugin.getOutgoingInvitationAcceptedEventStream().listen(
-            ZegoSignalingPluginCore
-                .shared.coreData.onOutgoingInvitationAccepted,
-          ),
+        ZegoSignalingPluginCore.shared.coreData.onOutgoingInvitationAccepted,
+      ),
       plugin.getOutgoingInvitationRejectedEventStream().listen(
-            ZegoSignalingPluginCore
-                .shared.coreData.onOutgoingInvitationRejected,
-          ),
+        ZegoSignalingPluginCore.shared.coreData.onOutgoingInvitationRejected,
+      ),
 
       /// end events
       plugin
@@ -119,7 +126,9 @@ mixin ZegoSignalingPluginCoreEvent {
           .where((event) => _isAdvanceEvent(event.mode))
           .listen(
             ZegoSignalingPluginCore
-                .shared.coreData.onOutgoingAdvanceInvitationEnded,
+                .shared
+                .coreData
+                .onOutgoingAdvanceInvitationEnded,
           ),
 
       /// timeout events
@@ -134,11 +143,13 @@ mixin ZegoSignalingPluginCoreEvent {
           .where((event) => _isAdvanceEvent(event.mode))
           .listen(
             ZegoSignalingPluginCore
-                .shared.coreData.onIncomingAdvanceInvitationTimeout,
+                .shared
+                .coreData
+                .onIncomingAdvanceInvitationTimeout,
           ),
       plugin.getOutgoingInvitationTimeoutEventStream().listen(
-            ZegoSignalingPluginCore.shared.coreData.onOutgoingInvitationTimeout,
-          ),
+        ZegoSignalingPluginCore.shared.coreData.onOutgoingInvitationTimeout,
+      ),
     ]);
   }
 

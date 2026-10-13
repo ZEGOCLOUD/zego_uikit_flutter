@@ -3,10 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ZegoInputBoardWrapper extends StatefulWidget {
-  const ZegoInputBoardWrapper({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
+  const ZegoInputBoardWrapper({super.key, required this.child});
 
   final Widget child;
 
@@ -42,11 +39,11 @@ class _ZegoInputBoardWrapperState extends State<ZegoInputBoardWrapper> {
           SizedBox(
             height: hasSafeArea
                 ? (MediaQuery.of(context).size.height -
-                    padding.top -
-                    padding.bottom)
+                      padding.top -
+                      padding.bottom)
                 : MediaQuery.of(context).size.height,
             child: widget.child,
-          )
+          ),
         ],
       ),
     );

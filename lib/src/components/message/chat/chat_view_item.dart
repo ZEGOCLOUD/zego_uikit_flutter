@@ -10,10 +10,10 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoInRoomChatViewItem extends StatefulWidget {
   const ZegoInRoomChatViewItem({
-    Key? key,
+    super.key,
     required this.message,
     required this.avatarBuilder,
-  }) : super(key: key);
+  });
 
   final ZegoInRoomMessage message;
   final ZegoAvatarBuilder? avatarBuilder;
@@ -38,8 +38,9 @@ class _ZegoCallMessageListState extends State<ZegoInRoomChatViewItem> {
       avatar(),
       SizedBox(width: 24.zR),
       Column(
-        crossAxisAlignment:
-            isLocalSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isLocalSender
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           topInfo(),
           SizedBox(height: 6.zR),
@@ -49,8 +50,9 @@ class _ZegoCallMessageListState extends State<ZegoInRoomChatViewItem> {
     ];
 
     return Row(
-      mainAxisAlignment:
-          isLocalSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: isLocalSender
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: isLocalSender ? List.from(rowItems.reversed) : rowItems,
     );
@@ -59,33 +61,28 @@ class _ZegoCallMessageListState extends State<ZegoInRoomChatViewItem> {
   Widget avatar() {
     return ValueListenableBuilder(
       valueListenable: ZegoUIKitUserPropertiesNotifier(widget.message.user),
-      builder: (context, _, __) {
-        return widget.avatarBuilder
-                ?.call(context, Size(56.zR, 56.zR), widget.message.user, {}) ??
+      builder: (context, _, _) {
+        return widget.avatarBuilder?.call(
+              context,
+              Size(56.zR, 56.zR),
+              widget.message.user,
+              {},
+            ) ??
             circleName(context, Size(56.zR, 56.zR), widget.message.user);
       },
     );
   }
 
   Widget content() {
-    final items = [
-      contentMessage(),
-      SizedBox(width: 14.zR),
-      contentState(),
-    ];
-    return Row(
-      children: isLocalSender ? List.from(items.reversed) : items,
-    );
+    final items = [contentMessage(), SizedBox(width: 14.zR), contentState()];
+    return Row(children: isLocalSender ? List.from(items.reversed) : items);
   }
 
   Widget contentMessage() {
     return IntrinsicWidth(
       //  automatic shrinkage width
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 530.zR,
-          minHeight: 40.zR,
-        ),
+        constraints: BoxConstraints(maxWidth: 530.zR, minHeight: 40.zR),
         child: Container(
           decoration: BoxDecoration(
             color: isLocalSender
@@ -164,8 +161,9 @@ class _ZegoCallMessageListState extends State<ZegoInRoomChatViewItem> {
   }
 
   Widget topInfo() {
-    final sendTime =
-        DateTime.fromMillisecondsSinceEpoch(widget.message.timestamp);
+    final sendTime = DateTime.fromMillisecondsSinceEpoch(
+      widget.message.timestamp,
+    );
     final formatSendTime =
         "${sendTime.hour > 12 ? "P.M:" : "A.M"} ${sendTime.hour}:${sendTime.minute}";
 
@@ -191,8 +189,9 @@ class _ZegoCallMessageListState extends State<ZegoInRoomChatViewItem> {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      children:
-          isLocalSender ? List.from(topInfoChildren.reversed) : topInfoChildren,
+      children: isLocalSender
+          ? List.from(topInfoChildren.reversed)
+          : topInfoChildren,
     );
   }
 
@@ -201,8 +200,10 @@ class _ZegoCallMessageListState extends State<ZegoInRoomChatViewItem> {
     return Container(
       width: size.width,
       height: size.height,
-      decoration:
-          const BoxDecoration(color: Color(0xffDBDDE3), shape: BoxShape.circle),
+      decoration: const BoxDecoration(
+        color: Color(0xffDBDDE3),
+        shape: BoxShape.circle,
+      ),
       child: Center(
         child: Text(
           userName.isNotEmpty ? userName.characters.first : '',

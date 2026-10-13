@@ -28,14 +28,14 @@ class ZegoLeaveButton extends StatelessWidget {
   final ValueNotifier<bool>? clickableNotifier;
 
   const ZegoLeaveButton({
-    Key? key,
+    super.key,
     this.onLeaveConfirmation,
     this.onPress,
     this.icon,
     this.iconSize,
     this.buttonSize,
     this.clickableNotifier,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,8 @@ class ZegoLeaveButton extends StatelessWidget {
             ),
             child: SizedBox.fromSize(
               size: sizeBoxSize,
-              child: icon?.icon ??
+              child:
+                  icon?.icon ??
                   UIKitImage.asset(StyleIconUrls.iconS1ControlBarEnd),
             ),
           ),

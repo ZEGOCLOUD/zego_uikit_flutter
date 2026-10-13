@@ -10,13 +10,11 @@ import 'package:zego_uikit/src/components/screen_util/core/_flutter_widgets.dart
 import 'package:zego_uikit/src/components/screen_util/core/screen_util.dart';
 import 'package:zego_uikit/src/components/screen_util/core/screenutil_mixin.dart';
 
-typedef ZegoRebuildFactor = bool Function(
-    MediaQueryData old, MediaQueryData data);
+typedef ZegoRebuildFactor =
+    bool Function(MediaQueryData old, MediaQueryData data);
 
-typedef ZegoScreenUtilInitBuilder = Widget Function(
-  BuildContext context,
-  Widget? child,
-);
+typedef ZegoScreenUtilInitBuilder =
+    Widget Function(BuildContext context, Widget? child);
 
 /// @nodoc
 abstract class ZegoRebuildFactors {
@@ -36,11 +34,11 @@ abstract class ZegoRebuildFactors {
     return old != data;
   }
 
-  static bool always(MediaQueryData _, MediaQueryData __) {
+  static bool always(MediaQueryData _, MediaQueryData _) {
     return true;
   }
 
-  static bool none(MediaQueryData _, MediaQueryData __) {
+  static bool none(MediaQueryData _, MediaQueryData _) {
     return false;
   }
 }
@@ -71,7 +69,7 @@ abstract class ZegoFontSizeResolvers {
 class ZegoScreenUtilInit extends StatefulWidget {
   /// A helper widget that initializes [ZegoScreenUtil]
   const ZegoScreenUtilInit({
-    Key? key,
+    super.key,
     this.builder,
     this.child,
     this.rebuildFactor = ZegoRebuildFactors.size,
@@ -82,7 +80,7 @@ class ZegoScreenUtilInit extends StatefulWidget {
     this.ensureScreenSize,
     this.responsiveWidgets,
     this.fontSizeResolver = ZegoFontSizeResolvers.width,
-  }) : super(key: key);
+  });
 
   final ZegoScreenUtilInitBuilder? builder;
   final Widget? child;
@@ -146,7 +144,8 @@ class _ZegoScreenUtilInitState extends State<ZegoScreenUtilInit>
 
   void _markNeedsBuildIfAllowed(Element el) {
     final widgetName = el.widget.runtimeType.toString();
-    final allowed = widget is ZegoSU ||
+    final allowed =
+        widget is ZegoSU ||
         _canMarkedToBuild.contains(widgetName) ||
         !(widgetName.startsWith('_') || zFlutterWidgets.contains(widgetName));
 

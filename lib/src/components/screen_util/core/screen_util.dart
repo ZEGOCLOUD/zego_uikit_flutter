@@ -6,8 +6,8 @@ import 'dart:ui' as ui show FlutterView;
 // Flutter imports:
 import 'package:flutter/widgets.dart';
 
-typedef ZegoFontSizeResolver = double Function(
-    num fontSize, ZegoScreenUtil instance);
+typedef ZegoFontSizeResolver =
+    double Function(num fontSize, ZegoScreenUtil instance);
 
 /// @nodoc
 class ZegoScreenUtil {
@@ -111,13 +111,15 @@ class ZegoScreenUtil {
       }
     } catch (_) {
       throw Exception(
-          'You must either use ZegoScreenUtil.init or ScreenUtilInit first');
+        'You must either use ZegoScreenUtil.init or ScreenUtilInit first',
+      );
     }
 
     final MediaQueryData? deviceData = data.nonEmptySizeOrNull();
     final Size deviceSize = deviceData?.size ?? designSize;
 
-    final orientation = deviceData?.orientation ??
+    final orientation =
+        deviceData?.orientation ??
         (deviceSize.width > deviceSize.height
             ? Orientation.landscape
             : Orientation.portrait);

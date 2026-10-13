@@ -9,13 +9,13 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoScreenSharingToggleButton extends StatefulWidget {
   const ZegoScreenSharingToggleButton({
-    Key? key,
+    super.key,
     this.iconStartSharing,
     this.iconStopSharing,
     this.buttonSize,
     this.iconSize,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   final ButtonIcon? iconStartSharing;
   final ButtonIcon? iconStopSharing;
@@ -54,16 +54,14 @@ class _ZegoScreenSharingToggleButtonState
           child: Container(
             width: containerSize.width,
             height: containerSize.height,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
+            decoration: const BoxDecoration(shape: BoxShape.circle),
             child: SizedBox.fromSize(
               size: sizeBoxSize,
               child: isScreenSharing
                   ? widget.iconStartSharing?.icon ??
-                      UIKitImage.asset(StyleIconUrls.iconScreenShareStop)
+                        UIKitImage.asset(StyleIconUrls.iconScreenShareStop)
                   : widget.iconStopSharing?.icon ??
-                      UIKitImage.asset(StyleIconUrls.iconScreenShareStart),
+                        UIKitImage.asset(StyleIconUrls.iconScreenShareStart),
             ),
           ),
         );

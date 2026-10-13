@@ -33,7 +33,7 @@ class ZegoBeautyEffectSlider extends StatefulWidget {
   final double? thumbRadius;
 
   const ZegoBeautyEffectSlider({
-    Key? key,
+    super.key,
     required this.effectType,
     required this.defaultValue,
     this.thumpHeight,
@@ -45,7 +45,7 @@ class ZegoBeautyEffectSlider extends StatefulWidget {
     this.inactiveTrackColor,
     this.thumbColor,
     this.thumbRadius,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoBeautyEffectSlider> createState() => _ZegoBeautyEffectSliderState();

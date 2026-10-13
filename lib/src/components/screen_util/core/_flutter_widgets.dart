@@ -827,5 +827,5 @@ final zFlutterWidgets = HashSet<String>.from({
   'WidgetToRenderBoxAdapter',
   'WillPopScope',
   'WordBoundary',
-  'Wrap'
+  'Wrap',
 });

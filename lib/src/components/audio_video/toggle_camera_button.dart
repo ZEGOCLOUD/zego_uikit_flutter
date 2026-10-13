@@ -15,14 +15,14 @@ import 'package:zego_uikit/src/services/services.dart';
 /// button used to open/close camera
 class ZegoToggleCameraButton extends StatefulWidget {
   const ZegoToggleCameraButton({
-    Key? key,
+    super.key,
     this.normalIcon,
     this.offIcon,
     this.onPressed,
     this.defaultOn = true,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   final ButtonIcon? normalIcon;
   final ButtonIcon? offIcon;
@@ -62,8 +62,9 @@ class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton>
 
     /// listen local camera state changes
     return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id),
+      valueListenable: ZegoUIKit().getCameraStateNotifier(
+        ZegoUIKit().getLocalUser().id,
+      ),
       builder: (context, isCameraOn, _) {
         /// update if camera state changed
         return GestureDetector(
@@ -74,19 +75,22 @@ class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton>
             decoration: BoxDecoration(
               color: isCameraOn
                   ? widget.normalIcon?.backgroundColor ??
-                      controlBarButtonCheckedBackgroundColor
+                        controlBarButtonCheckedBackgroundColor
                   : widget.offIcon?.backgroundColor ??
-                      controlBarButtonBackgroundColor,
+                        controlBarButtonBackgroundColor,
               shape: BoxShape.circle,
             ),
             child: SizedBox.fromSize(
               size: sizeBoxSize,
               child: isCameraOn
                   ? widget.normalIcon?.icon ??
-                      UIKitImage.asset(
-                          StyleIconUrls.iconS1ControlBarCameraNormal)
+                        UIKitImage.asset(
+                          StyleIconUrls.iconS1ControlBarCameraNormal,
+                        )
                   : widget.offIcon?.icon ??
-                      UIKitImage.asset(StyleIconUrls.iconS1ControlBarCameraOff),
+                        UIKitImage.asset(
+                          StyleIconUrls.iconS1ControlBarCameraOff,
+                        ),
             ),
           ),
         );
@@ -97,8 +101,9 @@ class _ZegoToggleCameraButtonState extends State<ZegoToggleCameraButton>
   void onPressed() {
     if (!executeWithRateLimit(() {
       /// get current camera state
-      final valueNotifier =
-          ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id);
+      final valueNotifier = ZegoUIKit().getCameraStateNotifier(
+        ZegoUIKit().getLocalUser().id,
+      );
 
       final targetState = !valueNotifier.value;
 

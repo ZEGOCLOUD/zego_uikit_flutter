@@ -22,10 +22,7 @@ class ZegoUIKitUser {
   Map<String, dynamic> toJson() => {'id': id, 'name': name};
 
   factory ZegoUIKitUser.fromJson(Map<String, dynamic> json) {
-    return ZegoUIKitUser(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-    );
+    return ZegoUIKitUser(id: json['id'] ?? '', name: json['name'] ?? '');
   }
 
   ValueNotifier<bool> get microphone => _tryGetUser.microphone;
@@ -66,16 +63,13 @@ class ZegoUIKitUser {
     return id.isEmpty;
   }
 
-  ZegoUIKitUser({
-    required this.id,
-    required this.name,
-  });
+  ZegoUIKitUser({required this.id, required this.name});
 
   // internal helper function
   ZegoUser toZegoUser() => ZegoUser(id, name);
 
   ZegoUIKitUser.fromZego(ZegoUser zegoUser)
-      : this(id: zegoUser.userID, name: zegoUser.userName);
+    : this(id: zegoUser.userID, name: zegoUser.userName);
 
   ZegoUIKitCoreUser get _tryGetUser {
     final user = ZegoUIKitCore.shared.coreData.getUser(id);
@@ -129,11 +123,8 @@ class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier
 
   StreamSubscription<dynamic>? _userListChangedSubscription;
 
-  ZegoUIKitUserPropertiesNotifier(
-    ZegoUIKitUser user, {
-    String? mixerStreamID,
-  })  : _user = user,
-        _mixerStreamID = mixerStreamID {
+  ZegoUIKitUserPropertiesNotifier(ZegoUIKitUser user, {this._mixerStreamID})
+    : _user = user {
     _listenUser();
   }
 
@@ -152,8 +143,9 @@ class ZegoUIKitUserPropertiesNotifier extends ChangeNotifier
 
     _userListChangedSubscription?.cancel();
     if (_coreUser.isEmpty) {
-      _userListChangedSubscription =
-          ZegoUIKit().getUserListStream().listen(onUserListUpdated);
+      _userListChangedSubscription = ZegoUIKit().getUserListStream().listen(
+        onUserListUpdated,
+      );
     } else {
       _listenUserProperty();
     }

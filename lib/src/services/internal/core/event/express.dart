@@ -268,45 +268,31 @@ class ZegoUIKitExpressEventImpl {
     ZegoExpressEngine.onAIVoiceChangerGetSpeakerList = null;
   }
 
-  void onDebugError(
-    int errorCode,
-    String funcName,
-    String info,
-  ) {
+  void onDebugError(int errorCode, String funcName, String info) {
     for (var event in events) {
       event.onDebugError(errorCode, funcName, info);
     }
   }
 
-  void onApiCalledResult(
-    int errorCode,
-    String funcName,
-    String info,
-  ) {
+  void onApiCalledResult(int errorCode, String funcName, String info) {
     for (var event in events) {
       event.onApiCalledResult(errorCode, funcName, info);
     }
   }
 
-  void onEngineStateUpdate(
-    ZegoEngineState state,
-  ) {
+  void onEngineStateUpdate(ZegoEngineState state) {
     for (var event in events) {
       event.onEngineStateUpdate(state);
     }
   }
 
-  void onRecvExperimentalAPI(
-    String content,
-  ) {
+  void onRecvExperimentalAPI(String content) {
     for (var event in events) {
       event.onRecvExperimentalAPI(content);
     }
   }
 
-  void onFatalError(
-    int errorCode,
-  ) {
+  void onFatalError(int errorCode) {
     for (var event in events) {
       event.onFatalError(errorCode);
     }
@@ -344,10 +330,7 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onRoomOnlineUserCountUpdate(
-    String roomID,
-    int count,
-  ) {
+  void onRoomOnlineUserCountUpdate(String roomID, int count) {
     for (var event in events) {
       event.onRoomOnlineUserCountUpdate(roomID, count);
     }
@@ -364,10 +347,7 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onRoomStreamExtraInfoUpdate(
-    String roomID,
-    List<ZegoStream> streamList,
-  ) {
+  void onRoomStreamExtraInfoUpdate(String roomID, List<ZegoStream> streamList) {
     for (var event in events) {
       event.onRoomStreamExtraInfoUpdate(roomID, streamList);
     }
@@ -382,10 +362,7 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onRoomTokenWillExpire(
-    String roomID,
-    int remainTimeInSecond,
-  ) {
+  void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) {
     for (var event in events) {
       event.onRoomTokenWillExpire(roomID, remainTimeInSecond);
     }
@@ -423,25 +400,19 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onPublisherSendAudioFirstFrame(
-    ZegoPublishChannel channel,
-  ) {
+  void onPublisherSendAudioFirstFrame(ZegoPublishChannel channel) {
     for (var event in events) {
       event.onPublisherSendAudioFirstFrame(channel);
     }
   }
 
-  void onPublisherSendVideoFirstFrame(
-    ZegoPublishChannel channel,
-  ) {
+  void onPublisherSendVideoFirstFrame(ZegoPublishChannel channel) {
     for (var event in events) {
       event.onPublisherSendVideoFirstFrame(channel);
     }
   }
 
-  void onPublisherRenderVideoFirstFrame(
-    ZegoPublishChannel channel,
-  ) {
+  void onPublisherRenderVideoFirstFrame(ZegoPublishChannel channel) {
     for (var event in events) {
       event.onPublisherRenderVideoFirstFrame(channel);
     }
@@ -526,96 +497,67 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onPlayerQualityUpdate(
-    String streamID,
-    ZegoPlayStreamQuality quality,
-  ) {
+  void onPlayerQualityUpdate(String streamID, ZegoPlayStreamQuality quality) {
     for (var event in events) {
       event.onPlayerQualityUpdate(streamID, quality);
     }
   }
 
-  void onPlayerMediaEvent(
-    String streamID,
-    ZegoPlayerMediaEvent mediaEvent,
-  ) {
+  void onPlayerMediaEvent(String streamID, ZegoPlayerMediaEvent mediaEvent) {
     for (var event in events) {
       event.onPlayerMediaEvent(streamID, mediaEvent);
     }
   }
 
-  void onPlayerRecvAudioFirstFrame(
-    String streamID,
-  ) {
+  void onPlayerRecvAudioFirstFrame(String streamID) {
     for (var event in events) {
       event.onPlayerRecvAudioFirstFrame(streamID);
     }
   }
 
-  void onPlayerRecvVideoFirstFrame(
-    String streamID,
-  ) {
+  void onPlayerRecvVideoFirstFrame(String streamID) {
     for (var event in events) {
       event.onPlayerRecvVideoFirstFrame(streamID);
     }
   }
 
-  void onPlayerRenderVideoFirstFrame(
-    String streamID,
-  ) {
+  void onPlayerRenderVideoFirstFrame(String streamID) {
     for (var event in events) {
       event.onPlayerRenderVideoFirstFrame(streamID);
     }
   }
 
-  void onPlayerRenderCameraVideoFirstFrame(
-    String streamID,
-  ) {
+  void onPlayerRenderCameraVideoFirstFrame(String streamID) {
     for (var event in events) {
       event.onPlayerRenderCameraVideoFirstFrame(streamID);
     }
   }
 
-  void onPlayerVideoSizeChanged(
-    String streamID,
-    int width,
-    int height,
-  ) {
+  void onPlayerVideoSizeChanged(String streamID, int width, int height) {
     for (var event in events) {
       event.onPlayerVideoSizeChanged(streamID, width, height);
     }
   }
 
-  void onPlayerRecvSEI(
-    String streamID,
-    Uint8List data,
-  ) {
+  void onPlayerRecvSEI(String streamID, Uint8List data) {
     for (var event in events) {
       event.onPlayerRecvSEI(streamID, data);
     }
   }
 
-  void onPlayerRecvMediaSideInfo(
-    ZegoMediaSideInfo info,
-  ) {
+  void onPlayerRecvMediaSideInfo(ZegoMediaSideInfo info) {
     for (var event in events) {
       event.onPlayerRecvMediaSideInfo(info);
     }
   }
 
-  void onPlayerRecvAudioSideInfo(
-    String streamID,
-    Uint8List data,
-  ) {
+  void onPlayerRecvAudioSideInfo(String streamID, Uint8List data) {
     for (var event in events) {
       event.onPlayerRecvAudioSideInfo(streamID, data);
     }
   }
 
-  void onPlayerLowFpsWarning(
-    ZegoVideoCodecID codecID,
-    String streamID,
-  ) {
+  void onPlayerLowFpsWarning(ZegoVideoCodecID codecID, String streamID) {
     for (var event in events) {
       event.onPlayerLowFpsWarning(codecID, streamID);
     }
@@ -650,17 +592,13 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onMixerSoundLevelUpdate(
-    Map<int, double> soundLevels,
-  ) {
+  void onMixerSoundLevelUpdate(Map<int, double> soundLevels) {
     for (var event in events) {
       event.onMixerSoundLevelUpdate(soundLevels);
     }
   }
 
-  void onAutoMixerSoundLevelUpdate(
-    Map<String, double> soundLevels,
-  ) {
+  void onAutoMixerSoundLevelUpdate(Map<String, double> soundLevels) {
     for (var event in events) {
       event.onAutoMixerSoundLevelUpdate(soundLevels);
     }
@@ -695,25 +633,19 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onCapturedSoundLevelUpdate(
-    double soundLevel,
-  ) {
+  void onCapturedSoundLevelUpdate(double soundLevel) {
     for (var event in events) {
       event.onCapturedSoundLevelUpdate(soundLevel);
     }
   }
 
-  void onCapturedSoundLevelInfoUpdate(
-    ZegoSoundLevelInfo soundLevelInfo,
-  ) {
+  void onCapturedSoundLevelInfoUpdate(ZegoSoundLevelInfo soundLevelInfo) {
     for (var event in events) {
       event.onCapturedSoundLevelInfoUpdate(soundLevelInfo);
     }
   }
 
-  void onRemoteSoundLevelUpdate(
-    Map<String, double> soundLevels,
-  ) {
+  void onRemoteSoundLevelUpdate(Map<String, double> soundLevels) {
     for (var event in events) {
       event.onRemoteSoundLevelUpdate(soundLevels);
     }
@@ -727,17 +659,13 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onCapturedAudioSpectrumUpdate(
-    List<double> audioSpectrum,
-  ) {
+  void onCapturedAudioSpectrumUpdate(List<double> audioSpectrum) {
     for (var event in events) {
       event.onCapturedAudioSpectrumUpdate(audioSpectrum);
     }
   }
 
-  void onRemoteAudioSpectrumUpdate(
-    Map<String, List<double>> audioSpectrums,
-  ) {
+  void onRemoteAudioSpectrumUpdate(Map<String, List<double>> audioSpectrums) {
     for (var event in events) {
       event.onRemoteAudioSpectrumUpdate(audioSpectrums);
     }
@@ -753,19 +681,13 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onRemoteCameraStateUpdate(
-    String streamID,
-    ZegoRemoteDeviceState state,
-  ) {
+  void onRemoteCameraStateUpdate(String streamID, ZegoRemoteDeviceState state) {
     for (var event in events) {
       event.onRemoteCameraStateUpdate(streamID, state);
     }
   }
 
-  void onRemoteMicStateUpdate(
-    String streamID,
-    ZegoRemoteDeviceState state,
-  ) {
+  void onRemoteMicStateUpdate(String streamID, ZegoRemoteDeviceState state) {
     for (var event in events) {
       event.onRemoteMicStateUpdate(streamID, state);
     }
@@ -780,9 +702,7 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onAudioRouteChange(
-    ZegoAudioRoute audioRoute,
-  ) {
+  void onAudioRouteChange(ZegoAudioRoute audioRoute) {
     for (var event in events) {
       event.onAudioRouteChange(audioRoute);
     }
@@ -834,11 +754,7 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onIMRecvCustomCommand(
-    String roomID,
-    ZegoUser fromUser,
-    String command,
-  ) {
+  void onIMRecvCustomCommand(String roomID, ZegoUser fromUser, String command) {
     for (var event in events) {
       event.onIMRecvCustomCommand(roomID, fromUser, command);
     }
@@ -852,7 +768,11 @@ class ZegoUIKitExpressEventImpl {
   ) {
     for (var event in events) {
       event.onAudioEffectPlayStateUpdate(
-          audioEffectPlayer, audioEffectID, state, errorCode);
+        audioEffectPlayer,
+        audioEffectID,
+        state,
+        errorCode,
+      );
     }
   }
 
@@ -877,26 +797,19 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onPerformanceStatusUpdate(
-    ZegoPerformanceStatus status,
-  ) {
+  void onPerformanceStatusUpdate(ZegoPerformanceStatus status) {
     for (var event in events) {
       event.onPerformanceStatusUpdate(status);
     }
   }
 
-  void onNetworkModeChanged(
-    ZegoNetworkMode mode,
-  ) {
+  void onNetworkModeChanged(ZegoNetworkMode mode) {
     for (var event in events) {
       event.onNetworkModeChanged(mode);
     }
   }
 
-  void onNetworkSpeedTestError(
-    int errorCode,
-    ZegoNetworkSpeedTestType type,
-  ) {
+  void onNetworkSpeedTestError(int errorCode, ZegoNetworkSpeedTestType type) {
     for (var event in events) {
       event.onNetworkSpeedTestError(errorCode, type);
     }
@@ -933,35 +846,25 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onRequestUploadDumpData(
-    String dumpDir,
-    bool takePhoto,
-  ) {
+  void onRequestUploadDumpData(String dumpDir, bool takePhoto) {
     for (var event in events) {
       event.onRequestUploadDumpData(dumpDir, takePhoto);
     }
   }
 
-  void onStartDumpData(
-    int errorCode,
-  ) {
+  void onStartDumpData(int errorCode) {
     for (var event in events) {
       event.onStartDumpData(errorCode);
     }
   }
 
-  void onStopDumpData(
-    int errorCode,
-    String dumpDir,
-  ) {
+  void onStopDumpData(int errorCode, String dumpDir) {
     for (var event in events) {
       event.onStopDumpData(errorCode, dumpDir);
     }
   }
 
-  void onUploadDumpData(
-    int errorCode,
-  ) {
+  void onUploadDumpData(int errorCode) {
     for (var event in events) {
       event.onUploadDumpData(errorCode);
     }
@@ -994,10 +897,7 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onAlignedAudioAuxData(
-    Uint8List data,
-    ZegoAudioFrameParam param,
-  ) {
+  void onAlignedAudioAuxData(Uint8List data, ZegoAudioFrameParam param) {
     for (var event in events) {
       event.onAlignedAudioAuxData(data, param);
     }
@@ -1012,7 +912,12 @@ class ZegoUIKitExpressEventImpl {
   ) {
     for (var event in events) {
       event.onProcessRemoteAudioData(
-          data, dataLength, param, streamID, timestamp);
+        data,
+        dataLength,
+        param,
+        streamID,
+        timestamp,
+      );
     }
   }
 
@@ -1085,7 +990,10 @@ class ZegoUIKitExpressEventImpl {
   ) {
     for (var event in events) {
       event.onDownloadProgressUpdate(
-          copyrightedMusic, resourceID, progressRate);
+        copyrightedMusic,
+        resourceID,
+        progressRate,
+      );
     }
   }
 
@@ -1097,7 +1005,11 @@ class ZegoUIKitExpressEventImpl {
   ) {
     for (var event in events) {
       event.onCurrentPitchValueUpdate(
-          copyrightedMusic, resourceID, currentDuration, pitchValue);
+        copyrightedMusic,
+        resourceID,
+        currentDuration,
+        pitchValue,
+      );
     }
   }
 
@@ -1105,9 +1017,11 @@ class ZegoUIKitExpressEventImpl {
     ZegoScreenCaptureSource source,
     ZegoScreenCaptureSourceExceptionType exceptionType,
   ) {
-    debugPrint('111 onScreenCaptureExceptionOccurred, '
-        'source:$source, '
-        'exceptionType:$exceptionType, ');
+    debugPrint(
+      '111 onScreenCaptureExceptionOccurred, '
+      'source:$source, '
+      'exceptionType:$exceptionType, ',
+    );
     for (var event in events) {
       event.onScreenCaptureExceptionOccurred(source, exceptionType);
     }
@@ -1118,11 +1032,13 @@ class ZegoUIKitExpressEventImpl {
     ZegoScreenCaptureWindowState windowState,
     Rect windowRect,
   ) {
-    debugPrint('111 onScreenCaptureWindowStateChanged, '
-        'source:$source, '
-        'windowState:$windowState, '
-        'windowRect:$windowRect, '
-        '');
+    debugPrint(
+      '111 onScreenCaptureWindowStateChanged, '
+      'source:$source, '
+      'windowState:$windowState, '
+      'windowRect:$windowRect, '
+      '',
+    );
 
     for (var event in events) {
       event.onScreenCaptureWindowStateChanged(source, windowState, windowRect);
@@ -1133,9 +1049,11 @@ class ZegoUIKitExpressEventImpl {
     ZegoScreenCaptureSource source,
     Rect captureRect,
   ) {
-    debugPrint('111 onScreenCaptureSourceRectChanged, '
-        'source:$source, '
-        'captureRect:$captureRect, ');
+    debugPrint(
+      '111 onScreenCaptureSourceRectChanged, '
+      'source:$source, '
+      'captureRect:$captureRect, ',
+    );
     for (var event in events) {
       event.onScreenCaptureSourceRectChanged(source, captureRect);
     }
@@ -1150,10 +1068,7 @@ class ZegoUIKitExpressEventImpl {
     }
   }
 
-  void onAIVoiceChangerInit(
-    ZegoAIVoiceChanger aiVoiceChanger,
-    int errorCode,
-  ) {
+  void onAIVoiceChangerInit(ZegoAIVoiceChanger aiVoiceChanger, int errorCode) {
     for (var event in events) {
       event.onAIVoiceChangerInit(aiVoiceChanger, errorCode);
     }

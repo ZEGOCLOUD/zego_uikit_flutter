@@ -16,20 +16,22 @@ class ZegoUIKitCoreData
   ZegoUIKitCoreRoom room = ZegoUIKitCoreRoom('');
 
   StreamController<ZegoInRoomCommandReceivedData>?
-      customCommandReceivedStreamCtrl;
-  final networkStateNotifier =
-      ValueNotifier<ZegoUIKitNetworkState>(ZegoUIKitNetworkState.online);
+  customCommandReceivedStreamCtrl;
+  final networkStateNotifier = ValueNotifier<ZegoUIKitNetworkState>(
+    ZegoUIKitNetworkState.online,
+  );
   StreamController<ZegoUIKitNetworkState>? networkStateStreamCtrl;
 
   ValueNotifier<ZegoUIKitExpressEngineState> engineStateNotifier =
       ValueNotifier<ZegoUIKitExpressEngineState>(
-          ZegoUIKitExpressEngineState.stop);
+        ZegoUIKitExpressEngineState.stop,
+      );
   final engineStateStreamCtrl =
       StreamController<ZegoUIKitExpressEngineState>.broadcast();
 
   bool waitingEngineStopEnableValueOfCustomVideoProcessing = false;
   StreamSubscription?
-      engineStateUpdatedSubscriptionByEnableCustomVideoProcessing;
+  engineStateUpdatedSubscriptionByEnableCustomVideoProcessing;
   bool waitingEngineStopEnableValueOfCustomVideoRender = false;
   StreamSubscription? engineStateUpdatedSubscriptionByEnableCustomVideoRender;
 
@@ -42,11 +44,7 @@ class ZegoUIKitCoreData
 
     isInit = true;
 
-    ZegoLoggerService.logInfo(
-      'init',
-      tag: 'uikit',
-      subTag: 'core data',
-    );
+    ZegoLoggerService.logInfo('init', tag: 'uikit', subTag: 'core data');
 
     customCommandReceivedStreamCtrl ??=
         StreamController<ZegoInRoomCommandReceivedData>.broadcast();
@@ -68,11 +66,7 @@ class ZegoUIKitCoreData
 
     isInit = false;
 
-    ZegoLoggerService.logInfo(
-      'uninit',
-      tag: 'uikit',
-      subTag: 'core data',
-    );
+    ZegoLoggerService.logInfo('uninit', tag: 'uikit', subTag: 'core data');
 
     uninitNetworkTimestamp();
 
@@ -91,11 +85,7 @@ class ZegoUIKitCoreData
   }
 
   void clear() {
-    ZegoLoggerService.logInfo(
-      'clear',
-      tag: 'uikit',
-      subTag: 'core data',
-    );
+    ZegoLoggerService.logInfo('clear', tag: 'uikit', subTag: 'core data');
 
     clearStream();
     media.clear();
@@ -112,10 +102,7 @@ class ZegoUIKitCoreData
     room.clear();
   }
 
-  void setRoom(
-    String roomID, {
-    bool markAsLargeRoom = false,
-  }) {
+  void setRoom(String roomID, {bool markAsLargeRoom = false}) {
     ZegoLoggerService.logInfo(
       'set room:"$roomID", markAsLargeRoom:$markAsLargeRoom}',
       tag: 'uikit-room',

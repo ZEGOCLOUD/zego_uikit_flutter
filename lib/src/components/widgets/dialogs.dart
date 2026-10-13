@@ -34,7 +34,8 @@ Future<bool> showAlertDialog(
   var result = false;
 
   try {
-    result = await showDialog(
+    result =
+        await showDialog(
           context: context!,
           barrierDismissible: false,
           builder: (BuildContext context) {
@@ -46,7 +47,8 @@ Future<bool> showAlertDialog(
                 title: Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: titleStyle ??
+                  style:
+                      titleStyle ??
                       TextStyle(
                         fontSize: 30.0.zR,
                         fontWeight: FontWeight.bold,
@@ -56,7 +58,8 @@ Future<bool> showAlertDialog(
                 content: Text(
                   content,
                   textAlign: TextAlign.center,
-                  style: contentStyle ??
+                  style:
+                      contentStyle ??
                       TextStyle(
                         fontSize: 28.0.zR,
                         color: const Color(0xff2A2A2A),
@@ -99,32 +102,40 @@ Future<bool> showTopModalSheet<T>(
   bool result = false;
 
   try {
-    result = await showGeneralDialog<bool>(
+    result =
+        await showGeneralDialog<bool>(
           context: context!,
           barrierDismissible: barrierDismissible,
           transitionDuration: const Duration(milliseconds: 250),
           barrierLabel: MaterialLocalizations.of(context).dialogLabel,
           barrierColor: Colors.black.withValues(alpha: 0.5),
-          pageBuilder: (context, _, __) => ZegoScreenUtilInit(
+          pageBuilder: (context, _, _) => ZegoScreenUtilInit(
             designSize: const Size(750, 1334),
             minTextAdapt: true,
             splitScreenMode: true,
             builder: (context, child) {
               return SafeArea(
-                  child: Column(
-                children: [
-                  SizedBox(height: 16.zH),
-                  widget,
-                ],
-              ));
+                child: Column(
+                  children: [
+                    SizedBox(height: 16.zH),
+                    widget,
+                  ],
+                ),
+              );
             },
           ),
           transitionBuilder: (context, animation, secondaryAnimation, child) {
             return SlideTransition(
               position:
-                  CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)
-                      .drive(Tween<Offset>(
-                          begin: const Offset(0, -1.0), end: Offset.zero)),
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutCubic,
+                  ).drive(
+                    Tween<Offset>(
+                      begin: const Offset(0, -1.0),
+                      end: Offset.zero,
+                    ),
+                  ),
               child: child,
             );
           },

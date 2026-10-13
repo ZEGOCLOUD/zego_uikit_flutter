@@ -37,12 +37,13 @@ enum ZegoAvatarAlignment {
 /// - [extraInfo]: Additional information as a key-value map.
 ///
 /// The function should return a widget representing the avatar.
-typedef ZegoAvatarBuilder = Widget? Function(
-  BuildContext context,
-  Size size,
-  ZegoUIKitUser? user,
-  Map<String, dynamic> extraInfo,
-);
+typedef ZegoAvatarBuilder =
+    Widget? Function(
+      BuildContext context,
+      Size size,
+      ZegoUIKitUser? user,
+      Map<String, dynamic> extraInfo,
+    );
 
 /// Specifies the rules for showing the fullscreen mode toggle button.
 enum ZegoShowFullscreenModeToggleButtonRules {

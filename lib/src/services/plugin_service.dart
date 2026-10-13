@@ -33,16 +33,19 @@ mixin ZegoPluginService {
     ZegoSignalingPluginCore.shared.coreData.initData();
 
     assert(
-        ZegoPluginAdapter().signalingPlugin != null,
-        'ZegoUIKitSignalingPluginImpl: ZegoUIKitPluginType.signaling is null, '
-        'plugins should contain ZegoUIKitSignalingPlugin');
+      ZegoPluginAdapter().signalingPlugin != null,
+      'ZegoUIKitSignalingPluginImpl: ZegoUIKitPluginType.signaling is null, '
+      'plugins should contain ZegoUIKitSignalingPlugin',
+    );
 
     return ZegoUIKitSignalingPluginImpl.shared;
   }
 
   ZegoUIKitBeautyPluginImpl getBeautyPlugin() {
-    assert(ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null,
-        'ZegoUIKitBeautyPluginImpl: ZegoUIKitPluginType.beauty is null');
+    assert(
+      ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null,
+      'ZegoUIKitBeautyPluginImpl: ZegoUIKitPluginType.beauty is null',
+    );
 
     return ZegoUIKitBeautyPluginImpl.shared;
   }

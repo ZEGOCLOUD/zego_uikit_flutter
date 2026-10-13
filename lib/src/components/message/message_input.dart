@@ -11,7 +11,7 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoInRoomMessageInput extends StatefulWidget {
   const ZegoInRoomMessageInput({
-    Key? key,
+    super.key,
     this.placeHolder = 'Say something...',
     this.payloadAttributes,
     this.backgroundColor,
@@ -26,7 +26,7 @@ class ZegoInRoomMessageInput extends StatefulWidget {
     this.onSubmit,
     this.valueNotifier,
     this.focusNotifier,
-  }) : super(key: key);
+  });
 
   final String placeHolder;
   final Map<String, String>? payloadAttributes;
@@ -82,12 +82,11 @@ class _ZegoInRoomMessageInputState extends State<ZegoInRoomMessageInput> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.zR, vertical: 15.zR),
-      color: widget.backgroundColor ??
+      color:
+          widget.backgroundColor ??
           const Color(0xff222222).withValues(alpha: 0.8),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: 90.zR,
-        ),
+        constraints: BoxConstraints(minHeight: 90.zR),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -132,7 +131,7 @@ class _ZegoInRoomMessageInputState extends State<ZegoInRoomMessageInput> {
           autofocus: widget.autofocus,
           focusNode: focusNode,
           inputFormatters: <TextInputFormatter>[
-            LengthLimitingTextInputFormatter(400)
+            LengthLimitingTextInputFormatter(400),
           ],
           controller: textController,
           onChanged: (String inputMessage) {

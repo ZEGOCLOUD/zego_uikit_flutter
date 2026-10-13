@@ -26,7 +26,7 @@ class ZegoRefuseInvitationButtonResult {
 /// @nodoc
 class ZegoRefuseInvitationButton extends StatefulWidget {
   const ZegoRefuseInvitationButton({
-    Key? key,
+    super.key,
     required this.inviterID,
     this.isAdvancedMode = false,
     this.targetInvitationID,
@@ -45,7 +45,7 @@ class ZegoRefuseInvitationButton extends StatefulWidget {
     this.unclickableTextColor = Colors.black,
     this.clickableBackgroundColor = Colors.transparent,
     this.unclickableBackgroundColor = Colors.transparent,
-  }) : super(key: key);
+  });
   final bool isAdvancedMode;
 
   final String inviterID;
@@ -105,15 +105,15 @@ class _ZegoRefuseInvitationButtonState
 
     final result = widget.isAdvancedMode
         ? await ZegoUIKit().getSignalingPlugin().refuseAdvanceInvitation(
-              inviterID: widget.inviterID,
-              data: widget.data ?? '',
-              invitationID: widget.targetInvitationID,
-            )
+            inviterID: widget.inviterID,
+            data: widget.data ?? '',
+            invitationID: widget.targetInvitationID,
+          )
         : await ZegoUIKit().getSignalingPlugin().refuseInvitation(
-              inviterID: widget.inviterID,
-              data: widget.data ?? '',
-              targetInvitationID: widget.targetInvitationID,
-            );
+            inviterID: widget.inviterID,
+            data: widget.data ?? '',
+            targetInvitationID: widget.targetInvitationID,
+          );
 
     widget.onPressed?.call(
       ZegoRefuseInvitationButtonResult(

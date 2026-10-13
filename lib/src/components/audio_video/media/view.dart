@@ -16,14 +16,14 @@ import 'package:zego_uikit/src/services/services.dart';
 /// 3. foreground view
 class ZegoUIKitMediaView extends StatefulWidget {
   const ZegoUIKitMediaView({
-    Key? key,
+    super.key,
     required this.user,
     this.backgroundBuilder,
     this.foregroundBuilder,
     this.borderRadius,
     this.borderColor,
     this.extraInfo,
-  }) : super(key: key);
+  });
 
   final ZegoUIKitUser? user;
 
@@ -48,13 +48,7 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
   @override
   Widget build(BuildContext context) {
     return circleBorder(
-      child: Stack(
-        children: [
-          background(),
-          mediaView(),
-          foreground(),
-        ],
-      ),
+      child: Stack(children: [background(), mediaView(), foreground()]),
     );
   }
 
@@ -113,7 +107,7 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
                 valueListenable: ZegoUIKitUserPropertiesNotifier(
                   widget.user ?? ZegoUIKitUser.empty(),
                 ),
-                builder: (context, _, __) {
+                builder: (context, _, _) {
                   return widget.backgroundBuilder?.call(
                         context,
                         Size(constraints.maxWidth, constraints.maxHeight),
@@ -136,21 +130,23 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
     if (widget.foregroundBuilder != null) {
       return LayoutBuilder(
         builder: (context, constraints) {
-          return Stack(children: [
-            ValueListenableBuilder(
-              valueListenable: ZegoUIKitUserPropertiesNotifier(
-                widget.user ?? ZegoUIKitUser.empty(),
+          return Stack(
+            children: [
+              ValueListenableBuilder(
+                valueListenable: ZegoUIKitUserPropertiesNotifier(
+                  widget.user ?? ZegoUIKitUser.empty(),
+                ),
+                builder: (context, _, _) {
+                  return widget.foregroundBuilder!.call(
+                    context,
+                    Size(constraints.maxWidth, constraints.maxHeight),
+                    widget.user,
+                    widget.extraInfo ?? {},
+                  );
+                },
               ),
-              builder: (context, _, __) {
-                return widget.foregroundBuilder!.call(
-                  context,
-                  Size(constraints.maxWidth, constraints.maxHeight),
-                  widget.user,
-                  widget.extraInfo ?? {},
-                );
-              },
-            ),
-          ]);
+            ],
+          );
         },
       );
     }
@@ -165,7 +161,9 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
 
     final decoration = BoxDecoration(
       border: Border.all(
-          color: widget.borderColor ?? const Color(0xffA4A4A4), width: 1),
+        color: widget.borderColor ?? const Color(0xffA4A4A4),
+        width: 1,
+      ),
       borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius!)),
     );
 
@@ -176,8 +174,9 @@ class _ZegoUIKitMediaViewState extends State<ZegoUIKitMediaView> {
         borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius!)),
         clipBehavior: Clip.antiAlias,
         elevation: 6.0,
-        shadowColor: (widget.borderColor ?? const Color(0xffA4A4A4))
-            .withValues(alpha: 0.3),
+        shadowColor: (widget.borderColor ?? const Color(0xffA4A4A4)).withValues(
+          alpha: 0.3,
+        ),
         child: child,
       ),
     );

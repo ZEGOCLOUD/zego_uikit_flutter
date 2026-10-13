@@ -18,9 +18,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
 
   /// backToDesktop
   @override
-  Future<void> backToDesktop({
-    bool nonRoot = false,
-  }) async {
+  Future<void> backToDesktop({bool nonRoot = false}) async {
     if (Platform.isAndroid) {
       ZegoLoggerService.logInfo(
         'nonRoot:$nonRoot',
@@ -198,11 +196,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       return false;
     }
 
-    ZegoLoggerService.logInfo(
-      '',
-      tag: 'uikit-channel',
-      subTag: 'stopIOSPIP',
-    );
+    ZegoLoggerService.logInfo('', tag: 'uikit-channel', subTag: 'stopIOSPIP');
 
     bool result = false;
     try {
@@ -242,11 +236,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
       return false;
     }
 
-    ZegoLoggerService.logInfo(
-      '',
-      tag: 'uikit-channel',
-      subTag: 'isIOSInPIP',
-    );
+    ZegoLoggerService.logInfo('', tag: 'uikit-channel', subTag: 'isIOSInPIP');
 
     var isInPIP = false;
     try {
@@ -504,9 +494,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     );
 
     try {
-      final arguments = <String, dynamic>{
-        'stream_id': streamID,
-      };
+      final arguments = <String, dynamic>{'stream_id': streamID};
       if (resourceMode != null) {
         arguments['resourceMode'] = resourceMode;
       }
@@ -682,9 +670,7 @@ class MethodChannelZegoUIKitPlugin extends ZegoUIKitPluginPlatform {
     );
 
     try {
-      await methodChannel.invokeMethod('reporterUpdateToken', {
-        'token': token,
-      });
+      await methodChannel.invokeMethod('reporterUpdateToken', {'token': token});
     } on PlatformException catch (e) {
       ZegoLoggerService.logError(
         'Failed to request: $e.',

@@ -18,9 +18,9 @@ class ZegoOutsideRoomAudioVideoViewStream
   final isVisibleNotifier = ValueNotifier<bool>(false);
 
   ZegoOutsideRoomAudioVideoViewStream({
-    required ZegoUIKitUser user,
-    required String roomID,
-  }) : super(user: user, roomID: roomID);
+    required super.user,
+    required super.roomID,
+  });
 
   String get targetStreamID {
     return generateStreamID(user.id, roomID, ZegoStreamType.main);
@@ -60,12 +60,7 @@ class ZegoAudioVideoViewOutsideRoomID {
     final Random rnd = Random();
 
     return String.fromCharCodes(
-      Iterable.generate(
-        5,
-        (_) => chars.codeUnitAt(
-          rnd.nextInt(chars.length),
-        ),
-      ),
+      Iterable.generate(5, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))),
     );
   }
 }

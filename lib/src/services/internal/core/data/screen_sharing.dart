@@ -51,8 +51,8 @@ mixin ZegoUIKitCoreDataScreenSharing {
       subTag: 'startSharingScreen',
     );
 
-    screenCaptureSource =
-        await ZegoExpressEngine.instance.createScreenCaptureSource();
+    screenCaptureSource = await ZegoExpressEngine.instance
+        .createScreenCaptureSource();
 
     isScreenSharingQualityNormal.value = false;
     isScreenSharing.value = true;
@@ -65,10 +65,7 @@ mixin ZegoUIKitCoreDataScreenSharing {
       microphoneVolume: 100,
       applicationVolume: 100,
     );
-    await screenCaptureSource?.startCapture(
-      config: config,
-      inApp: false,
-    );
+    await screenCaptureSource?.startCapture(config: config, inApp: false);
 
     if (isFirstScreenSharing && Platform.isAndroid) {
       isFirstScreenSharing = false;
@@ -100,8 +97,9 @@ mixin ZegoUIKitCoreDataScreenSharing {
 
     screenCaptureSource?.stopCapture();
 
-    await ZegoExpressEngine.instance
-        .destroyScreenCaptureSource(screenCaptureSource!);
+    await ZegoExpressEngine.instance.destroyScreenCaptureSource(
+      screenCaptureSource!,
+    );
 
     ZegoLoggerService.logInfo(
       'stop done',

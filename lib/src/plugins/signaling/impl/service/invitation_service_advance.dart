@@ -72,16 +72,20 @@ mixin ZegoPluginInvitationServiceAdvance {
       }
     }
 
-    final zimExtendedData = jsonEncode(ZegoUIKitAdvanceInvitationSendProtocol(
-      inviter: ZegoUIKitUser(id: inviterID, name: inviterName),
-      invitees: invitees,
-      type: type,
-      customData: data,
-    ));
+    final zimExtendedData = jsonEncode(
+      ZegoUIKitAdvanceInvitationSendProtocol(
+        inviter: ZegoUIKitUser(id: inviterID, name: inviterName),
+        invitees: invitees,
+        type: type,
+        customData: data,
+      ),
+    );
 
     ZegoSignalingPluginPushConfig? pluginPushConfig;
     if (ZegoSignalingPluginCore
-            .shared.coreData.notifyWhenAppIsInTheBackgroundOrQuit &&
+            .shared
+            .coreData
+            .notifyWhenAppIsInTheBackgroundOrQuit &&
         (zegoNotificationConfig?.notifyWhenAppIsInTheBackgroundOrQuit ??
             false)) {
       pluginPushConfig = ZegoSignalingPluginPushConfig(
@@ -110,30 +114,33 @@ mixin ZegoPluginInvitationServiceAdvance {
 
     return ZegoSignalingPluginCore.shared.coreData
         .advanceInvite(
-      invitees: invitees,
-      type: type,
-      timeout: timeout,
-      extendedData: zimExtendedData,
-      kitData: data,
-      pushConfig: pluginPushConfig,
-    )
+          invitees: invitees,
+          type: type,
+          timeout: timeout,
+          extendedData: zimExtendedData,
+          kitData: data,
+          pushConfig: pluginPushConfig,
+        )
         .then((result) {
-      ZegoUIKit().reporter().report(
-        event: ZegoUIKitSignalingReporter.eventCallInvite,
-        params: {
-          ZegoUIKitSignalingReporter.eventKeyInvitationID: result.invitationID,
-          ZegoUIKitSignalingReporter.eventKeyInvitees: invitees,
-          ZegoUIKitSignalingReporter.eventKeyInviteesCount: invitees.length,
-          ZegoUIKitSignalingReporter.eventKeyErrorUsers:
-              result.errorInvitees.keys.toList(),
-          ZegoUIKitSignalingReporter.eventKeyErrorUsersCount:
-              result.errorInvitees.keys.length,
-          ZegoUIKitSignalingReporter.eventKeyExtendedData: zimExtendedData,
-        },
-      );
+          ZegoUIKit().reporter().report(
+            event: ZegoUIKitSignalingReporter.eventCallInvite,
+            params: {
+              ZegoUIKitSignalingReporter.eventKeyInvitationID:
+                  result.invitationID,
+              ZegoUIKitSignalingReporter.eventKeyInvitees: invitees,
+              ZegoUIKitSignalingReporter.eventKeyInviteesCount: invitees.length,
+              ZegoUIKitSignalingReporter.eventKeyErrorUsers: result
+                  .errorInvitees
+                  .keys
+                  .toList(),
+              ZegoUIKitSignalingReporter.eventKeyErrorUsersCount:
+                  result.errorInvitees.keys.length,
+              ZegoUIKitSignalingReporter.eventKeyExtendedData: zimExtendedData,
+            },
+          );
 
-      return result;
-    });
+          return result;
+        });
   }
 
   ///
@@ -159,16 +166,20 @@ mixin ZegoPluginInvitationServiceAdvance {
       );
     }
 
-    final zimExtendedData = jsonEncode(ZegoUIKitAdvanceInvitationSendProtocol(
-      inviter: ZegoUIKitUser(id: inviterID, name: inviterName),
-      invitees: invitees,
-      type: type,
-      customData: data,
-    ));
+    final zimExtendedData = jsonEncode(
+      ZegoUIKitAdvanceInvitationSendProtocol(
+        inviter: ZegoUIKitUser(id: inviterID, name: inviterName),
+        invitees: invitees,
+        type: type,
+        customData: data,
+      ),
+    );
 
     ZegoSignalingPluginPushConfig? pluginPushConfig;
     if (ZegoSignalingPluginCore
-            .shared.coreData.notifyWhenAppIsInTheBackgroundOrQuit &&
+            .shared
+            .coreData
+            .notifyWhenAppIsInTheBackgroundOrQuit &&
         (zegoNotificationConfig?.notifyWhenAppIsInTheBackgroundOrQuit ??
             false)) {
       pluginPushConfig = ZegoSignalingPluginPushConfig(
@@ -336,9 +347,7 @@ mixin ZegoPluginInvitationServiceAdvance {
 
     final pushConfig = ZegoSignalingPluginIncomingInvitationCancelPushConfig(
       resourcesID: ZegoSignalingPluginCore.shared.coreData
-          .queryAdvanceResourceIDByInvitationID(
-        targetInvitationID!,
-      ),
+          .queryAdvanceResourceIDByInvitationID(targetInvitationID!),
       payload: data,
     );
 
@@ -399,9 +408,7 @@ mixin ZegoPluginInvitationServiceAdvance {
           targetInvitationID = extendedDataMap!['invitation_id']! as String;
         } else {
           targetInvitationID = ZegoSignalingPluginCore.shared.coreData
-              .queryAdvanceInvitationIDByInitiatorID(
-            inviterID,
-          );
+              .queryAdvanceInvitationIDByInitiatorID(inviterID);
         }
       }
     }
@@ -437,7 +444,7 @@ mixin ZegoPluginInvitationServiceAdvance {
   }
 
   Future<ZegoSignalingPluginResponseInvitationResult>
-      refuseAdvanceInvitationByInvitationID({
+  refuseAdvanceInvitationByInvitationID({
     required String invitationID,
     required String data,
   }) async {
@@ -476,11 +483,10 @@ mixin ZegoPluginInvitationServiceAdvance {
     String? inviterName,
     String? invitationID,
   }) async {
-    final targetInvitationID = invitationID ??
+    final targetInvitationID =
+        invitationID ??
         ZegoSignalingPluginCore.shared.coreData
-            .queryAdvanceInvitationIDByInitiatorID(
-          inviterID,
-        );
+            .queryAdvanceInvitationIDByInitiatorID(inviterID);
 
     if (targetInvitationID.isEmpty) {
       ZegoLoggerService.logError(
@@ -511,10 +517,12 @@ mixin ZegoPluginInvitationServiceAdvance {
 
     return ZegoSignalingPluginCore.shared.coreData.advanceAccept(
       targetInvitationID,
-      jsonEncode(ZegoUIKitAdvanceInvitationAcceptProtocol(
-        inviter: ZegoUIKitUser(id: inviterID, name: inviterName ?? ''),
-        customData: data,
-      )),
+      jsonEncode(
+        ZegoUIKitAdvanceInvitationAcceptProtocol(
+          inviter: ZegoUIKitUser(id: inviterID, name: inviterName ?? ''),
+          customData: data,
+        ),
+      ),
     );
   }
 
@@ -524,13 +532,13 @@ mixin ZegoPluginInvitationServiceAdvance {
     String? invitationID,
     ZegoNotificationConfig? zegoNotificationConfig,
   }) async {
-    final zimExtendedData = const JsonEncoder().convert({
-      'data': data ?? '',
-    });
+    final zimExtendedData = const JsonEncoder().convert({'data': data ?? ''});
 
     ZegoSignalingPluginPushConfig? pluginPushConfig;
     if (ZegoSignalingPluginCore
-            .shared.coreData.notifyWhenAppIsInTheBackgroundOrQuit &&
+            .shared
+            .coreData
+            .notifyWhenAppIsInTheBackgroundOrQuit &&
         (zegoNotificationConfig?.notifyWhenAppIsInTheBackgroundOrQuit ??
             false)) {
       pluginPushConfig = ZegoSignalingPluginPushConfig(
@@ -568,9 +576,7 @@ mixin ZegoPluginInvitationServiceAdvance {
         tag: 'uikit-plugin-signaling',
         subTag: 'advance invitation service',
       );
-      return const ZegoSignalingPluginEndInvitationResult(
-        invitationID: '',
-      );
+      return const ZegoSignalingPluginEndInvitationResult(invitationID: '');
     }
 
     ZegoLoggerService.logInfo(
@@ -596,13 +602,13 @@ mixin ZegoPluginInvitationServiceAdvance {
     String? invitationID,
     ZegoNotificationConfig? zegoNotificationConfig,
   }) async {
-    final zimExtendedData = const JsonEncoder().convert({
-      'data': data ?? '',
-    });
+    final zimExtendedData = const JsonEncoder().convert({'data': data ?? ''});
 
     ZegoSignalingPluginPushConfig? pluginPushConfig;
     if (ZegoSignalingPluginCore
-            .shared.coreData.notifyWhenAppIsInTheBackgroundOrQuit &&
+            .shared
+            .coreData
+            .notifyWhenAppIsInTheBackgroundOrQuit &&
         (zegoNotificationConfig?.notifyWhenAppIsInTheBackgroundOrQuit ??
             false)) {
       pluginPushConfig = ZegoSignalingPluginPushConfig(
@@ -640,9 +646,7 @@ mixin ZegoPluginInvitationServiceAdvance {
         tag: 'uikit-plugin-signaling',
         subTag: 'advance invitation service',
       );
-      return const ZegoSignalingPluginQuitInvitationResult(
-        invitationID: '',
-      );
+      return const ZegoSignalingPluginQuitInvitationResult(invitationID: '');
     }
 
     ZegoLoggerService.logInfo(
@@ -663,20 +667,23 @@ mixin ZegoPluginInvitationServiceAdvance {
   }
 
   List<AdvanceInvitationUser> getAdvanceInvitees(String invitationID) {
-    return ZegoSignalingPluginCore.shared.coreData
-        .getAdvanceInvitees(invitationID);
+    return ZegoSignalingPluginCore.shared.coreData.getAdvanceInvitees(
+      invitationID,
+    );
   }
 
   /// a->b, b->c;
   /// in c event, a is initiator, b is inviter
   AdvanceInvitationUser? getAdvanceInitiator(String invitationID) {
-    return ZegoSignalingPluginCore.shared.coreData
-        .getAdvanceInitiator(invitationID);
+    return ZegoSignalingPluginCore.shared.coreData.getAdvanceInitiator(
+      invitationID,
+    );
   }
 
   bool isUserInAdvanceInvitationNow(String userID) {
-    return ZegoSignalingPluginCore.shared.coreData
-        .isUserInAdvanceInvitationNow(userID);
+    return ZegoSignalingPluginCore.shared.coreData.isUserInAdvanceInvitationNow(
+      userID,
+    );
   }
 
   String advanceInvitationToString() {
@@ -687,37 +694,52 @@ mixin ZegoPluginInvitationServiceAdvance {
   /// When to call: After the call invitation is initiated, the calling member accepts, rejects, or exits, or the response times out, the current calling inviting member receives this callback.
   /// Note: If the user is not the inviter who initiated this call invitation or is not online, the callback will not be received.
   Stream<ZegoSignalingPluginInvitationUserStateChangedEvent>
-      getAdvanceInvitationUserStateChangedStream() {
-    return ZegoSignalingPluginCore.shared.coreData
-            .streamCtrlAdvanceInvitationUserStateChanged?.stream ??
+  getAdvanceInvitationUserStateChangedStream() {
+    return ZegoSignalingPluginCore
+            .shared
+            .coreData
+            .streamCtrlAdvanceInvitationUserStateChanged
+            ?.stream ??
         const Stream.empty();
   }
 
   /// stream callback, notify invitee when call invitation received
   Stream<Map<String, dynamic>> getAdvanceInvitationReceivedStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlAdvanceInvitationReceived?.stream ??
+            .shared
+            .coreData
+            .streamCtrlAdvanceInvitationReceived
+            ?.stream ??
         const Stream.empty();
   }
 
   /// stream callback, notify invitee if invitation timeout
   Stream<Map<String, dynamic>> getAdvanceInvitationTimeoutStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlAdvanceInvitationTimeout?.stream ??
+            .shared
+            .coreData
+            .streamCtrlAdvanceInvitationTimeout
+            ?.stream ??
         const Stream.empty();
   }
 
   /// stream callback, notify when call invitation cancelled by inviter
   Stream<Map<String, dynamic>> getAdvanceInvitationCanceledStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlAdvanceInvitationCanceled?.stream ??
+            .shared
+            .coreData
+            .streamCtrlAdvanceInvitationCanceled
+            ?.stream ??
         const Stream.empty();
   }
 
   /// stream callback, notify when call ended by inviter
   Stream<Map<String, dynamic>> getAdvanceInvitationEndedStream() {
     return ZegoSignalingPluginCore
-            .shared.coreData.streamCtrlAdvanceInvitationEnded?.stream ??
+            .shared
+            .coreData
+            .streamCtrlAdvanceInvitationEnded
+            ?.stream ??
         const Stream.empty();
   }
 }

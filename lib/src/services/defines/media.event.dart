@@ -111,10 +111,7 @@ class ZegoUIKitMediaEventInterface {
   ///
   /// - [mediaPlayer] Callback player object.
   /// - [data] SEI content.
-  void onMediaPlayerRecvSEI(
-    ZegoMediaPlayer mediaPlayer,
-    Uint8List data,
-  ) {}
+  void onMediaPlayerRecvSEI(ZegoMediaPlayer mediaPlayer, Uint8List data) {}
 
   /// The callback of sound level update.
   ///

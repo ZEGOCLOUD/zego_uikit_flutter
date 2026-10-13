@@ -1,5 +1,1 @@
-enum ZegoUIKitNetworkState {
-  unknown,
-  offline,
-  online,
-}
+enum ZegoUIKitNetworkState { unknown, offline, online }

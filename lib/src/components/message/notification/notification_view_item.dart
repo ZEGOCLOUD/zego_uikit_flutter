@@ -7,13 +7,13 @@ import 'package:zego_uikit/src/services/defines/defines.dart';
 
 class ZegoInRoomNotificationViewItem extends StatelessWidget {
   const ZegoInRoomNotificationViewItem({
-    Key? key,
+    super.key,
     required this.user,
     required this.message,
     this.prefix,
     this.maxLines = 3,
     this.isHorizontal = true,
-  }) : super(key: key);
+  });
 
   final String? prefix;
   final ZegoUIKitUser user;
@@ -23,8 +23,9 @@ class ZegoInRoomNotificationViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final messageBackgroundColor =
-        const Color(0xff2a2a2a).withValues(alpha: 0.5);
+    final messageBackgroundColor = const Color(
+      0xff2a2a2a,
+    ).withValues(alpha: 0.5);
     const messageNameColor = Color(0xffFFB763);
 
     return Column(
@@ -72,30 +73,29 @@ class ZegoInRoomNotificationViewItem extends StatelessWidget {
   TextSpan prefixWidget() {
     const messageHostColor = Color(0xff9f76ff);
 
-    return TextSpan(children: [
-      WidgetSpan(
-        child: Transform.translate(
-          offset: Offset(0, 0.zR),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: 34.zR + prefix!.length * 12.zR,
-              minWidth: 34.zR,
-              minHeight: 36.zR,
-              maxHeight: 36.zR,
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: messageHostColor,
-                borderRadius: BorderRadius.all(Radius.circular(20.zR)),
+    return TextSpan(
+      children: [
+        WidgetSpan(
+          child: Transform.translate(
+            offset: Offset(0, 0.zR),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: 34.zR + prefix!.length * 12.zR,
+                minWidth: 34.zR,
+                minHeight: 36.zR,
+                maxHeight: 36.zR,
               ),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(12.zR, 4.zR, 12.zR, 4.zR),
-                child: Center(
-                  child: Text(
-                    prefix!,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.zR,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: messageHostColor,
+                  borderRadius: BorderRadius.all(Radius.circular(20.zR)),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(12.zR, 4.zR, 12.zR, 4.zR),
+                  child: Center(
+                    child: Text(
+                      prefix!,
+                      style: TextStyle(color: Colors.white, fontSize: 20.zR),
                     ),
                   ),
                 ),
@@ -103,8 +103,8 @@ class ZegoInRoomNotificationViewItem extends StatelessWidget {
             ),
           ),
         ),
-      ),
-      WidgetSpan(child: SizedBox(width: 10.zR)),
-    ]);
+        WidgetSpan(child: SizedBox(width: 10.zR)),
+      ],
+    );
   }
 }

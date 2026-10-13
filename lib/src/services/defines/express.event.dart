@@ -46,11 +46,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// - [errorCode] Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
   /// - [funcName] Function name.
   /// - [info] Detailed error information.
-  void onDebugError(
-    int errorCode,
-    String funcName,
-    String info,
-  ) {}
+  void onDebugError(int errorCode, String funcName, String info) {}
 
   /// Method execution result callback
   ///
@@ -63,11 +59,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// - [errorCode] Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
   /// - [funcName] Function name.
   /// - [info] Detailed error information.
-  void onApiCalledResult(
-    int errorCode,
-    String funcName,
-    String info,
-  ) {}
+  void onApiCalledResult(int errorCode, String funcName, String info) {}
 
   /// The callback triggered when the audio/video engine state changes.
   ///
@@ -80,9 +72,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///   2. If there is no special need, the developer does not need to pay attention to this callback.
   ///
   /// - [state] The audio/video engine state.
-  void onEngineStateUpdate(
-    ZegoEngineState state,
-  ) {}
+  void onEngineStateUpdate(ZegoEngineState state) {}
 
   /// Experimental API callback
   ///
@@ -91,9 +81,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Caution: Please use this feature with the help of ZEGO Technical Support.
   ///
   /// - [content] Callback content in JSON string format.
-  void onRecvExperimentalAPI(
-    String content,
-  ) {}
+  void onRecvExperimentalAPI(String content) {}
 
   /// The callback that triggered a fatal error, causing the SDK to malfunction and unable to function properly.
   ///
@@ -105,9 +93,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///   None.
   ///
   /// - [errorCode] Error code.
-  void onFatalError(
-    int errorCode,
-  ) {}
+  void onFatalError(int errorCode) {}
 
   /// Notification of the room connection state changes.
   ///
@@ -186,10 +172,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [roomID] Room ID where the user is logged in, a string of up to 128 bytes in length.
   /// - [count] Count of online users.
-  void onRoomOnlineUserCountUpdate(
-    String roomID,
-    int count,
-  ) {}
+  void onRoomOnlineUserCountUpdate(String roomID, int count) {}
 
   /// The callback triggered when the number of streams published by the other users in the same room increases or decreases.
   ///
@@ -259,10 +242,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [roomID] Room ID where the user is logged in, a string of up to 128 bytes in length.
   /// - [remainTimeInSecond] The remaining time before the token expires.
-  void onRoomTokenWillExpire(
-    String roomID,
-    int remainTimeInSecond,
-  ) {}
+  void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) {}
 
   /// The callback triggered when the state of stream publishing changes.
   ///
@@ -333,9 +313,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Related callbacks: After the [startPublishingStream] function is called successfully, determine if the SDK actually collected video data by the callback function [onPublisherCapturedVideoFirstFrame], determine if the SDK has rendered the first frame of video data collected by calling back [onPublisherRenderVideoFirstFrame].
   ///
   /// - [channel] Publishing stream channel.If you only publish one audio stream, you can ignore this parameter.
-  void onPublisherSendAudioFirstFrame(
-    ZegoPublishChannel channel,
-  ) {}
+  void onPublisherSendAudioFirstFrame(ZegoPublishChannel channel) {}
 
   /// The callback triggered when the first video frame is sent.
   ///
@@ -346,9 +324,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Note: This function is only available in ZegoExpressVideo SDK!
   ///
   /// - [channel] Publishing stream channel.If you only publish one video stream, you can ignore this parameter.
-  void onPublisherSendVideoFirstFrame(
-    ZegoPublishChannel channel,
-  ) {}
+  void onPublisherSendVideoFirstFrame(ZegoPublishChannel channel) {}
 
   /// The callback triggered when the first video frame is rendered.
   ///
@@ -358,9 +334,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Note: This function is only available in ZegoExpressVideo SDK!
   ///
   /// - [channel] Publishing stream channel.If you only publish one audio and video stream, you can ignore this parameter.
-  void onPublisherRenderVideoFirstFrame(
-    ZegoPublishChannel channel,
-  ) {}
+  void onPublisherRenderVideoFirstFrame(ZegoPublishChannel channel) {}
 
   /// The callback triggered when the video capture resolution changes.
   ///
@@ -500,10 +474,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [streamID] Stream ID.
   /// - [quality] Playing stream quality, including audio and video framerate, bitrate, RTT, etc.
-  void onPlayerQualityUpdate(
-    String streamID,
-    ZegoPlayStreamQuality quality,
-  ) {}
+  void onPlayerQualityUpdate(String streamID, ZegoPlayStreamQuality quality) {}
 
   /// The callback triggered when a media event occurs during streaming playing.
   ///
@@ -514,10 +485,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [streamID] Stream ID.
   /// - [event] Specific events received when playing the stream.
-  void onPlayerMediaEvent(
-    String streamID,
-    ZegoPlayerMediaEvent event,
-  ) {}
+  void onPlayerMediaEvent(String streamID, ZegoPlayerMediaEvent event) {}
 
   /// The callback triggered when the first audio frame is received.
   ///
@@ -528,9 +496,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Related callbacks: After a successful call to [startPlayingStream], the callback function [onPlayerRecvVideoFirstFrame] determines whether the SDK has received the video data, and the callback [onPlayerRenderVideoFirstFrame] determines whether the SDK has rendered the first frame of the received video data.
   ///
   /// - [streamID] Stream ID.
-  void onPlayerRecvAudioFirstFrame(
-    String streamID,
-  ) {}
+  void onPlayerRecvAudioFirstFrame(String streamID) {}
 
   /// The callback triggered when the first video frame is received. Except for Linux systems, this callback is thrown from the ui thread by default.
   ///
@@ -542,9 +508,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Note: This function is only available in ZegoExpressVideo SDK!
   ///
   /// - [streamID] Stream ID.
-  void onPlayerRecvVideoFirstFrame(
-    String streamID,
-  ) {}
+  void onPlayerRecvVideoFirstFrame(String streamID) {}
 
   /// The callback triggered when the first video frame is rendered.
   ///
@@ -556,9 +520,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Note: This function is only available in ZegoExpressVideo SDK!
   ///
   /// - [streamID] Stream ID.
-  void onPlayerRenderVideoFirstFrame(
-    String streamID,
-  ) {}
+  void onPlayerRenderVideoFirstFrame(String streamID) {}
 
   /// Calls back when the stream playing end renders the first frame of the video from the remote camera.
   ///
@@ -571,9 +533,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Note: This function is only available in ZegoExpressVideo SDK!
   ///
   /// - [streamID] Stream ID.
-  void onPlayerRenderCameraVideoFirstFrame(
-    String streamID,
-  ) {}
+  void onPlayerRenderCameraVideoFirstFrame(String streamID) {}
 
   /// The callback triggered when the stream playback resolution changes.
   ///
@@ -587,11 +547,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// - [streamID] Stream ID.
   /// - [width] Video decoding resolution width.
   /// - [height] Video decoding resolution height.
-  void onPlayerVideoSizeChanged(
-    String streamID,
-    int width,
-    int height,
-  ) {}
+  void onPlayerVideoSizeChanged(String streamID, int width, int height) {}
 
   /// The callback triggered when Supplemental Enhancement Information is received.
   ///
@@ -605,10 +561,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [streamID] Stream ID.
   /// - [data] SEI content.
-  void onPlayerRecvSEI(
-    String streamID,
-    Uint8List data,
-  ) {}
+  void onPlayerRecvSEI(String streamID, Uint8List data) {}
 
   /// The callback triggered when Supplemental Enhancement Information is received synchronously.
   ///
@@ -618,9 +571,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Caution: 1. Since the video encoder itself generates an SEI with a payload type of 5, or when a video file is used for publishing, such SEI may also exist in the video file. Therefore, if the developer needs to filter out this type of SEI, it can be before [createEngine] Call [ZegoEngineConfig.advancedConfig("unregister_sei_filter", "XXXXX")]. Among them, unregister_sei_filter is the key, and XXXXX is the uuid filter string to be set. 2. When [mutePlayStreamVideo] or [muteAllPlayStreamVideo] is called to set only the audio stream to be pulled, the SEI will not be received.
   ///
   /// - [info] SEI Callback info.
-  void onPlayerRecvMediaSideInfo(
-    ZegoMediaSideInfo info,
-  ) {}
+  void onPlayerRecvMediaSideInfo(ZegoMediaSideInfo info) {}
 
   /// Receive the audio side information content of the remote stream.
   ///
@@ -632,10 +583,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [streamID] Stream ID.
   /// - [data] Audio side information content.
-  void onPlayerRecvAudioSideInfo(
-    String streamID,
-    Uint8List data,
-  ) {}
+  void onPlayerRecvAudioSideInfo(String streamID, Uint8List data) {}
 
   /// Playing stream low frame rate warning.
   ///
@@ -646,10 +594,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [codecID] Video codec ID.
   /// - [streamID] Stream ID.
-  void onPlayerLowFpsWarning(
-    ZegoVideoCodecID codecID,
-    String streamID,
-  ) {}
+  void onPlayerLowFpsWarning(ZegoVideoCodecID codecID, String streamID) {}
 
   /// The callback triggered when playing stream.
   ///
@@ -711,9 +656,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Related APIs: Develop can start a mixed flow task through [startMixerTask].
   ///
   /// - [soundLevels] The sound key-value pair of each single stream in the mixed stream, the key is the soundLevelID of each single stream, and the value is the sound value of the corresponding single stream. Value range: The value range of value is 0.0 ~ 100.0.
-  void onMixerSoundLevelUpdate(
-    Map<int, double> soundLevels,
-  ) {}
+  void onMixerSoundLevelUpdate(Map<int, double> soundLevels) {}
 
   /// The callback triggered when the sound level of any input stream changes in the auto stream mixing process.
   ///
@@ -724,9 +667,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Related APIs: Users can call [startAutoMixerTask] function to start an auto stream mixing task.Users can call [stopAutoMixerTask] function to stop an auto stream mixing task.
   ///
   /// - [soundLevels] Sound level hash map, key is the streamID of every single stream in this mixer stream, value is the sound level value of that single stream, value ranging from 0.0 to 100.0.
-  void onAutoMixerSoundLevelUpdate(
-    Map<String, double> soundLevels,
-  ) {}
+  void onAutoMixerSoundLevelUpdate(Map<String, double> soundLevels) {}
 
   /// The callback triggered when there is a change to audio devices (i.e. new device added or existing device deleted).
   ///
@@ -785,9 +726,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Related APIs: Start sound level monitoring via [startSoundLevelMonitor]. Monitoring remote played audio sound level by callback [onRemoteSoundLevelUpdate]
   ///
   /// - [soundLevel] Locally captured sound level value, ranging from 0.0 to 100.0.
-  void onCapturedSoundLevelUpdate(
-    double soundLevel,
-  ) {}
+  void onCapturedSoundLevelUpdate(double soundLevel) {}
 
   /// The local captured audio sound level callback, supported vad.
   ///
@@ -800,9 +739,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Related APIs: Start sound level monitoring via [startSoundLevelMonitor]. Monitoring remote played audio sound level by callback [onRemoteSoundLevelUpdate] or [onRemoteSoundLevelInfoUpdate].
   ///
   /// - [soundLevelInfo] Locally captured sound level value, ranging from 0.0 to 100.0.
-  void onCapturedSoundLevelInfoUpdate(
-    ZegoSoundLevelInfo soundLevelInfo,
-  ) {}
+  void onCapturedSoundLevelInfoUpdate(ZegoSoundLevelInfo soundLevelInfo) {}
 
   /// The remote playing streams audio sound level callback.
   ///
@@ -813,9 +750,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Related APIs: Start sound level monitoring via [startSoundLevelMonitor]. Monitoring local captured audio sound by callback [onCapturedSoundLevelUpdate] or [onCapturedSoundLevelInfoUpdate].
   ///
   /// - [soundLevels] Remote sound level hash map, key is the streamID, value is the sound level value of the corresponding streamID, value ranging from 0.0 to 100.0.
-  void onRemoteSoundLevelUpdate(
-    Map<String, double> soundLevels,
-  ) {}
+  void onRemoteSoundLevelUpdate(Map<String, double> soundLevels) {}
 
   /// The remote playing streams audio sound level callback, supported vad.
   ///
@@ -839,9 +774,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Related APIs: Start audio spectrum monitoring via [startAudioSpectrumMonitor]. Monitoring remote played audio spectrum by callback [onRemoteAudioSpectrumUpdate]
   ///
   /// - [audioSpectrum] Locally captured audio spectrum value list. Spectrum value range is [0-2^30].
-  void onCapturedAudioSpectrumUpdate(
-    List<double> audioSpectrum,
-  ) {}
+  void onCapturedAudioSpectrumUpdate(List<double> audioSpectrum) {}
 
   /// The remote playing streams audio spectrum callback.
   ///
@@ -852,9 +785,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Related APIs: Start audio spectrum monitoring via [startAudioSpectrumMonitor]. Monitoring local played audio spectrum by callback [onCapturedAudioSpectrumUpdate].
   ///
   /// - [audioSpectrums] Remote audio spectrum hash map, key is the streamID, value is the audio spectrum list of the corresponding streamID. Spectrum value range is [0-2^30]
-  void onRemoteAudioSpectrumUpdate(
-    Map<String, List<double>> audioSpectrums,
-  ) {}
+  void onRemoteAudioSpectrumUpdate(Map<String, List<double>> audioSpectrums) {}
 
   /// The callback triggered when a local device exception occurred.
   ///
@@ -897,10 +828,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [streamID] Stream ID.
   /// - [state] Remote microphone status.
-  void onRemoteMicStateUpdate(
-    String streamID,
-    ZegoRemoteDeviceState state,
-  ) {}
+  void onRemoteMicStateUpdate(String streamID, ZegoRemoteDeviceState state) {}
 
   /// The callback triggered when the state of the remote speaker changes.
   ///
@@ -925,9 +853,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Platform differences: Only supports iOS and Android.
   ///
   /// - [audioRoute] Current audio route.
-  void onAudioRouteChange(
-    ZegoAudioRoute audioRoute,
-  ) {}
+  void onAudioRouteChange(ZegoAudioRoute audioRoute) {}
 
   /// Callback for audio VAD  stable state update.
   ///
@@ -1094,9 +1020,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Restrictions: None.
   ///
   /// - [status] System performance monitoring status.
-  void onPerformanceStatusUpdate(
-    ZegoPerformanceStatus status,
-  ) {}
+  void onPerformanceStatusUpdate(ZegoPerformanceStatus status) {}
 
   /// Network mode changed callback.
   ///
@@ -1106,9 +1030,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// Restrictions: None.
   ///
   /// - [mode] Current network mode.
-  void onNetworkModeChanged(
-    ZegoNetworkMode mode,
-  ) {}
+  void onNetworkModeChanged(ZegoNetworkMode mode) {}
 
   /// Network speed test error callback.
   ///
@@ -1120,10 +1042,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [errorCode] Network speed test error code. Please refer to error codes document https://docs.zegocloud.com/en/5548.html for details.
   /// - [type] Uplink or down-link.
-  void onNetworkSpeedTestError(
-    int errorCode,
-    ZegoNetworkSpeedTestType type,
-  ) {}
+  void onNetworkSpeedTestError(int errorCode, ZegoNetworkSpeedTestType type) {}
 
   /// Network speed test quality callback.
   ///
@@ -1184,10 +1103,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [dumpDir] Dump data dir.
   /// - [takePhoto] Need to take photo when uploading dump data
-  void onRequestUploadDumpData(
-    String dumpDir,
-    bool takePhoto,
-  ) {}
+  void onRequestUploadDumpData(String dumpDir, bool takePhoto) {}
 
   /// Callback when starting to dump data.
   ///
@@ -1195,9 +1111,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// When to Trigger: This callback is triggered when [startDumpData] is called.
   ///
   /// - [errorCode] Error code.
-  void onStartDumpData(
-    int errorCode,
-  ) {}
+  void onStartDumpData(int errorCode) {}
 
   /// Callback when stopping to dump data.
   ///
@@ -1206,10 +1120,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [errorCode] Error code.
   /// - [dumpDir] Dump data dir.
-  void onStopDumpData(
-    int errorCode,
-    String dumpDir,
-  ) {}
+  void onStopDumpData(int errorCode, String dumpDir) {}
 
   /// Callback after uploading the dump data.
   ///
@@ -1217,9 +1128,7 @@ abstract class ZegoUIKitExpressEventInterface {
   /// When to Trigger: When [uploadDumpData] is called, this callback will be triggered after SDK executes the upload task.
   ///
   /// - [errorCode] Error code.
-  void onUploadDumpData(
-    int errorCode,
-  ) {}
+  void onUploadDumpData(int errorCode) {}
 
   /// Custom audio processing local captured PCM audio frame callback.
   ///
@@ -1268,10 +1177,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [data] Audio data in PCM format.
   /// - [param] Parameters of the audio frame.
-  void onAlignedAudioAuxData(
-    Uint8List data,
-    ZegoAudioFrameParam param,
-  ) {}
+  void onAlignedAudioAuxData(Uint8List data, ZegoAudioFrameParam param) {}
 
   /// Custom audio processing remote playing stream PCM audio frame callback.
   ///
@@ -1488,10 +1394,7 @@ abstract class ZegoUIKitExpressEventInterface {
   ///
   /// - [aiVoiceChanger] Callback AI voice changer instance.
   /// - [errorCode] Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
-  void onAIVoiceChangerInit(
-    ZegoAIVoiceChanger aiVoiceChanger,
-    int errorCode,
-  ) {}
+  void onAIVoiceChangerInit(ZegoAIVoiceChanger aiVoiceChanger, int errorCode) {}
 
   /// Update AI voice changer engine models status callback.
   ///

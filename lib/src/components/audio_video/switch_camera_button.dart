@@ -12,13 +12,13 @@ import 'package:zego_uikit/src/services/services.dart';
 /// switch cameras
 class ZegoSwitchCameraButton extends StatefulWidget {
   const ZegoSwitchCameraButton({
-    Key? key,
+    super.key,
     this.onPressed,
     this.icon,
     this.defaultUseFrontFacingCamera = true,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   final ButtonIcon? icon;
 
@@ -56,50 +56,56 @@ class _ZegoSwitchCameraButtonState extends State<ZegoSwitchCameraButton>
     final sizeBoxSize = widget.iconSize ?? Size(56.zR, 56.zR);
 
     return ValueListenableBuilder<bool>(
-        valueListenable:
-            ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id),
-        builder: (context, isCameraOn, _) {
-          return ValueListenableBuilder<bool>(
-            valueListenable: ZegoUIKit().getUseFrontFacingCameraStateNotifier(
-                ZegoUIKit().getLocalUser().id),
-            builder: (context, isFrontFacing, _) {
-              return GestureDetector(
-                onTap: isCameraOn
-                    ? () async {
-                        if (!executeWithRateLimit(() async {
-                          final targetState = !isFrontFacing;
-                          await ZegoUIKit().useFrontFacingCamera(targetState);
+      valueListenable: ZegoUIKit().getCameraStateNotifier(
+        ZegoUIKit().getLocalUser().id,
+      ),
+      builder: (context, isCameraOn, _) {
+        return ValueListenableBuilder<bool>(
+          valueListenable: ZegoUIKit().getUseFrontFacingCameraStateNotifier(
+            ZegoUIKit().getLocalUser().id,
+          ),
+          builder: (context, isFrontFacing, _) {
+            return GestureDetector(
+              onTap: isCameraOn
+                  ? () async {
+                      if (!executeWithRateLimit(() async {
+                        final targetState = !isFrontFacing;
+                        await ZegoUIKit().useFrontFacingCamera(targetState);
 
-                          if (widget.onPressed != null) {
-                            widget.onPressed!(targetState);
-                          }
-                        })) {
-                          ZegoLoggerService.logInfo(
-                            "Click rate is limited, ignoring the current click",
-                            tag: 'uikit-camera',
-                            subTag: 'switch camera',
-                          );
+                        if (widget.onPressed != null) {
+                          widget.onPressed!(targetState);
                         }
+                      })) {
+                        ZegoLoggerService.logInfo(
+                          "Click rate is limited, ignoring the current click",
+                          tag: 'uikit-camera',
+                          subTag: 'switch camera',
+                        );
                       }
-                    : null,
-                child: Container(
-                  width: containerSize.width,
-                  height: containerSize.height,
-                  decoration: BoxDecoration(
-                    color: widget.icon?.backgroundColor ??
-                        controlBarButtonCheckedBackgroundColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: SizedBox.fromSize(
-                    size: sizeBoxSize,
-                    child: widget.icon?.icon ??
-                        UIKitImage.asset(
-                            StyleIconUrls.iconS1ControlBarFlipCamera),
-                  ),
+                    }
+                  : null,
+              child: Container(
+                width: containerSize.width,
+                height: containerSize.height,
+                decoration: BoxDecoration(
+                  color:
+                      widget.icon?.backgroundColor ??
+                      controlBarButtonCheckedBackgroundColor,
+                  shape: BoxShape.circle,
                 ),
-              );
-            },
-          );
-        });
+                child: SizedBox.fromSize(
+                  size: sizeBoxSize,
+                  child:
+                      widget.icon?.icon ??
+                      UIKitImage.asset(
+                        StyleIconUrls.iconS1ControlBarFlipCamera,
+                      ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

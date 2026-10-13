@@ -12,10 +12,10 @@ import 'package:zego_uikit/src/services/services.dart';
 /// container of media,
 class ZegoUIKitMediaContainer extends StatefulWidget {
   const ZegoUIKitMediaContainer({
-    Key? key,
+    super.key,
     this.foregroundBuilder,
     this.backgroundBuilder,
-  }) : super(key: key);
+  });
 
   /// foreground builder of audio video view
   final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;

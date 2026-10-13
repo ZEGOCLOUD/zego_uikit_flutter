@@ -289,7 +289,6 @@ class ZegoLogExporterShareManager {
             }
           }
         }
-
         /// Process iOS logs
         else if (Platform.isIOS) {
           /// Process logs from Application Support directory

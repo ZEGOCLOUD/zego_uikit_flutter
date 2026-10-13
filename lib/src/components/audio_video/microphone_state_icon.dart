@@ -18,12 +18,12 @@ class ZegoMicrophoneStateIcon extends StatefulWidget {
   final Image? iconMicrophoneSpeaking;
 
   const ZegoMicrophoneStateIcon({
-    Key? key,
+    super.key,
     required this.targetUser,
     this.iconMicrophoneOn,
     this.iconMicrophoneOff,
     this.iconMicrophoneSpeaking,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoMicrophoneStateIcon> createState() =>
@@ -57,8 +57,9 @@ class _ZegoMicrophoneStateIconState extends State<ZegoMicrophoneStateIcon> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKit().getMicrophoneStateNotifier(widget.targetUser?.id ?? ''),
+      valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+        widget.targetUser?.id ?? '',
+      ),
       builder: (context, isMicrophoneOn, _) {
         return ValueListenableBuilder<int>(
           valueListenable: soundLevelNotifier,
@@ -75,19 +76,19 @@ class _ZegoMicrophoneStateIconState extends State<ZegoMicrophoneStateIcon> {
 
             return soundLevel > 3
                 ? widget.iconMicrophoneSpeaking ??
-                    UIKitImage.asset(
-                      StyleIconUrls.iconVideoViewMicrophoneSpeaking,
-                      width: 24.zR,
-                      height: 24.zR,
-                      fit: BoxFit.fitWidth,
-                    )
+                      UIKitImage.asset(
+                        StyleIconUrls.iconVideoViewMicrophoneSpeaking,
+                        width: 24.zR,
+                        height: 24.zR,
+                        fit: BoxFit.fitWidth,
+                      )
                 : widget.iconMicrophoneOn ??
-                    UIKitImage.asset(
-                      StyleIconUrls.iconVideoViewMicrophoneOn,
-                      width: 24.zR,
-                      height: 24.zR,
-                      fit: BoxFit.fitWidth,
-                    );
+                      UIKitImage.asset(
+                        StyleIconUrls.iconVideoViewMicrophoneOn,
+                        width: 24.zR,
+                        height: 24.zR,
+                        fit: BoxFit.fitWidth,
+                      );
           },
         );
       },

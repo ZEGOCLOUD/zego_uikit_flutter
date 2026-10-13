@@ -15,7 +15,7 @@ import 'package:zego_uikit/src/services/services.dart';
 /// button used to open/close microphone
 class ZegoToggleMicrophoneButton extends StatefulWidget {
   const ZegoToggleMicrophoneButton({
-    Key? key,
+    super.key,
     this.normalIcon,
     this.offIcon,
     this.onPressed,
@@ -23,7 +23,7 @@ class ZegoToggleMicrophoneButton extends StatefulWidget {
     this.iconSize,
     this.buttonSize,
     this.muteMode = false,
-  }) : super(key: key);
+  });
 
   final ButtonIcon? normalIcon;
   final ButtonIcon? offIcon;
@@ -67,8 +67,9 @@ class _ZegoToggleMicrophoneButtonState extends State<ZegoToggleMicrophoneButton>
 
     /// listen local microphone state changes
     return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKit().getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id),
+      valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+        ZegoUIKit().getLocalUser().id,
+      ),
       builder: (context, isMicrophoneOn, _) {
         /// update if microphone state changed
         return GestureDetector(
@@ -79,20 +80,22 @@ class _ZegoToggleMicrophoneButtonState extends State<ZegoToggleMicrophoneButton>
             decoration: BoxDecoration(
               color: isMicrophoneOn
                   ? widget.normalIcon?.backgroundColor ??
-                      controlBarButtonCheckedBackgroundColor
+                        controlBarButtonCheckedBackgroundColor
                   : widget.offIcon?.backgroundColor ??
-                      controlBarButtonBackgroundColor,
+                        controlBarButtonBackgroundColor,
               shape: BoxShape.circle,
             ),
             child: SizedBox.fromSize(
               size: sizeBoxSize,
               child: isMicrophoneOn
                   ? widget.normalIcon?.icon ??
-                      UIKitImage.asset(
-                          StyleIconUrls.iconS1ControlBarMicrophoneNormal)
+                        UIKitImage.asset(
+                          StyleIconUrls.iconS1ControlBarMicrophoneNormal,
+                        )
                   : widget.offIcon?.icon ??
-                      UIKitImage.asset(
-                          StyleIconUrls.iconS1ControlBarMicrophoneOff),
+                        UIKitImage.asset(
+                          StyleIconUrls.iconS1ControlBarMicrophoneOff,
+                        ),
             ),
           ),
         );
@@ -103,8 +106,9 @@ class _ZegoToggleMicrophoneButtonState extends State<ZegoToggleMicrophoneButton>
   void onPressed() {
     if (!executeWithRateLimit(() {
       /// get current microphone state
-      final valueNotifier =
-          ZegoUIKit().getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id);
+      final valueNotifier = ZegoUIKit().getMicrophoneStateNotifier(
+        ZegoUIKit().getLocalUser().id,
+      );
 
       final targetState = !valueNotifier.value;
 

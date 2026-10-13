@@ -10,34 +10,30 @@ mixin ZegoUIKitMessagesPluginService {
     required String roomID,
     required String message,
   }) async {
-    final result = await ZegoPluginAdapter()
-        .signalingPlugin!
+    final result = await ZegoPluginAdapter().signalingPlugin!
         .sendInRoomTextMessage(roomID: roomID, message: message);
     return result;
   }
 
   Future<ZegoSignalingPluginInRoomCommandMessageResult>
-      sendInRoomCommandMessage({
+  sendInRoomCommandMessage({
     required String roomID,
     required Uint8List message,
   }) async {
-    final result = await ZegoPluginAdapter()
-        .signalingPlugin!
+    final result = await ZegoPluginAdapter().signalingPlugin!
         .sendInRoomCommandMessage(roomID: roomID, message: message);
     return result;
   }
 
   Stream<ZegoSignalingPluginInRoomTextMessageReceivedEvent>
-      getInRoomTextMessageReceivedEventStream() {
-    return ZegoPluginAdapter()
-        .signalingPlugin!
+  getInRoomTextMessageReceivedEventStream() {
+    return ZegoPluginAdapter().signalingPlugin!
         .getInRoomTextMessageReceivedEventStream();
   }
 
   Stream<ZegoSignalingPluginInRoomCommandMessageReceivedEvent>
-      getInRoomCommandMessageReceivedEventStream() {
-    return ZegoPluginAdapter()
-        .signalingPlugin!
+  getInRoomCommandMessageReceivedEventStream() {
+    return ZegoPluginAdapter().signalingPlugin!
         .getInRoomCommandMessageReceivedEventStream();
   }
 }

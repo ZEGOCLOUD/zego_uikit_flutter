@@ -7,7 +7,7 @@ enum ZegoUIKitExpressEngineState {
   start,
 
   /// The engine has stoped
-  stop
+  stop,
 }
 
 typedef ZegoUIKitMixerTask = ZegoMixerTask;

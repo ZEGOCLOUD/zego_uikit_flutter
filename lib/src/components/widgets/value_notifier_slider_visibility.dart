@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 
 class ValueNotifierSliderVisibility extends StatefulWidget {
   const ValueNotifierSliderVisibility({
-    Key? key,
+    super.key,
     required this.child,
     required this.visibilityNotifier,
     this.animationDuration = const Duration(milliseconds: 300),
     this.beginOffset = Offset.zero,
     this.endOffset = const Offset(0.0, 2.0),
-  }) : super(key: key);
+  });
 
   final ValueNotifier<bool> visibilityNotifier;
   final Widget child;
@@ -34,10 +34,14 @@ class _ValueNotifierSliderVisibilityState
 
     widget.visibilityNotifier.addListener(onVisibilityNotify);
 
-    _controller =
-        AnimationController(duration: widget.animationDuration, vsync: this);
-    _animation = Tween(begin: widget.beginOffset, end: widget.endOffset)
-        .animate(_controller);
+    _controller = AnimationController(
+      duration: widget.animationDuration,
+      vsync: this,
+    );
+    _animation = Tween(
+      begin: widget.beginOffset,
+      end: widget.endOffset,
+    ).animate(_controller);
   }
 
   @override
@@ -50,10 +54,7 @@ class _ValueNotifierSliderVisibilityState
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _animation,
-      child: widget.child,
-    );
+    return SlideTransition(position: _animation, child: widget.child);
   }
 
   void onVisibilityNotify() {

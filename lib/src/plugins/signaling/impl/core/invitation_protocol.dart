@@ -20,22 +20,17 @@ class ZegoUIKitInvitationSendProtocol {
   }
 
   static bool typeOf(Map<String, dynamic> json) {
-    Set<String> requiredKeys = {
-      'inviter_id',
-      'inviter_name',
-      'type',
-      'data',
-    };
+    Set<String> requiredKeys = {'inviter_id', 'inviter_name', 'type', 'data'};
 
     return requiredKeys.every((key) => json.containsKey(key));
   }
 
   Map<String, dynamic> toJson() => {
-        'inviter_id': inviter.id,
-        'inviter_name': inviter.name,
-        'type': type,
-        'data': customData,
-      };
+    'inviter_id': inviter.id,
+    'inviter_name': inviter.name,
+    'type': type,
+    'data': customData,
+  };
 
   factory ZegoUIKitInvitationSendProtocol.fromJson(Map<String, dynamic> json) {
     return ZegoUIKitInvitationSendProtocol(

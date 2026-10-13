@@ -14,11 +14,7 @@ import 'package:zego_uikit/src/components/audio_video_container/layout_picture_i
 import 'package:zego_uikit/src/components/defines.dart';
 import 'package:zego_uikit/src/services/services.dart';
 
-enum AudioVideoViewFullScreeMode {
-  none,
-  normal,
-  autoOrientation,
-}
+enum AudioVideoViewFullScreeMode { none, normal, autoOrientation }
 
 enum ZegoAudioVideoContainerSource {
   /// who in stream list
@@ -34,7 +30,7 @@ enum ZegoAudioVideoContainerSource {
 /// it will layout views by layout mode and config
 class ZegoAudioVideoContainer extends StatefulWidget {
   const ZegoAudioVideoContainer({
-    Key? key,
+    super.key,
     required this.layout,
     this.foregroundBuilder,
     this.backgroundBuilder,
@@ -48,7 +44,7 @@ class ZegoAudioVideoContainer extends StatefulWidget {
       ZegoAudioVideoContainerSource.screenSharing,
     ],
     this.onUserListUpdated,
-  }) : super(key: key);
+  });
 
   final ZegoLayout layout;
 
@@ -136,42 +132,43 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ZegoUIKitUser?>(
-        valueListenable: screenSharingController.fullscreenUserNotifier,
-        builder: (BuildContext context, fullscreenUser, _) {
-          if (fullscreenUser != null &&
-              (widget.layout is ZegoLayoutGalleryConfig) &&
-              (widget.layout as ZegoLayoutGalleryConfig)
-                  .showNewScreenSharingViewInFullscreenMode) {
-            return ZegoScreenSharingView(
-              user: fullscreenUser,
-              foregroundBuilder: widget.foregroundBuilder,
-              backgroundBuilder: widget.backgroundBuilder,
-              controller: widget.screenSharingViewController ??
-                  defaultScreenSharingViewController,
-              showFullscreenModeToggleButtonRules:
-                  (widget.layout is ZegoLayoutGalleryConfig)
-                      ? (widget.layout as ZegoLayoutGalleryConfig)
-                          .showScreenSharingFullscreenModeToggleButtonRules
-                      : ZegoShowFullscreenModeToggleButtonRules
-                          .showWhenScreenPressed,
-            );
-          } else {
-            updateUserList();
+      valueListenable: screenSharingController.fullscreenUserNotifier,
+      builder: (BuildContext context, fullscreenUser, _) {
+        if (fullscreenUser != null &&
+            (widget.layout is ZegoLayoutGalleryConfig) &&
+            (widget.layout as ZegoLayoutGalleryConfig)
+                .showNewScreenSharingViewInFullscreenMode) {
+          return ZegoScreenSharingView(
+            user: fullscreenUser,
+            foregroundBuilder: widget.foregroundBuilder,
+            backgroundBuilder: widget.backgroundBuilder,
+            controller:
+                widget.screenSharingViewController ??
+                defaultScreenSharingViewController,
+            showFullscreenModeToggleButtonRules:
+                (widget.layout is ZegoLayoutGalleryConfig)
+                ? (widget.layout as ZegoLayoutGalleryConfig)
+                      .showScreenSharingFullscreenModeToggleButtonRules
+                : ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed,
+          );
+        } else {
+          updateUserList();
 
-            return StreamBuilder<List<ZegoUIKitUser>>(
-              stream: ZegoUIKit().getAudioVideoListStream(),
-              builder: (context, snapshot) {
-                if (widget.layout is ZegoLayoutPictureInPictureConfig) {
-                  return pictureInPictureLayout(userList);
-                } else if (widget.layout is ZegoLayoutGalleryConfig) {
-                  return galleryLayout(userList);
-                }
-                assert(false, 'Unimplemented layout');
-                return Container();
-              },
-            );
-          }
-        });
+          return StreamBuilder<List<ZegoUIKitUser>>(
+            stream: ZegoUIKit().getAudioVideoListStream(),
+            builder: (context, snapshot) {
+              if (widget.layout is ZegoLayoutPictureInPictureConfig) {
+                return pictureInPictureLayout(userList);
+              } else if (widget.layout is ZegoLayoutGalleryConfig) {
+                return galleryLayout(userList);
+              }
+              assert(false, 'Unimplemented layout');
+              return Container();
+            },
+          );
+        }
+      },
+    );
   }
 
   /// picture in picture
@@ -208,7 +205,8 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
       userList: userList,
       maxItemCount: 8,
       avatarConfig: widget.avatarConfig,
-      screenSharingViewController: widget.screenSharingViewController ??
+      screenSharingViewController:
+          widget.screenSharingViewController ??
           defaultScreenSharingViewController,
     );
   }
@@ -223,8 +221,8 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
     if (screenSharingController.private.defaultFullScreen) {
       screenSharingController.fullscreenUserNotifier.value =
           ZegoUIKit().getScreenSharingList().isEmpty
-              ? null
-              : ZegoUIKit().getScreenSharingList().first;
+          ? null
+          : ZegoUIKit().getScreenSharingList().first;
     }
 
     setState(() {
@@ -254,8 +252,11 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
     }
 
     /// remove if not in stream
-    userList.removeWhere((user) =>
-        -1 == streamUsers.indexWhere((streamUser) => user.id == streamUser.id));
+    userList.removeWhere(
+      (user) =>
+          -1 ==
+          streamUsers.indexWhere((streamUser) => user.id == streamUser.id),
+    );
     if (logEnabled) {
       ZegoLoggerService.logInfo(
         'updateUserList 2, '
@@ -332,7 +333,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
 
     userList =
         widget.sortAudioVideo?.call(List<ZegoUIKitUser>.from(userList)) ??
-            userList;
+        userList;
     if (logEnabled) {
       ZegoLoggerService.logInfo(
         'updateUserList 6, '
@@ -344,7 +345,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoAudioVideoContainer> {
 
     userList =
         widget.filterAudioVideo?.call(List<ZegoUIKitUser>.from(userList)) ??
-            userList;
+        userList;
     if (logEnabled) {
       ZegoLoggerService.logInfo(
         'updateUserList 7, '

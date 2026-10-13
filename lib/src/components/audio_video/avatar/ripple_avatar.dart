@@ -11,14 +11,14 @@ import 'package:zego_uikit/src/services/services.dart';
 /// display sound level value through circular ripples
 class ZegoRippleAvatar extends StatefulWidget {
   const ZegoRippleAvatar({
-    Key? key,
+    super.key,
     required this.user,
     required this.child,
     this.color,
     this.minRadius = 60,
     this.radiusIncrement = 0.2,
     this.mixerStreamID,
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -166,8 +166,9 @@ class _ZegoRippleAvatarState extends State<ZegoRippleAvatar> {
       }
     } else {
       if (ZegoUIKit().getUser(widget.user?.id ?? '').isEmpty()) {
-        userListUpdateSubscription =
-            ZegoUIKit().getUserListStream().listen(onUserListUpdated);
+        userListUpdateSubscription = ZegoUIKit().getUserListStream().listen(
+          onUserListUpdated,
+        );
       } else {
         soundLevelStreamSubscription = ZegoUIKit()
             .getSoundLevelStream(widget.user?.id ?? '')

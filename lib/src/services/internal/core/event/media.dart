@@ -40,11 +40,7 @@ class ZegoUIKitMediaEventImpl {
   }
 
   void init() {
-    ZegoLoggerService.logInfo(
-      'init',
-      tag: 'uikit-media',
-      subTag: 'event',
-    );
+    ZegoLoggerService.logInfo('init', tag: 'uikit-media', subTag: 'event');
 
     ZegoExpressEngine.onMediaPlayerStateUpdate = onMediaPlayerStateUpdate;
     ZegoExpressEngine.onMediaPlayerNetworkEvent = onMediaPlayerNetworkEvent;
@@ -70,11 +66,7 @@ class ZegoUIKitMediaEventImpl {
   }
 
   void uninit() {
-    ZegoLoggerService.logInfo(
-      'uninit',
-      tag: 'uikit-media',
-      subTag: 'event',
-    );
+    ZegoLoggerService.logInfo('uninit', tag: 'uikit-media', subTag: 'event');
 
     ZegoExpressEngine.onMediaPlayerStateUpdate = null;
     ZegoExpressEngine.onMediaPlayerNetworkEvent = null;
@@ -129,10 +121,7 @@ class ZegoUIKitMediaEventImpl {
     int height,
   ) {}
 
-  void onMediaPlayerRecvSEI(
-    ZegoMediaPlayer mediaPlayer,
-    Uint8List data,
-  ) {
+  void onMediaPlayerRecvSEI(ZegoMediaPlayer mediaPlayer, Uint8List data) {
     for (var event in events) {
       event.onMediaPlayerRecvSEI(mediaPlayer, data);
     }

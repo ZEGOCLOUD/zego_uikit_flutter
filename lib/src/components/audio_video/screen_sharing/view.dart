@@ -22,7 +22,7 @@ const isScreenSharingExtraInfoKey = 'isScreenSharing';
 /// 3. foreground view
 class ZegoScreenSharingView extends StatefulWidget {
   const ZegoScreenSharingView({
-    Key? key,
+    super.key,
     required this.user,
     this.foregroundBuilder,
     this.backgroundBuilder,
@@ -32,7 +32,7 @@ class ZegoScreenSharingView extends StatefulWidget {
     this.showFullscreenModeToggleButtonRules =
         ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed,
     this.controller,
-  }) : super(key: key);
+  });
 
   final ZegoUIKitUser? user;
 
@@ -48,7 +48,7 @@ class ZegoScreenSharingView extends StatefulWidget {
   final Map<String, dynamic> extraInfo;
 
   final ZegoShowFullscreenModeToggleButtonRules
-      showFullscreenModeToggleButtonRules;
+  showFullscreenModeToggleButtonRules;
   final ZegoScreenSharingViewController? controller;
 
   @override
@@ -166,21 +166,24 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
               return StreamBuilder(
                 stream: NativeDeviceOrientationCommunicator()
                     .onOrientationChanged(),
-                builder: (context,
-                    AsyncSnapshot<NativeDeviceOrientation> asyncResult) {
-                  if (asyncResult.hasData) {
-                    /// Do not update ui when ui is building !!!
-                    /// use postFrameCallback to update videoSize
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      ///  notify sdk to update video render orientation
-                      ZegoUIKit().updateAppOrientation(
-                        deviceOrientationMap(asyncResult.data!),
-                      );
-                    });
-                  }
+                builder:
+                    (
+                      context,
+                      AsyncSnapshot<NativeDeviceOrientation> asyncResult,
+                    ) {
+                      if (asyncResult.hasData) {
+                        /// Do not update ui when ui is building !!!
+                        /// use postFrameCallback to update videoSize
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          ///  notify sdk to update video render orientation
+                          ZegoUIKit().updateAppOrientation(
+                            deviceOrientationMap(asyncResult.data!),
+                          );
+                        });
+                      }
 
-                  return userView;
-                },
+                      return userView;
+                    },
               );
             },
           );
@@ -198,7 +201,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
               valueListenable: ZegoUIKitUserPropertiesNotifier(
                 widget.user ?? ZegoUIKitUser.empty(),
               ),
-              builder: (context, _, __) {
+              builder: (context, _, _) {
                 return widget.backgroundBuilder?.call(
                       context,
                       Size(constraints.maxWidth, constraints.maxHeight),
@@ -206,7 +209,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
                       {
                         ZegoViewBuilderMapExtraInfoKey.isScreenSharingView.name:
                             true,
-                        ...widget.extraInfo
+                        ...widget.extraInfo,
                       },
                     ) ??
                     Container(color: Colors.red);
@@ -219,47 +222,51 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
   }
 
   Widget foreground() {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Container(
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: widget.user?.id == ZegoUIKit().getLocalUser().id
-              ? const Color(0xFF333438)
-              : Colors.transparent,
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: userName(context, constraints),
-            ),
-            ValueListenableBuilder(
-              valueListenable: ZegoUIKitUserPropertiesNotifier(
-                widget.user ?? ZegoUIKitUser.empty(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: widget.user?.id == ZegoUIKit().getLocalUser().id
+                ? const Color(0xFF333438)
+                : Colors.transparent,
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: userName(context, constraints),
               ),
-              builder: (context, _, __) {
-                return widget.foregroundBuilder?.call(
-                      context,
-                      Size(constraints.maxWidth, constraints.maxHeight),
-                      widget.user,
-                      {
-                        ZegoViewBuilderMapExtraInfoKey.isScreenSharingView.name:
-                            true,
-                        ZegoViewBuilderMapExtraInfoKey.isFullscreen.text:
-                            widget.controller?.fullscreenUserNotifier.value !=
-                                null,
-                        ...widget.extraInfo
-                      },
-                    ) ??
-                    Container();
-              },
-            ),
-            localScreenShareTipView(),
-          ],
-        ),
-      );
-    });
+              ValueListenableBuilder(
+                valueListenable: ZegoUIKitUserPropertiesNotifier(
+                  widget.user ?? ZegoUIKitUser.empty(),
+                ),
+                builder: (context, _, _) {
+                  return widget.foregroundBuilder?.call(
+                        context,
+                        Size(constraints.maxWidth, constraints.maxHeight),
+                        widget.user,
+                        {
+                          ZegoViewBuilderMapExtraInfoKey
+                                  .isScreenSharingView
+                                  .name:
+                              true,
+                          ZegoViewBuilderMapExtraInfoKey.isFullscreen.text:
+                              widget.controller?.fullscreenUserNotifier.value !=
+                              null,
+                          ...widget.extraInfo,
+                        },
+                      ) ??
+                      Container();
+                },
+              ),
+              localScreenShareTipView(),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget userName(BuildContext context, BoxConstraints constraints) {
@@ -273,9 +280,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: constraints.maxWidth * 0.8,
-            ),
+            constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
             child: Text(
               widget.user?.name ?? '',
               overflow: TextOverflow.ellipsis,
@@ -303,10 +308,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
                   Text(
                     widget.controller?.private.sharingTipText ??
                         'You are sharing screen',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 32.zR,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 32.zR),
                   ),
                   Padding(padding: EdgeInsets.only(top: 20.zR)),
                   GestureDetector(
@@ -316,9 +318,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
                     child: Container(
                       padding: EdgeInsets.all(30.zR),
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.red,
-                        ),
+                        border: Border.all(color: Colors.red),
                         borderRadius: BorderRadius.circular(6.zR),
                       ),
                       child: Text(
@@ -411,9 +411,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
           top: 0,
           bottom: 0,
           right: 20.zR,
-          child: Center(
-            child: getFullScreenIconButton(),
-          ),
+          child: Center(child: getFullScreenIconButton()),
         );
       case ZegoShowFullscreenModeToggleButtonRules.alwaysHide:
         return Container();
@@ -425,9 +423,7 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
               return Positioned(
                 top: 0,
                 bottom: 0,
-                child: Center(
-                  child: getFullScreenIconButton(),
-                ),
+                child: Center(child: getFullScreenIconButton()),
               );
             } else {
               return Container();
@@ -503,7 +499,8 @@ class _ZegoScreenSharingViewState extends State<ZegoScreenSharingView> {
       invalidQualityCount = 0;
     }
 
-    final settings = widget.controller?.private.autoStopSettings ??
+    final settings =
+        widget.controller?.private.autoStopSettings ??
         ZegoScreenSharingAutoStopSettings();
     if (invalidQualityCount >= settings.invalidCount) {
       ZegoUIKit()

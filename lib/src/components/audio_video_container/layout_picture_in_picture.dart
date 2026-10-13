@@ -43,7 +43,7 @@ class ZegoLayoutPictureInPictureConfig extends ZegoLayout {
 
   ///
   ZegoShowFullscreenModeToggleButtonRules
-      showScreenSharingFullscreenModeToggleButtonRules;
+  showScreenSharingFullscreenModeToggleButtonRules;
 
   /// User ID for Specifying Large View
   String? bigViewUserID;
@@ -67,13 +67,13 @@ class ZegoLayoutPictureInPictureConfig extends ZegoLayout {
 /// picture in picture layout
 class ZegoLayoutPictureInPicture extends StatefulWidget {
   const ZegoLayoutPictureInPicture({
-    Key? key,
+    super.key,
     required this.userList,
     required this.layoutConfig,
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.avatarConfig,
-  }) : super(key: key);
+  });
 
   final List<ZegoUIKitUser> userList;
   final ZegoLayoutPictureInPictureConfig layoutConfig;
@@ -112,8 +112,9 @@ class _ZegoLayoutPictureInPictureState
     if ((widget.layoutConfig.bigViewUserID?.isNotEmpty ?? false) &&
         -1 != queryBigViewUserIndex) {
       largeViewUser = widget.userList[queryBigViewUserIndex];
-      final smallViewUserIndex = widget.userList
-          .indexWhere((user) => user.id != widget.layoutConfig.bigViewUserID);
+      final smallViewUserIndex = widget.userList.indexWhere(
+        (user) => user.id != widget.layoutConfig.bigViewUserID,
+      );
       if (-1 != smallViewUserIndex) {
         smallViewUser = widget.userList[smallViewUserIndex];
       }
@@ -127,15 +128,17 @@ class _ZegoLayoutPictureInPictureState
         if (largeViewUser == null)
           Container()
         else
-          LayoutBuilder(builder: (context, constraints) {
-            return ZegoAudioVideoView(
-              key: ValueKey<String>('zego-audio-video-${largeViewUser!.id}'),
-              user: largeViewUser,
-              backgroundBuilder: widget.backgroundBuilder,
-              foregroundBuilder: widget.foregroundBuilder,
-              avatarConfig: widget.avatarConfig,
-            );
-          }),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return ZegoAudioVideoView(
+                key: ValueKey<String>('zego-audio-video-${largeViewUser!.id}'),
+                user: largeViewUser,
+                backgroundBuilder: widget.backgroundBuilder,
+                foregroundBuilder: widget.foregroundBuilder,
+                avatarConfig: widget.avatarConfig,
+              );
+            },
+          ),
         if (smallViewUser == null)
           Container()
         else
@@ -185,15 +188,17 @@ class _ZegoLayoutPictureInPictureState
 
     return Stack(
       children: [
-        LayoutBuilder(builder: (context, constraints) {
-          return ZegoAudioVideoView(
-            key: ValueKey<String>('zego-audio-video-${largeViewUser.id}'),
-            user: largeViewUser,
-            backgroundBuilder: widget.backgroundBuilder,
-            foregroundBuilder: widget.foregroundBuilder,
-            avatarConfig: widget.avatarConfig,
-          );
-        }),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return ZegoAudioVideoView(
+              key: ValueKey<String>('zego-audio-video-${largeViewUser.id}'),
+              user: largeViewUser,
+              backgroundBuilder: widget.backgroundBuilder,
+              foregroundBuilder: widget.foregroundBuilder,
+              avatarConfig: widget.avatarConfig,
+            );
+          },
+        ),
         ZegoLayoutPIPSmallItemList(
           targetUsers: smallViewList,
           defaultPosition: widget.layoutConfig.smallViewPosition,
@@ -208,8 +213,9 @@ class _ZegoLayoutPictureInPictureState
 
               /// swap large view user to small view user
               final largeViewUser = widget.userList[0];
-              final indexOfClickedUser = widget.userList
-                  .indexWhere((user) => clickedUser.id == user.id);
+              final indexOfClickedUser = widget.userList.indexWhere(
+                (user) => clickedUser.id == user.id,
+              );
               widget.userList[0] = clickedUser;
               widget.userList[indexOfClickedUser] = largeViewUser;
             });

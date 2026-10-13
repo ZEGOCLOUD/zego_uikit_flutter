@@ -27,9 +27,7 @@ abstract class ZegoUIKitPluginPlatform extends PlatformInterface {
   }
 
   /// backToDesktop
-  Future<void> backToDesktop({
-    bool nonRoot = false,
-  }) {
+  Future<void> backToDesktop({bool nonRoot = false}) {
     throw UnimplementedError('backToDesktop has not been implemented.');
   }
 
@@ -50,7 +48,8 @@ abstract class ZegoUIKitPluginPlatform extends PlatformInterface {
 
   Future<void> requestDismissKeyguard() {
     throw UnimplementedError(
-        'requestDismissKeyguard has not been implemented.');
+      'requestDismissKeyguard has not been implemented.',
+    );
   }
 
   Future<void> enableHardwareDecoder(bool isEnabled) {
@@ -87,7 +86,8 @@ abstract class ZegoUIKitPluginPlatform extends PlatformInterface {
 
   Future<void> enableCustomVideoRender(bool isEnabled) {
     throw UnimplementedError(
-        'enableCustomVideoRender has not been implemented.');
+      'enableCustomVideoRender has not been implemented.',
+    );
   }
 
   Future<void> startPlayingStreamInPIP(
@@ -98,7 +98,8 @@ abstract class ZegoUIKitPluginPlatform extends PlatformInterface {
     int? videoCodecID,
   }) {
     throw UnimplementedError(
-        'startPlayingStreamInPIP has not been implemented.');
+      'startPlayingStreamInPIP has not been implemented.',
+    );
   }
 
   Future<void> updatePlayingStreamViewInPIP(
@@ -107,12 +108,14 @@ abstract class ZegoUIKitPluginPlatform extends PlatformInterface {
     int viewMode,
   ) {
     throw UnimplementedError(
-        'updatePlayingStreamViewInPIP has not been implemented.');
+      'updatePlayingStreamViewInPIP has not been implemented.',
+    );
   }
 
   Future<void> stopPlayingStreamInPIP(String streamID) {
     throw UnimplementedError(
-        'stopPlayingStreamInPIP has not been implemented.');
+      'stopPlayingStreamInPIP has not been implemented.',
+    );
   }
 
   Future<void> reporterCreate({
@@ -134,7 +137,8 @@ abstract class ZegoUIKitPluginPlatform extends PlatformInterface {
 
   Future<void> reporterUpdateCommonParams(Map<String, Object> params) {
     throw UnimplementedError(
-        'reporterUpdateCommonParams has not been implemented.');
+      'reporterUpdateCommonParams has not been implemented.',
+    );
   }
 
   Future<void> reporterEvent({

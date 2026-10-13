@@ -14,10 +14,10 @@ class ZegoUIKitMediaWaveform extends StatefulWidget {
   final ValueNotifier<ZegoUIKitMediaPlayState> playStateNotifier;
 
   const ZegoUIKitMediaWaveform({
-    Key? key,
+    super.key,
     required this.soundLevelStream,
     required this.playStateNotifier,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoUIKitMediaWaveform> createState() => _ZegoUIKitMediaWaveformState();
@@ -49,10 +49,7 @@ class _ZegoUIKitMediaWaveformState extends State<ZegoUIKitMediaWaveform> {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: WaveformPainter(
-        soundLevels: _soundLevels,
-        isPlaying: isPlaying,
-      ),
+      painter: WaveformPainter(soundLevels: _soundLevels, isPlaying: isPlaying),
       size: const Size(double.infinity, 100.0),
     );
   }
@@ -82,10 +79,7 @@ class WaveformPainter extends CustomPainter {
   final ValueNotifier<bool> isPlaying;
   double timestampSecond = 0.0;
 
-  WaveformPainter({
-    required this.soundLevels,
-    required this.isPlaying,
-  });
+  WaveformPainter({required this.soundLevels, required this.isPlaying});
 
   @override
   void paint(Canvas canvas, Size size) {

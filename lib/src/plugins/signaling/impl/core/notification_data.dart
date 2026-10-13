@@ -13,11 +13,11 @@ mixin ZegoSignalingPluginCoreNotificationData {
 
   // ------- notification event streams ------
   StreamController<ZegoSignalingPluginNotificationArrivedEvent>?
-      streamCtrlNotificationArrived;
+  streamCtrlNotificationArrived;
   StreamController<ZegoSignalingPluginNotificationClickedEvent>?
-      streamCtrlNotificationClicked;
+  streamCtrlNotificationClicked;
   StreamController<ZegoSignalingPluginNotificationRegisteredEvent>?
-      streamCtrlNotificationRegistered;
+  streamCtrlNotificationRegistered;
 
   void initNotificationData() {
     ZegoLoggerService.logInfo(
@@ -26,12 +26,18 @@ mixin ZegoSignalingPluginCoreNotificationData {
       subTag: 'notification data',
     );
 
-    streamCtrlNotificationArrived ??= StreamController<
-        ZegoSignalingPluginNotificationArrivedEvent>.broadcast();
-    streamCtrlNotificationClicked ??= StreamController<
-        ZegoSignalingPluginNotificationClickedEvent>.broadcast();
-    streamCtrlNotificationRegistered ??= StreamController<
-        ZegoSignalingPluginNotificationRegisteredEvent>.broadcast();
+    streamCtrlNotificationArrived ??=
+        StreamController<
+          ZegoSignalingPluginNotificationArrivedEvent
+        >.broadcast();
+    streamCtrlNotificationClicked ??=
+        StreamController<
+          ZegoSignalingPluginNotificationClickedEvent
+        >.broadcast();
+    streamCtrlNotificationRegistered ??=
+        StreamController<
+          ZegoSignalingPluginNotificationRegisteredEvent
+        >.broadcast();
   }
 
   void uninitNotificationData() {
@@ -53,7 +59,7 @@ mixin ZegoSignalingPluginCoreNotificationData {
 
   /// enable notification
   Future<ZegoSignalingPluginEnableNotifyResult>
-      enableNotifyWhenAppRunningInBackgroundOrQuit(
+  enableNotifyWhenAppRunningInBackgroundOrQuit(
     bool enabled, {
     bool? isIOSSandboxEnvironment,
     bool enableIOSVoIP = true,
@@ -71,8 +77,7 @@ mixin ZegoSignalingPluginCoreNotificationData {
     );
     notifyWhenAppIsInTheBackgroundOrQuit = enabled;
 
-    return ZegoPluginAdapter()
-        .signalingPlugin!
+    return ZegoPluginAdapter().signalingPlugin!
         .enableNotifyWhenAppRunningInBackgroundOrQuit(
           isIOSSandboxEnvironment: isIOSSandboxEnvironment,
           enableIOSVoIP: enableIOSVoIP,
@@ -86,19 +91,19 @@ mixin ZegoSignalingPluginCoreNotificationData {
 
   /// get notification arrived stream
   Stream<ZegoSignalingPluginNotificationArrivedEvent>
-      getNotificationArrivedStream() {
+  getNotificationArrivedStream() {
     return streamCtrlNotificationArrived?.stream ?? const Stream.empty();
   }
 
   /// get notification clicked stream
   Stream<ZegoSignalingPluginNotificationClickedEvent>
-      getNotificationClickedStream() {
+  getNotificationClickedStream() {
     return streamCtrlNotificationClicked?.stream ?? const Stream.empty();
   }
 
   /// get notification registered stream
   Stream<ZegoSignalingPluginNotificationRegisteredEvent>
-      getNotificationRegisteredStream() {
+  getNotificationRegisteredStream() {
     return streamCtrlNotificationRegistered?.stream ?? const Stream.empty();
   }
 }

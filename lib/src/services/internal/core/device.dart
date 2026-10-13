@@ -16,10 +16,7 @@ class ZegoUIKitCoreDataDeviceImpl {
   IosDeviceInfo? get iosDeviceInfo => _iosDeviceInfo;
 
   Future<void> init() async {
-    ZegoLoggerService.logInfo(
-      'init device module',
-      subTag: 'core data',
-    );
+    ZegoLoggerService.logInfo('init device module', subTag: 'core data');
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
@@ -36,9 +33,6 @@ class ZegoUIKitCoreDataDeviceImpl {
   }
 
   void uninit() {
-    ZegoLoggerService.logInfo(
-      'uninit device module',
-      subTag: 'core data',
-    );
+    ZegoLoggerService.logInfo('uninit device module', subTag: 'core data');
   }
 }

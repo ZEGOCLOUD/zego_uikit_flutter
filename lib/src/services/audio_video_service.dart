@@ -21,7 +21,6 @@ mixin ZegoAudioVideoService {
     return ZegoUIKitCore.shared.stopPlayAllAudio();
   }
 
-
   /// When the [mute] is set to true, it means that the device is not actually turned off, but muted.
   /// The default value is false, which means the device is turned off.
   /// When either the camera or the microphone is muted, the audio and video views will still be visible.
@@ -180,6 +179,7 @@ mixin ZegoAudioVideoService {
   /// local use front facing camera
   Future<bool> useFrontFacingCamera(
     bool isFrontFacing, {
+
     /// Whether to ignore the camera's open state;
     /// if not ignored, the operation will not be executed when the camera is not open
     bool ignoreCameraStatus = false,
@@ -226,17 +226,27 @@ mixin ZegoAudioVideoService {
       switch (streamType) {
         case ZegoStreamType.main:
           return ZegoUIKitCore
-              .shared.coreData.localUser.mainChannel.viewNotifier;
+              .shared
+              .coreData
+              .localUser
+              .mainChannel
+              .viewNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
           return ZegoUIKitCore
-              .shared.coreData.localUser.auxChannel.viewNotifier;
+              .shared
+              .coreData
+              .localUser
+              .auxChannel
+              .viewNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.viewNotifier;
@@ -259,17 +269,27 @@ mixin ZegoAudioVideoService {
       switch (streamType) {
         case ZegoStreamType.main:
           return ZegoUIKitCore
-              .shared.coreData.localUser.mainChannel.viewIDNotifier;
+              .shared
+              .coreData
+              .localUser
+              .mainChannel
+              .viewIDNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
           return ZegoUIKitCore
-              .shared.coreData.localUser.auxChannel.viewIDNotifier;
+              .shared
+              .coreData
+              .localUser
+              .auxChannel
+              .viewIDNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.viewIDNotifier;
@@ -291,17 +311,27 @@ mixin ZegoAudioVideoService {
       switch (streamType) {
         case ZegoStreamType.main:
           return ZegoUIKitCore
-              .shared.coreData.localUser.mainChannel.qualityNotifier;
+              .shared
+              .coreData
+              .localUser
+              .mainChannel
+              .qualityNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
           return ZegoUIKitCore
-              .shared.coreData.localUser.auxChannel.qualityNotifier;
+              .shared
+              .coreData
+              .localUser
+              .auxChannel
+              .qualityNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.qualityNotifier;
@@ -321,18 +351,28 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore.shared.coreData.localUser.mainChannel
+          return ZegoUIKitCore
+              .shared
+              .coreData
+              .localUser
+              .mainChannel
               .isCapturedAudioFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore.shared.coreData.localUser.auxChannel
+          return ZegoUIKitCore
+              .shared
+              .coreData
+              .localUser
+              .auxChannel
               .isCapturedAudioFirstFrameNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.isCapturedAudioFirstFrameNotifier;
@@ -352,18 +392,28 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore.shared.coreData.localUser.mainChannel
+          return ZegoUIKitCore
+              .shared
+              .coreData
+              .localUser
+              .mainChannel
               .isCapturedVideoFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore.shared.coreData.localUser.auxChannel
+          return ZegoUIKitCore
+              .shared
+              .coreData
+              .localUser
+              .auxChannel
               .isCapturedVideoFirstFrameNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.isCapturedVideoFirstFrameNotifier;
@@ -383,18 +433,28 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore.shared.coreData.localUser.mainChannel
+          return ZegoUIKitCore
+              .shared
+              .coreData
+              .localUser
+              .mainChannel
               .isSendAudioFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore.shared.coreData.localUser.auxChannel
+          return ZegoUIKitCore
+              .shared
+              .coreData
+              .localUser
+              .auxChannel
               .isSendAudioFirstFrameNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.isSendAudioFirstFrameNotifier;
@@ -414,18 +474,28 @@ mixin ZegoAudioVideoService {
         userID == ZegoUIKitCore.shared.coreData.localUser.id) {
       switch (streamType) {
         case ZegoStreamType.main:
-          return ZegoUIKitCore.shared.coreData.localUser.mainChannel
+          return ZegoUIKitCore
+              .shared
+              .coreData
+              .localUser
+              .mainChannel
               .isSendVideoFirstFrameNotifier;
         case ZegoStreamType.media:
         case ZegoStreamType.screenSharing:
         case ZegoStreamType.mix:
-          return ZegoUIKitCore.shared.coreData.localUser.auxChannel
+          return ZegoUIKitCore
+              .shared
+              .coreData
+              .localUser
+              .auxChannel
               .isSendVideoFirstFrameNotifier;
       }
     } else {
       final targetUser = ZegoUIKitCore.shared.coreData.remoteUsersList
-          .firstWhere((user) => user.id == userID,
-              orElse: ZegoUIKitCoreUser.empty);
+          .firstWhere(
+            (user) => user.id == userID,
+            orElse: ZegoUIKitCoreUser.empty,
+          );
       switch (streamType) {
         case ZegoStreamType.main:
           return targetUser.mainChannel.isSendVideoFirstFrameNotifier;
@@ -475,8 +545,9 @@ mixin ZegoAudioVideoService {
   }
 
   Stream<List<ZegoUIKitUser>> getAudioVideoListStream() {
-    return ZegoUIKitCore.shared.coreData.audioVideoListStreamCtrl?.stream
-            .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
+    return ZegoUIKitCore.shared.coreData.audioVideoListStreamCtrl?.stream.map(
+          (users) => users.map((e) => e.toZegoUikitUser()).toList(),
+        ) ??
         const Stream.empty();
   }
 
@@ -503,8 +574,9 @@ mixin ZegoAudioVideoService {
   }
 
   Stream<List<ZegoUIKitUser>> getMediaListStream() {
-    return ZegoUIKitCore.shared.coreData.media.mediaListStreamCtrl?.stream
-            .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
+    return ZegoUIKitCore.shared.coreData.media.mediaListStreamCtrl?.stream.map(
+          (users) => users.map((e) => e.toZegoUikitUser()).toList(),
+        ) ??
         const Stream.empty();
   }
 
@@ -560,8 +632,9 @@ mixin ZegoAudioVideoService {
   }
 
   Stream<ZegoUIKitReceiveSEIEvent> getReceiveCustomSEIStream() {
-    return ZegoUIKitCore.shared.coreData.receiveSEIStreamCtrl?.stream
-            .where((event) {
+    return ZegoUIKitCore.shared.coreData.receiveSEIStreamCtrl?.stream.where((
+          event,
+        ) {
           return event.typeIdentifier == ZegoUIKitInnerSEIType.custom.name;
         }) ??
         const Stream.empty();

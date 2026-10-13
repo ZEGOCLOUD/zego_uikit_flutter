@@ -35,13 +35,16 @@ mixin ZegoRoomService {
     );
 
     if (ZegoErrorCode.CommonSuccess != joinRoomResult.errorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.roomLoginError,
-        message: 'login room error:${joinRoomResult.errorCode}, '
-            'room id:$roomID, large room:$markAsLargeRoom, '
-            '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
-        method: 'joinRoom',
-      ));
+      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.roomLoginError,
+          message:
+              'login room error:${joinRoomResult.errorCode}, '
+              'room id:$roomID, large room:$markAsLargeRoom, '
+              '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
+          method: 'joinRoom',
+        ),
+      );
     }
 
     ZegoUIKit().reporter().report(
@@ -51,8 +54,8 @@ mixin ZegoRoomService {
         ZegoUIKitReporter.eventKeyToken: token,
         ZegoUIKitReporter.eventKeyStartTime: joinBeginTime,
         ZegoUIKitReporter.eventKeyErrorCode: joinRoomResult.errorCode,
-        ZegoUIKitReporter.eventKeyErrorMsg:
-            joinRoomResult.extendedData.toString(),
+        ZegoUIKitReporter.eventKeyErrorMsg: joinRoomResult.extendedData
+            .toString(),
       },
     );
 
@@ -60,9 +63,7 @@ mixin ZegoRoomService {
   }
 
   /// leave room
-  Future<ZegoRoomLogoutResult> leaveRoom({
-    String? targetRoomID,
-  }) async {
+  Future<ZegoRoomLogoutResult> leaveRoom({String? targetRoomID}) async {
     final currentRoomID = ZegoUIKitCore.shared.coreData.room.id;
 
     final leaveRoomResult = await ZegoUIKitCore.shared.leaveRoom(
@@ -70,12 +71,15 @@ mixin ZegoRoomService {
     );
 
     if (ZegoErrorCode.CommonSuccess != leaveRoomResult.errorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.roomLeaveError,
-        message: 'leave room error:${leaveRoomResult.errorCode}, '
-            '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
-        method: 'leaveRoom',
-      ));
+      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.roomLeaveError,
+          message:
+              'leave room error:${leaveRoomResult.errorCode}, '
+              '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
+          method: 'leaveRoom',
+        ),
+      );
     }
 
     ZegoUIKit().reporter().report(
@@ -83,8 +87,8 @@ mixin ZegoRoomService {
       params: {
         ZegoUIKitReporter.eventKeyRoomID: currentRoomID,
         ZegoUIKitReporter.eventKeyErrorCode: leaveRoomResult.errorCode,
-        ZegoUIKitReporter.eventKeyErrorMsg:
-            leaveRoomResult.extendedData.toString(),
+        ZegoUIKitReporter.eventKeyErrorMsg: leaveRoomResult.extendedData
+            .toString(),
       },
     );
 
@@ -112,14 +116,16 @@ mixin ZegoRoomService {
 
   /// update room properties
   Future<bool> updateRoomProperties(Map<String, String> properties) async {
-    return ZegoUIKitCore.shared
-        .updateRoomProperties(Map<String, String>.from(properties));
+    return ZegoUIKitCore.shared.updateRoomProperties(
+      Map<String, String>.from(properties),
+    );
   }
 
   /// get room properties
   Map<String, RoomProperty> getRoomProperties() {
     return Map<String, RoomProperty>.from(
-        ZegoUIKitCore.shared.coreData.room.properties);
+      ZegoUIKitCore.shared.coreData.room.properties,
+    );
   }
 
   /// only notify the property which changed

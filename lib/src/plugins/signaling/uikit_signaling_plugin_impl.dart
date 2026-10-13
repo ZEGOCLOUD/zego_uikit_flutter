@@ -111,15 +111,13 @@ class ZegoUIKitSignalingPluginImpl
   }
 
   Stream<ZegoSignalingPluginConnectionStateChangedEvent>
-      getConnectionStateStream() {
-    return ZegoPluginAdapter()
-        .signalingPlugin!
+  getConnectionStateStream() {
+    return ZegoPluginAdapter().signalingPlugin!
         .getConnectionStateChangedEventStream();
   }
 
   Stream<ZegoSignalingPluginRoomStateChangedEvent> getRoomStateStream() {
-    return ZegoPluginAdapter()
-        .signalingPlugin!
+    return ZegoPluginAdapter().signalingPlugin!
         .getRoomStateChangedEventStream();
   }
 

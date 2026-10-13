@@ -1,4 +1,4 @@
-library zego_uikit;
+library;
 
 export 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 

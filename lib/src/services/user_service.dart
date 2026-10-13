@@ -19,9 +19,9 @@ mixin ZegoUserService {
   /// get all users, include local user and remote users
   List<ZegoUIKitUser> getAllUsers() {
     return [
-      ZegoUIKitCore.shared.coreData.localUser,
-      ...ZegoUIKitCore.shared.coreData.remoteUsersList
-    ]
+          ZegoUIKitCore.shared.coreData.localUser,
+          ...ZegoUIKitCore.shared.coreData.remoteUsersList,
+        ]
         .where((user) => !user.isAnotherRoomUser)
         .map((user) => user.toZegoUikitUser())
         .toList();
@@ -87,38 +87,43 @@ mixin ZegoUserService {
 
   /// get notifier of in-room user attributes
   ValueNotifier<ZegoUIKitUserAttributes> getInRoomUserAttributesNotifier(
-      String userID) {
+    String userID,
+  ) {
     return ZegoUIKitCore.shared.coreData.getUser(userID).inRoomAttributes;
   }
 
   /// get user list notifier
   Stream<List<ZegoUIKitUser>> getUserListStream() {
     return ZegoUIKitCore.shared.coreData.userListStreamCtrl?.stream.map(
-            (users) => users
-                .where((user) => !user.isAnotherRoomUser)
-                .map((e) => e.toZegoUikitUser())
-                .toList()) ??
+          (users) => users
+              .where((user) => !user.isAnotherRoomUser)
+              .map((e) => e.toZegoUikitUser())
+              .toList(),
+        ) ??
         const Stream.empty();
   }
 
   /// get user join notifier
   Stream<List<ZegoUIKitUser>> getUserJoinStream() {
-    return ZegoUIKitCore.shared.coreData.userJoinStreamCtrl?.stream
-            .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
+    return ZegoUIKitCore.shared.coreData.userJoinStreamCtrl?.stream.map(
+          (users) => users.map((e) => e.toZegoUikitUser()).toList(),
+        ) ??
         const Stream.empty();
   }
 
   /// get user leave notifier
   Stream<List<ZegoUIKitUser>> getUserLeaveStream() {
-    return ZegoUIKitCore.shared.coreData.userLeaveStreamCtrl?.stream
-            .map((users) => users.map((e) => e.toZegoUikitUser()).toList()) ??
+    return ZegoUIKitCore.shared.coreData.userLeaveStreamCtrl?.stream.map(
+          (users) => users.map((e) => e.toZegoUikitUser()).toList(),
+        ) ??
         const Stream.empty();
   }
 
   /// remove user from room, kick out
   Future<bool> removeUserFromRoom(List<String> userIDs) async {
-    final resultErrorCode =
-        await ZegoUIKitCore.shared.removeUserFromRoom(userIDs);
+    final resultErrorCode = await ZegoUIKitCore.shared.removeUserFromRoom(
+      userIDs,
+    );
 
     if (ZegoUIKitErrorCode.success != resultErrorCode) {
       ZegoUIKitCore.shared.error.errorStreamCtrl?.add(

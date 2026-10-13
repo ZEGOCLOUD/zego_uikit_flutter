@@ -15,11 +15,7 @@ class ZegoUIKitReceiveTurnOnLocalMicrophoneEvent {
   }
 }
 
-enum ZegoUIKitInnerSEIType {
-  mixerDeviceState,
-  mediaSyncInfo,
-  custom,
-}
+enum ZegoUIKitInnerSEIType { mixerDeviceState, mediaSyncInfo, custom }
 
 /// receive SEI from remote
 class ZegoUIKitReceiveSEIEvent {
@@ -93,52 +89,52 @@ class ZegoUIKitVideoConfig {
   });
 
   ZegoUIKitVideoConfig.preset180P()
-      : width = 180,
-        height = 320,
-        bitrate = 300,
-        fps = 15;
+    : width = 180,
+      height = 320,
+      bitrate = 300,
+      fps = 15;
 
   ZegoUIKitVideoConfig.preset270P()
-      : width = 270,
-        height = 480,
-        bitrate = 400,
-        fps = 15;
+    : width = 270,
+      height = 480,
+      bitrate = 400,
+      fps = 15;
 
   ZegoUIKitVideoConfig.preset360P()
-      : width = 360,
-        height = 640,
-        bitrate = 600,
-        fps = 15;
+    : width = 360,
+      height = 640,
+      bitrate = 600,
+      fps = 15;
 
   ZegoUIKitVideoConfig.preset540P()
-      : width = 540,
-        height = 960,
-        bitrate = 1200,
-        fps = 15;
+    : width = 540,
+      height = 960,
+      bitrate = 1200,
+      fps = 15;
 
   ZegoUIKitVideoConfig.preset720P()
-      : width = 720,
-        height = 1280,
-        bitrate = 1500,
-        fps = 15;
+    : width = 720,
+      height = 1280,
+      bitrate = 1500,
+      fps = 15;
 
   ZegoUIKitVideoConfig.preset1080P()
-      : width = 1080,
-        height = 1920,
-        bitrate = 3000,
-        fps = 15;
+    : width = 1080,
+      height = 1920,
+      bitrate = 3000,
+      fps = 15;
 
   ZegoUIKitVideoConfig.preset2K()
-      : width = 1440,
-        height = 2560,
-        bitrate = 6000,
-        fps = 15;
+    : width = 1440,
+      height = 2560,
+      bitrate = 6000,
+      fps = 15;
 
   ZegoUIKitVideoConfig.preset4K()
-      : width = 2160,
-        height = 3840,
-        bitrate = 12000,
-        fps = 15;
+    : width = 2160,
+      height = 3840,
+      bitrate = 12000,
+      fps = 15;
 
   ZegoVideoConfig get toSDK {
     final videoConfig = ZegoVideoConfig.preset(
@@ -168,12 +164,7 @@ class ZegoUIKitVideoConfig {
   }
 }
 
-enum ZegoStreamType {
-  main,
-  media,
-  screenSharing,
-  mix,
-}
+enum ZegoStreamType { main, media, screenSharing, mix }
 
 const zegoStreamTypeMediaText = 'player';
 const zegoStreamTypeScreenSharingText = 'screensharing';
@@ -468,7 +459,7 @@ enum ZegoUIKitPlayerState {
   playRequesting,
 
   /// The state that the stream is being playing, entering the state indicates that the stream has been successfully played, and the user can communicate normally.
-  playing
+  playing,
 }
 
 extension ZegoUIKitPlayerStateExtension on ZegoUIKitPlayerState {
@@ -484,11 +475,12 @@ extension ZegoUIKitPlayerStateExtension on ZegoUIKitPlayerState {
   }
 }
 
-typedef PlayerStateUpdateCallback = void Function(
-  ZegoUIKitPlayerState state,
-  int errorCode,
-  Map<String, dynamic> extendedData,
-);
+typedef PlayerStateUpdateCallback =
+    void Function(
+      ZegoUIKitPlayerState state,
+      int errorCode,
+      Map<String, dynamic> extendedData,
+    );
 
 /// Publish stream status.
 enum ZegoUIKitPublisherState {
@@ -499,7 +491,7 @@ enum ZegoUIKitPublisherState {
   publishRequesting,
 
   /// The state that the stream is being published, entering the state indicates that the stream has been successfully published, and the user can communicate normally.
-  publishing
+  publishing,
 }
 
 extension ZegoUIKitPublisherStateExtension on ZegoUIKitPublisherState {
@@ -515,8 +507,9 @@ extension ZegoUIKitPublisherStateExtension on ZegoUIKitPublisherState {
   }
 }
 
-typedef PublisherStateUpdateCallback = void Function(
-  ZegoUIKitPublisherState state,
-  int errorCode,
-  Map<String, dynamic> extendedData,
-);
+typedef PublisherStateUpdateCallback =
+    void Function(
+      ZegoUIKitPublisherState state,
+      int errorCode,
+      Map<String, dynamic> extendedData,
+    );

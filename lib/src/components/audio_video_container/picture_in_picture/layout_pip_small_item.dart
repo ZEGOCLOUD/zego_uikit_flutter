@@ -11,7 +11,7 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoLayoutPIPSmallItem extends StatefulWidget {
   const ZegoLayoutPIPSmallItem({
-    Key? key,
+    super.key,
     required this.targetUser,
     required this.localUser,
     required this.defaultPosition,
@@ -24,7 +24,7 @@ class ZegoLayoutPIPSmallItem extends StatefulWidget {
     this.size,
     this.margin,
     this.avatarConfig,
-  }) : super(key: key);
+  });
 
   final bool draggable;
   final bool showOnlyVideo;
@@ -63,8 +63,9 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
   Widget build(BuildContext context) {
     if (widget.showOnlyVideo) {
       return ValueListenableBuilder<bool>(
-        valueListenable:
-            ZegoUIKit().getCameraStateNotifier(widget.targetUser?.id ?? ''),
+        valueListenable: ZegoUIKit().getCameraStateNotifier(
+          widget.targetUser?.id ?? '',
+        ),
         builder: (context, cameraEnabled, _) {
           if (cameraEnabled) {
             return view();
@@ -108,13 +109,17 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
 
   /// calculates smallView's size based on current screen
   Widget calculateSize({required ZegoUIKitUser? user, required Widget child}) {
-    final portraitBaseSize =
-        Size(designedSize.height, designedSize.width); // vertical
+    final portraitBaseSize = Size(
+      designedSize.height,
+      designedSize.width,
+    ); // vertical
     final landscapeBaseSize = designedSize; //  horizontal
 
     if (user == null) {
       final defaultSize = Size(
-          landscapeBaseSize.height * designedRatio, landscapeBaseSize.height);
+        landscapeBaseSize.height * designedRatio,
+        landscapeBaseSize.height,
+      );
 
       return SizedBox.fromSize(size: defaultSize, child: child);
     } else {
@@ -138,7 +143,8 @@ class _ZegoLayoutPIPSmallItemState extends State<ZegoLayoutPIPSmallItem> {
 
   /// position container, calculates the coordinates based on current position
   Widget calculatePosition({required Widget child}) {
-    final paddingSpace = widget.margin ??
+    final paddingSpace =
+        widget.margin ??
         EdgeInsets.only(left: 20.zR, top: 50.zR, right: 20.zR, bottom: 30.zR);
 
     double? left, top, right, bottom;
@@ -259,16 +265,15 @@ class _ZegoSinglePointerDraggableState
     _grabLocalOffset = event.localPosition;
     _currentGlobalPos = event.position;
 
-    _overlayEntry = OverlayEntry(builder: (_) {
-      return Positioned(
-        left: _currentGlobalPos.dx - _grabLocalOffset.dx,
-        top: _currentGlobalPos.dy - _grabLocalOffset.dy,
-        child: IgnorePointer(
-          ignoring: true,
-          child: widget.feedback,
-        ),
-      );
-    });
+    _overlayEntry = OverlayEntry(
+      builder: (_) {
+        return Positioned(
+          left: _currentGlobalPos.dx - _grabLocalOffset.dx,
+          top: _currentGlobalPos.dy - _grabLocalOffset.dy,
+          child: IgnorePointer(ignoring: true, child: widget.feedback),
+        );
+      },
+    );
     Overlay.of(context).insert(_overlayEntry!);
     if (mounted) {
       setState(() {});

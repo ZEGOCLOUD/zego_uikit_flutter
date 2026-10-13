@@ -7,12 +7,12 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoLayoutGalleryLastItem extends StatefulWidget {
   const ZegoLayoutGalleryLastItem({
-    Key? key,
+    super.key,
     required this.users,
     this.borderColor,
     this.borderRadius,
     this.backgroundColor,
-  }) : super(key: key);
+  });
 
   final List<ZegoUIKitUser> users;
   final Color? borderColor;
@@ -96,10 +96,11 @@ class _ZegoLayoutGalleryLastItemState extends State<ZegoLayoutGalleryLastItem> {
           color: const Color(0xffDBDDE3),
           shape: BoxShape.circle,
           border: Border.all(
-              color: withBorderColor
-                  ? const Color(0xff4A4B4D)
-                  : Colors.transparent,
-              width: 0.89.zR),
+            color: withBorderColor
+                ? const Color(0xff4A4B4D)
+                : Colors.transparent,
+            width: 0.89.zR,
+          ),
         ),
         child: Center(
           child: Text(

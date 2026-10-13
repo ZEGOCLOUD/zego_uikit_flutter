@@ -11,10 +11,10 @@ class ZegoRPadding extends SingleChildRenderObjectWidget {
   ///
   /// The [padding] argument must not be null.
   const ZegoRPadding({
-    Key? key,
-    required Widget child,
+    super.key,
+    required Widget super.child,
     required this.padding,
-  }) : super(key: key, child: child);
+  });
 
   /// The amount of space by which to inset the child.
   final EdgeInsets padding;
@@ -32,7 +32,7 @@ class ZegoRPadding extends SingleChildRenderObjectWidget {
 class ZegoREdgeInsets extends EdgeInsets {
   /// Creates adapt insets from offsets from the left, top, right, and bottom.
   ZegoREdgeInsets.fromLTRB(double left, double top, double right, double bottom)
-      : super.fromLTRB(left.zR, top.zR, right.zR, bottom.zR);
+    : super.fromLTRB(left.zR, top.zR, right.zR, bottom.zR);
 
   /// Creates adapt insets where all the offsets are `value`.
   ///
@@ -56,10 +56,8 @@ class ZegoREdgeInsets extends EdgeInsets {
   /// const REdgeInsets.symmetric(vertical: 8.0)
   /// ```
   /// {@end-tool}
-  ZegoREdgeInsets.symmetric({
-    double vertical = 0,
-    double horizontal = 0,
-  }) : super.symmetric(vertical: vertical.zR, horizontal: horizontal.zR);
+  ZegoREdgeInsets.symmetric({double vertical = 0, double horizontal = 0})
+    : super.symmetric(vertical: vertical.zR, horizontal: horizontal.zR);
 
   /// Creates adapt insets with only the given values non-zero.
   ///
@@ -77,11 +75,11 @@ class ZegoREdgeInsets extends EdgeInsets {
     double left = 0,
     double top = 0,
   }) : super.only(
-          bottom: bottom.zR,
-          right: right.zR,
-          left: left.zR,
-          top: top.zR,
-        );
+         bottom: bottom.zR,
+         right: right.zR,
+         left: left.zR,
+         top: top.zR,
+       );
 }
 
 /// @nodoc
@@ -113,12 +111,7 @@ class ZegoREdgeInsetsDirectional extends EdgeInsetsDirectional {
     double end = 0,
     double start = 0,
     double top = 0,
-  }) : super.only(
-          bottom: bottom.zR,
-          start: start.zR,
-          end: end.zR,
-          top: top.zR,
-        );
+  }) : super.only(bottom: bottom.zR, start: start.zR, end: end.zR, top: top.zR);
 
   /// Creates adapt insets from offsets from the start, top, end, and bottom.
   ZegoREdgeInsetsDirectional.fromSTEB(
@@ -126,10 +119,5 @@ class ZegoREdgeInsetsDirectional extends EdgeInsetsDirectional {
     double top,
     double end,
     double bottom,
-  ) : super.fromSTEB(
-          start.zR,
-          top.zR,
-          end.zR,
-          bottom.zR,
-        );
+  ) : super.fromSTEB(start.zR, top.zR, end.zR, bottom.zR);
 }

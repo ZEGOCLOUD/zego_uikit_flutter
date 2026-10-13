@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 // Project imports:
 import 'package:zego_uikit/src/modules/outside_room_audio_video/controller.p.dart';
 import 'package:zego_uikit/src/modules/outside_room_audio_video/internal.dart';
-import 'package:zego_uikit/src/modules/outside_room_audio_video/defines.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 class ZegoOutsideRoomAudioVideoViewListController {
@@ -13,10 +12,12 @@ class ZegoOutsideRoomAudioVideoViewListController {
     List<ZegoOutsideRoomAudioVideoViewStreamUser> streams = const [],
   }) {
     private.streamsNotifier.value = streams
-        .map((stream) => ZegoOutsideRoomAudioVideoViewStream(
-              user: stream.user,
-              roomID: stream.roomID,
-            ))
+        .map(
+          (stream) => ZegoOutsideRoomAudioVideoViewStream(
+            user: stream.user,
+            roomID: stream.roomID,
+          ),
+        )
         .toList();
   }
 
@@ -98,10 +99,12 @@ class ZegoOutsideRoomAudioVideoViewListController {
     );
 
     private.streamsNotifier.value = streams
-        .map((stream) => ZegoOutsideRoomAudioVideoViewStream(
-              user: stream.user,
-              roomID: stream.roomID,
-            ))
+        .map(
+          (stream) => ZegoOutsideRoomAudioVideoViewStream(
+            user: stream.user,
+            roomID: stream.roomID,
+          ),
+        )
         .toList();
 
     if (startPlay) {

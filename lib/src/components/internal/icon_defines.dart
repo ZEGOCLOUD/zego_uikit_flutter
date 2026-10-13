@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 const controlBarButtonBackgroundColor = Colors.white;
 
 /// @nodoc
-final controlBarButtonCheckedBackgroundColor =
-    const Color(0xff2C2F3E).withValues(alpha: 0.6);
+final controlBarButtonCheckedBackgroundColor = const Color(
+  0xff2C2F3E,
+).withValues(alpha: 0.6);
 
 /// @nodoc
 class UIKitImage {

@@ -158,11 +158,7 @@ class ZegoUIKitReporter {
       return;
     }
 
-    ZegoLoggerService.logInfo(
-      '',
-      tag: 'uikit-reporter',
-      subTag: 'destroy',
-    );
+    ZegoLoggerService.logInfo('', tag: 'uikit-reporter', subTag: 'destroy');
     hadCreated = false;
     appID = -1;
 

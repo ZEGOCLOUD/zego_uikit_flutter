@@ -225,9 +225,5 @@ class TaskItem {
   final Future Function() runner;
   final VoidCallback next;
 
-  const TaskItem(
-    this.key,
-    this.runner,
-    this.next,
-  );
+  const TaskItem(this.key, this.runner, this.next);
 }

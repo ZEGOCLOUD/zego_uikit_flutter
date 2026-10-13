@@ -22,11 +22,13 @@ mixin ZegoMediaService {
     );
 
     if (ZegoUIKitErrorCode.success != playResult.errorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.mediaPlayError,
-        message: playResult.message,
-        method: 'playMedia',
-      ));
+      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.mediaPlayError,
+          message: playResult.message,
+          method: 'playMedia',
+        ),
+      );
     }
 
     return playResult;
@@ -64,11 +66,13 @@ mixin ZegoMediaService {
     final seekResult = await ZegoUIKitCore.shared.mediaSeekTo(millisecond);
 
     if (ZegoErrorCode.CommonSuccess != seekResult.errorCode) {
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.mediaSeekError,
-        message: 'seek result:${seekResult.errorCode}',
-        method: 'seekTo',
-      ));
+      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.mediaSeekError,
+          message: 'seek result:${seekResult.errorCode}',
+          method: 'seekTo',
+        ),
+      );
     }
 
     return seekResult;
@@ -81,10 +85,7 @@ mixin ZegoMediaService {
   /// local play volume.
   ///
   /// - [volume] The range is 0 ~ 100. The default is 30.
-  Future<void> setMediaVolume(
-    int volume, {
-    bool isSyncToRemote = false,
-  }) async {
+  Future<void> setMediaVolume(int volume, {bool isSyncToRemote = false}) async {
     return ZegoUIKitCore.shared.setMediaVolume(
       volume,
       isSyncToRemote: isSyncToRemote,
@@ -148,11 +149,9 @@ mixin ZegoMediaService {
     List<String>? allowedExtensions,
   }) async {
     return ZegoUIKitCore.shared.pickMediaFile(
-      allowedExtensions: allowedExtensions ??
-          [
-            ...zegoMediaVideoExtensions,
-            ...zegoMediaAudioExtensions,
-          ],
+      allowedExtensions:
+          allowedExtensions ??
+          [...zegoMediaVideoExtensions, ...zegoMediaAudioExtensions],
     );
   }
 

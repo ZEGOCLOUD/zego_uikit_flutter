@@ -12,7 +12,7 @@ import 'package:zego_uikit/src/services/services.dart';
 /// button used to switch audio output button route between speaker or system device
 class ZegoSwitchAudioOutputButton extends StatefulWidget {
   const ZegoSwitchAudioOutputButton({
-    Key? key,
+    super.key,
     this.speakerIcon,
     this.headphoneIcon,
     this.bluetoothIcon,
@@ -20,7 +20,7 @@ class ZegoSwitchAudioOutputButton extends StatefulWidget {
     this.defaultUseSpeaker = false,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   final ButtonIcon? speakerIcon;
   final ButtonIcon? headphoneIcon;
@@ -44,7 +44,8 @@ class ZegoSwitchAudioOutputButton extends StatefulWidget {
 }
 
 class _ZegoSwitchAudioOutputButtonState
-    extends State<ZegoSwitchAudioOutputButton> with ButtonRateLimitMixin {
+    extends State<ZegoSwitchAudioOutputButton>
+    with ButtonRateLimitMixin {
   @override
   void initState() {
     super.initState();
@@ -70,8 +71,9 @@ class _ZegoSwitchAudioOutputButtonState
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ZegoUIKitAudioRoute>(
       /// listen local audio output route changes
-      valueListenable: ZegoUIKit()
-          .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id),
+      valueListenable: ZegoUIKit().getAudioOutputDeviceNotifier(
+        ZegoUIKit().getLocalUser().id,
+      ),
       builder: (context, audioRoute, _) {
         /// update icon/background if route changed
         return getAudioRouteButtonByRoute(audioRoute);
@@ -86,25 +88,33 @@ class _ZegoSwitchAudioOutputButtonState
     /// get the new icon and background color
     if (ZegoUIKitAudioRoute.bluetooth == audioRoute) {
       /// always open
-      icon = widget.bluetoothIcon?.icon ??
+      icon =
+          widget.bluetoothIcon?.icon ??
           UIKitImage.asset(StyleIconUrls.iconS1ControlBarSpeakerBluetooth);
-      backgroundColor = widget.bluetoothIcon?.backgroundColor ??
+      backgroundColor =
+          widget.bluetoothIcon?.backgroundColor ??
           controlBarButtonBackgroundColor;
     } else if (ZegoUIKitAudioRoute.headphone == audioRoute) {
       /// always display speaker closed
-      icon = widget.headphoneIcon?.icon ??
+      icon =
+          widget.headphoneIcon?.icon ??
           UIKitImage.asset(StyleIconUrls.iconS1ControlBarSpeakerOff);
-      backgroundColor = widget.headphoneIcon?.backgroundColor ??
+      backgroundColor =
+          widget.headphoneIcon?.backgroundColor ??
           controlBarButtonBackgroundColor;
     } else if (ZegoUIKitAudioRoute.speaker == audioRoute) {
-      icon = widget.speakerIcon?.icon ??
+      icon =
+          widget.speakerIcon?.icon ??
           UIKitImage.asset(StyleIconUrls.iconS1ControlBarSpeakerNormal);
-      backgroundColor = widget.speakerIcon?.backgroundColor ??
+      backgroundColor =
+          widget.speakerIcon?.backgroundColor ??
           controlBarButtonCheckedBackgroundColor;
     } else {
-      icon = widget.headphoneIcon?.icon ??
+      icon =
+          widget.headphoneIcon?.icon ??
           UIKitImage.asset(StyleIconUrls.iconS1ControlBarSpeakerOff);
-      backgroundColor = widget.headphoneIcon?.backgroundColor ??
+      backgroundColor =
+          widget.headphoneIcon?.backgroundColor ??
           controlBarButtonBackgroundColor;
     }
 
@@ -120,10 +130,7 @@ class _ZegoSwitchAudioOutputButtonState
           color: backgroundColor,
           shape: BoxShape.circle,
         ),
-        child: SizedBox.fromSize(
-          size: sizeBoxSize,
-          child: icon,
-        ),
+        child: SizedBox.fromSize(size: sizeBoxSize, child: icon),
       ),
     );
   }

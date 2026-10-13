@@ -4,14 +4,20 @@ mixin ZegoDeviceService {
   /// protocol: String is 'operator'
   Stream<String> getTurnOnYourCameraRequestStream() {
     return ZegoUIKitCore
-            .shared.coreData.turnOnYourCameraRequestStreamCtrl?.stream ??
+            .shared
+            .coreData
+            .turnOnYourCameraRequestStreamCtrl
+            ?.stream ??
         const Stream.empty();
   }
 
   Stream<ZegoUIKitReceiveTurnOnLocalMicrophoneEvent>
-      getTurnOnYourMicrophoneRequestStream() {
+  getTurnOnYourMicrophoneRequestStream() {
     return ZegoUIKitCore
-            .shared.coreData.turnOnYourMicrophoneRequestStreamCtrl?.stream ??
+            .shared
+            .coreData
+            .turnOnYourMicrophoneRequestStreamCtrl
+            ?.stream ??
         const Stream.empty();
   }
 
@@ -30,9 +36,16 @@ mixin ZegoDeviceService {
         );
         if (parsedVersion.isEmpty) {
           return ZegoMobileSystemVersion(
-            major: int.tryParse(ZegoUIKitCore
-                        .shared.device.androidDeviceInfo?.version.release ??
-                    '') ??
+            major:
+                int.tryParse(
+                  ZegoUIKitCore
+                          .shared
+                          .device
+                          .androidDeviceInfo
+                          ?.version
+                          .release ??
+                      '',
+                ) ??
                 0,
             minor: 0,
             patch: 0,
@@ -43,11 +56,7 @@ mixin ZegoDeviceService {
       }
 
       if (Platform.isIOS) {
-        return ZegoMobileSystemVersion(
-          major: 0,
-          minor: 0,
-          patch: 0,
-        );
+        return ZegoMobileSystemVersion(major: 0, minor: 0, patch: 0);
         // return ZegoUIKitCore.shared.device.iosDeviceInfo;
       }
     }
@@ -60,7 +69,8 @@ mixin ZegoDeviceService {
   }
 
   ZegoMobileSystemVersion _parseMobileSystemVersion(
-      String operatingSystemVersion) {
+    String operatingSystemVersion,
+  ) {
     var systemVersion = ZegoMobileSystemVersion.empty();
 
     if (Platform.isAndroid) {

@@ -35,7 +35,7 @@ class ZegoTextIconButton extends StatefulWidget {
   final ZegoNetworkLoadingConfig? networkLoadingConfig;
 
   const ZegoTextIconButton({
-    Key? key,
+    super.key,
     this.text,
     this.textStyle,
     this.softWrap,
@@ -54,7 +54,7 @@ class ZegoTextIconButton extends StatefulWidget {
     this.clickableBackgroundColor = Colors.transparent,
     this.unclickableBackgroundColor = Colors.transparent,
     this.verticalLayout = true,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoTextIconButton> createState() => _ZegoTextIconButtonState();
@@ -88,8 +88,9 @@ class _ZegoTextIconButtonState extends State<ZegoTextIconButton> {
         borderRadius: null != widget.borderRadius
             ? BorderRadius.all(Radius.circular(widget.borderRadius!))
             : null,
-        shape:
-            null != widget.borderRadius ? BoxShape.rectangle : BoxShape.circle,
+        shape: null != widget.borderRadius
+            ? BoxShape.rectangle
+            : BoxShape.circle,
       ),
       child: widget.verticalLayout
           ? Column(
@@ -104,10 +105,7 @@ class _ZegoTextIconButtonState extends State<ZegoTextIconButton> {
   }
 
   List<Widget> children(BuildContext context) {
-    return [
-      icon(),
-      ...text(),
-    ];
+    return [icon(), ...text()];
   }
 
   Widget icon() {
@@ -121,9 +119,12 @@ class _ZegoTextIconButtonState extends State<ZegoTextIconButton> {
       decoration: BoxDecoration(
         color: widget.icon?.backgroundColor ?? Colors.transparent,
         border: Border.all(
-            color: widget.iconBorderColor ?? Colors.transparent, width: 1),
-        borderRadius:
-            BorderRadius.all(Radius.circular(widget.iconSize?.width ?? 74 / 2)),
+          color: widget.iconBorderColor ?? Colors.transparent,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(widget.iconSize?.width ?? 74 / 2),
+        ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(widget.iconSize?.width ?? 74 / 2),
@@ -147,7 +148,8 @@ class _ZegoTextIconButtonState extends State<ZegoTextIconButton> {
       Text(
         widget.text!,
         softWrap: widget.softWrap,
-        style: widget.textStyle ??
+        style:
+            widget.textStyle ??
             TextStyle(
               color: widget.onPressed != null
                   ? widget.clickableTextColor

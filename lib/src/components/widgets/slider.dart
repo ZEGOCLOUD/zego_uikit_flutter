@@ -32,7 +32,7 @@ class ZegoSlider extends StatefulWidget {
   final double? thumbRadius;
 
   const ZegoSlider({
-    Key? key,
+    super.key,
     required this.defaultValue,
     this.onChanged,
     this.thumpHeight,
@@ -44,7 +44,7 @@ class ZegoSlider extends StatefulWidget {
     this.inactiveTrackColor,
     this.thumbColor,
     this.thumbRadius,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoSlider> createState() => _ZegoSliderState();
@@ -71,7 +71,8 @@ class _ZegoSliderState extends State<ZegoSlider> {
       height: thumpHeight,
       child: SliderTheme(
         data: SliderTheme.of(context).copyWith(
-          valueIndicatorTextStyle: widget.textStyle ??
+          valueIndicatorTextStyle:
+              widget.textStyle ??
               TextStyle(
                 color: const Color(0xff1B1A1C),
                 fontSize: 30.zR,
@@ -80,12 +81,14 @@ class _ZegoSliderState extends State<ZegoSlider> {
           valueIndicatorColor:
               widget.textBackgroundColor ?? Colors.white.withValues(alpha: 0.5),
           activeTrackColor: widget.activeTrackColor ?? Colors.white,
-          inactiveTrackColor: widget.inactiveTrackColor ??
+          inactiveTrackColor:
+              widget.inactiveTrackColor ??
               const Color(0xff000000).withValues(alpha: 0.3),
           trackHeight: widget.trackHeight ?? 6.0.zR,
           thumbColor: widget.thumbColor ?? Colors.white,
           thumbShape: RoundSliderThumbShape(
-              enabledThumbRadius: widget.thumbRadius ?? thumpHeight / 2.0),
+            enabledThumbRadius: widget.thumbRadius ?? thumpHeight / 2.0,
+          ),
         ),
         child: ValueListenableBuilder<int>(
           valueListenable: valueNotifier,

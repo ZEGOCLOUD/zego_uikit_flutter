@@ -36,11 +36,7 @@ class ZegoUIKitEvent with ZegoUIKitExpressEvent, ZegoUIKitMediaEvent {
       return;
     }
 
-    ZegoLoggerService.logInfo(
-      'init',
-      tag: 'uikit-event',
-      subTag: 'init',
-    );
+    ZegoLoggerService.logInfo('init', tag: 'uikit-event', subTag: 'init');
 
     _isInit = true;
 
@@ -59,11 +55,7 @@ class ZegoUIKitEvent with ZegoUIKitExpressEvent, ZegoUIKitMediaEvent {
       return;
     }
 
-    ZegoLoggerService.logInfo(
-      'uninit',
-      tag: 'uikit-event',
-      subTag: 'uninit',
-    );
+    ZegoLoggerService.logInfo('uninit', tag: 'uikit-event', subTag: 'uninit');
 
     if (uninitOnRoomLeaved) {
       express.uninit();

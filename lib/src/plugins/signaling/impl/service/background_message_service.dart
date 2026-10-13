@@ -5,8 +5,8 @@ import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 mixin ZegoPluginBackgroundMessageService {
   Future<void> removeBackgroundMessageHandler({String key = ''}) async {
     return ZegoPluginAdapter().signalingPlugin!.removeBackgroundMessageHandler(
-          key: key,
-        );
+      key: key,
+    );
   }
 
   /// register background message handler
@@ -31,21 +31,21 @@ mixin ZegoPluginBackgroundMessageService {
   /// );
   /// ```
   Future<ZegoSignalingPluginSetMessageHandlerResult>
-      setBackgroundMessageHandler(
+  setBackgroundMessageHandler(
     ZegoSignalingPluginZPNsBackgroundMessageHandler handler, {
     String key = 'default',
   }) async {
     return ZegoPluginAdapter().signalingPlugin!.setBackgroundMessageHandler(
-          handler,
-          key: key,
-        );
+      handler,
+      key: key,
+    );
   }
 
   Future<ZegoSignalingPluginSetMessageHandlerResult> setThroughMessageHandler(
     ZegoSignalingPluginZPNsThroughMessageHandler? handler,
   ) async {
-    return ZegoPluginAdapter()
-        .signalingPlugin!
-        .setThroughMessageHandler(handler);
+    return ZegoPluginAdapter().signalingPlugin!.setThroughMessageHandler(
+      handler,
+    );
   }
 }

@@ -108,23 +108,30 @@ class ZegoUIKitCoreStreamInfo {
   ValueNotifier<int?> viewIDNotifier = ValueNotifier<int?>(-1);
   ValueNotifier<Widget?> viewNotifier = ValueNotifier<Widget?>(null);
   ValueNotifier<bool> viewCreatingNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<Size> viewSizeNotifier =
-      ValueNotifier<Size>(const Size(360, 640));
+  ValueNotifier<Size> viewSizeNotifier = ValueNotifier<Size>(
+    const Size(360, 640),
+  );
   StreamController<double>? soundLevelStream;
 
   ValueNotifier<ZegoUIKitPublishStreamQuality> qualityNotifier =
       ValueNotifier<ZegoUIKitPublishStreamQuality>(
-          ZegoPublishStreamQualityExtension.empty().toUIKit());
-  ValueNotifier<bool> isCapturedAudioFirstFrameNotifier =
-      ValueNotifier<bool>(false);
-  ValueNotifier<bool> isCapturedVideoFirstFrameNotifier =
-      ValueNotifier<bool>(false);
-  ValueNotifier<bool> isRenderedVideoFirstFrameNotifier =
-      ValueNotifier<bool>(false);
-  ValueNotifier<bool> isSendAudioFirstFrameNotifier =
-      ValueNotifier<bool>(false);
-  ValueNotifier<bool> isSendVideoFirstFrameNotifier =
-      ValueNotifier<bool>(false);
+        ZegoPublishStreamQualityExtension.empty().toUIKit(),
+      );
+  ValueNotifier<bool> isCapturedAudioFirstFrameNotifier = ValueNotifier<bool>(
+    false,
+  );
+  ValueNotifier<bool> isCapturedVideoFirstFrameNotifier = ValueNotifier<bool>(
+    false,
+  );
+  ValueNotifier<bool> isRenderedVideoFirstFrameNotifier = ValueNotifier<bool>(
+    false,
+  );
+  ValueNotifier<bool> isSendAudioFirstFrameNotifier = ValueNotifier<bool>(
+    false,
+  );
+  ValueNotifier<bool> isSendVideoFirstFrameNotifier = ValueNotifier<bool>(
+    false,
+  );
   ValueNotifier<GlobalKey> globalMainStreamChannelKeyNotifier =
       ValueNotifier<GlobalKey>(GlobalKey());
   ValueNotifier<GlobalKey> globalAuxStreamChannelKeyNotifier =
@@ -273,8 +280,9 @@ class ZegoUIKitCoreUser {
     lastAudioRoute = ZegoUIKitAudioRouteExtension.fromSDKValue(sdkAudioRoute);
   }
 
-  Future<void> destroyTextureRenderer(
-      {required ZegoStreamType streamType}) async {
+  Future<void> destroyTextureRenderer({
+    required ZegoStreamType streamType,
+  }) async {
     switch (streamType) {
       case ZegoStreamType.main:
         final viewID = mainChannel.viewIDNotifier.value ?? -1;
@@ -331,11 +339,7 @@ class ZegoUIKitCoreUser {
 
   /// 将用户信息序列化为 Map
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'isAnotherRoomUser': isAnotherRoomUser,
-    };
+    return {'id': id, 'name': name, 'isAnotherRoomUser': isAnotherRoomUser};
   }
 
   /// 从 Map 反序列化为用户对象
@@ -477,11 +481,10 @@ class ZegoUIKitVideoInternalConfig {
   ZegoUIKitVideoInternalConfig copyWith({
     ZegoPresetResolution? resolution,
     DeviceOrientation? orientation,
-  }) =>
-      ZegoUIKitVideoInternalConfig(
-        resolution: resolution ?? this.resolution,
-        orientation: orientation ?? this.orientation,
-      );
+  }) => ZegoUIKitVideoInternalConfig(
+    resolution: resolution ?? this.resolution,
+    orientation: orientation ?? this.orientation,
+  );
 }
 
 /// @nodoc

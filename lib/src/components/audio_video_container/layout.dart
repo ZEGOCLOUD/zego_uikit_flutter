@@ -46,7 +46,8 @@ class ZegoLayout {
     bool showNewScreenSharingViewInFullscreenMode = true,
 
     ///
-    ZegoShowFullscreenModeToggleButtonRules showScreenSharingFullscreenModeToggleButtonRules =
+    ZegoShowFullscreenModeToggleButtonRules
+        showScreenSharingFullscreenModeToggleButtonRules =
         ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed,
 
     /// User ID for Specifying Large View
@@ -85,7 +86,8 @@ class ZegoLayout {
     bool showNewScreenSharingViewInFullscreenMode = true,
 
     /// screen sharing configs, display rule of full screen button
-    ZegoShowFullscreenModeToggleButtonRules showScreenSharingFullscreenModeToggleButtonRules =
+    ZegoShowFullscreenModeToggleButtonRules
+        showScreenSharingFullscreenModeToggleButtonRules =
         ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed,
   }) {
     return ZegoLayoutGalleryConfig(

@@ -8,14 +8,14 @@ class RippleAnimation extends StatefulWidget {
   final Color color;
   final ValueNotifier<int> countReceiver;
 
-  const RippleAnimation(
-      {Key? key,
-      required this.child,
-      required this.countReceiver,
-      this.color = Colors.black,
-      this.minRadius = 60,
-      this.radiusIncrement = 0.15})
-      : super(key: key);
+  const RippleAnimation({
+    super.key,
+    required this.child,
+    required this.countReceiver,
+    this.color = Colors.black,
+    this.minRadius = 60,
+    this.radiusIncrement = 0.15,
+  });
 
   @override
   State<RippleAnimation> createState() => _RippleAnimationState();
@@ -82,7 +82,12 @@ class RipplePainter extends CustomPainter {
 
   // animating the opacity according to min radius and waves count.
   void circle(
-      Canvas canvas, Rect rect, double minRadius, int wave, int length) {
+    Canvas canvas,
+    Rect rect,
+    double minRadius,
+    int wave,
+    int length,
+  ) {
     Color paintColor;
     double radius;
     if (wave != 0) {

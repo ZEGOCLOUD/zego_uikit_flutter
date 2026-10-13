@@ -17,16 +17,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 /// For audio, we support "aac", "midi", "mp3", "ogg", "wav".
 class ZegoUIKitMediaPlayer extends StatefulWidget {
   const ZegoUIKitMediaPlayer({
-    Key? key,
+    super.key,
     required this.size,
     required this.config,
     this.filePathOrURL,
     this.initPosition,
     ZegoUIKitMediaPlayerStyle? style,
     ZegoUIKitMediaPlayerEvent? event,
-  })  : style = style ?? const ZegoUIKitMediaPlayerStyle(),
-        event = event ?? const ZegoUIKitMediaPlayerEvent(),
-        super(key: key);
+  }) : style = style ?? const ZegoUIKitMediaPlayerStyle(),
+       event = event ?? const ZegoUIKitMediaPlayerEvent();
 
   /// load the absolute path to the local resource or the URL of the network resource
   /// is null, will pop-up and pick files from local
@@ -96,8 +95,9 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
 
     hideSurfaceTimer?.cancel();
 
-    ZegoUIKitCore.shared.expressEngineCreatedNotifier
-        .removeListener(onExpressEngineCreated);
+    ZegoUIKitCore.shared.expressEngineCreatedNotifier.removeListener(
+      onExpressEngineCreated,
+    );
 
     ZegoUIKit().getMediaPlayStateNotifier().removeListener(onPlayStateChanged);
   }
@@ -115,10 +115,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
                 width: widget.size.width,
                 height: widget.size.height,
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1.0,
-                  ),
+                  border: Border.all(color: Colors.grey, width: 1.0),
                   borderRadius: BorderRadius.circular(4.0),
                   color: Colors.black.withValues(alpha: 0.5),
                 ),
@@ -137,10 +134,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
     );
   }
 
-  Widget movable({
-    required Widget child,
-    required BoxConstraints constraints,
-  }) {
+  Widget movable({required Widget child, required BoxConstraints constraints}) {
     return Positioned(
       left: topLeft?.dx ?? 10,
       top: topLeft?.dy ?? 10,
@@ -151,14 +145,8 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
                   var x = topLeft!.dx + details.delta.dx;
                   var y = topLeft!.dy + details.delta.dy;
 
-                  x = x.clamp(
-                    0.0,
-                    constraints.maxWidth - widget.size.width,
-                  );
-                  y = y.clamp(
-                    0.0,
-                    constraints.maxHeight - widget.size.height,
-                  );
+                  x = x.clamp(0.0, constraints.maxWidth - widget.size.width);
+                  y = y.clamp(0.0, constraints.maxHeight - widget.size.height);
                   topLeft = Offset(x, y);
                 });
               },
@@ -213,10 +201,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
             child: Container(
               color: Colors.transparent,
               child: surfaceVisibility
-                  ? controls(
-                      maxViewWidth,
-                      maxViewHeight,
-                    )
+                  ? controls(maxViewWidth, maxViewHeight)
                   : Container(),
             ),
           );
@@ -233,19 +218,13 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
                 closeButton(),
                 filePickButton(),
                 if (widget.config.isPlayButtonCentral)
-                  bigPlayButton(
-                    maxViewWidth,
-                    maxViewHeight,
-                  )
+                  bigPlayButton(maxViewWidth, maxViewHeight)
                 else
                   smallPlayButton(),
               ]
             : [],
         volumeButton(),
-        volumeSlider(
-          maxViewWidth,
-          maxViewHeight,
-        ),
+        volumeSlider(maxViewWidth, maxViewHeight),
         progressSlider(),
         progressDuration(),
       ],
@@ -281,12 +260,7 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
                     disabledInactiveTrackColor: Colors.white,
                   ),
                   child: ZegoUIKitMediaPlayState.noPlay == playState
-                      ? const Slider(
-                          min: 0,
-                          max: 1,
-                          value: 0,
-                          onChanged: null,
-                        )
+                      ? const Slider(min: 0, max: 1, value: 0, onChanged: null)
                       : Slider(
                           min: 0,
                           max: duration.toDouble(),
@@ -316,15 +290,14 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
             '${durationFormatString(Duration(milliseconds: duration))}';
         return Positioned(
           bottom: spacing + sliderHeight + 10 / 2,
-          left: spacing +
+          left:
+              spacing +
               (widget.config.canControl ? buttonSize.width + spacing : 0),
           child: Text(
             progressDuration,
-            style: widget.style.durationTextStyle ??
-                const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                ),
+            style:
+                widget.style.durationTextStyle ??
+                const TextStyle(color: Colors.white, fontSize: 10),
           ),
         );
       },
@@ -366,7 +339,8 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
             child: SizedBox(
               width: buttonSize.width,
               height: buttonSize.height,
-              child: (isMute
+              child:
+                  (isMute
                       ? widget.style.volumeMuteIcon
                       : widget.style.volumeIcon) ??
                   Icon(
@@ -407,8 +381,9 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
                             overlayShape: SliderComponentShape.noOverlay,
                             overlayColor: Colors.yellow.withValues(alpha: 0.4),
                             activeTrackColor: Colors.blue,
-                            inactiveTrackColor:
-                                Colors.blue.withValues(alpha: 0.5),
+                            inactiveTrackColor: Colors.blue.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           child: Slider(
                             min: 0,
@@ -485,16 +460,14 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
   }
 
   Widget getPlayButtonIcon(ZegoUIKitMediaPlayState playState, Size buttonSize) {
-    var icon = widget.style.playIcon ??
-        Icon(
-          Icons.play_circle,
-          color: Colors.white,
-          size: buttonSize.width,
-        );
+    var icon =
+        widget.style.playIcon ??
+        Icon(Icons.play_circle, color: Colors.white, size: buttonSize.width);
 
     switch (playState) {
       case ZegoUIKitMediaPlayState.playing:
-        icon = widget.style.pauseIcon ??
+        icon =
+            widget.style.pauseIcon ??
             Icon(
               Icons.pause_circle,
               color: Colors.white,
@@ -505,7 +478,8 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
       case ZegoUIKitMediaPlayState.loadReady:
       case ZegoUIKitMediaPlayState.pausing:
       case ZegoUIKitMediaPlayState.playEnded:
-        icon = widget.style.playIcon ??
+        icon =
+            widget.style.playIcon ??
             Icon(
               Icons.play_circle,
               color: Colors.white,
@@ -553,7 +527,8 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
         child: SizedBox(
           width: buttonSize.width,
           height: buttonSize.height,
-          child: widget.style.closeIcon ??
+          child:
+              widget.style.closeIcon ??
               Icon(
                 Icons.close_rounded,
                 color: Colors.white,
@@ -572,7 +547,8 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
         child: SizedBox(
           width: buttonSize.width,
           height: buttonSize.height,
-          child: widget.style.moreIcon ??
+          child:
+              widget.style.moreIcon ??
               Icon(
                 Icons.more_vert,
                 color: Colors.white,
@@ -659,8 +635,9 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
       if (ZegoUIKitCore.shared.expressEngineCreatedNotifier.value) {
         autoShareMedia();
       } else {
-        ZegoUIKitCore.shared.expressEngineCreatedNotifier
-            .addListener(onExpressEngineCreated);
+        ZegoUIKitCore.shared.expressEngineCreatedNotifier.addListener(
+          onExpressEngineCreated,
+        );
 
         ZegoLoggerService.logInfo(
           'express engine is not created, wait..',
@@ -680,8 +657,9 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
     );
 
     if (isCreated) {
-      ZegoUIKitCore.shared.expressEngineCreatedNotifier
-          .removeListener(onExpressEngineCreated);
+      ZegoUIKitCore.shared.expressEngineCreatedNotifier.removeListener(
+        onExpressEngineCreated,
+      );
       WidgetsBinding.instance.addPostFrameCallback((_) {
         autoShareMedia();
       });
@@ -708,16 +686,16 @@ class _ZegoUIKitMediaPlayerState extends State<ZegoUIKitMediaPlayer> {
 
     ZegoUIKit()
         .playMedia(
-      filePathOrURL: widget.filePathOrURL!,
-      enableRepeat: widget.config.enableRepeat,
-      autoStart: widget.config.autoStart,
-    )
+          filePathOrURL: widget.filePathOrURL!,
+          enableRepeat: widget.config.enableRepeat,
+          autoStart: widget.config.autoStart,
+        )
         .then((shareResult) {
-      ZegoLoggerService.logInfo(
-        'auto share media result:${widget.filePathOrURL}',
-        tag: 'uikit-component',
-        subTag: 'media player',
-      );
-    });
+          ZegoLoggerService.logInfo(
+            'auto share media result:${widget.filePathOrURL}',
+            tag: 'uikit-component',
+            subTag: 'media player',
+          );
+        });
   }
 }

@@ -31,7 +31,7 @@ class ZegoCancelInvitationButtonResult {
 /// @nodoc
 class ZegoCancelInvitationButton extends StatefulWidget {
   const ZegoCancelInvitationButton({
-    Key? key,
+    super.key,
     required this.invitees,
     this.isAdvancedMode = false,
     this.targetInvitationID,
@@ -49,7 +49,7 @@ class ZegoCancelInvitationButton extends StatefulWidget {
     this.unclickableTextColor = Colors.black,
     this.clickableBackgroundColor = Colors.transparent,
     this.unclickableBackgroundColor = Colors.transparent,
-  }) : super(key: key);
+  });
   final bool isAdvancedMode;
 
   final List<String> invitees;
@@ -106,14 +106,14 @@ class _ZegoCancelInvitationButtonState
   Future<void> onPressed() async {
     final result = widget.isAdvancedMode
         ? await ZegoUIKit().getSignalingPlugin().cancelAdvanceInvitation(
-              invitees: widget.invitees,
-              data: widget.data ?? '',
-              invitationID: widget.targetInvitationID,
-            )
+            invitees: widget.invitees,
+            data: widget.data ?? '',
+            invitationID: widget.targetInvitationID,
+          )
         : await ZegoUIKit().getSignalingPlugin().cancelInvitation(
-              invitees: widget.invitees,
-              data: widget.data ?? '',
-            );
+            invitees: widget.invitees,
+            data: widget.data ?? '',
+          );
 
     widget.onPressed?.call(
       ZegoCancelInvitationButtonResult(

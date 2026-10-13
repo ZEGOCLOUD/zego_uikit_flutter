@@ -253,10 +253,7 @@ void main() {
     queue.completeCurrentTask();
     await nextTaskStarted.future;
 
-    completeCanvasQueueTaskIfCurrent(
-      queue: queue,
-      isCurrent: () => false,
-    );
+    completeCanvasQueueTaskIfCurrent(queue: queue, isCurrent: () => false);
 
     expect(queue.currentTaskKey, 'next-stream');
     expect(thirdTaskStarted.isCompleted, isFalse);
@@ -278,10 +275,7 @@ void main() {
     );
     await taskStarted.future;
 
-    completeCanvasQueueTaskIfCurrent(
-      queue: queue,
-      isCurrent: () => true,
-    );
+    completeCanvasQueueTaskIfCurrent(queue: queue, isCurrent: () => true);
     await Future<void>.delayed(Duration.zero);
 
     expect(queue.currentTaskKey, isNull);
@@ -397,17 +391,16 @@ void main() {
       Iterable<Object>? currentUsers,
       Object? targetUser,
       bool streamRecordCurrent = true,
-    }) =>
-        isCanvasQueueTaskCurrent(
-          queue: queue,
-          streamID: streamID,
-          expectedGeneration: expectedGeneration,
-          currentGeneration: currentGeneration,
-          channelStreamID: channelStreamID,
-          currentUsers: currentUsers ?? [oldUser],
-          targetUser: targetUser ?? oldUser,
-          isStreamRecordCurrent: streamRecordCurrent,
-        );
+    }) => isCanvasQueueTaskCurrent(
+      queue: queue,
+      streamID: streamID,
+      expectedGeneration: expectedGeneration,
+      currentGeneration: currentGeneration,
+      channelStreamID: channelStreamID,
+      currentUsers: currentUsers ?? [oldUser],
+      targetUser: targetUser ?? oldUser,
+      isStreamRecordCurrent: streamRecordCurrent,
+    );
 
     expect(isCurrent(), isTrue);
     expect(isCurrent(streamID: 'another-stream'), isFalse);

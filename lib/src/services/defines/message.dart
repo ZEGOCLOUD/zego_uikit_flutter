@@ -11,12 +11,7 @@ import 'package:zego_express_engine_for_uikit/zego_express_engine.dart';
 import 'package:zego_uikit/src/services/defines/user.dart';
 
 /// in-room message send state
-enum ZegoInRoomMessageState {
-  idle,
-  sending,
-  success,
-  failed,
-}
+enum ZegoInRoomMessageState { idle, sending, success, failed }
 
 enum ZegoInRoomMessageType {
   /// Messages are guaranteed to be reliable
@@ -26,7 +21,7 @@ enum ZegoInRoomMessageType {
 
   /// Messages are not guaranteed to be reliable
   /// 20 times/second for room
-  barrageMessage
+  barrageMessage,
 }
 
 /// in-room message
@@ -48,8 +43,9 @@ class ZegoInRoomMessage {
   int timestamp;
 
   ///
-  var state =
-      ValueNotifier<ZegoInRoomMessageState>(ZegoInRoomMessageState.success);
+  var state = ValueNotifier<ZegoInRoomMessageState>(
+    ZegoInRoomMessageState.success,
+  );
 
   ZegoInRoomMessage({
     required this.user,
@@ -69,20 +65,20 @@ class ZegoInRoomMessage {
   }
 
   ZegoInRoomMessage.fromBroadcastMessage(ZegoBroadcastMessageInfo message)
-      : this(
-          user: ZegoUIKitUser.fromZego(message.fromUser),
-          message: message.message,
-          timestamp: message.sendTime,
-          messageID: message.messageID.toString(),
-        );
+    : this(
+        user: ZegoUIKitUser.fromZego(message.fromUser),
+        message: message.message,
+        timestamp: message.sendTime,
+        messageID: message.messageID.toString(),
+      );
 
   ZegoInRoomMessage.fromBarrageMessage(ZegoBarrageMessageInfo message)
-      : this(
-          user: ZegoUIKitUser.fromZego(message.fromUser),
-          message: message.message,
-          timestamp: message.sendTime,
-          messageID: message.messageID,
-        );
+    : this(
+        user: ZegoUIKitUser.fromZego(message.fromUser),
+        message: message.message,
+        timestamp: message.sendTime,
+        messageID: message.messageID,
+      );
 
   static String get messageKey => 'msg';
 
@@ -100,10 +96,7 @@ class ZegoInRoomMessage {
     }
 
     /// {'msg':'xxx', 'attrs':''}
-    return jsonEncode({
-      messageKey: message,
-      attributesKey: attributes,
-    });
+    return jsonEncode({messageKey: message, attributesKey: attributes});
   }
 
   @override

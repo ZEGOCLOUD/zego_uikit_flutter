@@ -24,10 +24,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
 
   ZegoUIKitUser get localUser {
     final tempUserID = ZegoAudioVideoViewOutsideRoomID.randomUserID();
-    _tempUser ??= ZegoUIKitUser(
-      id: tempUserID,
-      name: tempUserID,
-    );
+    _tempUser ??= ZegoUIKitUser(id: tempUserID, name: tempUserID);
 
     return _tempUser!;
   }
@@ -141,26 +138,26 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
 
     return ZegoUIKit()
         .init(
-      appID: _appID,
-      appSign: _appSign,
-      token: _token,
-      scenario: _scenario,
-    )
+          appID: _appID,
+          appSign: _appSign,
+          token: _token,
+          scenario: _scenario,
+        )
         .then((value) async {
-      ZegoLoggerService.logInfo(
-        'init done',
-        tag: 'outside room audio video controller.p',
-        subTag: 'initSDK',
-      );
+          ZegoLoggerService.logInfo(
+            'init done',
+            tag: 'outside room audio video controller.p',
+            subTag: 'initSDK',
+          );
 
-      await ZegoUIKit().setVideoConfig(
-        _config.video ?? ZegoUIKitVideoConfig.preset180P(),
-      );
+          await ZegoUIKit().setVideoConfig(
+            _config.video ?? ZegoUIKitVideoConfig.preset180P(),
+          );
 
-      sdkInitNotifier.value = true;
+          sdkInitNotifier.value = true;
 
-      return true;
-    });
+          return true;
+        });
   }
 
   Future<bool> uninitSDK() async {
@@ -297,9 +294,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
               streamInfo.user.id,
               userName: streamInfo.user.name,
             )
-          : await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
-              streamInfo.user.id,
-            );
+          : await ZegoUIKit().stopPlayAnotherRoomAudioVideo(streamInfo.user.id);
     }
 
     return true;
@@ -335,8 +330,10 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       return false;
     }
 
-    final queryIndex = streamsNotifier.value.indexWhere((streamInfo) =>
-        streamInfo.user.id == user.id && streamInfo.roomID == roomID);
+    final queryIndex = streamsNotifier.value.indexWhere(
+      (streamInfo) =>
+          streamInfo.user.id == user.id && streamInfo.roomID == roomID,
+    );
     if (-1 == queryIndex) {
       if (withLog) {
         ZegoLoggerService.logInfo(
@@ -386,9 +383,7 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
             streamInfo.user.id,
             userName: streamInfo.user.name,
           )
-        : await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
-            streamInfo.user.id,
-          );
+        : await ZegoUIKit().stopPlayAnotherRoomAudioVideo(streamInfo.user.id);
 
     return true;
   }
@@ -407,8 +402,9 @@ class ZegoOutsideRoomAudioVideoViewControllerPrivate {
       stream.isVisibleNotifier.addListener(onStreamVisibleStateUpdate);
     }
     onStreamVisibleStateUpdate();
-    previousStreams =
-        List<ZegoOutsideRoomAudioVideoViewStream>.from(streamsNotifier.value);
+    previousStreams = List<ZegoOutsideRoomAudioVideoViewStream>.from(
+      streamsNotifier.value,
+    );
   }
 
   Future<void> onStreamVisibleStateUpdate() async {

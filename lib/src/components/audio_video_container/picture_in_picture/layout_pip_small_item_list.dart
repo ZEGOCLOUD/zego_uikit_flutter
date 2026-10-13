@@ -13,7 +13,7 @@ import 'package:zego_uikit/src/services/services.dart';
 
 class ZegoLayoutPIPSmallItemList extends StatefulWidget {
   const ZegoLayoutPIPSmallItemList({
-    Key? key,
+    super.key,
     required this.targetUsers,
     required this.defaultPosition,
     required this.showOnlyVideo,
@@ -27,7 +27,7 @@ class ZegoLayoutPIPSmallItemList extends StatefulWidget {
     this.size,
     this.margin,
     this.avatarConfig,
-  }) : super(key: key);
+  });
 
   final bool showOnlyVideo;
   final bool scrollable;
@@ -108,7 +108,6 @@ class _ZegoLayoutPIPSmallItemListState
                 designedSize.width,
                 (visibleItemCount - 1) * 16.zR +
                     visibleItemCount * designedSize.height +
-
                     /// make user can see the last item's head area, so he can
                     /// know scrollable
                     (hasInvisibleUsers ? 16.zR * 3 : 0),
@@ -131,7 +130,8 @@ class _ZegoLayoutPIPSmallItemListState
     var visibleItemCount = widget.visibleItemCount;
 
     final mediaQueryData = MediaQuery.of(context);
-    final screenHeight = mediaQueryData.size.height -
+    final screenHeight =
+        mediaQueryData.size.height -
         mediaQueryData.padding.top -
         mediaQueryData.padding.bottom;
     final maxItemCount =
@@ -140,7 +140,8 @@ class _ZegoLayoutPIPSmallItemListState
     if (visibleItemCount < 0) {
       visibleItemCount = maxItemCount;
     } else {
-      final displayHeight = (widget.visibleItemCount - 1) * 16.zR +
+      final displayHeight =
+          (widget.visibleItemCount - 1) * 16.zR +
           widget.visibleItemCount * designedSize.height;
       if (displayHeight > screenHeight) {
         visibleItemCount = maxItemCount;
@@ -164,7 +165,8 @@ class _ZegoLayoutPIPSmallItemListState
       itemBuilder: (context, index) {
         final targetUser = userItems[index];
         return Padding(
-          padding: widget.spacingBetweenSmallViews ??
+          padding:
+              widget.spacingBetweenSmallViews ??
               EdgeInsets.fromLTRB(
                 widget.spacingBetweenSmallViews?.left ?? 0,
                 widget.spacingBetweenSmallViews?.top ?? 0,
@@ -203,13 +205,17 @@ class _ZegoLayoutPIPSmallItemListState
 
   /// calculates smallView's size based on current screen
   Widget calculateSize({required ZegoUIKitUser? user, required Widget child}) {
-    final portraitBaseSize =
-        Size(designedSize.height, designedSize.width); // vertical
+    final portraitBaseSize = Size(
+      designedSize.height,
+      designedSize.width,
+    ); // vertical
     final landscapeBaseSize = designedSize; //  horizontal
 
     if (user == null) {
       final defaultSize = Size(
-          landscapeBaseSize.height * designedRatio, landscapeBaseSize.height);
+        landscapeBaseSize.height * designedRatio,
+        landscapeBaseSize.height,
+      );
       return SizedBox.fromSize(size: defaultSize, child: child);
     } else {
       return ValueListenableBuilder<Size>(
@@ -232,7 +238,8 @@ class _ZegoLayoutPIPSmallItemListState
 
   /// position container, calculates the coordinates based on current position
   Widget calculatePosition({required Widget child}) {
-    final paddingSpace = widget.margin ??
+    final paddingSpace =
+        widget.margin ??
         EdgeInsets.only(left: 24.zR, top: 144.zR, right: 24.zR, bottom: 144.zR);
 
     double? left, top, right, bottom;

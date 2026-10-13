@@ -24,7 +24,7 @@ import 'package:zego_uikit/src/services/services.dart';
 /// 3. foreground view
 class ZegoOutsideRoomAudioVideoViewList extends StatefulWidget {
   const ZegoOutsideRoomAudioVideoViewList({
-    Key? key,
+    super.key,
     required this.appID,
     required this.controller,
     this.appSign = '',
@@ -32,9 +32,8 @@ class ZegoOutsideRoomAudioVideoViewList extends StatefulWidget {
     this.scenario = ZegoScenario.Default,
     ZegoOutsideRoomAudioVideoViewListStyle? style,
     ZegoOutsideRoomAudioVideoViewListConfig? config,
-  })  : style = style ?? const ZegoOutsideRoomAudioVideoViewListStyle(),
-        config = config ?? const ZegoOutsideRoomAudioVideoViewListConfig(),
-        super(key: key);
+  }) : style = style ?? const ZegoOutsideRoomAudioVideoViewListStyle(),
+       config = config ?? const ZegoOutsideRoomAudioVideoViewListConfig();
 
   /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final int appID;
@@ -120,7 +119,7 @@ class _ZegoOutsideRoomAudioVideoViewListState
           child: roomLoginWrapper(
             child: ValueListenableBuilder(
               valueListenable: widget.controller.private.updateNotifier,
-              builder: (context, _, __) {
+              builder: (context, _, _) {
                 return listview();
               },
             ),
@@ -135,14 +134,14 @@ class _ZegoOutsideRoomAudioVideoViewListState
       builder: (context, constraints) {
         final itemWidth = Axis.horizontal == widget.style.scrollDirection
             ? (1 / widget.style.item.sizeAspectRatio * constraints.maxHeight)
-                .ceil()
-                .toDouble()
+                  .ceil()
+                  .toDouble()
             : constraints.maxWidth;
         final itemHeight = Axis.horizontal == widget.style.scrollDirection
             ? constraints.maxHeight
             : (widget.style.item.sizeAspectRatio * constraints.maxWidth)
-                .ceil()
-                .toDouble();
+                  .ceil()
+                  .toDouble();
 
         ZegoLoggerService.logInfo(
           'layout ${constraints.maxWidth} x ${constraints.maxHeight}, '
@@ -173,31 +172,33 @@ class _ZegoOutsideRoomAudioVideoViewListState
               context: context,
               removeTop: true,
               removeBottom: true,
-              child: ValueListenableBuilder<
-                  List<ZegoOutsideRoomAudioVideoViewStream>>(
-                valueListenable: widget.controller.private.streamsNotifier,
-                builder: (context, streams, _) {
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: widget.style.scrollAxisCount,
-                      childAspectRatio: widget.style.itemAspectRatio,
-                    ),
-                    scrollDirection: widget.style.scrollDirection,
-                    itemCount: streams.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final stream = streams[index];
-                      return VisibilityDetector(
-                        key: Key(stream.targetStreamID),
-                        onVisibilityChanged: (visibilityInfo) async {
-                          stream.isVisibleNotifier.value =
-                              visibilityInfo.visibleFraction > 0.1;
+              child:
+                  ValueListenableBuilder<
+                    List<ZegoOutsideRoomAudioVideoViewStream>
+                  >(
+                    valueListenable: widget.controller.private.streamsNotifier,
+                    builder: (context, streams, _) {
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: widget.style.scrollAxisCount,
+                          childAspectRatio: widget.style.itemAspectRatio,
+                        ),
+                        scrollDirection: widget.style.scrollDirection,
+                        itemCount: streams.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final stream = streams[index];
+                          return VisibilityDetector(
+                            key: Key(stream.targetStreamID),
+                            onVisibilityChanged: (visibilityInfo) async {
+                              stream.isVisibleNotifier.value =
+                                  visibilityInfo.visibleFraction > 0.1;
+                            },
+                            child: listItem(stream, itemWidth, itemHeight),
+                          );
                         },
-                        child: listItem(stream, itemWidth, itemHeight),
                       );
                     },
-                  );
-                },
-              ),
+                  ),
             ),
           ),
         );
@@ -246,7 +247,8 @@ class _ZegoOutsideRoomAudioVideoViewListState
         return isInit
             ? child
             : Center(
-                child: widget.style.loadingBuilder?.call(context) ??
+                child:
+                    widget.style.loadingBuilder?.call(context) ??
                     const CircularProgressIndicator(),
               );
       },
@@ -260,7 +262,8 @@ class _ZegoOutsideRoomAudioVideoViewListState
         return isLogin
             ? child
             : Center(
-                child: widget.style.loadingBuilder?.call(context) ??
+                child:
+                    widget.style.loadingBuilder?.call(context) ??
                     const CircularProgressIndicator(),
               );
       },
@@ -271,12 +274,13 @@ class _ZegoOutsideRoomAudioVideoViewListState
     return StreamBuilder<List<ZegoUIKitUser>>(
       stream: ZegoUIKit().getUserListStream(),
       builder: (context, snapshot) {
-        final queryIndex = ZegoUIKit()
-            .getAudioVideoList()
-            .indexWhere((e) => e.id == stream.user.id);
+        final queryIndex = ZegoUIKit().getAudioVideoList().indexWhere(
+          (e) => e.id == stream.user.id,
+        );
         if (-1 == queryIndex) {
           return Center(
-            child: widget.style.item.loadingBuilder?.call(
+            child:
+                widget.style.item.loadingBuilder?.call(
                   context,
                   stream.user,
                   stream.roomID,
@@ -287,7 +291,8 @@ class _ZegoOutsideRoomAudioVideoViewListState
 
         return ZegoUIKit().getUser(stream.user.id).isEmpty()
             ? Center(
-                child: widget.style.item.loadingBuilder?.call(
+                child:
+                    widget.style.item.loadingBuilder?.call(
                       context,
                       stream.user,
                       stream.roomID,
@@ -295,8 +300,9 @@ class _ZegoOutsideRoomAudioVideoViewListState
                     const CircularProgressIndicator(),
               )
             : ValueListenableBuilder<bool>(
-                valueListenable:
-                    ZegoUIKit().getCameraStateNotifier(stream.user.id),
+                valueListenable: ZegoUIKit().getCameraStateNotifier(
+                  stream.user.id,
+                ),
                 builder: (context, isCameraOn, _) {
                   if (!isCameraOn) {
                     ZegoLoggerService.logInfo(
@@ -323,7 +329,8 @@ class _ZegoOutsideRoomAudioVideoViewListState
                               );
 
                               return Center(
-                                child: widget.style.item.loadingBuilder?.call(
+                                child:
+                                    widget.style.item.loadingBuilder?.call(
                                       context,
                                       stream.user,
                                       stream.roomID,
@@ -341,23 +348,29 @@ class _ZegoOutsideRoomAudioVideoViewListState
                             return StreamBuilder(
                               stream: NativeDeviceOrientationCommunicator()
                                   .onOrientationChanged(),
-                              builder: (context,
-                                  AsyncSnapshot<NativeDeviceOrientation>
-                                      asyncResult) {
-                                if (asyncResult.hasData) {
-                                  /// Do not update ui when ui is building !!!
-                                  /// use postFrameCallback to update videoSize
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((_) {
-                                    ///  notify sdk to update video render orientation
-                                    ZegoUIKit().updateAppOrientation(
-                                      deviceOrientationMap(asyncResult.data!),
-                                    );
-                                  });
-                                }
+                              builder:
+                                  (
+                                    context,
+                                    AsyncSnapshot<NativeDeviceOrientation>
+                                    asyncResult,
+                                  ) {
+                                    if (asyncResult.hasData) {
+                                      /// Do not update ui when ui is building !!!
+                                      /// use postFrameCallback to update videoSize
+                                      WidgetsBinding.instance.addPostFrameCallback((
+                                        _,
+                                      ) {
+                                        ///  notify sdk to update video render orientation
+                                        ZegoUIKit().updateAppOrientation(
+                                          deviceOrientationMap(
+                                            asyncResult.data!,
+                                          ),
+                                        );
+                                      });
+                                    }
 
-                                return userView;
-                              },
+                                    return userView;
+                                  },
                             );
                           },
                         );
@@ -376,10 +389,8 @@ class _ZegoOutsideRoomAudioVideoViewListState
         return Stack(
           children: [
             ValueListenableBuilder(
-              valueListenable: ZegoUIKitUserPropertiesNotifier(
-                stream.user,
-              ),
-              builder: (context, _, __) {
+              valueListenable: ZegoUIKitUserPropertiesNotifier(stream.user),
+              builder: (context, _, _) {
                 return widget.style.item.backgroundBuilder?.call(
                       context,
                       Size(constraints.maxWidth, constraints.maxHeight),
@@ -417,8 +428,9 @@ class _ZegoOutsideRoomAudioVideoViewListState
   ) {
     final screenSize = MediaQuery.of(context).size;
     final isSmallView = maxHeight < screenSize.height / 2;
-    final avatarSize =
-        isSmallView ? Size(110.zR, 110.zR) : Size(258.zR, 258.zR);
+    final avatarSize = isSmallView
+        ? Size(110.zR, 110.zR)
+        : Size(258.zR, 258.zR);
 
     var sizedWidth = widget.style.item.avatar?.size?.width ?? avatarSize.width;
     var sizedHeight =
@@ -430,9 +442,9 @@ class _ZegoOutsideRoomAudioVideoViewListState
       sizedHeight = maxHeight;
     }
 
-    final queryIndex = ZegoUIKit()
-        .getAudioVideoList()
-        .indexWhere((e) => e.id == stream.user.id);
+    final queryIndex = ZegoUIKit().getAudioVideoList().indexWhere(
+      (e) => e.id == stream.user.id,
+    );
     if (-1 == queryIndex) {
       return Container();
     }
