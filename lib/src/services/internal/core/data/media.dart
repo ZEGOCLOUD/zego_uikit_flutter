@@ -39,16 +39,26 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
 
   /// millisecond
   final progressNotifier = ValueNotifier<int>(0);
-  final stateNotifier =
-      ValueNotifier<ZegoUIKitMediaPlayState>(ZegoUIKitMediaPlayState.noPlay);
-  final typeNotifier =
-      ValueNotifier<ZegoUIKitMediaType>(ZegoUIKitMediaType.unknown);
+  final stateNotifier = ValueNotifier<ZegoUIKitMediaPlayState>(
+    ZegoUIKitMediaPlayState.noPlay,
+  );
+  final typeNotifier = ValueNotifier<ZegoUIKitMediaType>(
+    ZegoUIKitMediaType.unknown,
+  );
   final muteNotifier = ValueNotifier<bool>(false);
 
   List<String> get pureAudioExtensions => ['mp3', 'aac', 'wav', 'midi', "ogg"];
 
-  List<String> get videoExtensions =>
-      ['mp4', 'avi', 'mov', "flv", "mkv", "mpeg", "webm", "wmv"];
+  List<String> get videoExtensions => [
+    'mp4',
+    'avi',
+    'mov',
+    "flv",
+    "mkv",
+    "mpeg",
+    "webm",
+    "wmv",
+  ];
 
   ZegoMediaPlayerMediaInfo? get mediaInfo => _mediaInfo;
 
@@ -57,11 +67,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
   ZegoMediaPlayer? get currentPlayer => _currentPlayer;
 
   void init() {
-    ZegoLoggerService.logInfo(
-      'init media',
-      tag: 'uikit-media',
-      subTag: 'init',
-    );
+    ZegoLoggerService.logInfo('init media', tag: 'uikit-media', subTag: 'init');
 
     mediaListStreamCtrl ??=
         StreamController<List<ZegoUIKitCoreUser>>.broadcast();
@@ -107,11 +113,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
   }
 
   Future<void> clear() async {
-    ZegoLoggerService.logInfo(
-      'clear',
-      tag: 'uikit-media',
-      subTag: 'clear',
-    );
+    ZegoLoggerService.logInfo('clear', tag: 'uikit-media', subTag: 'clear');
 
     if (null != _currentPlayer) {
       ZegoLoggerService.logInfo(
@@ -168,7 +170,8 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
       );
       return ZegoUIKitMediaPlayResult(
         errorCode: loadResult.errorCode,
-        message: 'loadResource error:${loadResult.errorCode}, '
+        message:
+            'loadResource error:${loadResult.errorCode}, '
             'path:$filePathOrURL, '
             '${ZegoUIKitErrorCode.expressErrorCodeDocumentTips}',
       );
@@ -223,11 +226,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
   }
 
   Future<void> stop() async {
-    ZegoLoggerService.logInfo(
-      'try stop',
-      tag: 'uikit-media',
-      subTag: 'stop',
-    );
+    ZegoLoggerService.logInfo('try stop', tag: 'uikit-media', subTag: 'stop');
 
     if (ZegoUIKitMediaPlayState.playing == stateNotifier.value) {
       await _updatePlayStateWithSync(ZegoUIKitMediaPlayState.playEnded);
@@ -373,16 +372,13 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
   }
 
   Future<bool> _syncMediaInfoBySEI() async {
-    return ZegoUIKitCore.shared.coreData.sendSEI(
-      ZegoUIKitInnerSEIType.mediaSyncInfo.name,
-      {
-        ZegoUIKitSEIDefines.keyMediaStatus: stateNotifier.value.index,
-        ZegoUIKitSEIDefines.keyMediaProgress: progressNotifier.value,
-        ZegoUIKitSEIDefines.keyMediaDuration: _duration,
-        ZegoUIKitSEIDefines.keyMediaSoundLevel: _soundLevel,
-      },
-      streamType: ZegoStreamType.media,
-    );
+    return ZegoUIKitCore.shared.coreData
+        .sendSEI(ZegoUIKitInnerSEIType.mediaSyncInfo.name, {
+          ZegoUIKitSEIDefines.keyMediaStatus: stateNotifier.value.index,
+          ZegoUIKitSEIDefines.keyMediaProgress: progressNotifier.value,
+          ZegoUIKitSEIDefines.keyMediaDuration: _duration,
+          ZegoUIKitSEIDefines.keyMediaSoundLevel: _soundLevel,
+        }, streamType: ZegoStreamType.media);
   }
 
   @override
@@ -422,10 +418,7 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
   }
 
   @override
-  void onMediaPlayerRecvSEI(
-    ZegoMediaPlayer mediaPlayer,
-    Uint8List data,
-  ) {
+  void onMediaPlayerRecvSEI(ZegoMediaPlayer mediaPlayer, Uint8List data) {
     // ZegoLoggerService.logInfo(
     //   'onMediaPlayerRecvSEI $data',
     //   tag: 'uikit-media',
@@ -440,8 +433,9 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
   ) {
     _soundLevel = soundLevel;
 
-    ZegoUIKitCore.shared.coreData.localUser.auxChannel.soundLevelStream
-        ?.add(soundLevel);
+    ZegoUIKitCore.shared.coreData.localUser.auxChannel.soundLevelStream?.add(
+      soundLevel,
+    );
   }
 
   @override
@@ -616,35 +610,35 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
         }
       }
 
-      final pickFilesResult = (await FilePicker.platform.pickFiles(
-            type: null == allowedExtensions ? FileType.media : FileType.custom,
-            allowMultiple: allowMultiple,
-            allowedExtensions: allowedExtensions,
-            onFileLoading: (p0) {
-              ZegoLoggerService.logInfo(
-                'onFileLoading:$p0,${DateTime.now().millisecondsSinceEpoch}',
-                tag: 'uikit-media',
-                subTag: 'pickMediaFiles',
-              );
-            },
-          ))
-              ?.files ??
-          [];
+      void onFileLoading(FilePickerStatus status) {
+        ZegoLoggerService.logInfo(
+          'onFileLoading:$status,${DateTime.now().millisecondsSinceEpoch}',
+          tag: 'uikit-media',
+          subTag: 'pickMediaFiles',
+        );
+      }
+
+      final List<ZegoUIKitPlatformFile> pickFilesResult;
+      if (allowMultiple) {
+        pickFilesResult = await FilePicker.pickFiles(
+          type: null == allowedExtensions ? FileType.media : FileType.custom,
+          allowedExtensions: allowedExtensions,
+          onFileLoading: onFileLoading,
+        );
+      } else {
+        final file = await FilePicker.pickFile(
+          type: null == allowedExtensions ? FileType.media : FileType.custom,
+          allowedExtensions: allowedExtensions,
+          onFileLoading: onFileLoading,
+        );
+        pickFilesResult = file == null ? [] : [file];
+      }
       ZegoLoggerService.logInfo(
         'result: $pickFilesResult, ${DateTime.now().millisecondsSinceEpoch}',
         tag: 'uikit-media',
         subTag: 'pickMediaFiles',
       );
-      return pickFilesResult
-          .map((file) => ZegoUIKitPlatformFile(
-                name: file.name,
-                path: file.path,
-                bytes: file.bytes,
-                readStream: file.readStream,
-                size: file.size,
-                identifier: file.identifier,
-              ))
-          .toList();
+      return pickFilesResult;
     } on PlatformException catch (e) {
       ZegoLoggerService.logInfo(
         'unsupported operation $e',
@@ -652,11 +646,13 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
         subTag: 'pickMediaFiles',
       );
 
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.mediaPickFilesError,
-        message: 'exception:$e',
-        method: 'pickMediaFiles',
-      ));
+      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.mediaPickFilesError,
+          message: 'exception:$e',
+          method: 'pickMediaFiles',
+        ),
+      );
     } catch (e) {
       ZegoLoggerService.logInfo(
         'exception:$e',
@@ -664,18 +660,21 @@ class ZegoUIKitCoreDataMediaImpl extends ZegoUIKitMediaEventInterface {
         subTag: 'pickMediaFiles',
       );
 
-      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(ZegoUIKitError(
-        code: ZegoUIKitErrorCode.mediaPickFilesError,
-        message: 'exception:$e',
-        method: 'pickMediaFiles',
-      ));
+      ZegoUIKitCore.shared.error.errorStreamCtrl?.add(
+        ZegoUIKitError(
+          code: ZegoUIKitErrorCode.mediaPickFilesError,
+          message: 'exception:$e',
+          method: 'pickMediaFiles',
+        ),
+      );
     }
 
     return [];
   }
 
   Future<void> _updatePlayStateWithSync(
-      ZegoUIKitMediaPlayState playState) async {
+    ZegoUIKitMediaPlayState playState,
+  ) async {
     stateNotifier.value = playState;
 
     await _syncMediaInfoBySEI();

@@ -1,4 +1,4 @@
-#import "KitRemoteView.h"
+#import "pip/KitRemoteView.h"
 
 @implementation KitRemoteView
 

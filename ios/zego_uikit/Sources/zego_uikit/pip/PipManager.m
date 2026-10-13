@@ -1,8 +1,8 @@
-#import "PipManager.h"
+#import "pip/PipManager.h"
 
 #import <AVKit/AVKit.h>
 
-#import "KitRemoteView.h"
+#import "pip/KitRemoteView.h"
 
 @import ZegoExpressEngine;
 
@@ -293,10 +293,10 @@ API_AVAILABLE(ios(15.0))
             
             self.pipVideoView.translatesAutoresizingMaskIntoConstraints = NO;
             [NSLayoutConstraint activateConstraints:@[
-                [self.pipVideoView.topAnchor constraintEqualToAnchor:self.pipCallVC.view.topAnchor],
                 [self.pipVideoView.leftAnchor constraintEqualToAnchor:self.pipCallVC.view.leftAnchor],
+                [self.pipVideoView.rightAnchor constraintEqualToAnchor:self.pipCallVC.view.rightAnchor],
+                [self.pipVideoView.topAnchor constraintEqualToAnchor:self.pipCallVC.view.topAnchor],
                 [self.pipVideoView.bottomAnchor constraintEqualToAnchor:self.pipCallVC.view.bottomAnchor],
-                [self.pipVideoView.rightAnchor constraintEqualToAnchor:self.pipCallVC.view.rightAnchor]
             ]];
             
             self.pipLayer = [self createAVSampleBufferDisplayLayer];

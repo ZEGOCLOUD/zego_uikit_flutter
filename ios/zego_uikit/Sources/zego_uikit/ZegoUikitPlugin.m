@@ -6,9 +6,15 @@
 /// flutter express
 #import <zego_express_engine_for_uikit/ZegoCustomVideoProcessManager.h>
 #import <zego_express_engine_for_uikit/ZegoCustomVideoCaptureManager.h>
+#if SWIFT_PACKAGE
+#import <zego_express_engine_for_uikit/internal/ZegoExpressEngineMethodHandler.h>
+#import <zego_express_engine_for_uikit/internal/ZegoPlatformViewFactory.h>
+#import <zego_express_engine_for_uikit/internal/ZegoPlatformView.h>
+#else
 #import <zego_express_engine_for_uikit/ZegoExpressEngineMethodHandler.h>
 #import <zego_express_engine_for_uikit/ZegoPlatformViewFactory.h>
 #import <zego_express_engine_for_uikit/ZegoPlatformView.h>
+#endif
 #import <ZegoUIKitReport/ZegoUIKitReport.h>
 
 #import "pip/PipManager.h"
